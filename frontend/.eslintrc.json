@@ -4,9 +4,6 @@
     "es2021": true
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
     // "airbnb-base",
     // "airbnb/hooks",
     "airbnb-typescript",
