@@ -1,0 +1,39 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    // "airbnb-base",
+    // "airbnb/hooks",
+    "airbnb-typescript",
+    "prettier",
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint", "react", "import"],
+  "rules": {
+    "import/extensions": "error",
+    "import/no-extraneous-dependencies": "error",
+    "import-name": false,
+    "interface-name": false,
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "variable-name": false,
+    "object-literal-sort-keys": false,
+    "interface-over-type-literal": false,
+    "ordered-imports": false
+  }
+}
