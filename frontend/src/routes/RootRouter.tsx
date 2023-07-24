@@ -18,6 +18,7 @@ import FreePostViewPage from '@pages/FreePostViewPage';
 import CreateFreePostPage from '@pages/CreateFreePostPage';
 import EurekaPostViewPage from '@pages/EurekaPostViewPage';
 import LanguageSearchPage from '@pages/LanguageSearchPage';
+import LoginCallBackPage from '@pages/LoginCallBackPage';
 
 const RootRouter = () => {
 	return (
@@ -36,6 +37,7 @@ const RootRouter = () => {
 					</Route>
 				</Route>
 				<Route path="/login" element={<LoginPage />}></Route>
+				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
 				<Route path="/community">
 					<Route index element={<CommunityPage />}></Route>
 					<Route path="eureka/post" element={<CreateEurekaPostPage />}></Route>
