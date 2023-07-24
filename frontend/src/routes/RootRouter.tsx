@@ -18,6 +18,8 @@ import FreePostViewPage from '@pages/FreePostViewPage';
 import CreateFreePostPage from '@pages/CreateFreePostPage';
 import EurekaPostViewPage from '@pages/EurekaPostViewPage';
 import LanguageSearchPage from '@pages/LanguageSearchPage';
+import EurekaPage from '@pages/EurekaPage';
+import FreeBoardPage from '@pages/FreeBoardPage';
 
 const RootRouter = () => {
 	return (
@@ -36,13 +38,26 @@ const RootRouter = () => {
 					</Route>
 				</Route>
 				<Route path="/login" element={<LoginPage />}></Route>
-				<Route path="/community">
-					<Route index element={<CommunityPage />}></Route>
-					<Route path="eureka/post" element={<CreateEurekaPostPage />}></Route>
-					<Route path="free/post" element={<CreateFreePostPage />}></Route>
-					<Route path="eureka/:id" element={<EurekaPostViewPage />}></Route>
-					<Route path="free/:id" element={<FreePostViewPage />}></Route>
+				<Route path="/community" element={<CommunityPage />}>
+					<Route path="eureka" element={<EurekaPage />}></Route>
+					<Route path="free" element={<FreeBoardPage />}></Route>
 				</Route>
+				<Route
+					path="/community/eureka/post"
+					element={<CreateEurekaPostPage />}
+				></Route>
+				<Route
+					path="/community/free/post"
+					element={<CreateFreePostPage />}
+				></Route>
+				<Route
+					path="/community/eureka/:id"
+					element={<EurekaPostViewPage />}
+				></Route>
+				<Route
+					path="/community/free/:id"
+					element={<FreePostViewPage />}
+				></Route>
 				<Route path="/notification" element={<NotificationPage />}></Route>
 				<Route path="/repo">
 					<Route index element={<NotFound />}></Route>
