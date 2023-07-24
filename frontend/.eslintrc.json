@@ -9,8 +9,10 @@
     "airbnb-typescript",
     "prettier",
     "tslint:recommended",
+    // "eslint:recommended",
     "tslint-react",
-    "tslint-config-prettier"
+    "tslint-config-prettier",
+    "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
