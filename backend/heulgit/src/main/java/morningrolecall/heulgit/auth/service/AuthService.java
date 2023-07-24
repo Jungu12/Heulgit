@@ -8,25 +8,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.auth.dto.OAuthToken;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 	private final RestTemplate restTemplate;
 
-	@Value("${spring.security.oauth2.client.registration.github.client-id}")
 	private final String clientId;
 
-	@Value("${spring.security.oauth2.client.registration.github.client-secret}")
 	private final String clientSecret;
 
-	@Value("${github.accesstoken-url}")
 	private final String accessTokenUrl;
 
-	@Value("${github.userinfo-url}")
 	private final String userInfoUrl;
+
+	// 생성자 주입 사용
+	public AuthService(RestTemplate restTemplate,
+		@Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
+		@Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret,
+		@Value("${github.accesstoken-url}") String accessTokenUrl,
+		@Value("${github.userinfo-url}") String userInfoUrl) {
+		this.restTemplate = restTemplate;
+		this.clientId = clientId;
+		this.clientSecret = clientSecret;
+		this.accessTokenUrl = accessTokenUrl;
+		this.userInfoUrl = userInfoUrl;
+	}
 
 	/**
 	 * 인가 코드를 받아 액세스 토큰을 발급 받고, 이를 통해 사용자의 정보를 조회해 JWT 생성 및 반환
@@ -35,6 +42,8 @@ public class AuthService {
 	 * */
 	public OAuthToken createTokens(String code) {
 		String accessToken = getAccessToken(code);
+
+		System.out.println("accessToken : " + accessToken);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + accessToken);
