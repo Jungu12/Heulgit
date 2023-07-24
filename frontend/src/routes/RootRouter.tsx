@@ -39,10 +39,10 @@ const RootRouter = () => {
 					</Route>
 				</Route>
 				<Route path="/login" element={<LoginPage />}></Route>
+				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
 				<Route path="/community" element={<CommunityPage />}>
 					<Route path="eureka" element={<EurekaPage />}></Route>
 					<Route path="free" element={<FreeBoardPage />}></Route>
-				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
 				</Route>
 				<Route
 					path="/community/eureka/post"
