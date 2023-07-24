@@ -18,6 +18,7 @@ import FreePostViewPage from '@pages/FreePostViewPage';
 import CreateFreePostPage from '@pages/CreateFreePostPage';
 import EurekaPostViewPage from '@pages/EurekaPostViewPage';
 import LanguageSearchPage from '@pages/LanguageSearchPage';
+import LoginCallBackPage from '@pages/LoginCallBackPage';
 import EurekaPage from '@pages/EurekaPage';
 import FreeBoardPage from '@pages/FreeBoardPage';
 
@@ -41,6 +42,7 @@ const RootRouter = () => {
 				<Route path="/community" element={<CommunityPage />}>
 					<Route path="eureka" element={<EurekaPage />}></Route>
 					<Route path="free" element={<FreeBoardPage />}></Route>
+				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
 				</Route>
 				<Route
 					path="/community/eureka/post"
