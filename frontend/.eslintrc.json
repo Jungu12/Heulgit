@@ -27,9 +27,9 @@
     "import-name": "off",
     "interface-name": "off",
     "semicolon": ["off", "always", "ignore-bound-class-methods"],
-    "variable-name": false,
-    "object-literal-sort-keys": false,
-    "interface-over-type-literal": false,
-    "ordered-imports": false
+    "variable-name": "off",
+    "object-literal-sort-keys": "off",
+    "interface-over-type-literal": "off",
+    "ordered-imports": "off"
   }
 }
