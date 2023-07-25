@@ -27,7 +27,7 @@ const StyledCategoryButton = styled.button`
 const CommunityCategory = () => {
 	return (
 		<StyledCategoryContainer>
-			<StyledCategoryButton>흘깃판</StyledCategoryButton>
+			<StyledCategoryButton>유레카</StyledCategoryButton>
 			<StyledCategoryButton>자유게시판</StyledCategoryButton>
 		</StyledCategoryContainer>
 	);
