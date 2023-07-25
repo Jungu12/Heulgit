@@ -24,7 +24,7 @@ const Feed = styled.div`
 	display: flex;
 	justify-content: center;
 	height: 700px;
-	border: solid 1px #999999;
+	border: solid 1px #999939;
 `;
 
 // 푸터
