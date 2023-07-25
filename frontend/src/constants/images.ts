@@ -10,6 +10,7 @@ export const images = {
 		searchActive: '/assets/images/ic-search-active.png',
 		communityInactive: '/assets/images/ic-community-inactive.png',
 		communityActive: '/assets/images/ic-community-active.png',
+		createPost: '/assets/images/ic-create-post.png',
 	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',
