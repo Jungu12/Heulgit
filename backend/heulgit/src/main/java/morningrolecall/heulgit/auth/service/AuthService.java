@@ -8,7 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import morningrolecall.heulgit.auth.dto.OAuthToken;
+import morningrolecall.heulgit.auth.util.JwtFactory;
+import morningrolecall.heulgit.user.entity.User;
+import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
 public class AuthService {
@@ -22,17 +28,23 @@ public class AuthService {
 
 	private final String userInfoUrl;
 
+	private final UserRepository userRepository;
+
+	private final JwtFactory jwtFactory;
+
 	// 생성자 주입 사용
 	public AuthService(RestTemplate restTemplate,
 		@Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
 		@Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret,
 		@Value("${github.accesstoken-url}") String accessTokenUrl,
-		@Value("${github.userinfo-url}") String userInfoUrl) {
+		@Value("${github.userinfo-url}") String userInfoUrl, UserRepository userRepository, JwtFactory jwtFactory) {
 		this.restTemplate = restTemplate;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.accessTokenUrl = accessTokenUrl;
 		this.userInfoUrl = userInfoUrl;
+		this.userRepository = userRepository;
+		this.jwtFactory = jwtFactory;
 	}
 
 	/**
@@ -43,27 +55,35 @@ public class AuthService {
 	public OAuthToken createTokens(String code) {
 		String accessToken = getAccessToken(code);
 
-		System.out.println("accessToken : " + accessToken);
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + accessToken);
 		headers.set("Accept", "application/json");
 
 		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
-		ResponseEntity<OAuthToken> response = restTemplate.exchange(
+		ResponseEntity<String> response = restTemplate.exchange(
 			userInfoUrl,
 			HttpMethod.GET,
 			requestEntity,
-			OAuthToken.class
+			String.class
 		);
 
-		// TODO 사용자 정보 추출해서, DB 확인, JWT 생성 필요
-		System.out.println(response.getBody());
+		User user = extractUser(response.getBody());
 
-		OAuthToken tokens = new OAuthToken();
+		// 사용자 정보 추출이 정상적이지 않은 경우
+		if (user == null) {
+			// TODO 예외 처리 필요
+			return null;
+		}
 
-		return tokens;
+		String id = user.getId();
+		// 사용자가 처음 서비스를 이용하는 경우
+		if (userRepository.findUserById(id).isEmpty()) {
+			userRepository.save(user);
+		}
+
+		// JWT 생성!
+		return new OAuthToken(jwtFactory.generateAccessToken(id), jwtFactory.generateRefreshToken(id));
 	}
 
 	/**
@@ -84,11 +104,52 @@ public class AuthService {
 			String.class
 		);
 
-		String accessTokenResponse = response.getBody();
+		String accessTokenResponse = extractAccessToken(response.getBody());
+
 		if (accessTokenResponse != null) {
 			return accessTokenResponse;
 		} else {
 			throw new RuntimeException("[Exception] Access Token을 얻는데 실패했습니다.");
 		}
+	}
+
+	/**
+	 * 주어진 정보로부터 User 객체를 생성해 반환
+	 * @param data
+	 * @return User
+	 * */
+	private User extractUser(String data) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(data);
+
+			return new User(jsonNode.get("login").asText(), jsonNode.get("avatar_url").asText(),
+				jsonNode.get("name").asText(),
+				jsonNode.get("bio").asText(), jsonNode.get("company").asText(), jsonNode.get("location").asText(),
+				jsonNode.get("blog").asText());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 주어진 응답으로부터 Access Token을 추출해 반환
+	 * @param response 데이터
+	 * @return String Access Token 또는 null
+	 * */
+	private String extractAccessToken(String response) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(response);
+
+			if (jsonNode.has("access_token")) {
+				return jsonNode.get("access_token").asText();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
