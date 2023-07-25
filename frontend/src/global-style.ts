@@ -2,6 +2,13 @@ import { createGlobalStyle } from 'styled-components';
 
 // 외부에서 import 할거니까 모듈 내보내자~!
 export default createGlobalStyle`
+@font-face {
+    font-family: 'RixYeoljeongdo_Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/RixYeoljeongdo_Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -20,6 +27,7 @@ time, mark, audio, video {
 	border: 0;
 	font-size: 100%;
 	font: inherit;
+	font-family: 'Noto Sans KR', sans-serif;
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
