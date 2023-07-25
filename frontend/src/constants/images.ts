@@ -11,4 +11,7 @@ export const images = {
 		communityInactive: '/assets/images/ic-community-inactive.png',
 		communityActive: '/assets/images/ic-community-active.png',
 	},
+	header: {
+		back: '/assets/images/ic-arrow-back.png',
+	},
 };
