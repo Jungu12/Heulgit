@@ -24,12 +24,12 @@
   "rules": {
     "import/extensions": "error",
     "import/no-extraneous-dependencies": "error",
-    "import-name": false,
-    "interface-name": false,
-    "semicolon": [true, "always", "ignore-bound-class-methods"],
-    "variable-name": false,
-    "object-literal-sort-keys": false,
-    "interface-over-type-literal": false,
-    "ordered-imports": false
+    "import-name": "off",
+    "interface-name": "off",
+    "semicolon": ["off", "always", "ignore-bound-class-methods"],
+    "variable-name": "off",
+    "object-literal-sort-keys": "off",
+    "interface-over-type-literal": "off",
+    "ordered-imports": "off"
   }
 }
