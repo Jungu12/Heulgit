@@ -4,11 +4,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@RequiredArgsConstructor
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
+
 	@Id
 	@Column(name = "github_id")
 	private String id;
@@ -23,4 +28,6 @@ public class User {
 	private String company;
 
 	private String location;
+
+	private String blog;
 }
