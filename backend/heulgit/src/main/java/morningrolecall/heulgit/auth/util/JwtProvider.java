@@ -3,11 +3,13 @@ package morningrolecall.heulgit.auth.util;
 import java.security.Key;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -30,20 +32,28 @@ public class JwtProvider {
 			.compact();
 	}
 
-	public String extractSubject(String accessToken) {
-		Claims claims = parseClaims(accessToken);
+	// JWT 유효성 검사
+	public boolean validateToken(String token) {
+		try {
+			Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+			return true;
+		} catch (JwtException | IllegalArgumentException e) {
+			return false;
+		}
+	}
+
+	// JWT에서 사용자 ID 추출
+	public String getUserId(String token) {
+		Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
 		return claims.getSubject();
 	}
 
-	private Claims parseClaims(String accessToken) {
-		try {
-			return Jwts.parserBuilder()
-				.setSigningKey(key)
-				.build()
-				.parseClaimsJws(accessToken)
-				.getBody();
-		} catch (ExpiredJwtException e) {
-			return e.getClaims();
+	// 요청 헤더에서 JWT 추출
+	public String resolveToken(HttpServletRequest request) {
+		String bearerToken = request.getHeader("Authorization");
+		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7);
 		}
+		return null;
 	}
 }
