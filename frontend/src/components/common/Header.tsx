@@ -12,6 +12,7 @@ const StyledHeaderContainer = styled.div`
 	height: 56px;
 	align-items: center;
 	justify-content: center;
+	background-color: white;
 `;
 
 const StyledBackButton = styled.img`

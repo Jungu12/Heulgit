@@ -1,0 +1,43 @@
+import { HuelGitPostType } from '@typedef/home/heulgit.types';
+import React from 'react';
+import FeddItem from './FeddItem';
+import { styled } from 'styled-components';
+import { colors } from '@constants/colors';
+
+const StyledFeedListSection = styled.section`
+	height: calc(100vh - 194px);
+	overflow-y: scroll;
+	margin-top: 123px;
+	margin-bottom: 61px;
+	scrollbar-width: none; /* 파이어폭스 */
+	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+	&::-webkit-scrollbar {
+		display: none;
+	}
+`;
+
+const Separation = styled.div`
+	height: 1px;
+	width: 100%;
+	background-color: ${colors.greyScale.grey2};
+	margin-top: 12px;
+`;
+
+type Props = {
+	feedList: HuelGitPostType[];
+};
+
+const FeedItemList = ({ feedList }: Props) => {
+	return (
+		<StyledFeedListSection>
+			{feedList.map((feed) => (
+				<>
+					<FeddItem feed={feed} />
+					<Separation />
+				</>
+			))}
+		</StyledFeedListSection>
+	);
+};
+
+export default FeedItemList;

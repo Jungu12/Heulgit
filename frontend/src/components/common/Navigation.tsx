@@ -13,6 +13,7 @@ const StyledNavigationConatiner = styled.div`
 	width: 100%;
 	height: 70px;
 	border-top: 1px solid ${colors.greyScale.grey3};
+	background-color: white;
 	z-index: 99;
 
 	img {
