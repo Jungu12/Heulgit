@@ -25,7 +25,7 @@ public class AuthController {
 	 * */
 	@PostMapping("/github")
 	public ResponseEntity<?> getCode(@RequestParam("code") String code) {
-		logger.debug("getCode(), code : {}", code);
+		logger.debug("getCode(), code = {}", code);
 		return ResponseEntity.ok().body(authService.createTokens(code));
 	}
 }
