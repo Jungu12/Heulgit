@@ -1,14 +1,19 @@
 package morningrolecall.heulgit.auth.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.auth.dto.OAuthToken;
 import morningrolecall.heulgit.auth.service.AuthService;
 
 @RestController
@@ -27,5 +32,18 @@ public class AuthController {
 	public ResponseEntity<?> getCode(@RequestParam("code") String code) {
 		logger.debug("getCode(), code = {}", code);
 		return ResponseEntity.ok().body(authService.createTokens(code));
+	}
+
+	@GetMapping("/refresh-token")
+	public ResponseEntity<?> getToken(HttpServletRequest request) {
+		logger.debug("getToken(), Token 재발급");
+
+		OAuthToken authToken = authService.reGenerateAuthToken(request);
+
+		if (authToken == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
+		return ResponseEntity.ok().body(authToken);
 	}
 }

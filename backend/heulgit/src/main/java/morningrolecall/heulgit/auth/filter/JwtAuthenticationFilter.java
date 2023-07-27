@@ -26,6 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		this.jwtProvider = jwtProvider;
 	}
 
+	@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
@@ -49,9 +50,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			filterChain.doFilter(request, response);
-		} else {
-			// 유효하지 않은 경우는 403 에러 전달
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return;
 		}
+
+		logger.debug("[Filter] Token 존재하지 않거나 만료");
+
+		// 유효하지 않은 경우는 403 에러 전달
+		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 	}
 }

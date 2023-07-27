@@ -30,7 +30,7 @@ public class SecurityConfig {
 
 			.authorizeHttpRequests()
 			// "/"에 대한 요청은 모두 허용
-			.antMatchers("/oauth/github").permitAll()
+			.antMatchers("/oauth/**").permitAll()
 			// 그 외의 요청은 "USER" 권한이 있으면 가능
 			.anyRequest().hasRole("USER")
 
