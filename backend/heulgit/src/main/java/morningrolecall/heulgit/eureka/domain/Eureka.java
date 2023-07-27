@@ -53,4 +53,24 @@ public class Eureka {
 		this.view = 0;
 		this.link = link;
 	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	public void setUpdatedDate(LocalDateTime updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public void increaseView() {
+		this.view++;
+	}
 }

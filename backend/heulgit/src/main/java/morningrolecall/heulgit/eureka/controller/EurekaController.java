@@ -72,4 +72,11 @@ public class EurekaController {
 
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/posts/count")
+	public ResponseEntity<?> eurekaCount() {
+		logger.debug("eurekaCount()");
+		
+		return ResponseEntity.ok().body(eurekaService.countEurekas());
+	}
 }

@@ -30,4 +30,8 @@ public class EurekaImage {
 		this.fileUri = fileUri;
 		this.eureka = eureka;
 	}
+
+	public void setFileUri(String fileUri) {
+		this.fileUri = fileUri;
+	}
 }

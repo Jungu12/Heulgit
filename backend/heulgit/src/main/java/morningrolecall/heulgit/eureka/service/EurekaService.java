@@ -1,5 +1,7 @@
 package morningrolecall.heulgit.eureka.service;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.NoResultException;
 
 import org.springframework.data.domain.PageRequest;
@@ -27,8 +29,14 @@ public class EurekaService {
 	}
 
 	public Eureka findEureka(Long eurekaId) {
-		return eurekaRepository.findEurekaByEurekaId(eurekaId)
+		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+
+		eureka.increaseView();
+
+		eurekaRepository.saveAndFlush(eureka);
+
+		return eureka;
 	}
 
 	/**
@@ -54,23 +62,23 @@ public class EurekaService {
 	 * */
 	@Transactional
 	public void updateEureka(String githubId, Long eurekaId, EurekaDto eurekaDto) {
-		Eureka findEureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
+		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
 
-		if (!githubId.equals(findEureka.getGithubId())) {
+		if (!githubId.equals(eureka.getGithubId())) {
 			System.out.println("작성자가 아님!!!");
 			return;
 			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
 		}
 
-		Eureka eureka = Eureka.of(githubId, eurekaDto);
+		eureka.setTitle(eurekaDto.getTitle());
+		eureka.setContent(eurekaDto.getContent());
+		eureka.setUpdatedDate(LocalDateTime.now());
+		eureka.setLink(eurekaDto.getLink());
 
-		// TODO 삭제하고 다시 저장해야 함...
 		eurekaRepository.saveAndFlush(eureka);
 
-		if (eurekaDto.getFileUri() != null) {
-			eurekaImageService.addEurekaImage(eurekaDto.getFileUri(), eureka);
-		}
+		eurekaImageService.updateEurekaImage(eurekaDto.getFileUri(), eureka);
 	}
 
 	/**
@@ -91,5 +99,9 @@ public class EurekaService {
 		}
 
 		eurekaRepository.delete(findEureka);
+	}
+
+	public long countEurekas() {
+		return eurekaRepository.count();
 	}
 }
