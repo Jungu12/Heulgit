@@ -1,5 +1,7 @@
 package morningrolecall.heulgit.auth.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import morningrolecall.heulgit.auth.dto.OAuthToken;
-import morningrolecall.heulgit.auth.util.JwtFactory;
+import morningrolecall.heulgit.auth.util.JwtProvider;
 import morningrolecall.heulgit.user.entity.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
@@ -30,21 +32,20 @@ public class AuthService {
 
 	private final UserRepository userRepository;
 
-	private final JwtFactory jwtFactory;
+	private final JwtProvider jwtProvider;
 
-	// 생성자 주입 사용
 	public AuthService(RestTemplate restTemplate,
 		@Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
 		@Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret,
 		@Value("${github.accesstoken-url}") String accessTokenUrl,
-		@Value("${github.userinfo-url}") String userInfoUrl, UserRepository userRepository, JwtFactory jwtFactory) {
+		@Value("${github.userinfo-url}") String userInfoUrl, UserRepository userRepository, JwtProvider jwtProvider) {
 		this.restTemplate = restTemplate;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.accessTokenUrl = accessTokenUrl;
 		this.userInfoUrl = userInfoUrl;
 		this.userRepository = userRepository;
-		this.jwtFactory = jwtFactory;
+		this.jwtProvider = jwtProvider;
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class AuthService {
 		}
 
 		// JWT 생성!
-		return new OAuthToken(jwtFactory.generateAccessToken(id), jwtFactory.generateRefreshToken(id));
+		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
 	}
 
 	/**
@@ -151,5 +152,20 @@ public class AuthService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * Refresh Token을 받아 유효성을 검사하고, 유효한 경우는 Access Token과 Refresh Token을 재발급
+	 */
+	public OAuthToken reGenerateAuthToken(HttpServletRequest request) {
+		String refreshToken = jwtProvider.resolveToken(request);
+
+		if (refreshToken == null || !jwtProvider.validateToken(refreshToken)) {
+			return null;
+		}
+
+		String id = jwtProvider.getUserId(refreshToken);
+
+		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
 	}
 }
