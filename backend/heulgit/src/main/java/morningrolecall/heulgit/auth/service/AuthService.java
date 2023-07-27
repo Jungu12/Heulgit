@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import morningrolecall.heulgit.auth.dto.OAuthToken;
 import morningrolecall.heulgit.auth.util.JwtProvider;
-import morningrolecall.heulgit.user.entity.User;
+import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
@@ -77,14 +77,14 @@ public class AuthService {
 			return null;
 		}
 
-		String id = user.getId();
+		String githubId = user.getGithubId();
 		// 사용자가 처음 서비스를 이용하는 경우
-		if (userRepository.findUserById(id).isEmpty()) {
+		if (userRepository.findUserByGithubId(githubId).isEmpty()) {
 			userRepository.save(user);
 		}
 
 		// JWT 생성!
-		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
+		return new OAuthToken(jwtProvider.generateAccessToken(githubId), jwtProvider.generateRefreshToken(githubId));
 	}
 
 	/**
