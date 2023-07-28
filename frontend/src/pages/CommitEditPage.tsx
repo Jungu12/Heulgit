@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
-import CommitModal from '@components/profile/CommitModal';
 import Header from '@components/common/Header';
 import CommitTag from '@components/profile/Commit';
 import { colors } from '@constants/colors';
@@ -36,24 +34,24 @@ const StyledFooter = styled.div`
 	background-color: white;
 `;
 
-const CommitPlusButton = styled.button`
-	width: 100%;
-	height: 35px;
+// const CommitPlusButton = styled.button`
+// 	width: 100%;
+// 	height: 35px;
 
-	margin: 10px;
-	padding: 10px;
-	border: 1px solid;
-	border-radius: 5px;
+// 	margin: 10px;
+// 	padding: 10px;
+// 	border: 1px solid;
+// 	border-radius: 5px;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	/* background-color: white; */
-	font-weight: bold;
+// 	display: flex;
+// 	justify-content: center;
+// 	align-items: center;
+// 	/* background-color: white; */
+// 	font-weight: bold;
 
-	background-color: ${colors.primary.primary};
-	color: white;
-`;
+// 	background-color: ${colors.primary.primary};
+// 	color: white;
+// `;
 
 const CommitEditPage = () => {
 	// CommitTag 목록 -> 상태로 관리
@@ -80,26 +78,15 @@ const CommitEditPage = () => {
 		);
 	};
 
-	// 모달창
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const openModal = () => {
-		setIsModalOpen(true);
-	};
-
-	const closeModal = () => {
-		setIsModalOpen(false);
-	};
-
-	const handleSubmitCommit = (title: string, detail: string) => {
-		// 새로운 CommitTag를 추가합니다.
-		const newTag = {
-			id: commitTags.length + 1, // 새로운 ID를 부여하거나 다른 방식으로 고유한 ID를 생성하세요.
-			title: `# ${title}`,
-			detail,
-		};
-		setCommitTags((prevTags) => [...prevTags, newTag]);
-	};
+	// const handleSubmitCommit = (title: string, detail: string) => {
+	// 	// 새로운 CommitTag를 추가합니다.
+	// 	const newTag = {
+	// 		id: commitTags.length + 1, // 새로운 ID를 부여하거나 다른 방식으로 고유한 ID를 생성하세요.
+	// 		title: `# ${title}`,
+	// 		detail,
+	// 	};
+	// 	setCommitTags((prevTags) => [...prevTags, newTag]);
+	// };
 
 	return (
 		<StyledCommitEditPage>
@@ -117,20 +104,7 @@ const CommitEditPage = () => {
 					/>
 				))}
 			</CommitPageMiddle>
-			<StyledFooter>
-				<CommitPlusButton onClick={openModal}>
-					커밋 메시지 추가
-				</CommitPlusButton>
-			</StyledFooter>
-
-			{/* 모달 컴포넌트 */}
-			{isModalOpen && (
-				<CommitModal
-					onClose={closeModal}
-					onSubmit={handleSubmitCommit}
-					isOpen={isModalOpen}
-				/>
-			)}
+			<StyledFooter></StyledFooter>
 		</StyledCommitEditPage>
 	);
 };

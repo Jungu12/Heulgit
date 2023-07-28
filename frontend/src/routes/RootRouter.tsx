@@ -6,7 +6,6 @@ import MyActivityPage from '@pages/MyActivityPage';
 import MyLikePostPage from '@pages/MyLikePostPage';
 import MyLikeRepoPage from '@pages/MyLikeRepoPage';
 import MyCommentPage from '@pages/MyCommentPage';
-import FollowerPage from '@pages/FollowerPage';
 import NotFound from '@pages/NotFound';
 import NotificationPage from '@pages/NotificationPage';
 import ProfilePage from '@pages/ProfilePage';
@@ -23,6 +22,7 @@ import LoginCallBackPage from '@pages/LoginCallBackPage';
 import EurekaPage from '@pages/EurekaPage';
 import FreeBoardPage from '@pages/FreeBoardPage';
 import LanguageSearchModal from '@components/Home/LanguageSearchModal';
+import FollowPage from '@pages/FollowPage';
 
 const RootRouter = () => {
 	return (
@@ -39,7 +39,7 @@ const RootRouter = () => {
 						<Route path="like-post" element={<MyLikePostPage />}></Route>
 						<Route path="like-comment" element={<MyCommentPage />}></Route>
 						<Route path="commit-edit" element={<CommitEditPage />}></Route>
-						<Route path="follow" element={<FollowerPage />}></Route>
+						<Route path="follow" element={<FollowPage />}></Route>
 					</Route>
 				</Route>
 				<Route path="/login" element={<LoginPage />}></Route>
