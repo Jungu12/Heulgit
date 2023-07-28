@@ -1,3 +1,4 @@
+import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,8 @@ const StyledHeaderContainer = styled.div`
 	height: 56px;
 	align-items: center;
 	justify-content: center;
+	background-color: white;
+	border-bottom: 1px solid ${colors.greyScale.grey3};
 `;
 
 const StyledBackButton = styled.img`
