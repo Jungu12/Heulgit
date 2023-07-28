@@ -1,6 +1,7 @@
 package morningrolecall.heulgit.eureka.service;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 
@@ -224,5 +225,13 @@ public class EurekaService {
 
 		return eurekaRepository.findSliceByUser_GithubId(githubId,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+	}
+
+	/**
+	 * 단일 게시물의 좋아요 사용자 목록 반환
+	 * */
+	public Set<User> findLikedUsers(Long eurekaId) {
+		return eurekaRepository.findEurekaByEurekaId(eurekaId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다.")).getLikedUsers();
 	}
 }

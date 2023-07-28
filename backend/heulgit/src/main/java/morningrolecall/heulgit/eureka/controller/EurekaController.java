@@ -121,4 +121,11 @@ public class EurekaController {
 
 		return ResponseEntity.ok().body(eurekaService.searchUserEurekas(userId, sort, pages));
 	}
+
+	@GetMapping("/posts/likes/{eurekaId}")
+	public ResponseEntity<?> eurekaLikedUsers(@PathVariable Long eurekaId) {
+		logger.debug("eurekaLikedUsers(), eurekaId = {}", eurekaId);
+
+		return ResponseEntity.ok().body(eurekaService.findLikedUsers(eurekaId));
+	}
 }
