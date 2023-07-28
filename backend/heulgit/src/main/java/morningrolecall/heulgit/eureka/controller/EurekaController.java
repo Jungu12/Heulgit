@@ -29,7 +29,7 @@ public class EurekaController {
 	@GetMapping("/posts")
 	public ResponseEntity<?> eurekaList(@RequestParam String sort, @RequestParam int pages) {
 		logger.debug("eurekaList(), 유레카 전체 조회");
-		return ResponseEntity.ok().body(eurekaService.findEurekas(pages));
+		return ResponseEntity.ok().body(eurekaService.findEurekas(sort, pages));
 	}
 
 	// /eureka/posts/1
@@ -41,12 +41,13 @@ public class EurekaController {
 	}
 
 	@PostMapping("/posts")
-	public ResponseEntity<?> eurekaRegister(@AuthenticationPrincipal String userId, @RequestBody EurekaDto eurekaDto) {
-		logger.debug("eurekaRegister(), who = {}, title = {}, content = {}, imageId = {}, link = {}", userId,
+	public ResponseEntity<?> eurekaRegister(@AuthenticationPrincipal String githubId,
+		@RequestBody EurekaDto eurekaDto) {
+		logger.debug("eurekaRegister(), who = {}, title = {}, content = {}, imageId = {}, link = {}", githubId,
 			eurekaDto.getTitle(),
 			eurekaDto.getContent(), eurekaDto.getFileUri(), eurekaDto.getLink());
 
-		eurekaService.addEureka(userId, eurekaDto);
+		eurekaService.addEureka(githubId, eurekaDto);
 
 		return ResponseEntity.ok().build();
 	}
@@ -76,7 +77,25 @@ public class EurekaController {
 	@GetMapping("/posts/count")
 	public ResponseEntity<?> eurekaCount() {
 		logger.debug("eurekaCount()");
-		
+
 		return ResponseEntity.ok().body(eurekaService.countEurekas());
+	}
+
+	@GetMapping("/posts/like/{eurekaId}")
+	public ResponseEntity<?> eurekaLike(@AuthenticationPrincipal String userId, @PathVariable Long eurekaId) {
+		logger.debug("eurekaLike(), who = {}, eurekaId = {}", userId, eurekaId);
+
+		eurekaService.likeEureka(userId, eurekaId);
+
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/posts/unlike/{eurekaId}")
+	public ResponseEntity<?> eurekaUnlike(@AuthenticationPrincipal String userId, @PathVariable Long eurekaId) {
+		logger.debug("eurekaUnlike(), who = {}, eurekaId = {}", userId, eurekaId);
+
+		eurekaService.unlikeEureka(userId, eurekaId);
+
+		return ResponseEntity.ok().build();
 	}
 }
