@@ -104,4 +104,12 @@ public class EurekaController {
 
 		return ResponseEntity.ok().body(eurekaService.searchUserEurekas(keyword, sort, pages));
 	}
+
+	@GetMapping("/myposts")
+	public ResponseEntity<?> eurekaMyPosts(@AuthenticationPrincipal String userId, @RequestParam String sort,
+		@RequestParam int pages) {
+		logger.debug("eurekaMyPosts(), who = {}, sort = {}, pages = {}", userId, sort, pages);
+
+		return ResponseEntity.ok().body(eurekaService.searchUserEurekas(userId, sort, pages));
+	}
 }

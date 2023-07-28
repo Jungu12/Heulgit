@@ -214,4 +214,12 @@ public class EurekaService {
 		return eurekaRepository.findSliceByUser_GithubId(keyword,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 	}
+
+	public Slice<Eureka> findMyEurekas(String githubId, int pages) {
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+
+		return eurekaRepository.findSliceByUser_GithubId(githubId,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+	}
 }
