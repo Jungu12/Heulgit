@@ -86,8 +86,10 @@ const ContentInput: React.FC<ContentInputProps> = ({
 
 	return (
 		<StyledContentInputContainer>
-			{showURLInput && <StyledURLInput onChange={urlChangeHandler} />}
-			<StyledContentInput onChange={contentChangeHandler} />
+			{showURLInput && (
+				<StyledURLInput onChange={urlChangeHandler} value={url} />
+			)}
+			<StyledContentInput onChange={contentChangeHandler} value={content} />
 		</StyledContentInputContainer>
 	);
 };
