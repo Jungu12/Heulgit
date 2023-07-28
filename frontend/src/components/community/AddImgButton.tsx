@@ -1,15 +1,14 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-const StyledCreateButton = styled.button`
+const StyledAddImgButton = styled.button`
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	position: fixed;
-	bottom: 100px;
+	bottom: 40px;
 	right: 40px;
 
 	width: 70px;
@@ -19,17 +18,14 @@ const StyledCreateButton = styled.button`
 	background-color: ${colors.primary.primary};
 
 	padding: 0;
-	background-image: url(${images.community.createPost});
+	background-image: url(${images.community.addImg});
 	background-size: 60%;
 	background-repeat: no-repeat;
 	background-position: center;
 `;
 
-const CreateButton = () => {
-	const navigation = useNavigate();
-	return (
-		<StyledCreateButton onClick={() => navigation('/community/free/post')} />
-	);
+const AddImgButton = () => {
+	return <StyledAddImgButton />;
 };
 
-export default CreateButton;
+export default AddImgButton;

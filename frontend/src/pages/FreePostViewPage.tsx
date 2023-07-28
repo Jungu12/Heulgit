@@ -1,61 +1,44 @@
+import Header from '@components/common/Header';
+import CommentInput from '@components/community/CommentInput';
+import FeedBottom from '@components/community/FeedBottom';
+import FeedComment from '@components/community/FeedComment';
+import TitleContainer from '@components/community/TitleContainer';
+import { colors } from '@constants/colors';
 import React from 'react';
 import styled from 'styled-components';
 
 // 커뮤니티
-const CommunityBlock = styled.div``;
-
-// 헤더
-const Header = styled.div`
-	background-color: #999999;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	z-index: 1;
-
+const CommunityContainer = styled.div`
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
 	align-items: center;
-	height: 55px;
+	overflow-y: scroll;
+
+	height: 100vh;
 `;
 
 // 피드
 const Feed = styled.div`
 	display: flex;
+	position: relative;
 	justify-content: center;
-	height: 700px;
-	border: solid 1px #999939;
+
+	/* height: 300px; */
+	width: 100%;
+	min-height: 300px; /* 스크롤이 가능하도록 min-height로 변경 */
+	border: solid 1px ${colors.greyScale.grey4};
 `;
-
-// 푸터
-const Footer = styled.div`
-	background-color: #999999;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	z-index: 1;
-
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	height: 70px;
-`;
-
-const ProfileImg = styled.img``;
-
-const CommentInput = styled.input``;
 
 const FreePostViewPage = () => {
 	return (
-		<CommunityBlock>
-			<Header>상세 페이지</Header>
-			<Feed>피드입니다</Feed>
-			<Footer>
-				<ProfileImg />
-				<CommentInput />
-			</Footer>
-		</CommunityBlock>
+		<CommunityContainer>
+			<Header title="상세 페이지"></Header>
+			<TitleContainer />
+			<Feed>이 개그튼 피드 댓글에는 등록버튼 달기....</Feed>
+			<FeedBottom showCommentIcon={false} /> {/* 여기서 댓글 아이콘 숨김 */}
+			<FeedComment />
+			<CommentInput />
+		</CommunityContainer>
 	);
 };
 
