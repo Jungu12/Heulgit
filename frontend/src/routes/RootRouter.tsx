@@ -5,6 +5,8 @@ import MainPage from '@pages/MainPage';
 import MyActivityPage from '@pages/MyActivityPage';
 import MyLikePostPage from '@pages/MyLikePostPage';
 import MyLikeRepoPage from '@pages/MyLikeRepoPage';
+import MyCommentPage from '@pages/MyCommentPage';
+import FollowerPage from '@pages/FollowerPage';
 import NotFound from '@pages/NotFound';
 import NotificationPage from '@pages/NotificationPage';
 import ProfilePage from '@pages/ProfilePage';
@@ -32,10 +34,12 @@ const RootRouter = () => {
 					<Route path=":userId">
 						<Route index element={<ProfilePage />}></Route>
 						<Route path="activity" element={<MyActivityPage />}></Route>
-						<Route path="like" element={<MyLikePostPage />}></Route>
+						{/* <Route path="like" element={<MyLikePostPage />}></Route> */}
 						<Route path="like-repo" element={<MyLikeRepoPage />}></Route>
 						<Route path="like-post" element={<MyLikePostPage />}></Route>
+						<Route path="like-comment" element={<MyCommentPage />}></Route>
 						<Route path="commit-edit" element={<CommitEditPage />}></Route>
+						<Route path="follow" element={<FollowerPage />}></Route>
 					</Route>
 				</Route>
 				<Route path="/login" element={<LoginPage />}></Route>
