@@ -1,20 +1,25 @@
+import RankingGraph from '@components/profile/RankingGraph';
+import CommitGraph from '@components/profile/CommitGraph';
+import Category from '@components/profile/Category';
 import Navigation from '@components/common/Navigation';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import styled from 'styled-components';
 
-const ProfileHigh = styled.div`
+const StyledProfileHigh = styled.div`
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
+	padding: 20px;
 `;
 
-const UserProfile = styled.div`
+const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	height: 150px;
 `;
 
-const UserImage = styled.img`
+const StyledUserImage = styled.img`
 	display: flex;
 	justify-content: flex-start;
 	background-color: black;
@@ -23,80 +28,96 @@ const UserImage = styled.img`
 	border-radius: 50px;
 `;
 
-const UserInformation = styled.div`
+const StyledUserInformation = styled.div`
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
+	margin-left: 20px;
+	/* justify-content: flex-start; */
+	/* align-items: flex-start; */
 `;
 
-const ProfileCategory = styled.div`
-	display: flex;
-	justify-content: space-around;
-	align-items: flex-end;
-	height: 50px;
+const StyledActivityButton = styled.button`
+	height: 25px;
 `;
 
-const ProfileLow = styled.div`
+const StyledProfileLow = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	padding: 20px;
 `;
 
-const CommitBox = styled.div`
+const StyledCommitBox = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border: 1px solid;
 	border-radius: 10px;
-	width: 410px;
+	width: 100%;
 	height: 260px;
-	margin: 10px;
+	margin-bottom: 15px;
 `;
 
-const CommitRank = styled.div`
+const StyledCommitRank = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	border: 1px solid;
 	border-radius: 10px;
-	width: 410px;
+	width: 100%;
 	height: 350px;
-	margin: 10px;
 `;
 
-const Footer = styled.div`
-	height: 50px;
+const StyledFooter = styled.div`
+	height: 70px;
 `;
 
 const ProfilePage = () => {
+	const navigation = useNavigate();
+
 	return (
 		<div>
-			<ProfileHigh>
-				<UserProfile>
-					<UserImage src="" alt="User" />
-					<UserInformation>
+			<StyledProfileHigh>
+				<StyledUserProfile>
+					<StyledUserImage src="" alt="User" />
+					<StyledUserInformation>
 						<div>유저 이름</div>
-						<div>팔로잉 팔로워</div>
+						<div onClick={() => navigation('/profiles/1/follow')}>
+							팔로잉 팔로워
+						</div>
 						<div>추가 정보</div>
-					</UserInformation>
-				</UserProfile>
-				<div>내활동</div>
-			</ProfileHigh>
-			<ProfileCategory>
-				{/* 프로필 카테고리 */}
-				<div>프로필</div>
-				<div>유레카</div>
-				<div>자유</div>
-			</ProfileCategory>
-			<hr />
-			<ProfileLow>
-				<CommitBox>커밋 분석 그래프</CommitBox>
-				<CommitRank>커밋 랭킹</CommitRank>
-			</ProfileLow>
-			<Footer>
+					</StyledUserInformation>
+				</StyledUserProfile>
+				<StyledActivityButton
+					onClick={() => navigation('/profiles/1/activity')}
+				>
+					내활동
+				</StyledActivityButton>
+			</StyledProfileHigh>
+			<Category
+				menu1={'프로필'}
+				menuRouter1={''}
+				menu2={'유레카'}
+				menuRouter2={'2'}
+				// 작성한 유레카 페이지로 수정해야 함
+				menu3={'자유'}
+				menuRouter3={'3'}
+			/>
+			<StyledProfileLow>
+				<StyledCommitBox>
+					<CommitGraph></CommitGraph>
+					<button onClick={() => navigation('/profiles/1/commit-edit')}>
+						설정
+					</button>
+				</StyledCommitBox>
+				<StyledCommitRank>
+					<RankingGraph></RankingGraph>
+				</StyledCommitRank>
+			</StyledProfileLow>
+			<StyledFooter>
 				<Navigation />
-			</Footer>
+			</StyledFooter>
 		</div>
 	);
 };
