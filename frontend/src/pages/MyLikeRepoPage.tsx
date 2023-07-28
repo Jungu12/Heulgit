@@ -1,19 +1,21 @@
+// import { useNavigate } from 'react-router-dom';
+import Header from '@components/common/Header';
 import React from 'react';
 import styled from 'styled-components';
 
-const Header = styled.div`
-	height: 55px;
+const StyledHeader = styled.div`
+	width: 100%;
+	height: 56px;
+	background-color: white;
+	margin-bottom: 10px;
 `;
-const BackButton = styled.button``;
 
 const MyLikeRepoPage = () => {
 	return (
 		<div>
-			<Header>
-				<BackButton>◀</BackButton>
-				흘깃판
-			</Header>
-			<hr />
+			<StyledHeader>
+				<Header title={'좋아요 한 흘깃'}></Header>
+			</StyledHeader>
 		</div>
 	);
 };

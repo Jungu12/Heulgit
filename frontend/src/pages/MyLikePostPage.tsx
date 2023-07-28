@@ -1,10 +1,14 @@
+// import { useNavigate } from 'react-router-dom';
+import Header from '@components/common/Header';
 import React from 'react';
 import styled from 'styled-components';
 
-const Header = styled.div`
-	height: 55px;
+const StyledHeader = styled.div`
+	width: 100%;
+	height: 56px;
+	background-color: white;
+	margin-bottom: 10px;
 `;
-const BackButton = styled.button``;
 const StyledLikePostCategory = styled.div`
 	display: flex;
 	justify-content: space-around;
@@ -15,17 +19,15 @@ const StyledLikePostCategory = styled.div`
 const MyLikePostPage = () => {
 	return (
 		<div>
-			<Header>
-				<BackButton>◀</BackButton>
-				커뮤니티
-			</Header>
-			<hr />
+			<StyledHeader>
+				<Header title={'좋아요 한 게시물'}></Header>
+			</StyledHeader>
 			<StyledLikePostCategory>
 				<div>유레카</div>
 				<div>자유</div>
 			</StyledLikePostCategory>
-			<div>Post</div>
 			<hr />
+			<div>Post</div>
 		</div>
 	);
 };
