@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaCommentDto;
 import morningrolecall.heulgit.user.domain.User;
 
 @Entity
@@ -41,10 +42,23 @@ public class EurekaComment {
 	@JoinColumn(name = "parent_id", nullable = false)
 	private EurekaComment parentComment;
 
-	@Column(name = "order", nullable = false)
-	private int order;
+	@Column(name = "comment_order", nullable = false)
+	private int commentOrder;
 
 	public void setEureka(Eureka eureka) {
 		this.eureka = eureka;
+	}
+
+	public static EurekaComment of(Eureka eureka, User user, EurekaCommentDto eurekaCommentDto) {
+		return new EurekaComment(eureka, user, eurekaCommentDto.getContent());
+	}
+
+	private EurekaComment(Eureka eureka, User user, String content) {
+		this.eureka = eureka;
+		this.user = user;
+		this.content = content;
+		this.updatedDate = LocalDateTime.now();
+		this.parentComment = null;
+		this.commentOrder = 0;
 	}
 }
