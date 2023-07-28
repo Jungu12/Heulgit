@@ -25,6 +25,8 @@ export const images = {
 	like: '/assets/images/ic-like.png',
 	share: '/assets/images/ic-share.png',
 	userMark: '/assets/images/ic-user-mark.png',
+	menu: '/assets/images/ic-menu.png',
+	close: '/assets/images/ic-close.png',
 	dummy: {
 		dummy1: '/assets/images/dummy1.png',
 		dummy2: '/assets/images/dummy2.png',

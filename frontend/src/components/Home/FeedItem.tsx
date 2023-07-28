@@ -1,8 +1,11 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import { HuelGitPostType } from '@typedef/home/heulgit.types';
+import { HeulGitPostType } from '@typedef/home/heulgit.types';
 import React from 'react';
 import { styled } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import MarkdownSummaryRenderer from './MarkdownSummaryRenderer';
+import MarkdownRenderer from './MarkdownRenderer';
 
 const StyledFeedItemContainer = styled.div`
 	display: flex;
@@ -69,10 +72,13 @@ const StyledSubDataContainer = styled.div`
 `;
 
 type Props = {
-	feed: HuelGitPostType;
+	feed: HeulGitPostType;
+	type: 'summary' | 'full';
 };
 
-const FeddItem = ({ feed }: Props) => {
+const FeedItem = ({ feed, type }: Props) => {
+	const navigation = useNavigate();
+
 	return (
 		<StyledFeedItemContainer>
 			<StyledTopLine>
@@ -85,7 +91,13 @@ const FeddItem = ({ feed }: Props) => {
 				</StyledProfileContainer>
 				<StyledUpdateTime>{feed.updated_date}</StyledUpdateTime>
 			</StyledTopLine>
-			<StyledContentContainer>{feed.content}</StyledContentContainer>
+			<StyledContentContainer onClick={() => navigation(`/repo/${feed.id}`)}>
+				{type === 'full' ? (
+					<MarkdownRenderer text={feed.content} />
+				) : (
+					<MarkdownSummaryRenderer text={feed.content} />
+				)}
+			</StyledContentContainer>
 			<StyledButtonContainer>
 				<img src={images.like} alt="like_button" />
 				<img src={images.chat} alt="comment_button" />
@@ -98,4 +110,4 @@ const FeddItem = ({ feed }: Props) => {
 	);
 };
 
-export default FeddItem;
+export default FeedItem;

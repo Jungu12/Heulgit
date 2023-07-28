@@ -1,8 +1,8 @@
-import { HuelGitPostType } from '@typedef/home/heulgit.types';
+import { HeulGitPostType } from '@typedef/home/heulgit.types';
 import React from 'react';
-import FeddItem from './FeddItem';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
+import FeedItem from './FeedItem';
 
 const StyledFeedListSection = styled.section`
 	height: calc(100vh - 194px);
@@ -24,17 +24,17 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	feedList: HuelGitPostType[];
+	feedList: HeulGitPostType[];
 };
 
 const FeedItemList = ({ feedList }: Props) => {
 	return (
 		<StyledFeedListSection>
-			{feedList.map((feed) => (
-				<>
-					<FeddItem feed={feed} />
+			{feedList.map((feed, index) => (
+				<div key={index}>
+					<FeedItem feed={feed} type="summary" />
 					<Separation />
-				</>
+				</div>
 			))}
 		</StyledFeedListSection>
 	);
