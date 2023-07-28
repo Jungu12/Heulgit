@@ -25,10 +25,9 @@ public class EurekaController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final EurekaService eurekaService;
 
-	// /eureka/posts?sort=&pages=1
 	@GetMapping("/posts")
 	public ResponseEntity<?> eurekaList(@RequestParam String sort, @RequestParam int pages) {
-		logger.debug("eurekaList(), 유레카 전체 조회");
+		logger.debug("eurekaList(), sort = {}, pages = {}", sort, pages);
 		return ResponseEntity.ok().body(eurekaService.findEurekas(sort, pages));
 	}
 
@@ -88,5 +87,21 @@ public class EurekaController {
 		eurekaService.likeEureka(userId, eurekaId);
 
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/search/title")
+	public ResponseEntity<?> eurekaTitleSearch(@RequestParam String keyword,
+		@RequestParam String sort, @RequestParam int pages) {
+		logger.debug("eurekaSearch(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+
+		return ResponseEntity.ok().body(eurekaService.searchTitleEurekas(keyword, sort, pages));
+	}
+
+	@GetMapping("/search/user")
+	public ResponseEntity<?> eurekaUserSearch(@RequestParam String keyword,
+		@RequestParam String sort, @RequestParam int pages) {
+		logger.debug("eurekaSearch(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+
+		return ResponseEntity.ok().body(eurekaService.searchUserEurekas(keyword, sort, pages));
 	}
 }

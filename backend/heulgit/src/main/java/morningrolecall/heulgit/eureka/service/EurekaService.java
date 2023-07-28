@@ -170,4 +170,48 @@ public class EurekaService {
 
 		eurekaRepository.save(eureka);
 	}
+
+	/**
+	 * 게시물을 제목으로 검색
+	 * */
+	public Slice<Eureka> searchTitleEurekas(String keyword, String sort, int pages) {
+		if (sort.equals("likes")) {
+			return eurekaRepository.findContainsTitleSortedByLikesEurekas(keyword, PageRequest.of(pages - 1, SIZE));
+		}
+
+		if (sort.equals("comments")) {
+			return eurekaRepository.findContainsTitleSortedByCommentsEurekas(keyword, PageRequest.of(pages - 1, SIZE));
+		}
+
+		if (sort.equals("views")) {
+			return eurekaRepository.findSliceByTitleContains(keyword,
+				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+		}
+
+		// 최신 순
+		return eurekaRepository.findSliceByTitleContains(keyword,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+	}
+
+	/**
+	 * 게시물을 작성자 github ID로 검색
+	 * */
+	public Slice<Eureka> searchUserEurekas(String keyword, String sort, int pages) {
+		if (sort.equals("likes")) {
+			return eurekaRepository.findByUserNameSortedByLikesEurekas(keyword, PageRequest.of(pages - 1, SIZE));
+		}
+
+		if (sort.equals("comments")) {
+			return eurekaRepository.findByUserNameSortedByCommentsEurekas(keyword, PageRequest.of(pages - 1, SIZE));
+		}
+
+		if (sort.equals("views")) {
+			return eurekaRepository.findSliceByUser_GithubId(keyword,
+				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+		}
+
+		// 최신 순
+		return eurekaRepository.findSliceByUser_GithubId(keyword,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+	}
 }
