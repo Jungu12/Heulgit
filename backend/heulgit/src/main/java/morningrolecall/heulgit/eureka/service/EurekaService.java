@@ -30,15 +30,16 @@ public class EurekaService {
 
 	public Slice<Eureka> findEurekas(String sort, int pages) {
 		if (sort.equals("likes")) {
-
+			return eurekaRepository.findSortedByLikesEurekas(PageRequest.of(pages - 1, SIZE));
 		}
 
 		if (sort.equals("comments")) {
-
+			return eurekaRepository.findSortedByCommentsEurekas(PageRequest.of(pages - 1, SIZE));
 		}
 
 		if (sort.equals("views")) {
-			return eurekaRepository.findSliceBy(PageRequest.of(pages - 1, SIZE, Sort.by("view").descending()));
+			return eurekaRepository.findSliceBy(
+				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
 		}
 
 		return eurekaRepository.findSliceBy(PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));

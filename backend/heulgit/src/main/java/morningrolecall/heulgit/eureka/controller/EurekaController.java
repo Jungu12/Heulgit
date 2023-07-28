@@ -89,13 +89,4 @@ public class EurekaController {
 
 		return ResponseEntity.ok().build();
 	}
-
-	@GetMapping("/posts/unlike/{eurekaId}")
-	public ResponseEntity<?> eurekaUnlike(@AuthenticationPrincipal String userId, @PathVariable Long eurekaId) {
-		logger.debug("eurekaUnlike(), who = {}, eurekaId = {}", userId, eurekaId);
-
-		eurekaService.unlikeEureka(userId, eurekaId);
-
-		return ResponseEntity.ok().build();
-	}
 }
