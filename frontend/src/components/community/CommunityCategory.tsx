@@ -20,15 +20,15 @@ const StyledCategoryContainer = styled.div`
 `;
 
 // 커뮤니티 선택 버튼
-const StyledCategoryButton = styled.button<{ active: boolean }>`
+const StyledCategoryButton = styled.button<{ $active: boolean }>`
 	font-weight: bolder;
 	font-size: 14px;
 
 	background-color: transparent;
 	border: none;
 	border-bottom: solid 2px
-		${({ active }) =>
-			active ? colors.primary.primatyDark : colors.greyScale.grey4};
+		${({ $active }) =>
+			$active ? colors.primary.primatyDark : colors.greyScale.grey4};
 
 	width: 100%;
 	height: 100%;
@@ -50,7 +50,7 @@ const CommunityCategory = () => {
 			{categories.map((item, idx) => (
 				<StyledCategoryButton
 					key={idx}
-					active={item === button}
+					$active={item === button}
 					onClick={() => toggleActive(item)}
 				>
 					{item}

@@ -8,6 +8,7 @@ import { images } from '@constants/images';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import EurekaPage from './EurekaPage';
 
 // 커뮤니티
 const CommunityContainer = styled.div`
@@ -24,53 +25,56 @@ const StyledFeedContainer = styled.div`
 	flex-direction: column;
 	overflow-y: scroll;
 
-	top: 170px;
+	top: 163px;
+	width: 100%;
+	/* background-color: aqua; */
 	/* bottom: 70px; */
 `;
 
-// 피드 살려주세요
-const StyledFeed = styled.section`
-	display: flex;
-	flex-direction: column;
-
-	height: 400px;
-	width: 390px;
-`;
-
-// 검색 버튼
-// const StyledSearchButton = styled.img`
-// 	height: 24px;
-// 	width: 24px;
-// 	margin-right: 14px;
-// `;
+// 더미 게시물
+const dummyPosts = [
+	{
+		id: 1,
+		title: 'hihi',
+		user: {
+			id: 'jungu12',
+			avater_url: 'qweqweqweqw',
+		},
+		content: 'eqweqwewq',
+		link: 'dfkldfsdfds',
+		updated_date: '2023-07-24',
+		views: 100,
+		likes: 10,
+		comments: 12,
+		images: [{ file_uri: 'adfldskfjsdlk' }],
+	},
+	{
+		id: 2,
+		title: 'hihi',
+		user: {
+			id: 'jungu12',
+			avater_url: 'qweqweqweqw',
+		},
+		content: 'eqweqwewq',
+		link: 'dfkldfsdfds',
+		updated_date: '2023-07-24',
+		views: 100,
+		likes: 10,
+		comments: 12,
+		images: [{ file_uri: 'adfldskfjsdlk' }],
+	},
+];
 
 const CommunityPage = () => {
 	const navigation = useNavigate();
 
 	return (
 		<CommunityContainer>
-			<Header title="커뮤니티" type="home">
-				{/* <StyledSearchButton
-					src={images.navigation.searchActive}
-					alt="search button"
-					onClick={() => navigation('/search')}
-				/> */}
-			</Header>
+			<Header title="커뮤니티" type="home" />
 			<CommunityCategory />
 			<FilterCategory />
 			<StyledFeedContainer>
-				<StyledFeed>
-					피드입니다
-					<FeedBottom />
-				</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
+				<EurekaPage />
 			</StyledFeedContainer>
 			<CreateButton />
 			<Navigation />

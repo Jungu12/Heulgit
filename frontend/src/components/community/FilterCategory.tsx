@@ -19,8 +19,8 @@ const StyledFilterContainer = styled.div`
 `;
 
 // 필터 버튼
-const StyledFilterButton = styled.button<{ active: boolean }>`
-	color: ${({ active }) => (active ? 'white' : colors.greyScale.grey4)};
+const StyledFilterButton = styled.button<{ $active: boolean }>`
+	color: ${({ $active }) => ($active ? 'white' : colors.greyScale.grey4)};
 	font-size: 12px;
 	font-weight: 600;
 
@@ -29,12 +29,12 @@ const StyledFilterButton = styled.button<{ active: boolean }>`
 	height: 28px;
 
 	border: solid 2px
-		${({ active }) =>
-			active ? colors.primary.primatyDark : colors.greyScale.grey4};
+		${({ $active }) =>
+			$active ? colors.primary.primatyDark : colors.greyScale.grey4};
 	border-radius: 36px;
 
-	background-color: ${({ active }) =>
-		active ? colors.primary.primatyDark : 'white'};
+	background-color: ${({ $active }) =>
+		$active ? colors.primary.primatyDark : 'white'};
 `;
 
 const FilterCategory = () => {
@@ -52,7 +52,7 @@ const FilterCategory = () => {
 			{categories.map((item, idx) => (
 				<StyledFilterButton
 					key={idx}
-					active={item === button}
+					$active={item === button}
 					onClick={() => toggleActive(item)}
 				>
 					{item}
