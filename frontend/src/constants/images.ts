@@ -40,6 +40,7 @@ export const images = {
 	close: '/assets/images/ic-close.png',
 	searchPrimary: '/assets/images/ic-search-primary.png',
 	closePrimary: '/assets/images/ic-close-primary.png',
+	closeBlack: '/assets/images/ic-close-black.png',
 	dummy: {
 		dummy1: '/assets/images/dummy1.png',
 		dummy2: '/assets/images/dummy2.png',
