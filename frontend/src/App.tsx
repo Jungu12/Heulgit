@@ -1,33 +1,26 @@
-import { useWindowSize } from '@hooks/useWindowSize';
+// import { useWindowSize } from '@hooks/useWindowSize';
 import RootRouter from '@routes/RootRouter';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactModal from 'react-modal';
-import { styled } from 'styled-components';
-
-interface WrapperProps {
-	height?: number;
-}
-
-const Wrapper = styled.div<WrapperProps>`
-	width: 100%;
-	${(props) => (props.height ? `height: ${props.height}px;` : '')}
-`;
 
 const App = () => {
-	// function setScreenSize() {
-	// 	const vh = window.innerHeight * 0.01;
-	// 	document.documentElement.style.setProperty('--vh', `${vh}px`); //"--vh"라는 속성으로 정의해준다.
-	// }
+	function setScreenSize() {
+		const vh = window.innerHeight * 0.01;
+		document.documentElement.style.setProperty('--vh', `${vh}px`); //"--vh"라는 속성으로 정의해준다.
+	}
 
-	// window.addEventListener('resize', () => setScreenSize());
-	const { height } = useWindowSize();
+	useEffect(() => {
+		setScreenSize();
+
+		// resize 이벤트가 발생하면 다시 계산하도록 아래 코드 추가
+		window.addEventListener('resize', setScreenSize);
+		return () => window.removeEventListener('resize', setScreenSize);
+	}, []);
 
 	return (
-		<Wrapper height={height}>
-			<div className="App">
-				<RootRouter />
-			</div>
-		</Wrapper>
+		<div className="App">
+			<RootRouter />
+		</div>
 	);
 };
 
