@@ -38,11 +38,11 @@ const StyledFeed = styled.section`
 `;
 
 // 검색 버튼
-const StyledSearchButton = styled.img`
-	height: 24px;
-	width: 24px;
-	margin-right: 14px;
-`;
+// const StyledSearchButton = styled.img`
+// 	height: 24px;
+// 	width: 24px;
+// 	margin-right: 14px;
+// `;
 
 const CommunityPage = () => {
 	const navigation = useNavigate();
@@ -50,11 +50,11 @@ const CommunityPage = () => {
 	return (
 		<CommunityContainer>
 			<Header title="커뮤니티" type="home">
-				<StyledSearchButton
+				{/* <StyledSearchButton
 					src={images.navigation.searchActive}
 					alt="search button"
 					onClick={() => navigation('/search')}
-				/>
+				/> */}
 			</Header>
 			<CommunityCategory />
 			<FilterCategory />
