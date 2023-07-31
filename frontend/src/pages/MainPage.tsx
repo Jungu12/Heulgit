@@ -9,6 +9,7 @@ import { getYearAndMonth } from '@utils/date';
 import { decodeUnicode } from '@utils/markdown';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactModal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 import { css, styled } from 'styled-components';
 
 // 더미 데이터
@@ -357,6 +358,7 @@ const StyledClose = styled.img`
 const MainPage = () => {
 	const dropDownRef = useRef(null);
 	const calendarRef = useRef<HTMLButtonElement>(null);
+	const navigation = useNavigate();
 	const [isViewOptionOpen, setIsViewOptionOpen] = useDetectClose(
 		dropDownRef,
 		false,
@@ -434,6 +436,14 @@ const MainPage = () => {
 		setIsLanguageOpen(false);
 	}, []);
 
+	const onClickNotification = useCallback(() => {
+		navigation('/notification');
+	}, []);
+
+	const onClickGitMessage = useCallback(() => {
+		navigation('/gm');
+	}, []);
+
 	useEffect(() => {
 		setSelelctedOption('흘깃');
 		setSelectedLanguage('');
@@ -455,8 +465,8 @@ const MainPage = () => {
 			<StyledMainTitleSection>
 				<h2>흘깃</h2>
 				<StyledIconContainer>
-					<img src={images.alarm} alt="alarm" />
-					<img src={images.gitMessage} alt="gm" />
+					<img src={images.alarm} alt="alarm" onClick={onClickNotification} />
+					<img src={images.gitMessage} alt="gm" onClick={onClickGitMessage} />
 				</StyledIconContainer>
 			</StyledMainTitleSection>
 			<MainCatecorySection>

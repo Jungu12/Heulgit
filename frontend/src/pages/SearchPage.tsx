@@ -140,7 +140,7 @@ const SearchPage = () => {
 
 	return (
 		<StyledSearchContainer>
-			<Header title={seletedSearchCategory}>
+			<Header title={seletedSearchCategory} type="home">
 				<img
 					src={isOpen ? images.arrowUpBlack : images.arrowDownBlack}
 					onClick={() => setIsOpen(!isOpen)}

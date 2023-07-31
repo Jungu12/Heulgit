@@ -49,7 +49,7 @@ const CommunityPage = () => {
 
 	return (
 		<CommunityContainer>
-			<Header title="커뮤니티">
+			<Header title="커뮤니티" type="home">
 				<StyledSearchButton
 					src={images.navigation.searchActive}
 					alt="search button"

@@ -23,7 +23,7 @@ const ChatPage = () => {
 				<Header title={'깃속말'} />
 			</StyledHeader>
 			<StyledChatList>
-				<div onClick={() => navigation('/test/direct')}>
+				<div onClick={() => navigation('1')}>
 					<UserLog userLName={'bbing.pong'} userLog={'ㅋㅋㅋㅋ'} logDate={3} />
 				</div>{' '}
 			</StyledChatList>

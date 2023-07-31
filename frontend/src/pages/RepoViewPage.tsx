@@ -5,6 +5,7 @@ import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { decodeUnicode } from '@utils/markdown';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 // 더미 게시물
@@ -63,9 +64,16 @@ const Separation = styled.div`
 `;
 
 const RepoViewPage = () => {
+	const navigation = useNavigate();
+
 	return (
 		<StyledViewContainer>
-			<Header title={dummyFeed.name} />
+			<Header
+				title={dummyFeed.name}
+				onClickBackButton={() => {
+					navigation('/');
+				}}
+			/>
 			<FeedItem feed={dummyFeed} type="full" />
 			<Separation />
 			<CommentList comments={dummyComment} />

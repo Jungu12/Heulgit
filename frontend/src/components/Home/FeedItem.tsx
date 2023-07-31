@@ -1,7 +1,7 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { HeulGitPostType } from '@typedef/home/heulgit.types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import MarkdownSummaryRenderer from './MarkdownSummaryRenderer';
@@ -79,6 +79,14 @@ type Props = {
 const FeedItem = ({ feed, type }: Props) => {
 	const navigation = useNavigate();
 
+	const onClickComment = useCallback(() => {
+		console.log('댓글 클릭');
+	}, []);
+
+	const onClickLike = useCallback(() => {
+		navigation(`repo/${feed.id}/like`);
+	}, []);
+
 	return (
 		<StyledFeedItemContainer>
 			<StyledTopLine>
@@ -91,11 +99,14 @@ const FeedItem = ({ feed, type }: Props) => {
 				</StyledProfileContainer>
 				<StyledUpdateTime>{feed.updated_date}</StyledUpdateTime>
 			</StyledTopLine>
-			<StyledContentContainer onClick={() => navigation(`/repo/${feed.id}`)}>
+			<StyledContentContainer>
 				{type === 'full' ? (
 					<MarkdownRenderer text={feed.content} />
 				) : (
-					<MarkdownSummaryRenderer text={feed.content} />
+					<MarkdownSummaryRenderer
+						text={feed.content}
+						onClick={() => navigation(`/repo/${feed.id}`)}
+					/>
 				)}
 			</StyledContentContainer>
 			<StyledButtonContainer>
@@ -104,7 +115,8 @@ const FeedItem = ({ feed, type }: Props) => {
 				<img src={images.share} alt="share_button" />
 			</StyledButtonContainer>
 			<StyledSubDataContainer>
-				{`좋아요 ${feed.likes}개 · 댓글 ${feed.comments}개`}
+				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
+				<div onClick={onClickComment}>{`댓글 ${feed.comments}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);

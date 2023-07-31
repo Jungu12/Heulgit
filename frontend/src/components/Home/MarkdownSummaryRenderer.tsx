@@ -144,9 +144,10 @@ const StyledTableContainer = styled.div`
 
 type Props = {
 	text: string;
+	onClick: () => void;
 };
 
-const MarkdownSummaryRenderer = ({ text }: Props) => {
+const MarkdownSummaryRenderer = ({ text, onClick }: Props) => {
 	const summary = text.slice(0, 300);
 	const [imageList, setImageList] = useState<string[]>([]);
 
@@ -155,7 +156,7 @@ const MarkdownSummaryRenderer = ({ text }: Props) => {
 	}, [text]);
 
 	return (
-		<StyledMarkDownContainer>
+		<StyledMarkDownContainer onClick={onClick}>
 			<ReactMarkdown
 				remarkPlugins={[gfm, remarkEmoji]}
 				rehypePlugins={[raw]}
@@ -173,7 +174,6 @@ const MarkdownSummaryRenderer = ({ text }: Props) => {
 						return <StyledMarkDownP>{children}</StyledMarkDownP>;
 					},
 					img() {
-						// console.log(props);
 						return <></>;
 					},
 					code({ children, className }) {

@@ -22,6 +22,9 @@ import LoginCallBackPage from '@pages/LoginCallBackPage';
 import EurekaPage from '@pages/EurekaPage';
 import FreeBoardPage from '@pages/FreeBoardPage';
 import FollowPage from '@pages/FollowPage';
+import LikeViewPage from '@pages/LikeViewPage';
+import ChatDirectPage from '@pages/ChatDirectPage';
+import ChatPage from '@pages/ChatPage';
 
 const RootRouter = () => {
 	return (
@@ -60,13 +63,26 @@ const RootRouter = () => {
 					element={<EurekaPostViewPage />}
 				></Route>
 				<Route
+					path="/community/eureka/:id/like"
+					element={<LikeViewPage />}
+				></Route>
+				<Route
 					path="/community/free/:id"
 					element={<FreePostViewPage />}
 				></Route>
+				<Route
+					path="/community/free/:id/like"
+					element={<LikeViewPage />}
+				></Route>
 				<Route path="/notification" element={<NotificationPage />}></Route>
+				<Route path="/gm">
+					<Route index element={<ChatPage />}></Route>
+					<Route path=":id" element={<ChatDirectPage />}></Route>
+				</Route>
 				<Route path="/repo">
 					<Route index element={<NotFound />}></Route>
 					<Route path=":repoId" element={<RepoViewPage />}></Route>
+					<Route path=":repoId/like" element={<LikeViewPage />}></Route>
 				</Route>
 				<Route path="/search">
 					<Route index element={<SearchPage />}></Route>
