@@ -1,23 +1,19 @@
-// Import statements
 import Header from '@components/common/Header';
 import ChatBox from '@components/profile/ChatBox';
 import { colors } from '@constants/colors';
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useState, KeyboardEvent, useRef, useEffect } from 'react';
 import { styled } from 'styled-components';
 
-// Define the Message type
 type Message = {
 	text: string;
 	$isUser: boolean;
 };
 
-// Define the state for ChatDirectPage component
 type ChatDirectPageState = {
 	inputMessage: string;
 	messages: Message[];
 };
 
-// Styled components for the ChatDirectPage component
 const StyledHeader = styled.div`
 	width: 100%;
 	height: 56px;
@@ -47,7 +43,6 @@ const StyledInputWrap = styled.div`
 	padding: 0 10px;
 `;
 
-// StyledInputDivProps is used to style the input based on whether it is empty or not
 type StyledInputDivProps = {
 	$isEmpty: boolean;
 };
@@ -72,7 +67,6 @@ const StyledButton = styled.button`
 	height: 30px;
 `;
 
-// ChatDirectPage component
 const ChatDirectPage: React.FC = () => {
 	const [state, setState] = useState<ChatDirectPageState>({
 		inputMessage: '',
@@ -87,19 +81,15 @@ const ChatDirectPage: React.FC = () => {
 		],
 	});
 
-	// Handle input change in the input field
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setState((prev) => ({ ...prev, inputMessage: e.target.value }));
 	};
 
-	// Handle form submission (button click)
 	const handleSubmit = () => {
 		const { inputMessage, messages } = state;
-
 		if (inputMessage.trim() === '') {
 			return;
 		}
-
 		setState({
 			inputMessage: '',
 			messages: [...messages, { text: inputMessage, $isUser: true }],
@@ -111,8 +101,14 @@ const ChatDirectPage: React.FC = () => {
 			handleSubmit();
 		}
 	};
+	const messageEndRef = useRef<HTMLDivElement | null>(null);
 
-	// Render the ChatDirectPage component
+	useEffect(() => {
+		if (messageEndRef.current) {
+			messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
+	}, [state.messages]);
+
 	return (
 		<div>
 			<StyledHeader>
@@ -126,6 +122,7 @@ const ChatDirectPage: React.FC = () => {
 						$isUser={message.$isUser}
 					/>
 				))}
+				<div ref={messageEndRef}></div>
 			</StyledMessage>
 			<StyledFooter>
 				<StyledInputWrap>
