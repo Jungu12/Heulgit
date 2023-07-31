@@ -22,7 +22,7 @@ const StlyedTitleInput = styled.textarea.attrs({
 	height: 50px;
 	padding: 15px 15px 0 15px;
 
-	font-size: 20px;
+	font-size: 18px;
 	font-weight: bold;
 
 	resize: none;
