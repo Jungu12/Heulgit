@@ -17,7 +17,7 @@ const StyledCategoryContainer = styled.div`
 	top: 55px;
 
 	border-bottom: solid 2px ${colors.greyScale.grey3};
-	/* background-color: #ffffff; */
+	background-color: #ffffff;
 `;
 
 // 커뮤니티 선택 버튼
