@@ -165,7 +165,7 @@ const notifications = [
 notifications
 	.filter((notification) => notification.type === 'follow')
 	.map((noti) => {
-		noti.message;
+		return noti.message;
 	});
 
 notifications
@@ -194,7 +194,7 @@ const NotiFollow: React.FC = () => {
 	};
 
 	const final = [];
-	for (let notification of notifications) {
+	for (const notification of notifications) {
 		final.push(
 			<StyledContentContainer key={notification.id}>
 				<StyledProfileImgDiv>
