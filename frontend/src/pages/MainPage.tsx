@@ -170,6 +170,7 @@ const customStyles = {
 const StyledMainContainer = styled.div`
 	display: flex;
 	flex-direction: column;
+	height: 100vh;
 `;
 
 const StyledMainTitleSection = styled.section`
