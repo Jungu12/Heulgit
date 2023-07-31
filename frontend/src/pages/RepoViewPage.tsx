@@ -5,6 +5,7 @@ import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { decodeUnicode } from '@utils/markdown';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 // 더미 게시물
@@ -50,6 +51,13 @@ const dummyComment = [
 	},
 ];
 
+const FeedItemContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-top: 60px;
+`;
+
 const StyledViewContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -63,10 +71,20 @@ const Separation = styled.div`
 `;
 
 const RepoViewPage = () => {
+	const navigation = useNavigate();
+
 	return (
 		<StyledViewContainer>
-			<Header title={dummyFeed.name} />
-			<FeedItem feed={dummyFeed} type="full" />
+			<Header
+				title={dummyFeed.name}
+				onClickBackButton={() => {
+					navigation('/');
+				}}
+			/>
+			<FeedItemContainer>
+				<FeedItem feed={dummyFeed} type="full" />
+			</FeedItemContainer>
+
 			<Separation />
 			<CommentList comments={dummyComment} />
 		</StyledViewContainer>

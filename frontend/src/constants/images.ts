@@ -11,6 +11,15 @@ export const images = {
 		communityInactive: '/assets/images/ic-community-inactive.png',
 		communityActive: '/assets/images/ic-community-active.png',
 	},
+	community: {
+		createPost: '/assets/images/ic-create-post.png',
+		addImg: '/assets/images/ic-add-img.png',
+		likesInactive: '/assets/images/ic-likes-inactive.png',
+		likesActive: '/assets/images/ic-likes-active.png',
+		shareButton: '/assets/images/ic-share.png',
+		commentButton: '/assets/images/ic-comment.png',
+		contentLength: '/assets/images/ic-contentlengnth.png',
+	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',
 	},
@@ -18,6 +27,8 @@ export const images = {
 	arrowRight: '/assets/images/ic-arrow-right.png',
 	arrowDown: '/assets/images/ic-arrow-down.png',
 	arrowUp: '/assets/images/ic-arrow-up.png',
+	arrowDownBlack: '/assets/images/ic-arrow-down-black.png',
+	arrowUpBlack: '/assets/images/ic-arrow-up-black.png',
 	alarm: '/assets/images/ic-alarm.png',
 	calendar: '/assets/images/ic-calendar.png',
 	chat: '/assets/images/ic-chat.png',
@@ -27,6 +38,8 @@ export const images = {
 	userMark: '/assets/images/ic-user-mark.png',
 	menu: '/assets/images/ic-menu.png',
 	close: '/assets/images/ic-close.png',
+	searchPrimary: '/assets/images/ic-search-primary.png',
+	closePrimary: '/assets/images/ic-close-primary.png',
 	closeBlack: '/assets/images/ic-close-black.png',
 	dummy: {
 		dummy1: '/assets/images/dummy1.png',
