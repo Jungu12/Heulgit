@@ -10,8 +10,11 @@ const StyledCalendarContainer = styled.div`
 	display: flex;
 	position: fixed;
 	top: 112px;
-	left: 40px;
+	left: 95px;
 	z-index: 10;
+	/* .react-datepicker-popper {
+		z-index: 10;
+	} */
 
 	.react-datepicker__header {
 		background-color: white;

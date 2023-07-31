@@ -21,7 +21,6 @@ import EurekaPostViewPage from '@pages/EurekaPostViewPage';
 import LoginCallBackPage from '@pages/LoginCallBackPage';
 import EurekaPage from '@pages/EurekaPage';
 import FreeBoardPage from '@pages/FreeBoardPage';
-import LanguageSearchModal from '@components/Home/LanguageSearchModal';
 import FollowPage from '@pages/FollowPage';
 
 const RootRouter = () => {
@@ -67,7 +66,6 @@ const RootRouter = () => {
 				<Route path="/notification" element={<NotificationPage />}></Route>
 				<Route path="/repo">
 					<Route index element={<NotFound />}></Route>
-					<Route path="language" element={<LanguageSearchModal />}></Route>
 					<Route path=":repoId" element={<RepoViewPage />}></Route>
 				</Route>
 				<Route path="/search">
