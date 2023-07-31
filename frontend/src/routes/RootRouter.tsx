@@ -21,6 +21,7 @@ import EurekaPostViewPage from '@pages/EurekaPostViewPage';
 import LoginCallBackPage from '@pages/LoginCallBackPage';
 import EurekaPage from '@pages/EurekaPage';
 import FreeBoardPage from '@pages/FreeBoardPage';
+import FollowPage from '@pages/FollowPage';
 
 const RootRouter = () => {
 	return (
