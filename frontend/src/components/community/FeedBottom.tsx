@@ -51,7 +51,7 @@ const StyledCount = styled.div`
 
 const FeedBottom = ({ showCommentIcon = true }) => {
 	const [liked, setLiked] = useState(false); // 좋아요 상태를 저장하는 상태 변수 (기본값: false)
-	const [shared, setShared] = useState('');
+	// const [shared, setShared] = useState('');
 
 	// 좋아요 아이콘이 클릭되면 상태를 반전시킵니다.
 	const handleLikeClick = () => {
@@ -59,9 +59,9 @@ const FeedBottom = ({ showCommentIcon = true }) => {
 	};
 
 	// 공유 아이콘이 클릭되면 처리할 함수를 추가합니다.
-	const handleShareClick = () => {
-		// 공유 기능 구현
-	};
+	// const handleShareClick = () => {
+	// 	// 공유 기능 구현
+	// };
 
 	return (
 		<StyledFeedBottomContainer>

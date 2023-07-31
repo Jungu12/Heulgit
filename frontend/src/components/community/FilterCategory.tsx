@@ -23,14 +23,14 @@ const StyledFilterContainder = styled.div`
 // 필터 버튼
 const StyledFilterButton = styled.button`
 	color: ${colors.greyScale.grey4};
-	font-size: 11px;
-	font-weight: bold;
+	font-size: 12px;
+	font-weight: 600;
 
 	padding: 0;
 	width: 88px;
 	height: 28px;
 
-	border: solid 1px ${colors.greyScale.grey4};
+	border: solid 2px ${colors.greyScale.grey4};
 	border-radius: 36px;
 	background-color: white;
 `;
