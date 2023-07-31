@@ -36,6 +36,7 @@ const ImageSlider = ({ images }: Props) => {
 				slidesPerView={1}
 				spaceBetween={30}
 				loop={true}
+				style={{ zIndex: 0 }}
 				pagination={{
 					clickable: true,
 				}}

@@ -26,11 +26,12 @@ const StyledLanguageName = styled.p`
 
 type Props = {
 	language: ProgrammingLanguageType;
+	onClickLanguage: (language: string) => void;
 };
 
-const LanguageItem = ({ language }: Props) => {
+const LanguageItem = ({ language, onClickLanguage }: Props) => {
 	return (
-		<StyledItemContainer>
+		<StyledItemContainer onClick={() => onClickLanguage(language.name)}>
 			<StyledLanguageImage src={language.img} alt="" />
 			<StyledLanguageName>{language.name}</StyledLanguageName>
 		</StyledItemContainer>

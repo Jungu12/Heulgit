@@ -1,5 +1,6 @@
 import RootRouter from '@routes/RootRouter';
 import React from 'react';
+import ReactModal from 'react-modal';
 
 const App = () => {
 	function setScreenSize() {
@@ -16,4 +17,5 @@ const App = () => {
 	);
 };
 
+ReactModal.setAppElement('#root');
 export default App;

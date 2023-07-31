@@ -1,5 +1,6 @@
 import Calendar from '@components/Home/Calendar';
 import FeedItemList from '@components/Home/FeedItemList';
+import LanguageSearchModal from '@components/Home/LanguageSearchModal';
 import Navigation from '@components/common/Navigation';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
@@ -7,7 +8,8 @@ import useDetectClose from '@hooks/useDetectClose';
 import { getYearAndMonth } from '@utils/date';
 import { decodeUnicode } from '@utils/markdown';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { styled } from 'styled-components';
+import ReactModal from 'react-modal';
+import { css, styled } from 'styled-components';
 
 // 더미 데이터
 const dummyFeedList = [
@@ -146,6 +148,24 @@ const dummyFeedList = [
 ];
 // 여기까지
 
+// 모달 스타일
+const customStyles = {
+	overlay: {
+		backgroundColor: 'rgba(0, 0, 0, 0.3)', // 오버레이 배경색을 투명하게 설정
+	},
+	content: {
+		width: '100%',
+		height: '100vh',
+		top: '0',
+		left: '0',
+		background: 'rgba(255, 255, 255, 0.6)',
+		backdropFilter: 'blur(10px)',
+		zIndex: '99',
+		border: 'none',
+		padding: '0',
+	},
+};
+
 const StyledMainContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -182,12 +202,20 @@ const StyledIconContainer = styled.div`
 
 const MainCatecorySection = styled.section`
 	position: fixed;
+	z-index: 10;
 	top: 62px;
 	display: flex;
 	width: 100%;
 	height: 61px;
 	align-items: center;
 	border-bottom: 1px solid ${colors.greyScale.grey3};
+
+	button {
+		display: flex;
+		height: 36px;
+		justify-content: center;
+		align-items: center;
+	}
 `;
 
 const StyledDropDownContainer = styled.div`
@@ -242,6 +270,12 @@ const StyledCalendarFont = styled.div`
 	color: white;
 	font-size: 14px;
 	font-weight: 500;
+
+	img {
+		width: 18px;
+		height: 18px;
+		margin-left: 4px;
+	}
 `;
 
 const StyledLanguageFillter = styled.button`
@@ -256,6 +290,20 @@ const StyledLanguageFillter = styled.button`
 	margin-left: 10px;
 	margin-right: 20px;
 	flex: 0 0 auto;
+
+	${(props) =>
+		props.name &&
+		css`
+			/* name 값이 있는 경우에만 적용될 스타일 */
+			background-color: ${colors.primary.primary};
+			color: white;
+		`}
+
+	img {
+		width: 18px;
+		height: 18px;
+		margin-left: 4px;
+	}
 `;
 
 const StyledDropDown = styled.ul`
@@ -282,6 +330,7 @@ const StyledDropDown = styled.ul`
 	line-height: 26px;
 	letter-spacing: -0.24px;
 	gap: 4px;
+	z-index: 10;
 
 	&.active {
 		opacity: 1;
@@ -295,6 +344,16 @@ const StyledCalendarContainer = styled.div`
 	position: fixed;
 `;
 
+const StyledClose = styled.img`
+	position: fixed;
+	bottom: 0;
+	left: 50%;
+	width: 50px;
+	height: 50px;
+	z-index: 100;
+	transform: translate(-50%, -50%);
+`;
+
 const MainPage = () => {
 	const dropDownRef = useRef(null);
 	const calendarRef = useRef<HTMLButtonElement>(null);
@@ -302,6 +361,7 @@ const MainPage = () => {
 		dropDownRef,
 		false,
 	);
+	const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 	const [selelctedOption, setSelelctedOption] = useState('');
 	const [selectedLanguage, setSelectedLanguage] = useState('');
@@ -358,6 +418,23 @@ const MainPage = () => {
 		setIsCalendarOpen(false);
 	}, []);
 
+	const onClickClearLanguage = useCallback(() => {
+		setSelectedLanguage('');
+	}, []);
+
+	const onClickLanguageChoiceButton = useCallback(() => {
+		setIsLanguageOpen(!isLanguageOpen);
+	}, [isLanguageOpen]);
+
+	const onClickLanguageCloseButton = useCallback(() => {
+		setIsLanguageOpen(false);
+	}, []);
+
+	const onClickLanguage = useCallback((language: string) => {
+		setSelectedLanguage(language);
+		setIsLanguageOpen(false);
+	}, []);
+
 	useEffect(() => {
 		setSelelctedOption('흘깃');
 		setSelectedLanguage('');
@@ -384,8 +461,9 @@ const MainPage = () => {
 				</StyledIconContainer>
 			</StyledMainTitleSection>
 			<MainCatecorySection>
-				<StyledDropDownContainer ref={dropDownRef}>
+				<StyledDropDownContainer>
 					<StyledViewFillter
+						ref={dropDownRef}
 						onClick={() => setIsViewOptionOpen(!isViewOptionOpen)}
 					>
 						{selelctedOption}
@@ -416,8 +494,21 @@ const MainPage = () => {
 							)}
 						</StyledCalendarFont>
 					</StyledCalendarFillter>
-					<StyledLanguageFillter>
+					<StyledLanguageFillter
+						onClick={onClickLanguageChoiceButton}
+						name={selectedLanguage}
+					>
 						{selectedLanguage ? selectedLanguage : '언어 선택'}
+						{selectedLanguage && (
+							<img
+								src={images.close}
+								alt="clear"
+								onClick={(e) => {
+									e.stopPropagation();
+									onClickClearLanguage();
+								}}
+							/>
+						)}
 					</StyledLanguageFillter>
 				</StyledDropDownContainer>
 				{isCalendarOpen && (
@@ -431,6 +522,20 @@ const MainPage = () => {
 					</StyledCalendarContainer>
 				)}
 			</MainCatecorySection>
+			<ReactModal
+				isOpen={isLanguageOpen}
+				style={customStyles}
+				overlayClassName="custom-overlay"
+			>
+				<LanguageSearchModal onClickLanguage={onClickLanguage} />
+			</ReactModal>
+			{isLanguageOpen && (
+				<StyledClose
+					src={images.closeBlack}
+					alt="close"
+					onClick={onClickLanguageCloseButton}
+				/>
+			)}
 			<StyledDropDown className={isViewOptionOpen ? 'active' : ''}>
 				<li onClick={onClickHeulGit}>흘깃</li>
 				<li onClick={onClickStarSort}>스타 많은순</li>

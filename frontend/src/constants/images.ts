@@ -36,6 +36,7 @@ export const images = {
 	userMark: '/assets/images/ic-user-mark.png',
 	menu: '/assets/images/ic-menu.png',
 	close: '/assets/images/ic-close.png',
+	closeBlack: '/assets/images/ic-close-black.png',
 	dummy: {
 		dummy1: '/assets/images/dummy1.png',
 		dummy2: '/assets/images/dummy2.png',
