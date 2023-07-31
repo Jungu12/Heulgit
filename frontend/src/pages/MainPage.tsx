@@ -324,7 +324,6 @@ const MainPage = () => {
 	}, []);
 
 	const handleClickCalendar = useCallback(() => {
-		console.log('달력 클릭!');
 		setIsCalendarOpen(!isCalendarOpen);
 	}, [isCalendarOpen]);
 
@@ -372,7 +371,7 @@ const MainPage = () => {
 
 	useEffect(() => {
 		console.log(isCalendarOpen);
-	}, [isCalendarOpen]);
+	}, []);
 
 	return (
 		<StyledMainContainer>

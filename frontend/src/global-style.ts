@@ -29,6 +29,7 @@ time, mark, audio, video, input, textarea, button {
 	font: inherit;
 	font-family: 'Noto Sans KR', sans-serif;
 	vertical-align: baseline;
+	box-sizing: border-box;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
