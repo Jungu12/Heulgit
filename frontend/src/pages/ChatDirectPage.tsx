@@ -1,5 +1,5 @@
 import Header from '@components/common/Header';
-import ChatBox from '@components/profile/ChatBox';
+import ChatBox from '@components/gm/ChatBox';
 import { colors } from '@constants/colors';
 import React, { useState, KeyboardEvent, useRef, useEffect } from 'react';
 import { styled } from 'styled-components';
@@ -65,6 +65,11 @@ const StyledInput = styled.input`
 const StyledButton = styled.button`
 	width: 50px;
 	height: 30px;
+	margin-right: 10px;
+	/* border: 1px solid ${colors.primary.primary}; */
+	background-color: ${colors.primary.primary};
+	color: white;
+	border-radius: 8px;
 `;
 
 const ChatDirectPage: React.FC = () => {
@@ -133,6 +138,7 @@ const ChatDirectPage: React.FC = () => {
 							onChange={handleInputChange}
 							onKeyPress={handleKeyPress}
 						/>
+						<button>사진</button>
 					</StyledInputDiv>
 				</StyledInputWrap>
 				<StyledButton onClick={handleSubmit}>전송</StyledButton>
