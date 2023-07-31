@@ -44,6 +44,7 @@ const FilterCategory = () => {
 
 	const toggleActive = (category: string) => {
 		setButton(category === button ? '전체 보기' : category);
+		// navigation('/');
 	};
 
 	return (
