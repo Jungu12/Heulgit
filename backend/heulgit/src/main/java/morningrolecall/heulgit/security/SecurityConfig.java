@@ -29,10 +29,11 @@ public class SecurityConfig {
 			.and()
 
 			.authorizeHttpRequests()
-			// "/"에 대한 요청은 모두 허용
-			.antMatchers("/oauth/**").permitAll()
+			// "/oauth/**"에 대한 요청은 모두 허용
+			// .antMatchers("/oauth/**").permitAll()
 			// 그 외의 요청은 "USER" 권한이 있으면 가능
-			.anyRequest().hasRole("USER")
+			// .anyRequest().hasRole("USER")
+			.anyRequest().permitAll()
 
 			.and()
 
