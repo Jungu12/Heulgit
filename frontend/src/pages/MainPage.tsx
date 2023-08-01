@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { css, styled } from 'styled-components';
 import 'react-spring-bottom-sheet/dist/style.css';
 import CBottomSheet from '@components/common/CBottomSheet';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/index';
 
 // 더미 데이터
 const dummyFeedList = [
@@ -362,6 +364,7 @@ const StyledClose = styled.img`
 `;
 
 const MainPage = () => {
+	const accessToken = useSelector((state: RootState) => state.auth.token);
 	const dropDownRef = useRef(null);
 	const calendarRef = useRef<HTMLButtonElement>(null);
 	// const sheetRef = useRef<BottomSheetRef>();
@@ -466,6 +469,11 @@ const MainPage = () => {
 
 	useEffect(() => {
 		console.log(isCalendarOpen);
+		if (accessToken) {
+			console.log(accessToken);
+		} else {
+			console.log('토큰 없음');
+		}
 	}, []);
 
 	return (
