@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaDto;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.eureka.service.EurekaService;
 
 @RestController
@@ -51,15 +53,15 @@ public class EurekaController {
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping("/posts/update/{eurekaId}")
-	public ResponseEntity<?> eurekaUpdate(@AuthenticationPrincipal String userId, @PathVariable Long eurekaId,
-		@RequestBody EurekaDto eurekaDto) {
+	@PutMapping("/posts/update")
+	public ResponseEntity<?> eurekaUpdate(@AuthenticationPrincipal String userId,
+		@RequestBody EurekaUpdateRequest eurekaUpdateRequest) {
 		logger.debug("eurekaUpdate(), who = {}, eurekaId = {}, title = {}, content = {}, imageId = {}, link = {}",
-			userId, eurekaId,
-			eurekaDto.getTitle(),
-			eurekaDto.getContent(), eurekaDto.getFileUri(), eurekaDto.getLink());
+			userId, eurekaUpdateRequest.getEurekaId(),
+			eurekaUpdateRequest.getTitle(),
+			eurekaUpdateRequest.getContent(), eurekaUpdateRequest.getFileUri(), eurekaUpdateRequest.getLink());
 
-		eurekaService.updateEureka(userId, eurekaId, eurekaDto);
+		eurekaService.updateEureka(userId, eurekaUpdateRequest);
 
 		return ResponseEntity.ok().build();
 	}

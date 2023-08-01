@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.Eureka;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaDto;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.eureka.repository.EurekaImageRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaRepository;
 import morningrolecall.heulgit.user.domain.User;
@@ -81,8 +82,8 @@ public class EurekaService {
 	 * 3. 게시물 수정 (작성자 제외 수정 가능)
 	 * */
 	@Transactional
-	public void updateEureka(String githubId, Long eurekaId, EurekaDto eurekaDto) {
-		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
+	public void updateEureka(String githubId, EurekaUpdateRequest eurekaUpdateRequest) {
+		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaUpdateRequest.getEurekaId())
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
 
 		if (!githubId.equals(eureka.getUser().getGithubId())) {
@@ -91,14 +92,14 @@ public class EurekaService {
 			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
 		}
 
-		eureka.setTitle(eurekaDto.getTitle());
-		eureka.setContent(eurekaDto.getContent());
+		eureka.setTitle(eurekaUpdateRequest.getTitle());
+		eureka.setContent(eurekaUpdateRequest.getContent());
 		eureka.setUpdatedDate(LocalDateTime.now());
-		eureka.setLink(eurekaDto.getLink());
+		eureka.setLink(eurekaUpdateRequest.getLink());
 
 		eurekaRepository.saveAndFlush(eureka);
 
-		eurekaImageService.updateEurekaImage(eurekaDto.getFileUri(), eureka);
+		eurekaImageService.updateEurekaImage(eurekaUpdateRequest.getFileUri(), eureka);
 	}
 
 	/**
