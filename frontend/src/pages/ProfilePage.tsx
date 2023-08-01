@@ -5,6 +5,7 @@ import Navigation from '@components/common/Navigation';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import styled from 'styled-components';
+import CommitTable from '@components/profile/CommitTable';
 
 const StyledProfileHigh = styled.div`
 	display: flex;
@@ -47,18 +48,20 @@ const StyledProfileLow = styled.div`
 	align-items: center;
 	padding: 20px;
 `;
-
 const StyledCommitBox = styled.div`
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
 	align-items: center;
 	border: 1px solid;
 	border-radius: 10px;
 	width: 100%;
-	height: 260px;
-	margin-bottom: 15px;
+	margin-bottom: 20px;
 `;
-
+const StyledDiv = styled.div`
+	display: flex;
+	justify-content: center;
+	width: 80vw;
+`;
 const StyledCommitRank = styled.div`
 	display: flex;
 	justify-content: center;
@@ -66,7 +69,7 @@ const StyledCommitRank = styled.div`
 	border: 1px solid;
 	border-radius: 10px;
 	width: 100%;
-	height: 350px;
+	height: 300px;
 `;
 
 const StyledFooter = styled.div`
@@ -76,11 +79,32 @@ const StyledFooter = styled.div`
 const ProfilePage = () => {
 	const navigation = useNavigate();
 
+	const commitLabels = [
+		'commit tag 1',
+		'commit tag 2',
+		'commit tag 3',
+		'commit tag 4',
+		'commit tag 5',
+		'commit tag 6',
+		'commit tag 7',
+	];
+
+	const commitInfos = [
+		{ type: 'feat', count: 50 },
+		{ type: 'fix', count: 10 },
+		{ type: 'algo', count: 75 },
+		{ type: 'style', count: 20 },
+		{ type: 'docs', count: 15 },
+		{ type: 'study', count: 5 },
+	];
+
 	return (
 		<div>
 			<StyledProfileHigh>
 				<StyledUserProfile>
-					<StyledUserImage src="" alt="User" />
+					{/* <StyledProfileImage src={feed.user.avater_url} alt="user_profile" /> */}
+
+					<StyledUserImage src={''} alt="user_profile" />
 					<StyledUserInformation>
 						<div>유저 이름</div>
 						<div onClick={() => navigation('/profiles/1/follow')}>
@@ -106,11 +130,19 @@ const ProfilePage = () => {
 			/>
 			<StyledProfileLow>
 				<StyledCommitBox>
-					<CommitGraph></CommitGraph>
-					<button onClick={() => navigation('/profiles/1/commit-edit')}>
+					<StyledActivityButton
+						onClick={() => navigation('/profiles/1/commit-edit')}
+					>
 						설정
-					</button>
+					</StyledActivityButton>
+					<StyledDiv>
+						<CommitGraph labels={commitLabels} />
+					</StyledDiv>
+					<StyledDiv>
+						<CommitTable commitTag={commitInfos} />
+					</StyledDiv>
 				</StyledCommitBox>
+
 				<StyledCommitRank>
 					<RankingGraph></RankingGraph>
 				</StyledCommitRank>
