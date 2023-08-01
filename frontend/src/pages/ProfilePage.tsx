@@ -53,27 +53,34 @@ const StyledFooter = styled.div`
 `;
 
 const ProfilePage: React.FC = () => {
-	const [selectedMenu, setSelectedMenu] = useState<
-		'프로필' | '유레카' | '자유'
-	>('프로필'); // 기본 선택 메뉴는 '프로필'
+	const [selectedMenu, setSelectedMenu] = useState(''); // 기본 선택 메뉴는 '프로필'
 
 	const handleMenuClick = (menu: '프로필' | '유레카' | '자유') => {
 		setSelectedMenu(menu);
+		sessionStorage.setItem('selectedMenu', menu);
 	};
 
 	const navigation = useNavigate();
 
 	useEffect(() => {
-		// 필요한 경우 선택한 메뉴에 따른 데이터를 가져오거나 사이드 이펙트를 처리할 수 있습니다.
-	}, [selectedMenu]);
+		// selectedMenu가 변경될 때마다 sessionStorage에 저장.
+		const categoryItem = sessionStorage.getItem('selectedMenu') as
+			| '프로필'
+			| '유레카'
+			| '자유';
+
+		console.log(categoryItem);
+
+		if (categoryItem) {
+			setSelectedMenu(categoryItem);
+		}
+	}, []);
 
 	return (
 		<StyledProfilePage>
 			<StyledProfileHigh>
 				{' '}
 				<StyledUserProfile>
-					{/* <StyledProfileImage src={feed.user.avater_url} alt="user_profile" /> */}
-
 					<StyledUserImage src={''} alt="user_profile" />
 					<StyledUserInformation>
 						<div>유저 이름</div>

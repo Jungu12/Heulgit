@@ -11,8 +11,10 @@ const StyledCommitBox = styled.div`
 	align-items: center;
 	border: 1px solid;
 	border-radius: 10px;
-	width: 100%;
 	margin-bottom: 20px;
+`;
+const StyledWrap = styled.div`
+	width: 100%;
 `;
 const StyledDiv = styled.div`
 	display: flex;
@@ -55,7 +57,7 @@ const MyProfile = () => {
 	];
 
 	return (
-		<div>
+		<StyledWrap>
 			<StyledCommitBox>
 				<StyledActivityButton
 					onClick={() => navigation('/profiles/1/commit-edit')}
@@ -73,7 +75,7 @@ const MyProfile = () => {
 			<StyledCommitRank>
 				<RankingGraph></RankingGraph>
 			</StyledCommitRank>
-		</div>
+		</StyledWrap>
 	);
 };
 
