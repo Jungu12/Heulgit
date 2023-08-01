@@ -1,12 +1,13 @@
-import RankingGraph from '@components/profile/RankingGraph';
-import CommitGraph from '@components/profile/CommitGraph';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Category from '@components/profile/Category';
 import Navigation from '@components/common/Navigation';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
-import styled from 'styled-components';
-import CommitTable from '@components/profile/CommitTable';
+import MyFreeboard from '@components/profile/MyFreeboard';
+import MyEureka from '@components/profile/MyEureka';
+import MyProfile from '@components/profile/MyProfile';
 
+const StyledProfilePage = styled.div``;
 const StyledProfileHigh = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -33,8 +34,6 @@ const StyledUserInformation = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-left: 20px;
-	/* justify-content: flex-start; */
-	/* align-items: flex-start; */
 `;
 
 const StyledActivityButton = styled.button`
@@ -48,59 +47,30 @@ const StyledProfileLow = styled.div`
 	align-items: center;
 	padding: 20px;
 `;
-const StyledCommitBox = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	border: 1px solid;
-	border-radius: 10px;
-	width: 100%;
-	margin-bottom: 20px;
-`;
-const StyledDiv = styled.div`
-	display: flex;
-	justify-content: center;
-	width: 80vw;
-`;
-const StyledCommitRank = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border: 1px solid;
-	border-radius: 10px;
-	width: 100%;
-	height: 300px;
-`;
 
 const StyledFooter = styled.div`
 	height: 70px;
 `;
 
-const ProfilePage = () => {
+const ProfilePage: React.FC = () => {
+	const [selectedMenu, setSelectedMenu] = useState<
+		'프로필' | '유레카' | '자유'
+	>('프로필'); // 기본 선택 메뉴는 '프로필'
+
+	const handleMenuClick = (menu: '프로필' | '유레카' | '자유') => {
+		setSelectedMenu(menu);
+	};
+
 	const navigation = useNavigate();
 
-	const commitLabels = [
-		'commit tag 1',
-		'commit tag 2',
-		'commit tag 3',
-		'commit tag 4',
-		'commit tag 5',
-		'commit tag 6',
-		'commit tag 7',
-	];
-
-	const commitInfos = [
-		{ type: 'feat', count: 50 },
-		{ type: 'fix', count: 10 },
-		{ type: 'algo', count: 75 },
-		{ type: 'style', count: 20 },
-		{ type: 'docs', count: 15 },
-		{ type: 'study', count: 5 },
-	];
+	useEffect(() => {
+		// 필요한 경우 선택한 메뉴에 따른 데이터를 가져오거나 사이드 이펙트를 처리할 수 있습니다.
+	}, [selectedMenu]);
 
 	return (
-		<div>
+		<StyledProfilePage>
 			<StyledProfileHigh>
+				{' '}
 				<StyledUserProfile>
 					{/* <StyledProfileImage src={feed.user.avater_url} alt="user_profile" /> */}
 
@@ -121,36 +91,31 @@ const ProfilePage = () => {
 			</StyledProfileHigh>
 			<Category
 				menu1={'프로필'}
-				menuRouter1={''}
+				menuRouter1={() => handleMenuClick('프로필')}
 				menu2={'유레카'}
-				menuRouter2={'2'}
-				// 작성한 유레카 페이지로 수정해야 함
+				menuRouter2={() => handleMenuClick('유레카')}
 				menu3={'자유'}
-				menuRouter3={'3'}
+				menuRouter3={() => handleMenuClick('자유')}
 			/>
-			<StyledProfileLow>
-				<StyledCommitBox>
-					<StyledActivityButton
-						onClick={() => navigation('/profiles/1/commit-edit')}
-					>
-						설정
-					</StyledActivityButton>
-					<StyledDiv>
-						<CommitGraph labels={commitLabels} />
-					</StyledDiv>
-					<StyledDiv>
-						<CommitTable commitTag={commitInfos} />
-					</StyledDiv>
-				</StyledCommitBox>
-
-				<StyledCommitRank>
-					<RankingGraph></RankingGraph>
-				</StyledCommitRank>
-			</StyledProfileLow>
+			{selectedMenu === '프로필' && (
+				<StyledProfileLow>
+					<MyProfile />
+				</StyledProfileLow>
+			)}
+			{selectedMenu === '유레카' && (
+				<StyledProfileLow>
+					<MyEureka />
+				</StyledProfileLow>
+			)}
+			{selectedMenu === '자유' && (
+				<StyledProfileLow>
+					<MyFreeboard />
+				</StyledProfileLow>
+			)}
 			<StyledFooter>
 				<Navigation />
 			</StyledFooter>
-		</div>
+		</StyledProfilePage>
 	);
 };
 

@@ -21,12 +21,12 @@ const FollowPage = () => {
 			<StyledHeader>
 				<Header title={'username'}></Header>
 			</StyledHeader>
-			<Category
+			{/* <Category
 				menu1={'팔로잉'}
 				menu2={'팔로워'}
 				menuRouter1={''}
 				menuRouter2={''}
-			/>
+			/> */}
 			<StyledUserList>
 				{/* User List */}
 				<FollowUser />

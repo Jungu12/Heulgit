@@ -21,48 +21,28 @@ const StyledCategoryButton = styled.button`
 	padding: 0;
 `;
 
-type Props = {
+type CategoryProps = {
 	menu1: string;
+	menuRouter1: () => void;
 	menu2: string;
+	menuRouter2: () => void;
 	menu3?: string;
-	menuRouter1: string;
-	menuRouter2: string;
-	menuRouter3?: string;
-	onClickCategoryButton?: () => void;
+	menuRouter3?: () => void;
 };
 
-const Category = ({
+const Category: React.FC<CategoryProps> = ({
 	menu1,
-	menu2,
-	menu3,
 	menuRouter1,
+	menu2,
 	menuRouter2,
-	menuRouter3 = '',
-	onClickCategoryButton,
-}: Props) => {
-	const navigation = useNavigate();
-
-	const handleMenuClick = (menuRouter: string) => {
-		if (onClickCategoryButton) {
-			onClickCategoryButton();
-		} else {
-			navigation(menuRouter);
-		}
-	};
-
+	menu3,
+	menuRouter3,
+}) => {
 	return (
 		<StyledCategory>
-			<StyledCategoryButton onClick={() => handleMenuClick(menuRouter1)}>
-				{menu1}
-			</StyledCategoryButton>
-			<StyledCategoryButton onClick={() => handleMenuClick(menuRouter2)}>
-				{menu2}
-			</StyledCategoryButton>
-			{menu3 && (
-				<StyledCategoryButton onClick={() => handleMenuClick(menuRouter3)}>
-					{menu3}
-				</StyledCategoryButton>
-			)}
+			<StyledCategoryButton onClick={menuRouter1}>{menu1}</StyledCategoryButton>
+			<StyledCategoryButton onClick={menuRouter2}>{menu2}</StyledCategoryButton>
+			<StyledCategoryButton onClick={menuRouter3}>{menu3}</StyledCategoryButton>
 		</StyledCategory>
 	);
 };
