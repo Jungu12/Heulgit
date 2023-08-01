@@ -8,11 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.auth.dto.CodeDto;
 import morningrolecall.heulgit.auth.dto.OAuthToken;
 import morningrolecall.heulgit.auth.service.AuthService;
 
@@ -29,9 +30,9 @@ public class AuthController {
 	 * 이후 github_id를 가지고 JWT 생성 후 반환
 	 * */
 	@PostMapping("/github")
-	public ResponseEntity<?> getCode(@RequestParam("code") String code) {
-		logger.debug("getCode(), code = {}", code);
-		return ResponseEntity.ok().body(authService.createTokens(code));
+	public ResponseEntity<?> getCode(@RequestBody CodeDto codeDto) {
+		logger.debug("getCode(), code = {}", codeDto.getCode());
+		return ResponseEntity.ok().body(authService.createTokens(codeDto.getCode()));
 	}
 
 	@GetMapping("/refresh-token")
