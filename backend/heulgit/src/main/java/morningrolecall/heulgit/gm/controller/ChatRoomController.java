@@ -17,14 +17,14 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.gm.dto.ChatMessage;
 import morningrolecall.heulgit.gm.dto.ChatRoom;
 import morningrolecall.heulgit.gm.repository.ChatRoomRepository;
-import morningrolecall.heulgit.gm.service.MessageService;
+import morningrolecall.heulgit.gm.service.ChatRoomService;
 
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/gm")
 public class ChatRoomController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	private final MessageService chatRoomService;
+	private final ChatRoomService messageService;
 	private final ChatRoomRepository chatRoomRepository;
 
 	// 채팅 리스트 화면
@@ -71,8 +71,12 @@ public class ChatRoomController {
 	@ResponseBody
 	public List<ChatMessage> enterChatRoom(@PathVariable String roomId) {
 		//입장한 채팅방의 topic을 생성한다.
-		chatRoomService.enterChatRoom(roomId);
+		messageService.enterChatRoom(roomId);
 		// Redis에서 해당 채팅방의 채팅 로그를 가져와서 반환한다.
-		return chatRoomRepository.getChatLogs(roomId);
+		List<ChatMessage> list = messageService.getChatLogs(roomId);
+		for (ChatMessage chatMessage : list) {
+			System.out.println(chatMessage.getMessage());
+		}
+		return messageService.getChatLogs(roomId);
 	}
 }

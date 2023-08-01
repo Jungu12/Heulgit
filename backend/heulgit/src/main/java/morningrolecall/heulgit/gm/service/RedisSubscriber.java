@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import morningrolecall.heulgit.gm.dto.ChatMessage;
+import morningrolecall.heulgit.gm.dto.ChatRoom;
 import morningrolecall.heulgit.gm.repository.ChatRoomRepository;
 
 @Slf4j
@@ -40,14 +41,27 @@ public class RedisSubscriber implements MessageListener {
 			ChatMessage roomMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
 			// Websocket 구독자에게 채팅 메시지 Send
 			messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
-
 			// 받은 메시지를 Redis의 Hash 데이터 구조에 저장
-			chatRoomRepository.storeMessageInHash(channel, messageContent);
+			String sender = roomMessage.getSender();
+			ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomMessage.getRoomId());
+			if (chatRoom != null) {
+				chatRoom.addChatMessage(messageContent);
+				chatRoomRepository.updateChatRoom(chatRoom, messageContent);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
 	}
 
-	// 메시지를 Redis의 Hash 데이터 구조에 저장
+	// 채팅방의 채팅 메시지를 추가합니다.
+	// public ChatRoom addMessageToChatRoom(@RequestParam String roomId, @RequestParam String sender, @RequestParam String message) {
+	// 	ChatMessage chatMessage = new ChatMessage(sender, message);
+	// 	ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
+	// 	if (chatRoom != null) {
+	// 		chatRoom.addChatMessage(chatMessage);
+	// 		chatRoomRepository.updateChatRoom(chatRoom);
+	// 	}
+	// 	return chatRoom;
+	// }
 
 }

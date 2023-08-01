@@ -23,13 +23,11 @@ public class ChatRoomRepository {
 	//Redis
 	private final RedisTemplate<String, Object> redisTemplate;
 	private HashOperations<String, String, ChatRoom> opsHashChatRoom;
-	private HashOperations<String, String, ChatMessage> opsHashChatLogs;
 	// 채팅방의 대화 메시지를 발행하기 위한 redis topic 정보. 서버별로 채팅방에 매치되는 topic정보를 Map에 넣어 roomId로 찾을수 있도록 한다.
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@PostConstruct
 	private void init() {
-		opsHashChatLogs = redisTemplate.opsForHash();
 		opsHashChatRoom = redisTemplate.opsForHash();
 	}
 
@@ -65,23 +63,25 @@ public class ChatRoomRepository {
 	 * Todo : contains 말고 equals로 수정 필요....
 	 */
 	public List<ChatMessage> getChatLogs(String roomId) {
-		List<ChatMessage> ChatLogs = opsHashChatLogs.values(CHAT_LOGS);
-		List<ChatMessage> myChatLogs = new ArrayList<>();
-		for (ChatMessage chatLog : ChatLogs) {
-			logger.info("Redis Server's Data : getChatLogs(), roomdId = {}, message = {}", chatLog.getRoomId(),
-				chatLog.getMessage());
-			if (chatLog.getRoomId().contains(roomId)) {
-				logger.info("getChatLogs(), roomdId = {}, message = {}", chatLog.getRoomId(), chatLog.getMessage());
-				myChatLogs.add(chatLog);
-			}
+		ChatRoom curChatRoom = opsHashChatRoom.get(CHAT_ROOMS, roomId);
+		if (curChatRoom == null) {
+			return new ArrayList<>();
 		}
-		return myChatLogs;
+		return curChatRoom.getChatMessages();
 	}
 
-	public void storeMessageInHash(String roomId, ChatMessage message) {
-		String timestamp = String.valueOf(System.currentTimeMillis());
-		String key = roomId + ":" + timestamp;
-		redisTemplate.opsForHash().put(CHAT_LOGS, key, message);
+	public ChatRoom getChatRoom(String roomId) {
+		return opsHashChatRoom.get(CHAT_ROOMS, roomId);
 	}
+
+	public void updateChatRoom(ChatRoom chatRoom, ChatMessage messageContent) {
+		opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
+	}
+
+	// public void storeMessageInHash(String roomId, ChatMessage message) {
+	// 	String timestamp = String.valueOf(System.currentTimeMillis());
+	// 	String key = roomId + ":" + timestamp;
+	// 	redisTemplate.opsForHash().put(CHAT_LOGS, key, message);
+	// }
 
 }
