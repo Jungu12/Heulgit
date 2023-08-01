@@ -184,6 +184,7 @@ const StyledMainTitleSection = styled.section`
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+	background-color: white;
 
 	h2 {
 		color: ${colors.primary.primary};
@@ -213,6 +214,7 @@ const MainCatecorySection = styled.section`
 	width: 100%;
 	height: 61px;
 	align-items: center;
+	background-color: white;
 	border-bottom: 1px solid ${colors.greyScale.grey3};
 
 	button {
