@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.Eureka;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaDetailResponse;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaDto;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.eureka.repository.EurekaImageRepository;
@@ -47,15 +48,17 @@ public class EurekaService {
 		return eurekaRepository.findSliceBy(PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 	}
 
-	public Eureka findEureka(Long eurekaId) {
+	public EurekaDetailResponse findEureka(Long eurekaId) {
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
 
 		eureka.increaseView();
 
-		eurekaRepository.saveAndFlush(eureka);
+		System.out.println("eureka.getEurekaComments().get(0) = " + eureka.getEurekaComments().get(0));
 
-		return eureka;
+		eurekaRepository.save(eureka);
+
+		return EurekaDetailResponse.of(eureka);
 	}
 
 	/**

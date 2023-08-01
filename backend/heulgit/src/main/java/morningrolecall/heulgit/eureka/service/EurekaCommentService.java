@@ -31,8 +31,28 @@ public class EurekaCommentService {
 
 		EurekaComment eurekaComment = EurekaComment.of(eureka, user, eurekaCommentDto);
 
+		System.out.println(
+			"eurekaComment.getCommentId(), eurekaComment.getContent() = " + eurekaComment.getCommentId() + " "
+				+ eurekaComment.getContent());
+
 		eurekaCommentRepository.saveAndFlush(eurekaComment);
 
 		eureka.addComment(eurekaComment);
+	}
+
+	@Transactional
+	public void removeComment(String githubId, Long commentId) {
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
+
+		EurekaComment eurekaComment = eurekaCommentRepository.findEurekaCommentByCommentId(commentId)
+			.orElseThrow(() -> new NoResultException("해당 댓글은 존재하지 않습니다."));
+
+		if (!user.getGithubId().equals(eurekaComment.getUser().getGithubId())) {
+			System.out.println("작성자와 사용자가 일치하지 않습니다.");
+			return;
+		}
+
+		eurekaCommentRepository.delete(eurekaComment);
 	}
 }

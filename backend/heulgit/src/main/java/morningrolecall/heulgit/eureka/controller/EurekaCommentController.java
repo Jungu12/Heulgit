@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +25,22 @@ public class EurekaCommentController {
 	@PostMapping("/comments")
 	public ResponseEntity<?> commentRegister(@AuthenticationPrincipal String githubId,
 		@RequestBody EurekaCommentDto eurekaCommentDto) {
-		logger.debug("commentRegister(), who = {}, eurekaId = {}, content = {}, mentionedFollowers = {}", githubId,
-			eurekaCommentDto.getEurekaId(), eurekaCommentDto.getContent(), eurekaCommentDto.getMentionedFollowers());
+		logger.debug("commentRegister(), who = {}, eurekaId = {}, parentId = {}, content = {}, mentionedFollowers = {}",
+			githubId,
+			eurekaCommentDto.getEurekaId(), eurekaCommentDto.getParentId(), eurekaCommentDto.getContent(),
+			eurekaCommentDto.getMentionedFollowers());
 
 		eurekaCommentService.addComment(githubId, eurekaCommentDto);
+
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/{commentId}")
+	public ResponseEntity<?> commentRemove(@AuthenticationPrincipal String githubId,
+		@PathVariable Long commentId) {
+		logger.debug("commentRemove(), who = {}, commentId = {}", githubId, commentId);
+
+		eurekaCommentService.removeComment(githubId, commentId);
 
 		return ResponseEntity.ok().build();
 	}
