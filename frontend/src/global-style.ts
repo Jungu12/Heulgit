@@ -21,7 +21,7 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed, 
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+time, mark, audio, video, input, textarea, button {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -29,6 +29,7 @@ time, mark, audio, video {
 	font: inherit;
 	font-family: 'Noto Sans KR', sans-serif;
 	vertical-align: baseline;
+	box-sizing: border-box;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
@@ -52,5 +53,10 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+
+/* 바텀시트 css */
+.comment-bottom-sheet > div {
+	z-index: 100;
 }
 `;

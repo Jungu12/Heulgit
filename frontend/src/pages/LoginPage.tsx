@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 import { styled } from 'styled-components';
 
 const StyledLoginContainer = styled.div`
-	height: 100vh;
+	height: calc(var(--vh, 1vh) * 100);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
