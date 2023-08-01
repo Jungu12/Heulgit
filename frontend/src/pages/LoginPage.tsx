@@ -3,6 +3,7 @@ import { images } from '@constants/images';
 import React, { useCallback, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { lotties } from '@constants/lotties';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Lottie from 'lottie-react';
 import catUp from '../animation_lkrkgwed.json';
 
