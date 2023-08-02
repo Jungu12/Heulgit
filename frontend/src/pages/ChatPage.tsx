@@ -13,7 +13,10 @@ const StyledHeader = styled.div`
 	margin-bottom: 10px;
 `;
 const StyledChatList = styled.div`
-	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
+	padding: 15px;
 `;
 
 const ChatPage = () => {
@@ -25,6 +28,8 @@ const ChatPage = () => {
 			.get<ChatRoomType[]>(`http://192.168.100.64:8080/gm/chatrooms/${id}`)
 			.then((res) => {
 				console.log(res);
+				console.log('받아온 데이터 그대로 : ', res);
+
 				setChatRoomList(res);
 			});
 	}, []);
