@@ -11,16 +11,20 @@ const StyledCommitTable = styled.div`
 `;
 const StyledWrap = styled.div`
 	display: flex;
-	align-content: center;
 	justify-content: space-around;
 	border-bottom: 1px solid ${colors.greyScale.grey3};
-	padding: 10px 50px;
+	padding: 10px;
+	font-weight: 500;
 `;
 const StyledTag = styled.div`
-	width: 50vw;
+	display: flex;
+	justify-content: center;
+	width: 50%;
 `;
 const StyledCount = styled.div`
-	width: 10vw;
+	display: flex;
+	justify-content: center;
+	width: 50%;
 `;
 type CommitTag = {
 	type: string;

@@ -4,6 +4,7 @@ import CommitTable from '@components/profile/CommitTable';
 import RankingGraph from '@components/profile/RankingGraph';
 import CommitGraph from '@components/profile/CommitGraph';
 import { useNavigate } from 'react-router-dom';
+import { images } from '@constants/images';
 
 const StyledCommitBox = styled.div`
 	display: flex;
@@ -31,7 +32,13 @@ const StyledCommitRank = styled.div`
 	height: 300px;
 `;
 const StyledActivityButton = styled.button`
-	height: 25px;
+	background-color: transparent;
+	img {
+		width: 20px;
+		height: auto;
+	}
+	margin-left: auto;
+	padding: 10px;
 `;
 
 const MyProfile = () => {
@@ -62,7 +69,7 @@ const MyProfile = () => {
 				<StyledActivityButton
 					onClick={() => navigation('/profiles/1/commit-edit')}
 				>
-					설정
+					<img src={images.profile.settingIcon} alt="설정" />
 				</StyledActivityButton>
 				<StyledDiv>
 					<CommitGraph labels={commitLabels} />
