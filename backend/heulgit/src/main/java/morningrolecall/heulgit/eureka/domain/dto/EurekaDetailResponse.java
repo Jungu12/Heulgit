@@ -4,18 +4,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Builder;
 import lombok.Getter;
-import morningrolecall.heulgit.eureka.domain.Eureka;
+import lombok.NoArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.EurekaComment;
 import morningrolecall.heulgit.eureka.domain.EurekaImage;
 import morningrolecall.heulgit.user.domain.User;
 
 @Getter
+@Builder
+@NoArgsConstructor
 public class EurekaDetailResponse {
 	private Long eurekaId;
 	private User user;
 	private String title;
 	private String content;
+	private String readme;
 	private LocalDateTime updatedDate;
 	private int view;
 	private String link;
@@ -23,20 +27,16 @@ public class EurekaDetailResponse {
 	private Set<User> likedUsers;
 	private List<EurekaComment> eurekaComments;
 
-	public static EurekaDetailResponse of(Eureka eureka) {
-		return new EurekaDetailResponse(eureka.getEurekaId(), eureka.getUser(), eureka.getTitle(), eureka.getContent(),
-			eureka.getUpdatedDate(),
-			eureka.getView(), eureka.getLink(), eureka.getEurekaImages(), eureka.getLikedUsers(),
-			eureka.getEurekaComments());
-	}
-
-	private EurekaDetailResponse(Long eurekaId, User user, String title, String content, LocalDateTime updatedDate,
+	@Builder
+	public EurekaDetailResponse(Long eurekaId, User user, String title, String content, String readme,
+		LocalDateTime updatedDate,
 		int view,
 		String link, List<EurekaImage> eurekaImages, Set<User> likedUsers, List<EurekaComment> eurekaComments) {
 		this.eurekaId = eurekaId;
 		this.user = user;
 		this.title = title;
 		this.content = content;
+		this.readme = readme;
 		this.updatedDate = updatedDate;
 		this.view = view;
 		this.link = link;

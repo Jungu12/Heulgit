@@ -22,6 +22,9 @@ public interface EurekaRepository extends JpaRepository<Eureka, Long> {
 
 	Optional<Eureka> findEurekaByEurekaId(Long eurekaId);
 
+	@Query("SELECT e FROM Eureka e LEFT JOIN FETCH e.eurekaComments WHERE e.eurekaId = :eurekaId")
+	Optional<Eureka> findEurekaAndEurekaCommentsByEurekaId(Long eurekaId);
+
 	Slice<Eureka> findSliceByTitleContains(String title, Pageable pageable);
 
 	@Query("SELECT e FROM Eureka e WHERE e.title like %:title% ORDER BY SIZE(e.likedUsers) DESC, e.updatedDate DESC")

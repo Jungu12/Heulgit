@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,21 +43,26 @@ public class EurekaService {
 	 * 1. 정렬 조건 확인
 	 * 2. 정렬 후 페이지네이션 반환
 	 * */
-	public Slice<Eureka> findEurekas(String sort, int pages) {
+	public Slice<EurekaDetailResponse> findEurekas(String sort, int pages) {
 		if (sort.equals("likes")) {
-			return eurekaRepository.findSortedByLikesEurekas(PageRequest.of(pages - 1, SIZE));
+			Slice<Eureka> eurekas = eurekaRepository.findSortedByLikesEurekas(PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
 		if (sort.equals("comments")) {
-			return eurekaRepository.findSortedByCommentsEurekas(PageRequest.of(pages - 1, SIZE));
+			Slice<Eureka> eurekas = eurekaRepository.findSortedByCommentsEurekas(PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
 		if (sort.equals("views")) {
-			return eurekaRepository.findSliceBy(
+			Slice<Eureka> eurekas = eurekaRepository.findSliceBy(
 				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
-		return eurekaRepository.findSliceBy(PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		Slice<Eureka> eurekas = eurekaRepository.findSliceBy(
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 	}
 
 	/**
@@ -66,19 +73,30 @@ public class EurekaService {
 	 * 4. 저장 및 반환
 	 * */
 	public EurekaDetailResponse findEureka(Long eurekaId) {
-		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
+		Eureka eureka = eurekaRepository.findEurekaAndEurekaCommentsByEurekaId(eurekaId)
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
 
 		eureka.increaseView();
 
 		List<EurekaComment> eurekaComments = eurekaCommentRepository.findEurekaCommentsByEurekaOrderByUpdatedDateDesc(
 			eureka);
-
 		eureka.setEurekaComments(eurekaComments);
 
 		eurekaRepository.save(eureka);
 
-		return EurekaDetailResponse.of(eureka);
+		return EurekaDetailResponse.builder()
+			.eurekaId(eurekaId)
+			.user(eureka.getUser())
+			.title(eureka.getTitle())
+			.content(eureka.getContent())
+			.readme("")
+			.updatedDate(eureka.getUpdatedDate())
+			.view(eureka.getView())
+			.link(eureka.getLink())
+			.eurekaImages(eureka.getEurekaImages())
+			.likedUsers(eureka.getLikedUsers())
+			.eurekaComments(eurekaComments)
+			.build();
 	}
 
 	/**
@@ -222,23 +240,29 @@ public class EurekaService {
 	 * 1. 정렬 조건 확인
 	 * 2. 정렬 후 페이지네이션 반환
 	 * */
-	public Slice<Eureka> searchTitleEurekas(String keyword, String sort, int pages) {
+	public Slice<EurekaDetailResponse> searchTitleEurekas(String keyword, String sort, int pages) {
 		if (sort.equals("likes")) {
-			return eurekaRepository.findContainsTitleSortedByLikesEurekas(keyword, PageRequest.of(pages - 1, SIZE));
+			Slice<Eureka> eurekas = eurekaRepository.findContainsTitleSortedByLikesEurekas(keyword,
+				PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
 		if (sort.equals("comments")) {
-			return eurekaRepository.findContainsTitleSortedByCommentsEurekas(keyword, PageRequest.of(pages - 1, SIZE));
+			Slice<Eureka> eurekas = eurekaRepository.findContainsTitleSortedByCommentsEurekas(keyword,
+				PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
 		if (sort.equals("views")) {
-			return eurekaRepository.findSliceByTitleContains(keyword,
+			Slice<Eureka> eurekas = eurekaRepository.findSliceByTitleContains(keyword,
 				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
 		// 최신 순
-		return eurekaRepository.findSliceByTitleContains(keyword,
+		Slice<Eureka> eurekas = eurekaRepository.findSliceByTitleContains(keyword,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 	}
 
 	/**
@@ -246,23 +270,29 @@ public class EurekaService {
 	 * 1. 정렬 조건 확인
 	 * 2. 정렬 후 페이지네이션 반환
 	 * */
-	public Slice<Eureka> searchUserEurekas(String keyword, String sort, int pages) {
+	public Slice<EurekaDetailResponse> searchUserEurekas(String keyword, String sort, int pages) {
 		if (sort.equals("likes")) {
-			return eurekaRepository.findByUserNameSortedByLikesEurekas(keyword, PageRequest.of(pages - 1, SIZE));
+			Slice<Eureka> eurekas = eurekaRepository.findByUserNameSortedByLikesEurekas(keyword,
+				PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
 		if (sort.equals("comments")) {
-			return eurekaRepository.findByUserNameSortedByCommentsEurekas(keyword, PageRequest.of(pages - 1, SIZE));
+			Slice<Eureka> eurekas = eurekaRepository.findByUserNameSortedByCommentsEurekas(keyword,
+				PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
 		if (sort.equals("views")) {
-			return eurekaRepository.findSliceByUser_GithubId(keyword,
+			Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubId(keyword,
 				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
 
 		// 최신 순
-		return eurekaRepository.findSliceByUser_GithubId(keyword,
+		Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubId(keyword,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 	}
 
 	/**
@@ -270,12 +300,13 @@ public class EurekaService {
 	 * 1. 사용자 조회
 	 * 2. 사용자의 게시물 반환
 	 * */
-	public Slice<Eureka> findMyEurekas(String githubId, int pages) {
+	public Slice<EurekaDetailResponse> findMyEurekas(String githubId, int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
 			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
 
-		return eurekaRepository.findSliceByUser_GithubId(githubId,
+		Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubId(githubId,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 	}
 
 	/**
@@ -303,5 +334,26 @@ public class EurekaService {
 		}
 
 		return eurekaImages;
+	}
+
+	/**
+	 * Slice<Eureka>를 List<EurekasResponse>로 변환
+	 * */
+	private List<EurekaDetailResponse> toResponse(Slice<Eureka> eurekas) {
+		return eurekas.getContent().stream().map(eureka -> {
+			return EurekaDetailResponse.builder()
+				.eurekaId(eureka.getEurekaId())
+				.user(eureka.getUser())
+				.title(eureka.getTitle())
+				.content(eureka.getContent())
+				.updatedDate(eureka.getUpdatedDate())
+				.link(eureka.getLink())
+				.readme("")
+				.view(eureka.getView())
+				.eurekaImages(eureka.getEurekaImages())
+				.likedUsers(eureka.getLikedUsers())
+				.eurekaComments(eureka.getEurekaComments())
+				.build();
+		}).collect(Collectors.toList());
 	}
 }

@@ -21,7 +21,6 @@ import javax.persistence.OneToMany;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -82,19 +81,15 @@ public class Eureka {
 
 	@OneToMany(mappedBy = "eureka", cascade = CascadeType.ALL)
 	@Builder.Default
-	@JsonIgnore
+	@JsonIgnoreProperties("eureka")
 	private List<EurekaComment> eurekaComments = new ArrayList<>();
 
 	@Builder
 	public Eureka(User user, String title, String content, String link) {
-		setUser(user);
+		this.user = user;
 		this.title = title;
 		this.content = content;
 		this.link = link;
-	}
-
-	private void setUser(User user) {
-		this.user = user;
 	}
 
 	public void setTitle(String title) {

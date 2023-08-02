@@ -53,6 +53,10 @@ public class EurekaCommentService {
 			.build();
 
 		eurekaCommentRepository.saveAndFlush(eurekaComment);
+
+		eureka.addComment(eurekaComment);
+
+		eurekaRepository.save(eureka);
 	}
 
 	/**
