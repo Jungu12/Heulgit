@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,5 +64,11 @@ public class AuthController {
 		response.addCookie(CookieProvider.createCookie(oAuthToken.getRefreshToken()));
 
 		return ResponseEntity.ok().body(new AccessTokenResponse(oAuthToken.getAccessToken()));
+	}
+
+	@GetMapping("/me")
+	public ResponseEntity<?> getUserId(@CookieValue(value = "refreshToken") String token) {
+		logger.debug("getUserId()");
+		return ResponseEntity.ok().body(authService.getUserId(token));
 	}
 }

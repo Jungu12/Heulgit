@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -57,7 +58,13 @@ public class JwtProvider {
 
 	// JWT에서 사용자 ID 추출
 	public String getUserId(String token) {
-		return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+		try {
+			return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+		} catch (ExpiredJwtException ex) {
+			// 토큰이 만료된 경우
+			// 토큰 갱신 또는 로그아웃 등 수행
+			return null;
+		}
 	}
 
 	// 요청 헤더에서 JWT 추출
