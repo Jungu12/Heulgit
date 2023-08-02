@@ -54,4 +54,9 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+/* 바텀시트 css */
+.comment-bottom-sheet > div {
+	z-index: 100;
+}
 `;
