@@ -58,7 +58,7 @@ const StyledFooter = styled.div`
 `;
 
 const ProfilePage: React.FC = () => {
-	const [selectedMenu, setSelectedMenu] = useState(''); // 기본 선택 메뉴는 '프로필'
+	const [selectedMenu, setSelectedMenu] = useState('');
 
 	const handleMenuClick = (menu: '프로필' | '유레카' | '자유') => {
 		setSelectedMenu(menu);
@@ -78,6 +78,8 @@ const ProfilePage: React.FC = () => {
 
 		if (categoryItem) {
 			setSelectedMenu(categoryItem);
+		} else {
+			setSelectedMenu('프로필');
 		}
 	}, []);
 
@@ -108,6 +110,7 @@ const ProfilePage: React.FC = () => {
 				menuRouter2={() => handleMenuClick('유레카')}
 				menu3={'자유'}
 				menuRouter3={() => handleMenuClick('자유')}
+				selectedMenu={selectedMenu} // Category 컴포넌트에 선택된 메뉴 이름을 전달
 			/>
 			{selectedMenu === '프로필' && (
 				<StyledProfileLow>

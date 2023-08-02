@@ -7,20 +7,15 @@ import { colors } from '@constants/colors';
 const StyledCommitEditPage = styled.div`
 	/* background-color: ${colors.greyScale.grey2}; */
 `;
-const StyledHeader = styled.div`
-	width: 100%;
-	height: 56px;
-	margin-bottom: 10px;
-
-	.save-button {
-		margin-right: 20px;
-		background-color: transparent;
-		font-weight: 500;
-		font-size: 15px;
-	}
+const StyledSaveButton = styled.button`
+	margin-right: 20px;
+	background-color: transparent;
+	font-weight: 500;
+	font-size: 15px;
 `;
 
 const CommitPageMiddle = styled.div`
+	margin-top: 70px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -104,12 +99,11 @@ const CommitEditPage = () => {
 
 	return (
 		<StyledCommitEditPage>
-			<StyledHeader>
-				<Header
-					title={'커밋 메시지 설정'}
-					children={<button className="save-button">저장</button>}
-				></Header>
-			</StyledHeader>
+			<Header
+				title={'커밋 메시지 설정'}
+				children={<StyledSaveButton>저장</StyledSaveButton>}
+			></Header>
+
 			<CommitPageMiddle>
 				{/* CommitTag 목록을 매핑하여 렌더링 */}
 				{commitTags.map((tag) => (
@@ -121,7 +115,9 @@ const CommitEditPage = () => {
 					/>
 				))}
 			</CommitPageMiddle>
-			<StyledFooter></StyledFooter>
+			<StyledFooter>
+				<div>커밋 등록 버튼</div>
+			</StyledFooter>
 		</StyledCommitEditPage>
 	);
 };

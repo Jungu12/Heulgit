@@ -35,7 +35,7 @@ type Props = {
 	commitTag: CommitTag[];
 };
 
-const CommitTable: React.FC<Props> = ({ commitTag }) => {
+const CommitTable = ({ commitTag }: Props) => {
 	return (
 		<StyledCommitTable>
 			<StyledWrap>
