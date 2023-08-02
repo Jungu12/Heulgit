@@ -10,6 +10,11 @@ const StyledHeader = styled.div`
 	margin-bottom: 10px;
 `;
 
+const deleteKeysFromSession = (keys: string[]) => {
+	console.log('Deleting keys:', keys);
+	keys.forEach((key) => sessionStorage.removeItem(key));
+};
+
 const MyLikePostPage = () => {
 	const [selectedPost, setSelectedPost] = useState('');
 	const handleMenuClick = (menu: '유레카' | '자유') => {
@@ -29,12 +34,12 @@ const MyLikePostPage = () => {
 	}, []);
 
 	// 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
-	const deleteSession = () => {
-		console.log('test');
-		sessionStorage.clear();
-	};
 	useEffect(() => {
-		window.addEventListener('popstate', deleteSession);
+		const keysToDelete = ['selectedPost'];
+
+		if (window.location.pathname === '/profiles/1/like-post') {
+			deleteKeysFromSession(keysToDelete);
+		}
 	}, []);
 
 	return (

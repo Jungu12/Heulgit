@@ -57,6 +57,11 @@ const StyledFooter = styled.div`
 	height: 70px;
 `;
 
+const deleteKeysFromSession = (keys: string[]) => {
+	console.log('Deleting keys:', keys);
+	keys.forEach((key) => sessionStorage.removeItem(key));
+};
+
 const ProfilePage: React.FC = () => {
 	const navigation = useNavigate();
 
@@ -72,8 +77,6 @@ const ProfilePage: React.FC = () => {
 			| '유레카'
 			| '자유';
 
-		console.log(categoryItem);
-
 		if (categoryItem) {
 			setSelectedMenu(categoryItem);
 		} else {
@@ -82,12 +85,12 @@ const ProfilePage: React.FC = () => {
 	}, []);
 
 	// 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
-	const deleteSession = () => {
-		console.log('test');
-		sessionStorage.clear();
-	};
 	useEffect(() => {
-		window.addEventListener('popstate', deleteSession);
+		const keysToDelete = ['selectedMenu', 'selectedFollow'];
+
+		if (window.location.pathname === '/profiles/1') {
+			deleteKeysFromSession(keysToDelete);
+		}
 	}, []);
 
 	return (
