@@ -39,7 +39,7 @@ const RootRouter = () => {
 						{/* <Route path="like" element={<MyLikePostPage />}></Route> */}
 						<Route path="like-repo" element={<MyLikeRepoPage />}></Route>
 						<Route path="like-post" element={<MyLikePostPage />}></Route>
-						<Route path="like-comment" element={<MyCommentPage />}></Route>
+						<Route path="comment" element={<MyCommentPage />}></Route>
 						<Route path="commit-edit" element={<CommitEditPage />}></Route>
 						<Route path="follow" element={<FollowPage />}></Route>
 					</Route>
