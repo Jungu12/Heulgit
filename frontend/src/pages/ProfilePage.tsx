@@ -58,15 +58,13 @@ const StyledFooter = styled.div`
 `;
 
 const ProfilePage: React.FC = () => {
-	const [selectedMenu, setSelectedMenu] = useState('');
+	const navigation = useNavigate();
 
+	const [selectedMenu, setSelectedMenu] = useState('');
 	const handleMenuClick = (menu: '프로필' | '유레카' | '자유') => {
 		setSelectedMenu(menu);
 		sessionStorage.setItem('selectedMenu', menu);
 	};
-
-	const navigation = useNavigate();
-
 	useEffect(() => {
 		// selectedMenu가 변경될 때마다 sessionStorage에 저장.
 		const categoryItem = sessionStorage.getItem('selectedMenu') as
@@ -81,6 +79,15 @@ const ProfilePage: React.FC = () => {
 		} else {
 			setSelectedMenu('프로필');
 		}
+	}, []);
+
+	// 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
+	const deleteSession = () => {
+		console.log('test');
+		sessionStorage.clear();
+	};
+	useEffect(() => {
+		window.addEventListener('popstate', deleteSession);
 	}, []);
 
 	return (
