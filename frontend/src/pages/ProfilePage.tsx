@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import MyFreeboard from '@components/profile/MyFreeboard';
 import MyEureka from '@components/profile/MyEureka';
 import MyProfile from '@components/profile/MyProfile';
+import { images } from '@constants/images';
 
 const StyledProfilePage = styled.div``;
 const StyledProfileHigh = styled.div`
@@ -38,6 +39,10 @@ const StyledUserInformation = styled.div`
 
 const StyledActivityButton = styled.button`
 	height: 25px;
+	background-color: transparent;
+	img {
+		height: 25px;
+	}
 `;
 
 const StyledProfileLow = styled.div`
@@ -93,7 +98,7 @@ const ProfilePage: React.FC = () => {
 				<StyledActivityButton
 					onClick={() => navigation('/profiles/1/activity')}
 				>
-					내활동
+					<img src={images.menu} alt="내활동" />
 				</StyledActivityButton>
 			</StyledProfileHigh>
 			<Category

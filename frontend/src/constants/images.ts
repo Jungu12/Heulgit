@@ -23,6 +23,7 @@ export const images = {
 	profile: {
 		settingIcon: '/assets/images/ic-setting.png',
 		deleteIcon: '/assets/images/ic-delete.png',
+		crownIcon: '/assets/images/ic-crown.png',
 	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',
