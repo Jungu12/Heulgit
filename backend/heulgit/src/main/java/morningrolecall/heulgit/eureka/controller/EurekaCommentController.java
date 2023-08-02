@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,5 +44,12 @@ public class EurekaCommentController {
 		eurekaCommentService.removeComment(githubId, commentId);
 
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/{eurekaId}")
+	public ResponseEntity<?> commentList(@PathVariable Long eurekaId) {
+		logger.debug("commentList(), eurekaId = {}", eurekaId);
+
+		return ResponseEntity.ok().body(eurekaCommentService.findComments(eurekaId));
 	}
 }

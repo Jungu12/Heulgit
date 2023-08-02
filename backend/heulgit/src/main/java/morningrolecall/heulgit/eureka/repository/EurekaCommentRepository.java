@@ -11,5 +11,5 @@ import morningrolecall.heulgit.eureka.domain.EurekaComment;
 public interface EurekaCommentRepository extends JpaRepository<EurekaComment, Long> {
 	Optional<EurekaComment> findEurekaCommentByCommentId(Long commentId);
 
-	List<EurekaComment> findEurekaCommentsByEureka(Eureka eureka);
+	List<EurekaComment> findEurekaCommentsByEurekaOrderByUpdatedDateDesc(Eureka eureka);
 }

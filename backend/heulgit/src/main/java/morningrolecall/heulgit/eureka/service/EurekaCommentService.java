@@ -1,5 +1,7 @@
 package morningrolecall.heulgit.eureka.service;
 
+import java.util.List;
+
 import javax.persistence.NoResultException;
 
 import org.springframework.stereotype.Service;
@@ -73,5 +75,11 @@ public class EurekaCommentService {
 		}
 
 		eurekaCommentRepository.delete(eurekaComment);
+	}
+
+	public List<EurekaComment> findComments(Long eurekaId) {
+		return eurekaCommentRepository.findEurekaCommentsByEurekaOrderByUpdatedDateDesc(
+			eurekaRepository.findEurekaByEurekaId(eurekaId)
+				.orElseThrow(() -> new NoResultException("해당 게시물은 존재하지 않습니다.")));
 	}
 }

@@ -71,7 +71,8 @@ public class EurekaService {
 
 		eureka.increaseView();
 
-		List<EurekaComment> eurekaComments = eurekaCommentRepository.findEurekaCommentsByEureka(eureka);
+		List<EurekaComment> eurekaComments = eurekaCommentRepository.findEurekaCommentsByEurekaOrderByUpdatedDateDesc(
+			eureka);
 
 		eureka.setEurekaComments(eurekaComments);
 
