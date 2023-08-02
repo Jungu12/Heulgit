@@ -73,7 +73,7 @@ public class AuthService {
 
 		// 사용자 정보 추출이 정상적이지 않은 경우
 		if (user == null) {
-			// TODO 예외 처리 필요
+			System.out.println("사용자 정보가 잘못되었습니다.");
 			return null;
 		}
 
@@ -83,7 +83,7 @@ public class AuthService {
 			userRepository.save(user);
 		}
 
-		// JWT 생성!
+		// JWT 생성
 		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
 	}
 
