@@ -3,7 +3,7 @@ export type MessageType = {
 	sender: string;
 	message: string;
 	updatedTime: string;
-	isRead: boolean;
+	read: boolean;
 };
 
 export type ChatRoomType = {

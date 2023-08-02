@@ -119,15 +119,16 @@ const ChatDirectPage = () => {
 		if (inputMessage.trim() === '') return;
 		console.log(inputMessage);
 
-		client.current?.send(
-			'/pub/chat/message',
-			{},
-			JSON.stringify({
-				roomId: state.room.roomId,
-				sender: 'ksg2388',
-				message: inputMessage,
-			}),
-		);
+		const newMessage = {
+			roomId: state.room.roomId,
+			sender: 'ksg2388',
+			message: inputMessage,
+			read: true,
+			updatedTime: new Date().toString(),
+		};
+
+		client.current?.send('/pub/chat/message', {}, JSON.stringify(newMessage));
+
 		setInputMessage('');
 	}, [inputMessage]);
 
@@ -152,7 +153,7 @@ const ChatDirectPage = () => {
 	}, []);
 
 	useEffect(() => {
-		// console.log('[메세지 리스트]', messageList);
+		console.log('[메세지 리스트]', messageList);
 
 		if (messageEndRef.current) {
 			messageEndRef.current.scrollIntoView({
@@ -176,10 +177,12 @@ const ChatDirectPage = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log('[message 변경 됨?]', message);
+
 		if (message) {
-			setMessageList([...messageList, message]);
+			setMessageList((prev) => [...prev, message]);
 		}
-		// console.log(message);
+		console.log('[새로운 메시지 추가]', message);
 	}, [message]);
 
 	useEffect(() => {

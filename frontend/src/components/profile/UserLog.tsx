@@ -16,7 +16,7 @@ const StyledLog = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-	margin-left: 5px;
+	margin-left: 11px;
 `;
 
 type Props = {
