@@ -13,8 +13,9 @@ const StyledMessageBox = styled.div<{ $isUser: boolean }>`
 	align-content: center;
 `;
 const StyledMessageItem = styled.div<{ $isUser: boolean }>`
-	margin: 10px;
+	margin: 8px 12px;
 	padding: 10px;
+	white-space: pre-wrap;
 
 	border: 1px solid
 		${(props) =>
