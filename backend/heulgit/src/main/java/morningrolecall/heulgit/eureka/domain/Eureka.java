@@ -2,12 +2,14 @@ package morningrolecall.heulgit.eureka.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,14 +19,23 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import morningrolecall.heulgit.eureka.domain.dto.EurekaDto;
 import morningrolecall.heulgit.user.domain.User;
 
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 public class Eureka {
 
 	@Id
@@ -45,13 +56,16 @@ public class Eureka {
 	@Column(name = "updated_date", nullable = false)
 	private LocalDateTime updatedDate;
 
+	@Builder.Default
 	@Column(name = "view", nullable = false)
-	private int view;
+	private int view = 0;
 
 	@Column(name = "link", nullable = false)
 	private String link;
 
-	@OneToMany(mappedBy = "eureka", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "eureka", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("eureka")
+	@Builder.Default
 	private List<EurekaImage> eurekaImages = new ArrayList<>();
 
 	@ManyToMany
@@ -63,23 +77,24 @@ public class Eureka {
 		// 다대다 관계를 맺는 User 엔티티와 매핑되는 테이블의 컬럼
 		inverseJoinColumns = @JoinColumn(name = "github_id")
 	)
-	private Set<User> likedUsers;
+	@Builder.Default
+	private Set<User> likedUsers = new HashSet<>();
 
-	@OneToMany(mappedBy = "eureka", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "eureka", cascade = CascadeType.ALL)
+	@Builder.Default
+	@JsonIgnore
 	private List<EurekaComment> eurekaComments = new ArrayList<>();
 
-	public static Eureka of(User user, EurekaDto eurekaDto) {
-		return new Eureka(user, eurekaDto.getTitle(), eurekaDto.getContent(), eurekaDto.getLink());
-	}
-
-	private Eureka(User user, String title, String content,
-		String link) {
-		this.user = user;
+	@Builder
+	public Eureka(User user, String title, String content, String link) {
+		setUser(user);
 		this.title = title;
 		this.content = content;
-		this.updatedDate = LocalDateTime.now();
-		this.view = 0;
 		this.link = link;
+	}
+
+	private void setUser(User user) {
+		this.user = user;
 	}
 
 	public void setTitle(String title) {
@@ -102,21 +117,31 @@ public class Eureka {
 		this.view++;
 	}
 
+	public void addAllImage(List<EurekaImage> eurekaImages) {
+		this.eurekaImages.addAll(eurekaImages);
+	}
+
+	public void removeAllImage() {
+		this.eurekaImages.clear();
+	}
+
 	public void addComment(EurekaComment comment) {
-		eurekaComments.add(comment);
-		comment.setEureka(this);
+		this.eurekaComments.add(comment);
 	}
 
 	public void removeComment(EurekaComment comment) {
-		eurekaComments.remove(comment);
-		comment.setEureka(null);
+		this.eurekaComments.remove(comment);
 	}
 
 	public void addLikeUser(User user) {
 		this.likedUsers.add(user);
 	}
 
-	public void deleteLikeUser(User user) {
+	public void removeLikeUser(User user) {
 		this.likedUsers.remove(user);
+	}
+
+	public void setEurekaComments(List<EurekaComment> eurekaComments) {
+		this.eurekaComments = eurekaComments;
 	}
 }

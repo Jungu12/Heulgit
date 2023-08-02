@@ -9,4 +9,6 @@ import morningrolecall.heulgit.eureka.domain.EurekaImage;
 
 public interface EurekaImageRepository extends JpaRepository<EurekaImage, Eureka> {
 	Optional<EurekaImage> findEurekaImagesByEureka(Eureka eureka);
+
+	void deleteAllByEureka(Eureka eureka);
 }

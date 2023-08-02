@@ -1,13 +1,13 @@
 package morningrolecall.heulgit.eureka.domain.dto;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
-public class EurekaDto {
+public class EurekaRequest {
 	private String title;
 	private String content;
-	private String fileUri;
+	private List<String> fileUri;
 	private String link;
 }

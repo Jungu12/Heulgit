@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import morningrolecall.heulgit.eureka.domain.dto.EurekaDto;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaRequest;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.eureka.service.EurekaService;
 
@@ -43,12 +43,12 @@ public class EurekaController {
 
 	@PostMapping("/posts")
 	public ResponseEntity<?> eurekaRegister(@AuthenticationPrincipal String githubId,
-		@RequestBody EurekaDto eurekaDto) {
+		@RequestBody EurekaRequest eurekaRequest) {
 		logger.debug("eurekaRegister(), who = {}, title = {}, content = {}, imageId = {}, link = {}", githubId,
-			eurekaDto.getTitle(),
-			eurekaDto.getContent(), eurekaDto.getFileUri(), eurekaDto.getLink());
+			eurekaRequest.getTitle(),
+			eurekaRequest.getContent(), eurekaRequest.getFileUri().size(), eurekaRequest.getLink());
 
-		eurekaService.addEureka(githubId, eurekaDto);
+		eurekaService.addEureka(githubId, eurekaRequest);
 
 		return ResponseEntity.ok().build();
 	}

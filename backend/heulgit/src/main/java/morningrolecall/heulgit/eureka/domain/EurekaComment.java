@@ -4,27 +4,42 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import morningrolecall.heulgit.eureka.domain.dto.EurekaCommentDto;
 import morningrolecall.heulgit.user.domain.User;
 
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "eureka_comment")
+@EntityListeners(AuditingEntityListener.class)
 public class EurekaComment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "comment_id", nullable = false)
 	private Long commentId;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JoinColumn(name = "eureka_id", nullable = false)
 	private Eureka eureka;
 
@@ -36,29 +51,26 @@ public class EurekaComment {
 	private String content;
 
 	@Column(name = "updated_date", nullable = false)
+	@CreatedDate
 	private LocalDateTime updatedDate;
 
 	@ManyToOne
 	@JoinColumn(name = "parent_id", nullable = false)
+	@JsonBackReference
 	private EurekaComment parentComment;
 
-	@Column(name = "comment_order", nullable = false)
-	private int commentOrder;
-
-	public void setEureka(Eureka eureka) {
-		this.eureka = eureka;
-	}
-
-	public static EurekaComment of(Eureka eureka, User user, EurekaCommentDto eurekaCommentDto) {
-		return new EurekaComment(eureka, user, eurekaCommentDto.getContent());
-	}
-
-	private EurekaComment(Eureka eureka, User user, String content) {
-		this.eureka = eureka;
+	@Builder
+	public EurekaComment(Eureka eureka, User user, String content, EurekaComment parentComment) {
+		setEureka(eureka);
 		this.user = user;
 		this.content = content;
-		this.updatedDate = LocalDateTime.now();
-		this.parentComment = null;
-		this.commentOrder = 0;
+		this.parentComment = parentComment;
+	}
+
+	private void setEureka(Eureka eureka) {
+		if (this.eureka == null) {
+			this.eureka = eureka;
+			this.eureka.addComment(this);
+		}
 	}
 }

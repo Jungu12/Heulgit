@@ -21,6 +21,14 @@ public class EurekaCommentService {
 	private final EurekaRepository eurekaRepository;
 	private final UserRepository userRepository;
 
+	/**
+	 * 댓글 등록
+	 * 1. 사용자 조회
+	 * 2. 게시물 조회
+	 * 3. 부모 댓글 조회
+	 * 4. 댓글 생성
+	 * 5. 댓글 저장
+	 * */
 	@Transactional
 	public void addComment(String githubId, EurekaCommentDto eurekaCommentDto) {
 		User user = userRepository.findUserByGithubId(githubId)
@@ -29,17 +37,28 @@ public class EurekaCommentService {
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaCommentDto.getEurekaId())
 			.orElseThrow(() -> new NoResultException("해당 게시물이 존재하지 않습니다."));
 
-		EurekaComment eurekaComment = EurekaComment.of(eureka, user, eurekaCommentDto);
+		EurekaComment parentComment = null;
+		if (eurekaCommentDto.getParentId() != null) {
+			parentComment = eurekaCommentRepository.findEurekaCommentByCommentId(eurekaCommentDto.getParentId())
+				.orElseThrow(() -> new NoResultException("해당 부모 댓글이 존재하지 않습니다."));
+		}
 
-		System.out.println(
-			"eurekaComment.getCommentId(), eurekaComment.getContent() = " + eurekaComment.getCommentId() + " "
-				+ eurekaComment.getContent());
+		EurekaComment eurekaComment = EurekaComment.builder()
+			.eureka(eureka)
+			.user(user)
+			.content(eurekaCommentDto.getContent())
+			.parentComment(parentComment)
+			.build();
 
 		eurekaCommentRepository.saveAndFlush(eurekaComment);
-
-		eureka.addComment(eurekaComment);
 	}
 
+	/**
+	 * 댓글 삭제
+	 * 1. 사용자 및 댓글 조회
+	 * 2. 사용자와 댓글 작성자 비교
+	 * 3. 삭제
+	 * */
 	@Transactional
 	public void removeComment(String githubId, Long commentId) {
 		User user = userRepository.findUserByGithubId(githubId)
