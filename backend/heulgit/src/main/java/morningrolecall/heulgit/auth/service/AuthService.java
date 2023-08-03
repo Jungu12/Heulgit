@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import morningrolecall.heulgit.auth.dto.OAuthToken;
+import morningrolecall.heulgit.auth.dto.TokenInfoResponse;
 import morningrolecall.heulgit.auth.util.JwtProvider;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
@@ -73,7 +74,7 @@ public class AuthService {
 
 		// 사용자 정보 추출이 정상적이지 않은 경우
 		if (user == null) {
-			// TODO 예외 처리 필요
+			System.out.println("사용자 정보가 잘못되었습니다.");
 			return null;
 		}
 
@@ -167,5 +168,12 @@ public class AuthService {
 		String id = jwtProvider.getUserId(refreshToken);
 
 		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
+	}
+
+	/**
+	 * 토큰으로부터 사용자 ID 추출 후 반환
+	 * */
+	public TokenInfoResponse getUserId(String token) {
+		return new TokenInfoResponse(jwtProvider.getUserId(token));
 	}
 }
