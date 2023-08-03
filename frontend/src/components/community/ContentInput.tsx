@@ -23,7 +23,7 @@ const StyledURLInput = styled.textarea.attrs({
 	padding: 0px 15px 15px 15px;
 	top: 10px;
 
-	font-size: 17px;
+	font-size: 15px;
 	font-weight: bold;
 	word-break: break-word;
 
@@ -53,7 +53,7 @@ const StyledContentInput = styled.textarea.attrs({
 	/* textarea 크기 조절 막기 */
 	resize: none;
 
-	font-size: 17px;
+	font-size: 15px;
 	font-weight: bold;
 
 	border: none;

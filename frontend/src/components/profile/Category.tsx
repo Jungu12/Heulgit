@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 
@@ -8,7 +7,6 @@ const StyledCategory = styled.div`
 	justify-content: space-around;
 	align-items: end;
 	height: 50px;
-	border-bottom: 2px solid ${colors.greyScale.grey2};
 `;
 
 const StyledCategoryButton = styled.button`
@@ -19,49 +17,64 @@ const StyledCategoryButton = styled.button`
 	width: 100%;
 	height: 100%;
 	padding: 0;
+	border-bottom: 2px solid ${colors.greyScale.grey2};
 `;
 
-type Props = {
+const SelectedCategoryButton = styled(StyledCategoryButton)`
+	border-bottom: 2px solid ${colors.primary.primary};
+`;
+
+type CategoryProps = {
 	menu1: string;
+	menuRouter1: () => void;
 	menu2: string;
+	menuRouter2: () => void;
 	menu3?: string;
-	menuRouter1: string;
-	menuRouter2: string;
-	menuRouter3?: string;
-	onClickCategoryButton?: () => void;
+	menuRouter3?: () => void;
+	selectedMenu: string; // 선택된 메뉴 이름을 전달받는 속성
 };
 
 const Category = ({
 	menu1,
-	menu2,
-	menu3,
 	menuRouter1,
+	menu2,
 	menuRouter2,
-	menuRouter3 = '',
-	onClickCategoryButton,
-}: Props) => {
-	const navigation = useNavigate();
-
-	const handleMenuClick = (menuRouter: string) => {
-		if (onClickCategoryButton) {
-			onClickCategoryButton();
-		} else {
-			navigation(menuRouter);
-		}
-	};
-
+	menu3,
+	menuRouter3,
+	selectedMenu, // 선택된 메뉴 이름을 전달받는 속성
+}: CategoryProps) => {
 	return (
 		<StyledCategory>
-			<StyledCategoryButton onClick={() => handleMenuClick(menuRouter1)}>
-				{menu1}
-			</StyledCategoryButton>
-			<StyledCategoryButton onClick={() => handleMenuClick(menuRouter2)}>
-				{menu2}
-			</StyledCategoryButton>
-			{menu3 && (
-				<StyledCategoryButton onClick={() => handleMenuClick(menuRouter3)}>
-					{menu3}
+			{selectedMenu === menu1 ? (
+				<SelectedCategoryButton onClick={menuRouter1}>
+					{menu1}
+				</SelectedCategoryButton>
+			) : (
+				<StyledCategoryButton onClick={menuRouter1}>
+					{menu1}
 				</StyledCategoryButton>
+			)}
+			{selectedMenu === menu2 ? (
+				<SelectedCategoryButton onClick={menuRouter2}>
+					{menu2}
+				</SelectedCategoryButton>
+			) : (
+				<StyledCategoryButton onClick={menuRouter2}>
+					{menu2}
+				</StyledCategoryButton>
+			)}
+			{menu3 && (
+				<>
+					{selectedMenu === menu3 ? (
+						<SelectedCategoryButton onClick={menuRouter3}>
+							{menu3}
+						</SelectedCategoryButton>
+					) : (
+						<StyledCategoryButton onClick={menuRouter3}>
+							{menu3}
+						</StyledCategoryButton>
+					)}
+				</>
 			)}
 		</StyledCategory>
 	);

@@ -2,11 +2,9 @@ import Header from '@components/common/Header';
 import Navigation from '@components/common/Navigation';
 import CommunityCategory from '@components/community/CommunityCategory';
 import CreateButton from '@components/community/CreateButton';
-import FeedBottom from '@components/community/FeedBottom';
 import FilterCategory from '@components/community/FilterCategory';
-import { images } from '@constants/images';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 커뮤니티
@@ -15,6 +13,18 @@ const CommunityContainer = styled.div`
 	height: 100vh;
 	flex-direction: column;
 	align-items: center;
+
+	overflow-y: scroll;
+	-ms-overflow-style: none; /* 인터넷 익스플로러 */
+	scrollbar-width: none; /* 파이어폭스 */
+
+	/* 스크롤바 숨기기 (인터넷 익스플로러, 파이어폭스 */
+	&::-webkit-scrollbar {
+		display: none; /* 크롬, 사파리, 엣지 */
+	}
+	&::-ms-scrollbar {
+		display: none; /* 인터넷 익스플로러 */
+	}
 `;
 
 // 피드 컨테이너
@@ -22,55 +32,19 @@ const StyledFeedContainer = styled.div`
 	display: flex;
 	position: relative;
 	flex-direction: column;
-	overflow-y: scroll;
 
-	top: 170px;
-	/* bottom: 70px; */
-`;
-
-// 피드 살려주세요
-const StyledFeed = styled.section`
-	display: flex;
-	flex-direction: column;
-
-	height: 400px;
-	width: 390px;
-`;
-
-// 검색 버튼
-const StyledSearchButton = styled.img`
-	height: 24px;
-	width: 24px;
-	margin-right: 14px;
+	top: 163px;
+	width: 100%;
 `;
 
 const CommunityPage = () => {
-	const navigation = useNavigate();
-
 	return (
 		<CommunityContainer>
-			<Header title="커뮤니티" type="home">
-				<StyledSearchButton
-					src={images.navigation.searchActive}
-					alt="search button"
-					onClick={() => navigation('/search')}
-				/>
-			</Header>
+			<Header title="커뮤니티" type="home" />
 			<CommunityCategory />
 			<FilterCategory />
 			<StyledFeedContainer>
-				<StyledFeed>
-					피드입니다
-					<FeedBottom />
-				</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
-				<StyledFeed>피드입니다</StyledFeed>
+				<Outlet />
 			</StyledFeedContainer>
 			<CreateButton />
 			<Navigation />
