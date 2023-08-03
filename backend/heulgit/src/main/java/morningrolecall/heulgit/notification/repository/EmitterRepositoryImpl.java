@@ -31,14 +31,14 @@ public class EmitterRepositoryImpl implements EmitterRepository{
 	}
 
 	@Override
-	public Map<String, SseEmitter> findAllEmitterStartWithByEmail(String githubId) {
+	public Map<String, SseEmitter> findAllEmitterStartWithByGithubId(String githubId) {
 		return emitters.entrySet().stream()
 			.filter(entry -> entry.getKey().startsWith(githubId))
 			.collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
 	}
 
 	@Override
-	public Map<String, Object> findAllEventCacheStartWithByEmail(String githubId) {
+	public Map<String, Object> findAllEventCacheStartWithByGithubId(String githubId) {
 		return emitters.entrySet().stream()
 			.filter(entry -> entry.getKey().startsWith(githubId))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -50,7 +50,7 @@ public class EmitterRepositoryImpl implements EmitterRepository{
 	}
 
 	@Override
-	public void deleteAllEmitterStartWithId(String githubId) {
+	public void deleteAllEmitterStartWithGithubId(String githubId) {
 		emitters.forEach((key, emitter) -> {
 			if (key.startsWith(githubId)){
 				emitters.remove(key);
@@ -59,7 +59,7 @@ public class EmitterRepositoryImpl implements EmitterRepository{
 	}
 
 	@Override
-	public void deleteAllEventCacheStartWithId(String githubId) {
+	public void deleteAllEventCacheStartWithGithubId(String githubId) {
 		emitters.forEach((key, emitter) -> {
 			if (key.startsWith(githubId)){
 				emitters.remove(key);
