@@ -1,10 +1,10 @@
 import { colors } from '@constants/colors';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 // 필터 카테고리 컨테이너
-const StyledFilterContainder = styled.div`
+const StyledFilterContainer = styled.div`
 	display: flex;
 	position: fixed;
 	justify-content: space-around;
@@ -13,16 +13,15 @@ const StyledFilterContainder = styled.div`
 
 	width: 100%;
 	height: 55px;
-
-	top: 110px;
+	top: 108px;
 
 	border-bottom: solid 2px ${colors.greyScale.grey3};
-	/* background-color: #ffffff; */
+	background-color: white;
 `;
 
 // 필터 버튼
-const StyledFilterButton = styled.button`
-	color: ${colors.greyScale.grey4};
+const StyledFilterButton = styled.button<{ $active: boolean }>`
+	color: ${(props) => (props.$active ? 'white' : colors.greyScale.grey4)};
 	font-size: 12px;
 	font-weight: 600;
 
@@ -30,29 +29,32 @@ const StyledFilterButton = styled.button`
 	width: 88px;
 	height: 28px;
 
-	border: solid 2px ${colors.greyScale.grey4};
+	border: solid 2px
+		${({ $active }) =>
+			$active ? colors.primary.primary : colors.greyScale.grey4};
 	border-radius: 36px;
-	background-color: white;
+
+	background-color: ${({ $active }) =>
+		$active ? colors.primary.primary : 'white'};
 `;
 
 const FilterCategory = () => {
-	const navigation = useNavigate();
+	// const navigation = useNavigate();
+	const categories = ['전체 보기', '좋아요 많은 순', '댓글 많은 순', '조회 순'];
+	const [button, setButton] = useState('전체 보기');
 
 	return (
-		<StyledFilterContainder>
-			<StyledFilterButton onClick={() => navigation('/')}>
-				전체 보기
-			</StyledFilterButton>
-			<StyledFilterButton onClick={() => navigation('/')}>
-				좋아요 많은 순
-			</StyledFilterButton>
-			<StyledFilterButton onClick={() => navigation('/')}>
-				댓글 많은 순
-			</StyledFilterButton>
-			<StyledFilterButton onClick={() => navigation('/')}>
-				조회 순
-			</StyledFilterButton>
-		</StyledFilterContainder>
+		<StyledFilterContainer>
+			{categories.map((item, idx) => (
+				<StyledFilterButton
+					key={idx}
+					$active={item === button}
+					onClick={() => setButton(item)}
+				>
+					{item}
+				</StyledFilterButton>
+			))}
+		</StyledFilterContainer>
 	);
 };
 

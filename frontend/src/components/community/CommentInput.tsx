@@ -1,5 +1,5 @@
 import { colors } from '@constants/colors';
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
 
 // 댓글 컨테이너
@@ -44,7 +44,7 @@ const StyledCommentInput = styled.input.attrs({
 	border: solid 1px ${colors.greyScale.grey3};
 	border-radius: 8px;
 
-	padding: 0 40px 0 5px; /* 오른쪽 padding을 버튼 앞까지로 설정 */
+	padding: 0 40px 0 10px;
 	width: 100%;
 	height: 30px;
 
@@ -59,27 +59,59 @@ const StyledCommentInput = styled.input.attrs({
 	}
 `;
 
-const StyledRegisterButton = styled.button`
+// 등록 버튼
+const StyledRegisterButton = styled.button<{ $active: boolean }>`
 	position: absolute;
-	right: 5px;
+	right: 10px;
 	top: 50%;
 	transform: translateY(-50%);
 
 	border: none;
 	background-color: transparent;
 
-	color: ${colors.greyScale.grey4};
+	color: ${({ $active }) =>
+		$active ? colors.primary.primary : colors.greyScale.grey4};
 	font-weight: bold;
 	font-size: 13px;
 `;
 
 const CommentInput = () => {
+	const [keyword, setKeyword] = useState('');
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setKeyword(e.target.value);
+	};
+
+	const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			if (keyword.trim() !== '') {
+				console.log('등록할 댓글:', keyword);
+				setKeyword('');
+			}
+		}
+	};
+
+	const handleClick = () => {
+		if (keyword.trim() !== '') {
+			console.log('등록할 댓글:', keyword);
+			setKeyword('');
+		}
+	};
+
+	const isKeywordValid = keyword.trim().length > 0;
+
 	return (
 		<StyledCommentComtainer>
 			<StyledProfileImg />
 			<StyledCommentInputContainer>
-				<StyledCommentInput />
-				<StyledRegisterButton>등록</StyledRegisterButton>
+				<StyledCommentInput
+					value={keyword}
+					onChange={handleChange}
+					onKeyDown={handleEnter}
+				/>
+				<StyledRegisterButton $active={isKeywordValid} onClick={handleClick}>
+					등록
+				</StyledRegisterButton>
 			</StyledCommentInputContainer>
 		</StyledCommentComtainer>
 	);
