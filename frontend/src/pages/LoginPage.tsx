@@ -39,6 +39,7 @@ const StyledGitLoginButton = styled.button`
 	margin-top: 24px;
 	padding: 19px 0;
 	border-radius: 8px;
+	cursor: pointer;
 
 	p {
 		font-size: 20px;
@@ -67,7 +68,7 @@ const StyledLottieContainer = styled.div`
 
 const LoginPage = () => {
 	// oauth 요청 URL
-	const githubURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo user&redirect_uri=https://i9d211.p.ssafy.io/oauth/github`;
+	const githubURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo user&redirect_uri=http://localhost:3000/oauth/github`;
 
 	const onClickLoginButton = useCallback(() => {
 		window.location.href = githubURL;
