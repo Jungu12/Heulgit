@@ -14,8 +14,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import morningrolecall.heulgit.auth.dto.OAuthToken;
+import morningrolecall.heulgit.auth.dto.TokenInfoResponse;
 import morningrolecall.heulgit.auth.util.JwtProvider;
-import morningrolecall.heulgit.user.entity.User;
+import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
@@ -73,18 +74,18 @@ public class AuthService {
 
 		// 사용자 정보 추출이 정상적이지 않은 경우
 		if (user == null) {
-			// TODO 예외 처리 필요
+			System.out.println("사용자 정보가 잘못되었습니다.");
 			return null;
 		}
 
-		String id = user.getId();
+		String githubId = user.getGithubId();
 		// 사용자가 처음 서비스를 이용하는 경우
-		if (userRepository.findUserById(id).isEmpty()) {
+		if (userRepository.findUserByGithubId(githubId).isEmpty()) {
 			userRepository.save(user);
 		}
 
 		// JWT 생성!
-		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
+		return new OAuthToken(jwtProvider.generateAccessToken(githubId), jwtProvider.generateRefreshToken(githubId));
 	}
 
 	/**
@@ -167,5 +168,12 @@ public class AuthService {
 		String id = jwtProvider.getUserId(refreshToken);
 
 		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
+	}
+
+	/**
+	 * 토큰으로부터 사용자 ID 추출 후 반환
+	 * */
+	public TokenInfoResponse getUserId(String token) {
+		return new TokenInfoResponse(jwtProvider.getUserId(token));
 	}
 }

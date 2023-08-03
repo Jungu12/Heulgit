@@ -16,13 +16,13 @@ const StyledLog = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-	margin-left: 5px;
+	margin-left: 11px;
 `;
 
 type Props = {
 	userLName: string;
 	userLog: string;
-	logDate: number;
+	logDate: string;
 };
 
 const UserLog = ({ userLName, userLog, logDate }: Props) => {
@@ -32,7 +32,8 @@ const UserLog = ({ userLName, userLog, logDate }: Props) => {
 			<StyledLog>
 				<div>{userLName}</div>
 				<div>
-					{userLog} ..{logDate}(몇일전인지)..
+					{userLog}
+					{logDate}
 				</div>
 			</StyledLog>
 		</StyledUserLog>

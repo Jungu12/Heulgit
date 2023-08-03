@@ -3,6 +3,7 @@ import { images } from '@constants/images';
 import React, { useCallback, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { lotties } from '@constants/lotties';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Lottie from 'lottie-react';
 import catUp from '../animation_lkrkgwed.json';
 
@@ -29,6 +30,7 @@ const StyledContent = styled.div`
 `;
 
 const StyledGitLoginButton = styled.button`
+	z-index: 1;
 	display: flex;
 	width: 353px;
 	align-items: center;
@@ -37,6 +39,7 @@ const StyledGitLoginButton = styled.button`
 	margin-top: 24px;
 	padding: 19px 0;
 	border-radius: 8px;
+	cursor: pointer;
 
 	p {
 		font-size: 20px;

@@ -1,4 +1,4 @@
-package morningrolecall.heulgit.user.entity;
+package morningrolecall.heulgit.user.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 public class User {
 
 	@Id
-	@Column(name = "github_id")
-	private String id;
+	@Column(name = "github_id", nullable = false)
+	private String githubId;
 
 	@Column(name = "avatar_url")
 	private String avatarUrl;
 
+	@Column(nullable = false)
 	private String name;
 
 	private String bio;
