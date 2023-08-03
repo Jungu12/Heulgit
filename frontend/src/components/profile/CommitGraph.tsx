@@ -29,7 +29,6 @@ export const CommitGraph = ({ labels }: CommitGraphProps) => {
 		labels: labels,
 		datasets: [
 			{
-				label: '# of Votes',
 				data: [12, 9, 13, 5, 2, 3, 10],
 				backgroundColor: 'rgba(197,212,245,0.25)',
 				borderColor: colors.primary.primary,
@@ -38,7 +37,15 @@ export const CommitGraph = ({ labels }: CommitGraphProps) => {
 		],
 	};
 
-	return <Radar data={data} />;
+	const options = {
+		plugins: {
+			legend: {
+				display: false,
+			},
+		},
+	};
+
+	return <Radar data={data} options={options} />;
 };
 
 export default CommitGraph;

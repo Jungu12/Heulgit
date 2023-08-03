@@ -107,11 +107,21 @@ const ProfilePage: React.FC = () => {
 						<div>추가 정보</div>
 					</StyledUserInformation>
 				</StyledUserProfile>
-				<StyledActivityButton
-					onClick={() => navigation('/profiles/1/activity')}
-				>
-					<img src={images.menu} alt="내활동" />
-				</StyledActivityButton>
+				<div>
+					<StyledActivityButton
+						onClick={() => navigation('/profiles/1/activity')}
+					>
+						<img src={images.menu} alt="내활동" />
+					</StyledActivityButton>
+					<div>
+						<StyledActivityButton onClick={() => navigation('/profiles/1')}>
+							<img src={images.profile.followIcon} alt="팔로우" />
+						</StyledActivityButton>
+						<StyledActivityButton onClick={() => navigation('/gm')}>
+							<img src={images.gitMessage} alt="채팅" />
+						</StyledActivityButton>
+					</div>
+				</div>
 			</StyledProfileHigh>
 			<Category
 				menu1={'프로필'}

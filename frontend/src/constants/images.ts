@@ -24,6 +24,9 @@ export const images = {
 		settingIcon: '/assets/images/ic-setting.png',
 		deleteIcon: '/assets/images/ic-delete.png',
 		crownIcon: '/assets/images/ic-crown.png',
+		followIcon: '/assets/images/ic-follow.png',
+		followingIcon: '/assets/images/ic-following.png',
+		rankingIcon: '/assets/images/ic-ranking.png',
 	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',
