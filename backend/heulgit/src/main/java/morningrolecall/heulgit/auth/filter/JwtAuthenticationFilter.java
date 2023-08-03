@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String requestURI = request.getRequestURI();
 
 		// /oauth로 시작하는 URL에 대해서는 필터 처리 X
-		if (requestURI.startsWith("/oauth")) {
+		if (requestURI.startsWith("/")) {
 			filterChain.doFilter(request, response);
 			return;
 		}

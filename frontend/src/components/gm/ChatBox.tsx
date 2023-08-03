@@ -10,10 +10,12 @@ type MessageItemProps = {
 const StyledMessageBox = styled.div<{ $isUser: boolean }>`
 	display: flex;
 	justify-content: ${(props) => (props.$isUser ? 'right' : 'left')};
+	align-content: center;
 `;
 const StyledMessageItem = styled.div<{ $isUser: boolean }>`
-	margin: 10px;
+	margin: 8px 12px;
 	padding: 10px;
+	white-space: pre-wrap;
 
 	border: 1px solid
 		${(props) =>
@@ -23,10 +25,18 @@ const StyledMessageItem = styled.div<{ $isUser: boolean }>`
 		props.$isUser ? colors.primary.primaryLighten : 'white'};
 	max-width: 75%;
 `;
+const StyledUserImage = styled.img`
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	margin: 10px 0 0 10px;
+	background-color: black;
+`;
 
 const ChatBox: React.FC<MessageItemProps> = ({ message, $isUser }) => {
 	return (
 		<StyledMessageBox $isUser={$isUser}>
+			{!$isUser && <StyledUserImage src={''} />}
 			<StyledMessageItem $isUser={$isUser}>{message}</StyledMessageItem>
 		</StyledMessageBox>
 	);
