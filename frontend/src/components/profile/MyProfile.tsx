@@ -6,6 +6,35 @@ import CommitGraph from '@components/profile/CommitGraph';
 import { useNavigate } from 'react-router-dom';
 import { images } from '@constants/images';
 
+// 더미 데이터
+const dummyRankingList = [
+	{
+		github_id: 'bbong-sil',
+		count: 37,
+	},
+	{
+		github_id: 'kim.sg',
+		count: 152,
+	},
+	{
+		github_id: 'klb',
+		count: 89,
+	},
+	{
+		github_id: 'nabi',
+		count: 6,
+	},
+	{
+		github_id: 'siri',
+		count: 72,
+	},
+	{
+		github_id: 'summer',
+		count: 93,
+	},
+];
+// 더미 데이터 끝
+
 const StyledCommitBox = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -24,12 +53,14 @@ const StyledDiv = styled.div`
 `;
 const StyledCommitRank = styled.div`
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
+	/* justify-content: center; */
 	align-items: center;
 	border: 1px solid;
 	border-radius: 10px;
 	width: 100%;
-	height: 300px;
+	/* height: 250px; */
+	padding: 20px;
 `;
 const StyledActivityButton = styled.button`
 	background-color: transparent;
@@ -80,7 +111,8 @@ const MyProfile = () => {
 			</StyledCommitBox>
 
 			<StyledCommitRank>
-				<RankingGraph></RankingGraph>
+				<div>열심히 하셨잖아</div>
+				<RankingGraph rankingList={dummyRankingList} />
 			</StyledCommitRank>
 		</StyledWrap>
 	);
