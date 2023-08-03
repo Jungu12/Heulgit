@@ -19,7 +19,6 @@ import morningrolecall.heulgit.gm.dto.ChatRoom;
 @Repository
 public class ChatRoomRepository {
 	private static final String CHAT_ROOMS = "chatRoom";
-	private static final String CHAT_LOGS = "chatLog";
 	//Redis
 	private final RedisTemplate<String, Object> redisTemplate;
 	private HashOperations<String, String, ChatRoom> opsHashChatRoom;
@@ -60,7 +59,7 @@ public class ChatRoomRepository {
 	}
 
 	/**
-	 * Todo : contains 말고 equals로 수정 필요....
+	 * 채팅방에  저장된 채팅 로그들을 들고 온다.
 	 */
 	public List<ChatMessage> getChatLogs(String roomId) {
 		ChatRoom curChatRoom = opsHashChatRoom.get(CHAT_ROOMS, roomId);
@@ -75,13 +74,8 @@ public class ChatRoomRepository {
 	}
 
 	public void updateChatRoom(ChatRoom chatRoom, ChatMessage messageContent) {
+		chatRoom.addChatMessage(messageContent);
 		opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
 	}
-
-	// public void storeMessageInHash(String roomId, ChatMessage message) {
-	// 	String timestamp = String.valueOf(System.currentTimeMillis());
-	// 	String key = roomId + ":" + timestamp;
-	// 	redisTemplate.opsForHash().put(CHAT_LOGS, key, message);
-	// }
 
 }

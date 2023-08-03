@@ -62,11 +62,6 @@ public class ChatRoomController {
 	}
 
 	//채팅 로그 가져오기
-
-	/** Todo : 1. 채팅 로그에 대한 Key값 정하기
-	 *          2. 파라미터로 넘어온 roomId를 포함하는 value값이 존재하는지 찾고
-	 *          존재한다면, List에 넣어서 반환한다.
-	 */
 	@GetMapping("/chats/{roomId}")
 	@ResponseBody
 	public List<ChatMessage> enterChatRoom(@PathVariable String roomId) {
@@ -74,9 +69,7 @@ public class ChatRoomController {
 		messageService.enterChatRoom(roomId);
 		// Redis에서 해당 채팅방의 채팅 로그를 가져와서 반환한다.
 		List<ChatMessage> list = messageService.getChatLogs(roomId);
-		for (ChatMessage chatMessage : list) {
-			System.out.println(chatMessage.getMessage());
-		}
+
 		return messageService.getChatLogs(roomId);
 	}
 }
