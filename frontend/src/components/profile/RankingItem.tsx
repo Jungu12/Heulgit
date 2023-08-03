@@ -1,18 +1,12 @@
 import React from 'react';
 import { UserRankingType } from '@typedef/profile/user.types';
 import { styled } from 'styled-components';
-import { colors } from '@constants/colors';
+// import { colors } from '@constants/colors';
 
 const StyledRankingItem = styled.div`
 	display: flex;
 	justify-content: space-between;
-
-	width: 70vw;
-	margin: 10px;
-	padding: 10px;
-
-	background-color: ${colors.primary.primary};
-	border-radius: 10px;
+	width: 100%;
 `;
 
 type RankingProps = {
@@ -23,7 +17,7 @@ const RankingItem = ({ rank }: RankingProps) => {
 	return (
 		<StyledRankingItem>
 			<div>{rank.github_id}</div>
-			<div>{rank.count}</div>
+			<div>{rank.count} 개</div>
 		</StyledRankingItem>
 	);
 };

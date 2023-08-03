@@ -111,7 +111,7 @@ const MyProfile = () => {
 			</StyledCommitBox>
 
 			<StyledCommitRank>
-				<div>열심히 하셨잖아</div>
+				<div>열심히 하시잖아</div>
 				<RankingGraph rankingList={dummyRankingList} />
 			</StyledCommitRank>
 		</StyledWrap>
