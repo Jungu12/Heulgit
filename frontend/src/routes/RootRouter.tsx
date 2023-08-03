@@ -1,6 +1,6 @@
 import CommitEditPage from '@pages/CommitEditPage';
 import CommunityPage from '@pages/CommunityPage';
-import LoginPage from '@pages/LoginPage';
+import LoginPage from '@pages/Login/LoginPage';
 import MainPage from '@pages/MainPage';
 import MyActivityPage from '@pages/MyActivityPage';
 import MyLikePostPage from '@pages/MyLikePostPage';
