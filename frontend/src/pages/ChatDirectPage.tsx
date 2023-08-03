@@ -1,33 +1,40 @@
-// Import statements
+import React, {
+	useState,
+	KeyboardEvent,
+	useRef,
+	useEffect,
+	useCallback,
+} from 'react';
 import Header from '@components/common/Header';
-import ChatBox from '@components/profile/ChatBox';
+import ChatBox from '@components/gm/ChatBox';
 import { colors } from '@constants/colors';
-import React, { useState, KeyboardEvent } from 'react';
 import { styled } from 'styled-components';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { useLocation } from 'react-router';
+import { ChatRoomType, MessageType } from '@typedef/gm/gm.types';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { CompatClient, Stomp } from '@stomp/stompjs';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import SockJS from 'sockjs-client';
+import { http } from '@utils/http';
 
-// Define the Message type
-type Message = {
-	text: string;
-	$isUser: boolean;
-};
+const StyledChatDirectPageContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	height: calc(var(--vh, 1vh) * 100);
+`;
 
-// Define the state for ChatDirectPage component
-type ChatDirectPageState = {
-	inputMessage: string;
-	messages: Message[];
-};
-
-// Styled components for the ChatDirectPage component
 const StyledHeader = styled.div`
 	width: 100%;
 	height: 56px;
-	margin-bottom: 10px;
 `;
 
 const StyledMessage = styled.div`
 	word-wrap: break-word;
 	word-break: break-all;
 	margin-bottom: 50px;
+	height: calc((var(--vh, 1vh) * 100) - 102px);
+	overflow: scroll;
 `;
 
 const StyledFooter = styled.div`
@@ -46,12 +53,9 @@ const StyledInputWrap = styled.div`
 	width: 100%;
 	padding: 0 10px;
 `;
-
-// StyledInputDivProps is used to style the input based on whether it is empty or not
 type StyledInputDivProps = {
 	$isEmpty: boolean;
 };
-
 const StyledInputDiv = styled.div<StyledInputDivProps>`
 	display: flex;
 	border: 1px solid
@@ -59,7 +63,7 @@ const StyledInputDiv = styled.div<StyledInputDivProps>`
 			$isEmpty ? colors.greyScale.grey3 : colors.primary.primary};
 	border-radius: 8px;
 	padding: 2px 6px;
-	margin: 10px 0;
+	height: 35px;
 `;
 
 const StyledInput = styled.input`
@@ -69,78 +73,152 @@ const StyledInput = styled.input`
 
 const StyledButton = styled.button`
 	width: 50px;
-	height: 30px;
+	height: 35px;
+	margin-right: 10px;
+	/* border: 1px solid ${colors.primary.primary}; */
+	background-color: ${colors.primary.primary};
+	color: white;
+	border-radius: 8px;
 `;
 
-// ChatDirectPage component
-const ChatDirectPage: React.FC = () => {
-	const [state, setState] = useState<ChatDirectPageState>({
-		inputMessage: '',
-		messages: [
-			{ text: '야야 뭐하고있어', $isUser: false },
-			{ text: '누워서 티비보는중~ 넌?', $isUser: true },
-			{ text: '나두 그냥 누워있음ㅋㅋ', $isUser: false },
-			{
-				text: '두줄이상은 어떻게 되는지 확인해야지... 길게길게 써봅시다... 리액트 너무너무 재밌다...즐겁다...',
-				$isUser: true,
-			},
-		],
-	});
-
-	// Handle input change in the input field
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setState((prev) => ({ ...prev, inputMessage: e.target.value }));
+type RouteState = {
+	state: {
+		room: ChatRoomType;
 	};
+};
 
-	// Handle form submission (button click)
-	const handleSubmit = () => {
-		const { inputMessage, messages } = state;
+const ChatDirectPage = () => {
+	const { state } = useLocation() as RouteState;
+	const client = useRef<CompatClient>();
+	const messageEndRef = useRef<HTMLDivElement | null>(null);
+	const [messageList, setMessageList] = useState<MessageType[]>([]);
+	const [message, setMessage] = useState<MessageType>();
+	const [inputMessage, setInputMessage] = useState('');
 
-		if (inputMessage.trim() === '') {
-			return;
-		}
-
-		setState({
-			inputMessage: '',
-			messages: [...messages, { text: inputMessage, $isUser: true }],
+	// 채팅방 연결 함수
+	const connectHandler = useCallback((roomId: string) => {
+		client.current = Stomp.over(() => {
+			const sock = new SockJS('http://192.168.100.64:8080/gm');
+			return sock;
 		});
+
+		setMessageList([...state.room.chatMessages]);
+		client.current.connect({}, () => {
+			client.current!.subscribe(
+				`/sub/chat/room/${roomId}`,
+				(msg) => {
+					setMessage(JSON.parse(msg.body));
+				},
+				{ Authorization: '', simpDestination: roomId },
+			);
+		});
+	}, []);
+
+	// 메세지 보내기 함수
+	const sendHandler = useCallback(() => {
+		if (inputMessage.trim() === '') return;
+		console.log(inputMessage);
+
+		const newMessage = {
+			roomId: state.room.roomId,
+			sender: 'ksg2388',
+			message: inputMessage,
+			read: true,
+			updatedTime: new Date().toString(),
+		};
+
+		client.current?.send('/pub/chat/message', {}, JSON.stringify(newMessage));
+
+		setInputMessage('');
+	}, [inputMessage]);
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setInputMessage(e.target.value);
 	};
 
 	const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
-			handleSubmit();
+			sendHandler();
 		}
 	};
 
-	// Render the ChatDirectPage component
+	const loadChatRoomLog = useCallback((id: string) => {
+		http
+			.get<MessageType[]>(`http://192.168.100.64:8080/gm/chats/${id}`)
+			.then((res) => {
+				// console.log(res);
+				setMessageList([...res]);
+				// setChatRoomList(res);
+			});
+	}, []);
+
+	useEffect(() => {
+		console.log('[메세지 리스트]', messageList);
+
+		if (messageEndRef.current) {
+			messageEndRef.current.scrollIntoView({
+				behavior: 'auto',
+				block: 'end',
+				inline: 'nearest',
+			});
+		}
+	}, [messageList]);
+
+	// useEffect(() => {
+	// 	console.log(inputMessage);
+	// }, [inputMessage]);
+
+	// useEffect(() => {
+	// 	console.log('[message]', state.room.chatMessages);
+	// }, [state]);
+
+	useEffect(() => {
+		connectHandler(state.room.roomId);
+	}, []);
+
+	useEffect(() => {
+		console.log('[message 변경 됨?]', message);
+
+		if (message) {
+			setMessageList((prev) => [...prev, message]);
+		}
+		console.log('[새로운 메시지 추가]', message);
+	}, [message]);
+
+	useEffect(() => {
+		loadChatRoomLog(state.room.roomId);
+	}, [state.room.roomId]);
+
 	return (
-		<div>
+		<StyledChatDirectPageContainer>
 			<StyledHeader>
 				<Header title={'userName'} />
 			</StyledHeader>
 			<StyledMessage>
-				{state.messages.map((message, index) => (
+				{messageList.map((msg, index) => (
 					<ChatBox
 						key={index}
-						message={message.text}
-						$isUser={message.$isUser}
+						message={msg.message}
+						$isUser={msg.sender === 'ksg2388'}
 					/>
 				))}
+				<div ref={messageEndRef}></div>
 			</StyledMessage>
 			<StyledFooter>
 				<StyledInputWrap>
-					<StyledInputDiv $isEmpty={state.inputMessage === ''}>
+					<StyledInputDiv $isEmpty={inputMessage === ''}>
 						<StyledInput
 							type="text"
-							value={state.inputMessage}
+							value={inputMessage}
 							onChange={handleInputChange}
-							onKeyPress={handleKeyPress}
+							onKeyDown={handleKeyPress}
 						/>
+						<button>사진</button>
 					</StyledInputDiv>
 				</StyledInputWrap>
-				<StyledButton onClick={handleSubmit}>전송</StyledButton>
+				<StyledButton onClick={sendHandler}>전송</StyledButton>
 			</StyledFooter>
-		</div>
+		</StyledChatDirectPageContainer>
 	);
 };
 

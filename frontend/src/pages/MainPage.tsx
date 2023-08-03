@@ -11,6 +11,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactModal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { css, styled } from 'styled-components';
+import 'react-spring-bottom-sheet/dist/style.css';
+import CBottomSheet from '@components/common/CBottomSheet';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/index';
 
 // 더미 데이터
 const dummyFeedList = [
@@ -161,6 +165,7 @@ const customStyles = {
 		left: '0',
 		background: 'rgba(255, 255, 255, 0.6)',
 		backdropFilter: 'blur(10px)',
+		webkitBackdropFilter: 'blur(10px)', // -webkit-backdrop-filter 추가
 		zIndex: '99',
 		border: 'none',
 		padding: '0',
@@ -170,6 +175,7 @@ const customStyles = {
 const StyledMainContainer = styled.div`
 	display: flex;
 	flex-direction: column;
+	height: calc(var(--vh, 1vh) * 100);
 `;
 
 const StyledMainTitleSection = styled.section`
@@ -180,6 +186,7 @@ const StyledMainTitleSection = styled.section`
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+	background-color: white;
 
 	h2 {
 		color: ${colors.primary.primary};
@@ -209,6 +216,7 @@ const MainCatecorySection = styled.section`
 	width: 100%;
 	height: 61px;
 	align-items: center;
+	background-color: white;
 	border-bottom: 1px solid ${colors.greyScale.grey3};
 
 	button {
@@ -356,8 +364,10 @@ const StyledClose = styled.img`
 `;
 
 const MainPage = () => {
+	const accessToken = useSelector((state: RootState) => state.auth.token);
 	const dropDownRef = useRef(null);
 	const calendarRef = useRef<HTMLButtonElement>(null);
+	// const sheetRef = useRef<BottomSheetRef>();
 	const navigation = useNavigate();
 	const [isViewOptionOpen, setIsViewOptionOpen] = useDetectClose(
 		dropDownRef,
@@ -365,6 +375,7 @@ const MainPage = () => {
 	);
 	const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+	const [isCommentOpen, setIsCommentOpen] = useState(false);
 	const [selelctedOption, setSelelctedOption] = useState('');
 	const [selectedLanguage, setSelectedLanguage] = useState('');
 	const [startDate, setStartDate] = useState<Date | null>(null);
@@ -458,6 +469,11 @@ const MainPage = () => {
 
 	useEffect(() => {
 		console.log(isCalendarOpen);
+		if (accessToken) {
+			console.log(accessToken);
+		} else {
+			console.log('토큰 없음');
+		}
 	}, []);
 
 	return (
@@ -535,6 +551,7 @@ const MainPage = () => {
 				isOpen={isLanguageOpen}
 				style={customStyles}
 				overlayClassName="custom-overlay"
+				// className="modal"
 			>
 				<LanguageSearchModal onClickLanguage={onClickLanguage} />
 			</ReactModal>
@@ -552,6 +569,10 @@ const MainPage = () => {
 			</StyledDropDown>
 			{/* 피드가 담길 곳 */}
 			<FeedItemList feedList={dummyFeedList} />
+			<CBottomSheet
+				open={isCommentOpen}
+				onDismiss={() => setIsCommentOpen(false)}
+			></CBottomSheet>
 			<Navigation />
 		</StyledMainContainer>
 	);
