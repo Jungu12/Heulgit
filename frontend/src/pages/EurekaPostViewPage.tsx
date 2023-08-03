@@ -2,7 +2,6 @@ import Header from '@components/common/Header';
 import CommentInput from '@components/community/CommentInput';
 import EurekaPostCommentList from '@components/community/EurekaPostCommentList';
 import EurekaPostViewFeed from '@components/community/EurekaPostViewFeed';
-import FreePostViewFeed from '@components/community/FreePostViewFeed';
 import { images } from '@constants/images';
 import React from 'react';
 import styled from 'styled-components';

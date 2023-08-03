@@ -4,7 +4,7 @@ import CommunityCategory from '@components/community/CommunityCategory';
 import CreateButton from '@components/community/CreateButton';
 import FilterCategory from '@components/community/FilterCategory';
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 커뮤니티
@@ -38,8 +38,6 @@ const StyledFeedContainer = styled.div`
 `;
 
 const CommunityPage = () => {
-	const navigation = useNavigate();
-
 	return (
 		<CommunityContainer>
 			<Header title="커뮤니티" type="home" />

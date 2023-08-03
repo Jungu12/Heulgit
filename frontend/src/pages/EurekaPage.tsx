@@ -1,8 +1,6 @@
 import EurekaFeedItemList from '@components/community/EurekaFeedItemList';
-import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { styled } from 'styled-components';
 
 const StyledViewContainer = styled.div`
@@ -105,8 +103,6 @@ const dummyPosts = [
 ];
 
 const EurekaPage = () => {
-	const navigation = useNavigate();
-
 	return (
 		<StyledViewContainer>
 			<EurekaFeedItemList feedList={dummyPosts} />

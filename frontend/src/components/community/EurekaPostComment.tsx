@@ -1,7 +1,6 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { EurekaCommentType } from '@typedef/community/eureka.types';
-import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
 import React from 'react';
 import { styled } from 'styled-components';
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
-import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
-import FreePostComment from './FreePostComment';
 import { EurekaCommentType } from '@typedef/community/eureka.types';
 import EurekaPostComment from './EurekaPostComment';
 
