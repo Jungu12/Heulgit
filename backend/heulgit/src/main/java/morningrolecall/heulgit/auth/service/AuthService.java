@@ -109,6 +109,7 @@ public class AuthService {
 		String accessTokenResponse = extractAccessToken(response.getBody());
 
 		if (accessTokenResponse != null) {
+			System.out.println("accessTokenResponse = " + accessTokenResponse);
 			return accessTokenResponse;
 		} else {
 			throw new RuntimeException("[Exception] Access Token을 얻는데 실패했습니다.");
@@ -122,6 +123,8 @@ public class AuthService {
 	 * */
 	private User extractUser(String data) {
 		try {
+			System.out.println("data = " + data);
+
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(data);
 
