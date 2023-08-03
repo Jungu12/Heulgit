@@ -2,11 +2,16 @@ package morningrolecall.heulgit.relation.service;
 
 import org.springframework.stereotype.Service;
 
-import morningrolecall.heulgit.relation.domain.dto.FollowState;
+import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.relation.repository.RelationRepository;
 
 @Service
+@RequiredArgsConstructor
 public class RelationService {
-	public FollowState checkFollowState() {
 
+	private final RelationRepository relationRepository;
+
+	public boolean checkFollowState(String from, String to) {
+		return relationRepository.existsByFromIdAndToId(from, to);
 	}
 }
