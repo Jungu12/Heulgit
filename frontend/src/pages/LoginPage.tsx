@@ -1,7 +1,11 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { styled } from 'styled-components';
+import { lotties } from '@constants/lotties';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Lottie from 'lottie-react';
+import catUp from '../animation_lkrkgwed.json';
 
 const StyledLoginContainer = styled.div`
 	height: calc(var(--vh, 1vh) * 100);
@@ -54,12 +58,23 @@ const StyledAppName = styled.p`
 	margin-bottom: 12px;
 `;
 
+const StyledLottieContainer = styled.div`
+	position: absolute;
+	bottom: 0;
+	right: calc(100% -24px);
+`;
+
 const LoginPage = () => {
 	// oauth 요청 URL
 	const githubURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo user&redirect_uri=http://localhost:3000/oauth/github`;
 
 	const onClickLoginButton = useCallback(() => {
 		window.location.href = githubURL;
+	}, []);
+
+	useEffect(() => {
+		console.log(lotties.catUp);
+		console.log(catUp);
 	}, []);
 
 	return (
@@ -71,6 +86,13 @@ const LoginPage = () => {
 				<p>GitHub로 로그인하기</p>
 			</StyledGitLoginButton>
 			<StyledAppName>흘깃</StyledAppName>
+			<StyledLottieContainer>
+				<Lottie
+					animationData={catUp}
+					loop={true}
+					style={{ width: '133px', height: '200px' }}
+				/>
+			</StyledLottieContainer>
 		</StyledLoginContainer>
 	);
 };

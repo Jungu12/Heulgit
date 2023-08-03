@@ -51,6 +51,13 @@ const dummyComment = [
 	},
 ];
 
+const FeedItemContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-top: 60px;
+`;
+
 const StyledViewContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -74,7 +81,10 @@ const RepoViewPage = () => {
 					navigation('/');
 				}}
 			/>
-			<FeedItem feed={dummyFeed} type="full" />
+			<FeedItemContainer>
+				<FeedItem feed={dummyFeed} type="full" />
+			</FeedItemContainer>
+
 			<Separation />
 			<CommentList comments={dummyComment} />
 		</StyledViewContainer>
