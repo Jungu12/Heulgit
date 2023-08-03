@@ -3,6 +3,24 @@ import { http } from '@utils/http';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Lottie from 'lottie-react';
+import loadingCat from '../loading.json';
+
+const StyledCallBackContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	height: calc(var(--vh, 1vh) * 100);
+	align-items: center;
+	justify-content: center;
+
+	p {
+		margin-top: 24px;
+		font-family: 'RixYeoljeongdo_Regular';
+		font-size: 28px;
+	}
+`;
 
 const LoginCallBackPage = () => {
 	const navigation = useNavigate();
@@ -41,7 +59,19 @@ const LoginCallBackPage = () => {
 		}
 	}, []);
 
-	return <div>loading</div>;
+	return (
+		<StyledCallBackContainer>
+			<Lottie
+				animationData={loadingCat}
+				loop={true}
+				style={{
+					width: '300px',
+					height: '300px',
+				}}
+			/>
+			<p>잠시만 기다려주세요</p>
+		</StyledCallBackContainer>
+	);
 };
 
 export default LoginCallBackPage;
