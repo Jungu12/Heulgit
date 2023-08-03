@@ -10,17 +10,18 @@ const StyledFilterContainer = styled.div`
 	justify-content: space-around;
 	align-items: center;
 	z-index: 50;
+
 	width: 100%;
 	height: 55px;
 	top: 108px;
+
 	border-bottom: solid 2px ${colors.greyScale.grey3};
 	background-color: white;
-	/* background-color: #ffffff; */
 `;
 
 // 필터 버튼
 const StyledFilterButton = styled.button<{ $active: boolean }>`
-	color: ${({ $active }) => ($active ? 'white' : colors.greyScale.grey4)};
+	color: ${(props) => (props.$active ? 'white' : colors.greyScale.grey4)};
 	font-size: 12px;
 	font-weight: 600;
 
@@ -30,11 +31,11 @@ const StyledFilterButton = styled.button<{ $active: boolean }>`
 
 	border: solid 2px
 		${({ $active }) =>
-			$active ? colors.primary.primatyDark : colors.greyScale.grey4};
+			$active ? colors.primary.primary : colors.greyScale.grey4};
 	border-radius: 36px;
 
 	background-color: ${({ $active }) =>
-		$active ? colors.primary.primatyDark : 'white'};
+		$active ? colors.primary.primary : 'white'};
 `;
 
 const FilterCategory = () => {
@@ -42,18 +43,13 @@ const FilterCategory = () => {
 	const categories = ['전체 보기', '좋아요 많은 순', '댓글 많은 순', '조회 순'];
 	const [button, setButton] = useState('전체 보기');
 
-	const toggleActive = (category: string) => {
-		setButton(category === button ? '전체 보기' : category);
-		// navigation('/');
-	};
-
 	return (
 		<StyledFilterContainer>
 			{categories.map((item, idx) => (
 				<StyledFilterButton
 					key={idx}
 					$active={item === button}
-					onClick={() => toggleActive(item)}
+					onClick={() => setButton(item)}
 				>
 					{item}
 				</StyledFilterButton>

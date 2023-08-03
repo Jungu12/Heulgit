@@ -13,7 +13,7 @@ import RepoViewPage from '@pages/RepoViewPage';
 import SearchPage from '@pages/SearchPage';
 import SearchResultPage from '@pages/SearchResultPage';
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CreateEurekaPostPage from '@pages/CreateEurekaPostPage';
 import FreePostViewPage from '@pages/FreePostViewPage';
 import CreateFreePostPage from '@pages/CreateFreePostPage';
@@ -47,6 +47,7 @@ const RootRouter = () => {
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
 				<Route path="/community" element={<CommunityPage />}>
+					<Route index element={<Navigate replace to="eureka" />} />
 					<Route path="eureka" element={<EurekaPage />}></Route>
 					<Route path="free" element={<FreeBoardPage />}></Route>
 				</Route>

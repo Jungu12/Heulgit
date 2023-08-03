@@ -25,7 +25,7 @@ const StyledCreateFreePostContainer = styled.div`
 const StyledContentLengthContainer = styled.div`
 	display: flex;
 	align-items: center;
-	/* border: solid 1px ${colors.greyScale.grey4}; */
+
 	height: 50px;
 	margin-top: 20px;
 	margin-left: 30px;

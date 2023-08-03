@@ -2,13 +2,10 @@ import Header from '@components/common/Header';
 import Navigation from '@components/common/Navigation';
 import CommunityCategory from '@components/community/CommunityCategory';
 import CreateButton from '@components/community/CreateButton';
-import FeedBottom from '@components/community/FeedBottom';
 import FilterCategory from '@components/community/FilterCategory';
-import { images } from '@constants/images';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import EurekaPage from './EurekaPage';
 
 // 커뮤니티
 const CommunityContainer = styled.div`
@@ -16,6 +13,18 @@ const CommunityContainer = styled.div`
 	height: 100vh;
 	flex-direction: column;
 	align-items: center;
+
+	overflow-y: scroll;
+	-ms-overflow-style: none; /* 인터넷 익스플로러 */
+	scrollbar-width: none; /* 파이어폭스 */
+
+	/* 스크롤바 숨기기 (인터넷 익스플로러, 파이어폭스 */
+	&::-webkit-scrollbar {
+		display: none; /* 크롬, 사파리, 엣지 */
+	}
+	&::-ms-scrollbar {
+		display: none; /* 인터넷 익스플로러 */
+	}
 `;
 
 // 피드 컨테이너
@@ -23,47 +32,10 @@ const StyledFeedContainer = styled.div`
 	display: flex;
 	position: relative;
 	flex-direction: column;
-	overflow-y: scroll;
 
 	top: 163px;
 	width: 100%;
-	/* background-color: aqua; */
-	/* bottom: 70px; */
 `;
-
-// 더미 게시물
-const dummyPosts = [
-	{
-		id: 1,
-		title: 'hihi',
-		user: {
-			id: 'jungu12',
-			avater_url: 'qweqweqweqw',
-		},
-		content: 'eqweqwewq',
-		link: 'dfkldfsdfds',
-		updated_date: '2023-07-24',
-		views: 100,
-		likes: 10,
-		comments: 12,
-		images: [{ file_uri: 'adfldskfjsdlk' }],
-	},
-	{
-		id: 2,
-		title: 'hihi',
-		user: {
-			id: 'jungu12',
-			avater_url: 'qweqweqweqw',
-		},
-		content: 'eqweqwewq',
-		link: 'dfkldfsdfds',
-		updated_date: '2023-07-24',
-		views: 100,
-		likes: 10,
-		comments: 12,
-		images: [{ file_uri: 'adfldskfjsdlk' }],
-	},
-];
 
 const CommunityPage = () => {
 	const navigation = useNavigate();
@@ -74,7 +46,7 @@ const CommunityPage = () => {
 			<CommunityCategory />
 			<FilterCategory />
 			<StyledFeedContainer>
-				<EurekaPage />
+				<Outlet />
 			</StyledFeedContainer>
 			<CreateButton />
 			<Navigation />

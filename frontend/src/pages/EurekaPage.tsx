@@ -1,7 +1,4 @@
-// import Header from '@components/common/Header';
-import Header from '@components/common/Header';
-import CommunityFeedItem from '@components/community/CommunityFeedItem';
-// import CommunityFeedItemList from '@components/community/CommunityFeedItemList';
+import EurekaFeedItemList from '@components/community/EurekaFeedItemList';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React, { useCallback } from 'react';
@@ -13,17 +10,40 @@ const StyledViewContainer = styled.div`
 	flex-direction: column;
 `;
 
-const Separation = styled.div`
-	background-color: ${colors.greyScale.grey3};
-	width: 100%;
-	height: 1px;
-	margin-top: 20px;
-`;
-
 // 더미 게시물
 const dummyPosts = [
 	{
 		id: 1,
+		title: '여기는 유레카',
+		user: {
+			id: 'jungu12',
+			avater_url: images.dummy.dummy1,
+		},
+		content: 'eqweqwewq',
+		link: 'dfkldfsdfds',
+		updated_date: '2023-07-24',
+		views: 100,
+		likes: 10,
+		comments: 12,
+		images: [{ file_uri: '' }],
+	},
+	{
+		id: 2,
+		title: '유레카입니당 키키',
+		user: {
+			id: 'jungu12',
+			avater_url: images.dummy.dummy1,
+		},
+		content: 'asdasdasdasdasd',
+		link: 'dfkldfsdfds',
+		updated_date: '2023-07-24',
+		views: 100,
+		likes: 10,
+		comments: 12,
+		images: [{ file_uri: '' }],
+	},
+	{
+		id: 4,
 		title: 'hihi',
 		user: {
 			id: 'jungu12',
@@ -35,10 +55,10 @@ const dummyPosts = [
 		views: 100,
 		likes: 10,
 		comments: 12,
-		images: [{ file_uri: 'adfldskfjsdlk' }],
+		images: [{ file_uri: images.dummy.dummy5 }],
 	},
 	{
-		id: 2,
+		id: 3,
 		title: 'hihi',
 		user: {
 			id: 'jungu12',
@@ -50,7 +70,37 @@ const dummyPosts = [
 		views: 100,
 		likes: 10,
 		comments: 12,
-		images: [{ file_uri: 'adfldskfjsdlk' }],
+		images: [{ file_uri: '' }],
+	},
+	{
+		id: 1,
+		title: '여기는 유레카',
+		user: {
+			id: 'jungu12',
+			avater_url: images.dummy.dummy1,
+		},
+		content: 'eqweqwewq',
+		link: 'dfkldfsdfds',
+		updated_date: '2023-07-24',
+		views: 100,
+		likes: 10,
+		comments: 12,
+		images: [{ file_uri: '' }],
+	},
+	{
+		id: 1,
+		title: '여기는 유레카',
+		user: {
+			id: 'jungu12',
+			avater_url: images.dummy.dummy1,
+		},
+		content: '뀨?',
+		link: 'dfkldfsdfds',
+		updated_date: '2023-07-24',
+		views: 100,
+		likes: 10,
+		comments: 12,
+		images: [{ file_uri: images.dummy.dummy5 }],
 	},
 ];
 
@@ -59,19 +109,7 @@ const EurekaPage = () => {
 
 	return (
 		<StyledViewContainer>
-			<Header
-				title={dummyPosts[0].title}
-				onClickBackButton={() => {
-					navigation('/');
-				}}
-			/>
-			{dummyPosts.map((post) => (
-				<React.Fragment key={post.id}>
-					<CommunityFeedItem feed={post} />
-					<Separation />
-				</React.Fragment>
-			))}
-			{/* <CommunityFeedItemList comments={dummyComment} /> */}
+			<EurekaFeedItemList feedList={dummyPosts} />
 		</StyledViewContainer>
 	);
 };

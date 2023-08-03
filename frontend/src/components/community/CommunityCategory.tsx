@@ -1,6 +1,6 @@
 import { colors } from '@constants/colors';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 커뮤니티 선택 컨테이너
@@ -28,7 +28,7 @@ const StyledCategoryButton = styled.button<{ $active: boolean }>`
 	border: none;
 	border-bottom: solid 2px
 		${({ $active }) =>
-			$active ? colors.primary.primatyDark : colors.greyScale.grey4};
+			$active ? colors.primary.primary : colors.greyScale.grey4};
 
 	width: 100%;
 	height: 100%;
@@ -37,13 +37,33 @@ const StyledCategoryButton = styled.button<{ $active: boolean }>`
 
 const CommunityCategory = () => {
 	const navigation = useNavigate();
+	const location = useLocation();
 	const categories = ['유레카', '자유게시판'];
 	const [button, setButton] = useState('유레카');
 
 	const toggleActive = (category: string) => {
-		setButton(category === button ? '유레카' : category);
-		// navigation(category === button ? '' : '');
+		setButton(category);
+		if (category === '유레카') {
+			navigation('/community/eureka'); // '유레카'를 클릭했을 때 '/community/eureka'로 이동
+		} else {
+			navigation('/community/free'); // '자유게시판'을 클릭했을 때 '/community/free'로 이동
+		}
 	};
+
+	const changeCategory = useCallback((name: string) => {
+		if (name === 'free') return '자유게시판';
+		if (name === 'eureka') return '유레카';
+		return '';
+	}, []);
+
+	useEffect(() => {
+		console.log(button);
+	}, [button]);
+
+	useEffect(() => {
+		const cur = location.pathname.split('community/')[1];
+		setButton(changeCategory(cur));
+	}, []);
 
 	return (
 		<StyledCategoryContainer>
