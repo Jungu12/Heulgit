@@ -56,6 +56,9 @@ const LoginCallBackPage = () => {
 
 		if (code) {
 			getToken(code);
+		} else {
+			alert('로그인에 실패했습니다.');
+			navigation('/login');
 		}
 	}, []);
 
