@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.relation.domain.Relation;
 import morningrolecall.heulgit.relation.domain.dto.RelationUserInfo;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
-import morningrolecall.heulgit.user.entity.User;
+import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
@@ -64,9 +64,9 @@ public class RelationService {
 		List<RelationUserInfo> userInfos = new ArrayList<>();
 
 		for (String follower : followers) {
-			User user = userRepository.findUserById(follower).orElseThrow();
+			User user = userRepository.findUserByGithubId(follower).orElseThrow();
 			userInfos.add(RelationUserInfo.builder()
-				.id(user.getId())
+				.id(user.getGithubId())
 				.avater_url(user.getAvatarUrl())
 				.build());
 		}
@@ -85,9 +85,9 @@ public class RelationService {
 		List<RelationUserInfo> userInfos = new ArrayList<>();
 
 		for (String following : followings) {
-			User user = userRepository.findUserById(following).orElseThrow();
+			User user = userRepository.findUserByGithubId(following).orElseThrow();
 			userInfos.add(RelationUserInfo.builder()
-				.id(user.getId())
+				.id(user.getGithubId())
 				.avater_url(user.getAvatarUrl())
 				.build());
 		}
