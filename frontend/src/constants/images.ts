@@ -1,6 +1,7 @@
 export const images = {
 	logo: '/assets/images/logo.png',
 	gitLogo: '/assets/images/git-logo.png',
+	gotoGit: '/assets/images/ic-goto-git.png',
 	navigation: {
 		homeInactive: '/assets/images/ic-home-inactive.png',
 		homeActive: '/assets/images/ic-home-active.png',
@@ -19,6 +20,11 @@ export const images = {
 		shareButton: '/assets/images/ic-share.png',
 		commentButton: '/assets/images/ic-comment.png',
 		contentLength: '/assets/images/ic-contentlengnth.png',
+	},
+	profile: {
+		settingIcon: '/assets/images/ic-setting.png',
+		deleteIcon: '/assets/images/ic-delete.png',
+		crownIcon: '/assets/images/ic-crown.png',
 	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',
@@ -44,5 +50,8 @@ export const images = {
 	dummy: {
 		dummy1: '/assets/images/dummy1.png',
 		dummy2: '/assets/images/dummy2.png',
+		dummy3: '/assets/images/dummy3.png',
+		dummy4: '/assets/images/dummy4.png',
+		dummy5: '/assets/images/dummy5.png',
 	},
 };

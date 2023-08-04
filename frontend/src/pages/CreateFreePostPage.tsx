@@ -4,7 +4,6 @@ import ContentInput from '@components/community/ContentInput';
 import ImageContainer from '@components/community/ImageContainer';
 import RegisterButton from '@components/community/RegisterButton';
 import TitleInput from '@components/community/TitleInput';
-import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +24,7 @@ const StyledCreateFreePostContainer = styled.div`
 const StyledContentLengthContainer = styled.div`
 	display: flex;
 	align-items: center;
-	/* border: solid 1px ${colors.greyScale.grey4}; */
+
 	height: 50px;
 	margin-top: 20px;
 	margin-left: 30px;

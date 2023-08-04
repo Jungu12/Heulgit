@@ -1,64 +1,71 @@
 import React from 'react';
-import {
-	Chart as ChartJS,
-	CategoryScale,
-	LinearScale,
-	BarElement,
-	Title,
-	Tooltip,
-	Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import RankingItem from './RankingItem';
+import { UserRankingType } from '@typedef/profile/user.types';
+import { styled } from 'styled-components';
+import { colors } from '@constants/colors';
+import { images } from '@constants/images';
 
-//기본 Bar 차트
-//https://react-chartjs-2.js.org/components/bar
+const StyledRankingGraph = styled.div``;
 
-ChartJS.register(
-	CategoryScale,
-	LinearScale,
-	BarElement,
-	Title,
-	Tooltip,
-	Legend,
-);
-
-export const options = {
-	responsive: true,
-	plugins: {
-		legend: {
-			position: 'top' as const,
-		},
-		title: {
-			display: true,
-			text: 'Chart.js Bar Chart',
-		},
-	},
+type StyledRankingListItemProps = {
+	rankingNumber: number;
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+const StyledRankingListItem = styled.div<StyledRankingListItemProps>`
+	width: 70vw;
+	margin: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: ${(props) =>
+		props.rankingNumber === 1
+			? colors.primary.primary
+			: props.rankingNumber === 2
+			? colors.primary.primaryLighten
+			: colors.greyScale.grey2};
+	color: ${(props) => (props.rankingNumber === 1 ? 'white' : 'black')};
+	font-weight: ${(props) => (props.rankingNumber === 1 ? '500' : '100')};
+	display: flex;
+	align-items: center;
+`;
 
-export const data = {
-	labels,
-	datasets: [
-		{
-			label: '분류 1',
-			data: [1, 2, 3, 4, 5, 6, 7],
-			backgroundColor: 'rgba(255, 99, 132, 0.5)',
-		},
-		{
-			label: '분류 2',
-			data: [2, 3, 4, 5, 4, 7, 8],
-			backgroundColor: 'rgba(53, 162, 235, 0.5)',
-		},
-	],
+const RankingNumber = styled.div`
+	font-size: 16px;
+	width: 20px;
+	margin: 0 5px;
+`;
+
+const RankingImage = styled.img`
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+`;
+
+type RankingProps = {
+	rankingList: UserRankingType[];
 };
 
-export default function BarChart() {
+const RankingGraph = ({ rankingList }: RankingProps) => {
+	const sortedRankingList = rankingList
+		.slice()
+		.sort((a, b) => b.count - a.count);
+	const top5RankingList = sortedRankingList.slice(0, 5);
+
 	return (
-		<div className="contentWrap">
-			<div className="contentInner">
-				<Bar options={options} data={data} />
-			</div>
-		</div>
+		<StyledRankingGraph>
+			{top5RankingList.map((rank, index) => (
+				<StyledRankingListItem key={index} rankingNumber={index + 1}>
+					{index + 1 === 1 ? (
+						<>
+							<RankingImage src={images.profile.crownIcon} alt="Ranking 1" />
+						</>
+					) : (
+						<RankingNumber>{index + 1}</RankingNumber>
+					)}
+					<RankingItem rank={rank} />
+				</StyledRankingListItem>
+			))}
+		</StyledRankingGraph>
 	);
-}
+};
+
+export default RankingGraph;
