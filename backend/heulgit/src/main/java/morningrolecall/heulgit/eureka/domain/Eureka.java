@@ -84,14 +84,6 @@ public class Eureka {
 	@JsonIgnoreProperties("eureka")
 	private List<EurekaComment> eurekaComments = new ArrayList<>();
 
-	@Builder
-	public Eureka(User user, String title, String content, String link) {
-		this.user = user;
-		this.title = title;
-		this.content = content;
-		this.link = link;
-	}
-
 	public void setTitle(String title) {
 		this.title = title;
 	}
