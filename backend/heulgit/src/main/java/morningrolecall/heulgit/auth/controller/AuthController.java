@@ -45,7 +45,7 @@ public class AuthController {
 	@PostMapping("/github")
 	@ApiOperation(value = "Access Token, Refresh Token 발급")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "code", dataType = "String", value = "Github로부터 받은 인가 코드", required = true)
+		@ApiImplicitParam(name = "code", dataTypeClass = String.class, value = "Github로부터 받은 인가 코드", required = true)
 	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "토큰 발급 성공"),
@@ -54,7 +54,8 @@ public class AuthController {
 		logger.debug("getCode(), code = {}", codeDto.getCode());
 
 		OAuthToken oAuthToken = authService.createTokens(codeDto.getCode());
-		response.addCookie(CookieProvider.createCookie(oAuthToken.getRefreshToken()));
+
+		response.addHeader("Set-Cookie", CookieProvider.createCookie(oAuthToken.getRefreshToken()).toString());
 
 		return ResponseEntity.ok().body(new AccessTokenResponse(oAuthToken.getAccessToken()));
 	}
@@ -79,7 +80,7 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-		response.addCookie(CookieProvider.createCookie(oAuthToken.getRefreshToken()));
+		response.addHeader("Set-Cookie", CookieProvider.createCookie(oAuthToken.getRefreshToken()).toString());
 
 		return ResponseEntity.ok().body(new AccessTokenResponse(oAuthToken.getAccessToken()));
 	}
