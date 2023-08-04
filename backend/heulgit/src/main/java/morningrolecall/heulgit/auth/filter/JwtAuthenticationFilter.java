@@ -32,8 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		FilterChain filterChain) throws ServletException, IOException {
 		String requestURI = request.getRequestURI();
 
-		// /oauth로 시작하는 URL에 대해서는 필터 처리 X
-		if (requestURI.startsWith("/oauth")) {
+		// /oauth, swagger ui에 대한 URL은 필터 처리 X
+		if (requestURI.startsWith("/oauth") || requestURI.startsWith("/v3/api-docs") || requestURI.startsWith(
+			"/swagger-ui") || requestURI.startsWith("/favicon.ico") || requestURI.startsWith("/swagger-resources")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
