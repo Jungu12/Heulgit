@@ -1,11 +1,74 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Header from '@components/common/Header';
+import BigHeader from '@components/profile/BigHeader';
 import CommitTag from '@components/profile/Commit';
 import { colors } from '@constants/colors';
 
+const StyledBox = styled.div`
+	height: 100vh;
+
+	overflow-y: scroll;
+	scrollbar-width: none; /* 파이어폭스 */
+	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+	&::-webkit-scrollbar {
+		display: none;
+	}
+	@media (min-width: 768px) {
+		display: flex;
+		justify-content: center;
+	}
+`;
+
+const StyledSideL = styled.div`
+	height: 100vh;
+	left: 0;
+
+	@media (max-width: 767px) {
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		position: fixed;
+		width: 124px;
+		background-color: ${colors.primary.primaryLighten};
+	}
+
+	@media (min-width: 1200px) {
+		position: fixed;
+		width: 242px;
+		background-color: ${colors.primary.primary};
+	}
+`;
+const StyledSideR = styled.div`
+	height: 100vh;
+	right: 0;
+
+	@media (max-width: 767px) {
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		position: fixed;
+		width: 124px;
+		background-color: ${colors.primary.primaryLighten};
+	}
+
+	@media (min-width: 1200px) {
+		position: fixed;
+		width: 242px;
+		background-color: ${colors.primary.primary};
+	}
+`;
+
 const StyledCommitEditPage = styled.div`
-	/* background-color: ${colors.greyScale.grey2}; */
+	@media (min-width: 767px) {
+		width: 500px;
+	}
+`;
+
+const StyledEditTitle = styled.div`
+	height: 60px;
 `;
 const StyledSaveButton = styled.button`
 	margin-right: 20px;
@@ -15,11 +78,10 @@ const StyledSaveButton = styled.button`
 `;
 
 const CommitPageMiddle = styled.div`
-	margin-top: 70px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 0 20px 50px;
+	padding: 10px 20px 60px;
 `;
 
 const StyledFooter = styled.div`
@@ -33,26 +95,29 @@ const StyledFooter = styled.div`
 	justify-content: center;
 	align-items: center;
 	background-color: white;
+
+	@media (min-width: 768px) {
+		width: 500px;
+	}
 `;
+const CommitPlusButton = styled.button`
+	width: 100%;
+	height: 35px;
 
-// const CommitPlusButton = styled.button`
-// 	width: 100%;
-// 	height: 35px;
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid;
+	border-radius: 5px;
 
-// 	margin: 10px;
-// 	padding: 10px;
-// 	border: 1px solid;
-// 	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* background-color: white; */
+	font-weight: bold;
 
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-// 	/* background-color: white; */
-// 	font-weight: bold;
-
-// 	background-color: ${colors.primary.primary};
-// 	color: white;
-// `;
+	background-color: ${colors.primary.primary};
+	color: white;
+`;
 
 const CommitEditPage = () => {
 	// CommitTag 목록 -> 상태로 관리
@@ -84,41 +149,59 @@ const CommitEditPage = () => {
 		);
 	};
 
-	// commitTags 배열에서 title 값을 추출하여 새로운 배열 생성
-	// const commitTagTitles = commitTags.map((tag) => tag.title);
+	// 화면 사이즈별 타이틀 변환
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-	// const handleSubmitCommit = (title: string, detail: string) => {
-	// 	// 새로운 CommitTag를 추가합니다.
-	// 	const newTag = {
-	// 		id: commitTags.length + 1, // 새로운 ID를 부여하거나 다른 방식으로 고유한 ID를 생성하세요.
-	// 		title: `# ${title}`,
-	// 		detail,
-	// 	};
-	// 	setCommitTags((prevTags) => [...prevTags, newTag]);
-	// };
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
 
 	return (
-		<StyledCommitEditPage>
-			<Header
-				title={'커밋 메시지 설정'}
-				children={<StyledSaveButton>저장</StyledSaveButton>}
-			></Header>
+		<StyledBox>
+			<StyledSideL>
+				<div>네비게이션</div>
+			</StyledSideL>
 
-			<CommitPageMiddle>
-				{/* CommitTag 목록을 매핑하여 렌더링 */}
-				{commitTags.map((tag) => (
-					<CommitTag
-						key={tag.id}
-						title={tag.title}
-						detail={tag.detail}
-						onClickDeleteButton={() => handleDeleteCommitTag(tag.id)}
-					/>
-				))}
-			</CommitPageMiddle>
-			<StyledFooter>
-				<div>커밋 등록 버튼</div>
-			</StyledFooter>
-		</StyledCommitEditPage>
+			<StyledCommitEditPage>
+				<StyledEditTitle>
+					{windowWidth <= 768 ? (
+						<Header title={'커밋 메시지 설정'}>
+							<StyledSaveButton>저장</StyledSaveButton>
+						</Header>
+					) : (
+						<BigHeader title={'커밋 메시지 설정'}>
+							<StyledSaveButton>저장</StyledSaveButton>
+						</BigHeader>
+					)}
+				</StyledEditTitle>
+
+				<CommitPageMiddle>
+					{/* CommitTag 목록을 매핑하여 렌더링 */}
+					{commitTags.map((tag) => (
+						<CommitTag
+							key={tag.id}
+							title={tag.title}
+							detail={tag.detail}
+							onClickDeleteButton={() => handleDeleteCommitTag(tag.id)}
+						/>
+					))}
+				</CommitPageMiddle>
+				<StyledFooter>
+					<CommitPlusButton>커밋 메시지 추가</CommitPlusButton>
+				</StyledFooter>
+			</StyledCommitEditPage>
+			<StyledSideR>
+				<div>카테고리</div>
+			</StyledSideR>
+		</StyledBox>
 	);
 };
 

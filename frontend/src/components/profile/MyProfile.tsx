@@ -49,9 +49,18 @@ const StyledCommitBox = styled.div`
 	margin-bottom: 20px;
 	padding: 20px;
 `;
+const StyledCommitList = styled.div`
+	/* 타블렛 이상이면 적용 */
+	@media (min-width: 768px) {
+		display: flex;
+	}
+`;
+const StyledCommitItem = styled.div`
+	@media (min-width: 768px) {
+		width: 50%;
+	}
+`;
 const StyledActivityButton = styled.button`
-	position: absolute;
-	right: 40px;
 	background-color: transparent;
 	img {
 		width: 20px;
@@ -75,9 +84,6 @@ const SytledTitle = styled.div`
 	align-items: center;
 	img {
 		height: 24px;
-	}
-	.rank-title {
-		background-color: lightblue;
 	}
 `;
 
@@ -111,15 +117,14 @@ const MyProfile = () => {
 				>
 					<img src={images.profile.settingIcon} alt="설정" />
 				</StyledActivityButton>
-				<CommitGraph labels={commitLabels} />
-				<CommitTable commitTag={commitInfos} />
-
-				{/* <StyledDiv>
-					<CommitGraph labels={commitLabels} />
-				</StyledDiv>
-				<StyledDiv>
-					<CommitTable commitTag={commitInfos} />
-				</StyledDiv> */}
+				<StyledCommitList>
+					<StyledCommitItem>
+						<CommitGraph labels={commitLabels} />
+					</StyledCommitItem>
+					<StyledCommitItem>
+						<CommitTable commitTag={commitInfos} />
+					</StyledCommitItem>
+				</StyledCommitList>
 			</StyledCommitBox>
 
 			<StyledRankBox>
