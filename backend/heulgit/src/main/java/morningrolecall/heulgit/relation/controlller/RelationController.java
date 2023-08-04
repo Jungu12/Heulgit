@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import morningrolecall.heulgit.relation.service.RelationService;
 
 @RestController
-@RequestMapping("/relations")
+@RequestMapping("/api/relations")
 @RequiredArgsConstructor
 @Slf4j
 public class RelationController {
@@ -30,7 +30,8 @@ public class RelationController {
 	 * @param to : follow 여부를 확인하고 싶은 user
 	 */
 	@GetMapping("/state")
-	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from, @RequestParam String to) {
+	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from1, @RequestParam String to) {
+		String from = "user1";
 		logger.debug("followStateCheck(), from = {}, to = {}", from, to);
 
 		return ResponseEntity.ok().body(relationService.checkFollowState(from, to));
@@ -53,8 +54,9 @@ public class RelationController {
 	 * @param from : 사용자
 	 * @param userId : 사용자가 팔로우하려는 다른 유저 Github ID
 	 */
-	@PostMapping("/follow")
-	public ResponseEntity<?> addFollow(@AuthenticationPrincipal String from, @RequestParam String to) {
+	@PostMapping("/api/follow")
+	public ResponseEntity<?> addFollow(@AuthenticationPrincipal String from1, @RequestParam String to) {
+		String from = "user1";
 		logger.debug("addFollow(), from = {}, to = {}", from, to);
 		relationService.addFollow(from, to);
 
