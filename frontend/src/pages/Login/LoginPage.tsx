@@ -8,7 +8,8 @@ import LoginPageWeb from './LoginPageWeb';
 
 const LoginPage = () => {
 	// oauth 요청 URL
-	const githubURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo user&redirect_uri=http://localhost:3000/oauth/github`;
+	// const githubURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo user&redirect_uri=https://localhost:3000/oauth/github`;
+	const githubURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo user&redirect_uri=https://i9d211.p.ssafy.io/oauth/github`;
 
 	const onClickLoginButton = useCallback(() => {
 		window.location.href = githubURL;

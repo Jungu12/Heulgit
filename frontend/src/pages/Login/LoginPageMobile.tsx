@@ -8,6 +8,7 @@ import Lottie from 'lottie-react';
 import catUp from '../../animation_lkrkgwed.json';
 
 const StyledLoginContainer = styled.div`
+	position: relative;
 	height: calc(var(--vh, 1vh) * 100);
 	display: flex;
 	flex-direction: column;
