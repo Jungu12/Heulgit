@@ -31,9 +31,7 @@ public class ChatRoomService {
 		topics = new HashMap<>();
 	}
 
-	/**
-	 * 채팅방 입장 : redis에 topic을 만들고 pub/sub 통신을 하기 위해 리스너를 설정한다.
-	 */
+	// 채팅방 입장 : redis에 topic을 만들고 pub/sub 통신을 하기 위해 리스너를 설정한다.
 	public void enterChatRoom(String roomId) {
 		ChannelTopic topic = topics.get(roomId);
 		if (topic == null) {
@@ -43,17 +41,23 @@ public class ChatRoomService {
 		topics.put(roomId, topic);
 	}
 
+	// roomId로 해당 채팅방의 Topic을 반환한다.
 	public ChannelTopic getTopic(String roomId) {
+
 		return topics.get(roomId);
 	}
 
+	//메세지를 저장한다.
 	public void saveMessage(ChatMessage message) {
 		ChatRoom curChatRoom = chatRoomRepository.getChatRoom(message.getRoomId());
 		chatRoomRepository.updateChatRoom(curChatRoom, message);
 	}
 
+	//메세지를 반환한다.
 	public List<ChatMessage> getChatLogs(String roomId) {
+
 		List<ChatMessage> ChatMessages = chatRoomRepository.getChatLogs(roomId);
+
 		if (ChatMessages == null) {
 			return new ArrayList<>();
 		}

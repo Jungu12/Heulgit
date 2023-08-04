@@ -38,7 +38,8 @@ public class ChatRoomController {
 	// Todo : 자신의 githubID 어노테이션으로 자신의 채팅방 조회하는 로직 추가
 	@GetMapping("/chatrooms/{githubId}")
 	@ResponseBody
-	public List<ChatRoom> room(@PathVariable String githubId) {
+	public List<ChatRoom> chatRoomList(@PathVariable String githubId) {
+
 		return chatRoomRepository.findMyChatRooms(githubId);
 	}
 
@@ -46,7 +47,7 @@ public class ChatRoomController {
 	// Todo : 자신의 githubID 어노테이션으로 들고오는 코드 추가
 	@PostMapping("/room")
 	@ResponseBody
-	public ChatRoom createRoom(@RequestParam String user2) {
+	public ChatRoom chatRoomAdd(@RequestParam String user2) {
 		String user1 = "jungu12";
 		logger.info("createRoom(), user1 = {}, user2 = {}", user1, user2);
 		logger.info("createChatRoom() = {}", chatRoomRepository.createChatRoom(user1, user2));
@@ -64,12 +65,11 @@ public class ChatRoomController {
 	//채팅 로그 가져오기
 	@GetMapping("/chats/{roomId}")
 	@ResponseBody
-	public List<ChatMessage> enterChatRoom(@PathVariable String roomId) {
+	public List<ChatMessage> MessageList(@PathVariable String roomId) {
 		//입장한 채팅방의 topic을 생성한다.
 		messageService.enterChatRoom(roomId);
-		// Redis에서 해당 채팅방의 채팅 로그를 가져와서 반환한다.
-		List<ChatMessage> list = messageService.getChatLogs(roomId);
 
+		// Redis에서 해당 채팅방의 채팅 로그를 가져와서 반환한다.
 		return messageService.getChatLogs(roomId);
 	}
 }
