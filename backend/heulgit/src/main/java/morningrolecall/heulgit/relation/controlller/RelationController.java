@@ -31,7 +31,6 @@ public class RelationController {
 	 */
 	@GetMapping("/state")
 	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from, @RequestParam String to) {
-
 		logger.debug("followStateCheck(), from = {}, to = {}", from, to);
 
 		return ResponseEntity.ok().body(relationService.checkFollowState(from, to));
@@ -43,7 +42,6 @@ public class RelationController {
 	 */
 	@DeleteMapping("/unfollow")
 	public ResponseEntity<?> cancelFollow(@AuthenticationPrincipal String from, @RequestParam String to) {
-
 		logger.debug("cancelFollow(), from = {}, to = {}", from, to);
 		relationService.cancelFollow(from, to);
 
@@ -57,7 +55,6 @@ public class RelationController {
 	 */
 	@PostMapping("/follow")
 	public ResponseEntity<?> addFollow(@AuthenticationPrincipal String from, @RequestParam String to) {
-
 		logger.debug("addFollow(), from = {}, to = {}", from, to);
 		relationService.addFollow(from, to);
 
@@ -70,8 +67,8 @@ public class RelationController {
 	 */
 	@GetMapping("/followers")
 	public ResponseEntity<?> getFollowers(@AuthenticationPrincipal String userId) {
-
 		logger.debug("getFollowers(), userId = {}");
+
 		return ResponseEntity.ok().body(relationService.getFollowers(userId));
 	}
 

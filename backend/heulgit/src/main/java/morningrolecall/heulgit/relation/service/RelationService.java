@@ -34,11 +34,13 @@ public class RelationService {
 	public void addFollow(String from, String to) {
 		// 이미 팔로우 관계가 존재하면 아무 작업을 하지 않는다.
 		if (relationRepository.existsByFromIdAndToId(from, to)) {
+			//Todo : 예외처리 코드 추가 필요
+			System.out.println("이미 팔로우가 이루어졌습니다.");
 			return;
 		}
 
 		// 팔로우 관계가 존재하지 않는 경우 새로운 Relation 엔티티를 생성하여 저장한다.
-		Relation relation = new Relation().builder()
+		Relation relation = Relation.builder()
 			.fromId(from)
 			.toId(to)
 			.build();
@@ -48,11 +50,20 @@ public class RelationService {
 
 	public List<String> getFollowers(String userId) {
 		List<Relation> relations = relationRepository.findByToId(userId);
+
+		if (relations.isEmpty()) {
+			throw new RuntimeException("조회할 정보가 없습니다.");
+		}
+
 		return relations.stream().map(Relation::getFromId).collect(Collectors.toList());
 	}
 
 	public List<String> getFollowings(String userId) {
 		List<Relation> relations = relationRepository.findByFromId(userId);
+
+		if (relations.isEmpty()) {
+			throw new RuntimeException("조회할 정보가 없습니다.");
+		}
 		return relations.stream().map(Relation::getToId).collect(Collectors.toList());
 	}
 }
