@@ -1,6 +1,5 @@
 package morningrolecall.heulgit.gm.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.gm.dto.ChatMessage;
 import morningrolecall.heulgit.gm.dto.ChatRoom;
 import morningrolecall.heulgit.gm.repository.ChatRoomRepository;
+import morningrolecall.heulgit.gm.util.RedisSubscriberManager;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +24,7 @@ public class ChatRoomService {
 	private final RedisMessageListenerContainer redisMessageListener;
 	// 구독 처리 서비스
 	private final RedisSubscriber redisSubscriber;
+	private final RedisSubscriberManager redisSubscriberManager;
 	private Map<String, ChannelTopic> topics;
 
 	@PostConstruct
@@ -37,30 +38,50 @@ public class ChatRoomService {
 		if (topic == null) {
 			topic = new ChannelTopic(roomId);
 		}
+
 		redisMessageListener.addMessageListener(redisSubscriber, topic);
 		topics.put(roomId, topic);
 	}
 
 	// roomId로 해당 채팅방의 Topic을 반환한다.
 	public ChannelTopic getTopic(String roomId) {
-
 		return topics.get(roomId);
 	}
 
-	//메세지를 저장한다.
+	// 채팅방을 생성한다.
+	public ChatRoom addChatRoom(String user1, String user2) {
+		return chatRoomRepository.createChatRoom(user1, user2);
+	}
+
+	// 메세지를 저장한다.
 	public void saveMessage(ChatMessage message) {
 		ChatRoom curChatRoom = chatRoomRepository.getChatRoom(message.getRoomId());
 		chatRoomRepository.updateChatRoom(curChatRoom, message);
 	}
 
 	//메세지를 반환한다.
-	public List<ChatMessage> getChatLogs(String roomId) {
-
+	public List<ChatMessage> findMessage(String roomId) {
 		List<ChatMessage> ChatMessages = chatRoomRepository.getChatLogs(roomId);
 
 		if (ChatMessages == null) {
-			return new ArrayList<>();
+			throw new RuntimeException("채팅방에 메세지가 없습니다.");
 		}
+
 		return ChatMessages;
+	}
+
+	// 사용자가 특정 topic(채팅방)에 들어왔을 때 구독자로 등록한다.
+	public void userJoinedChatRoom(String topic, String userId) {
+		redisSubscriberManager.addUserToTopic(topic, userId);
+	}
+
+	// 사용자가 특정 topic(채팅방)에서 나갔을 때 구독자에서 제거한다.
+	public void userLeftChatRoom(String topic, String userId) {
+		redisSubscriberManager.removeUserFromTopic(topic, userId);
+	}
+
+	// 사용자가 특정 topic(채팅방)에 구독 중인지 확인한다.
+	public boolean isUserSubscribedToChatRoom(String topic, String userId) {
+		return redisSubscriberManager.isUserSubscribedToTopic(topic, userId);
 	}
 }

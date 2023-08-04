@@ -15,20 +15,20 @@ import morningrolecall.heulgit.gm.service.RedisPublisher;
 public class MessageController {
 
 	private final RedisPublisher redisPublisher;
-	private final ChatRoomService messageService;
+	private final ChatRoomService chatRoomService;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	// websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
 	@MessageMapping("/chat/message")
 	public void message(ChatMessage message) {
 		try {
-			messageService.enterChatRoom(message.getRoomId());
+			chatRoomService.enterChatRoom(message.getRoomId());
 			// Websocket에 발행된 메시지를 redis로 발행한다(publish)
-			redisPublisher.publish(messageService.getTopic(message.getRoomId()), message);
+			redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
 		} catch (Exception e) {
 			logger.error("메세지 발행 실패", e);
 		} finally {
-			messageService.saveMessage(message);
+			chatRoomService.saveMessage(message);
 		}
 	}
 }

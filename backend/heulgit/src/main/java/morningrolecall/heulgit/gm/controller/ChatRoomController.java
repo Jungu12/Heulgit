@@ -1,9 +1,9 @@
 package morningrolecall.heulgit.gm.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
-import morningrolecall.heulgit.gm.dto.ChatMessage;
-import morningrolecall.heulgit.gm.dto.ChatRoom;
 import morningrolecall.heulgit.gm.repository.ChatRoomRepository;
 import morningrolecall.heulgit.gm.service.ChatRoomService;
 
@@ -24,7 +22,7 @@ import morningrolecall.heulgit.gm.service.ChatRoomService;
 @RequestMapping("/gm")
 public class ChatRoomController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	private final ChatRoomService messageService;
+	private final ChatRoomService chatRoomService;
 	private final ChatRoomRepository chatRoomRepository;
 
 	// 채팅 리스트 화면
@@ -38,23 +36,25 @@ public class ChatRoomController {
 	// Todo : 자신의 githubID 어노테이션으로 자신의 채팅방 조회하는 로직 추가
 	@GetMapping("/chatrooms/{githubId}")
 	@ResponseBody
-	public List<ChatRoom> chatRoomList(@PathVariable String githubId) {
+	public ResponseEntity<?> chatRoomList(@AuthenticationPrincipal String githubId) {
+		logger.debug("chatRoomList(), githubId = {}", githubId);
 
-		return chatRoomRepository.findMyChatRooms(githubId);
+		return ResponseEntity.ok().body(chatRoomRepository.findMyChatRooms(githubId));
 	}
 
 	// 채팅방 생성
 	// Todo : 자신의 githubID 어노테이션으로 들고오는 코드 추가
 	@PostMapping("/room")
 	@ResponseBody
-	public ChatRoom chatRoomAdd(@RequestParam String user2) {
-		String user1 = "jungu12";
-		logger.info("createRoom(), user1 = {}, user2 = {}", user1, user2);
-		logger.info("createChatRoom() = {}", chatRoomRepository.createChatRoom(user1, user2));
-		return chatRoomRepository.createChatRoom(user1, user2);
+	public ResponseEntity<?> chatRoomAdd(@AuthenticationPrincipal String user1, @RequestParam String user2) {
+		logger.info("chatRoomAdd(), user1 = {}, user2 = {}", user1, user2);
+
+		chatRoomService.addChatRoom(user1, user2);
+
+		return ResponseEntity.ok().body(chatRoomService.addChatRoom(user1, user2));
 	}
 
-	// 채팅방 입장 화면
+	// 채팅방 입장 화면(삭제 예정)
 	@GetMapping("/room/enter/{roomId}")
 	public String roomDetail(Model model, @PathVariable String roomId) {
 		model.addAttribute("roomId", roomId);
@@ -65,11 +65,13 @@ public class ChatRoomController {
 	//채팅 로그 가져오기
 	@GetMapping("/chats/{roomId}")
 	@ResponseBody
-	public List<ChatMessage> MessageList(@PathVariable String roomId) {
+	public ResponseEntity<?> messageList(@PathVariable String roomId) {
+		logger.debug("messageList(), roomId = {}", roomId);
+
 		//입장한 채팅방의 topic을 생성한다.
-		messageService.enterChatRoom(roomId);
+		chatRoomService.enterChatRoom(roomId);
 
 		// Redis에서 해당 채팅방의 채팅 로그를 가져와서 반환한다.
-		return messageService.getChatLogs(roomId);
+		return ResponseEntity.ok().body(chatRoomService.findMessage(roomId));
 	}
 }

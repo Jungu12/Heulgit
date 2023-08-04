@@ -32,4 +32,12 @@ public class ChatRoom implements Serializable {
 		}
 		return chatMessages;
 	}
+
+	public void markAllMessagesAsRead() {
+		if (chatMessages != null) {
+			for (ChatMessage message : chatMessages) {
+				message.updateRead();
+			}
+		}
+	}
 }

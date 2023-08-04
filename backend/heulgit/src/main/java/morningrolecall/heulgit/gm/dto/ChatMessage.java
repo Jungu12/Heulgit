@@ -15,4 +15,7 @@ public class ChatMessage implements Serializable {
 	private String updatedTime; // 전송 시간
 	private boolean read; // 채팅 확인 여부
 
+	public void updateRead() {
+		read = true;
+	}
 }
