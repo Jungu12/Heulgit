@@ -4,6 +4,7 @@ import React from 'react';
 import { styled } from 'styled-components';
 
 const StyledLoginContainer = styled.div`
+	position: relative;
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
