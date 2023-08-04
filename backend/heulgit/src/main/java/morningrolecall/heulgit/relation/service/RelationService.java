@@ -1,5 +1,6 @@
 package morningrolecall.heulgit.relation.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,13 +10,17 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.relation.domain.Relation;
+import morningrolecall.heulgit.relation.domain.dto.RelationUserInfo;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
+import morningrolecall.heulgit.user.entity.User;
+import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class RelationService {
 
 	private final RelationRepository relationRepository;
+	private final UserRepository userRepository;
 
 	public boolean checkFollowState(String from, String to) {
 		return relationRepository.existsByFromIdAndToId(from, to);
@@ -48,23 +53,45 @@ public class RelationService {
 		relationRepository.save(relation);
 	}
 
-	public List<String> getFollowers(String userId) {
+	public List<RelationUserInfo> getFollowers(String userId) {
 		List<Relation> relations = relationRepository.findByToId(userId);
 
 		if (relations.isEmpty()) {
 			throw new RuntimeException("조회할 정보가 없습니다.");
 		}
+		//나를 팔로우 하는 유저 목록
+		List<String> followers = relations.stream().map(Relation::getFromId).collect(Collectors.toList());
+		List<RelationUserInfo> userInfos = new ArrayList<>();
 
-		return relations.stream().map(Relation::getFromId).collect(Collectors.toList());
+		for (String follower : followers) {
+			User user = userRepository.findUserById(follower).orElseThrow();
+			userInfos.add(RelationUserInfo.builder()
+				.id(user.getId())
+				.avater_url(user.getAvatarUrl())
+				.build());
+		}
+		return userInfos;
 	}
 
-	public List<String> getFollowings(String userId) {
+	public List<RelationUserInfo> getFollowings(String userId) {
 		List<Relation> relations = relationRepository.findByFromId(userId);
 
 		if (relations.isEmpty()) {
 			throw new RuntimeException("조회할 정보가 없습니다.");
 		}
-		return relations.stream().map(Relation::getToId).collect(Collectors.toList());
+
+		//내가 팔로우 하는 유저 목록
+		List<String> followings = relations.stream().map(Relation::getToId).collect(Collectors.toList());
+		List<RelationUserInfo> userInfos = new ArrayList<>();
+
+		for (String following : followings) {
+			User user = userRepository.findUserById(following).orElseThrow();
+			userInfos.add(RelationUserInfo.builder()
+				.id(user.getId())
+				.avater_url(user.getAvatarUrl())
+				.build());
+		}
+		return userInfos;
 	}
 }
 

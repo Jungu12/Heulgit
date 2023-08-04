@@ -78,8 +78,8 @@ public class RelationController {
 	 */
 	@GetMapping("/followings")
 	public ResponseEntity<?> getFollowings(@AuthenticationPrincipal String userId) {
-
 		logger.debug("getFollowings(), userId = {}");
+
 		return ResponseEntity.ok().body(relationService.getFollowings(userId));
 	}
 }
