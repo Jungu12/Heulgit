@@ -30,7 +30,7 @@ import morningrolecall.heulgit.auth.util.CookieProvider;
 @Api(tags = "OAuth")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/oauth")
+@RequestMapping("/api/oauth")
 public class AuthController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final AuthService authService;
