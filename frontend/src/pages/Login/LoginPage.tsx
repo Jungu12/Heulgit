@@ -6,6 +6,7 @@ import LoginMobilePage from './LoginPageMobile';
 import LoginPageTablet from './LoginPageTablet';
 import LoginPageWeb from './LoginPageWeb';
 
+// 로그인 페이지로 왔을때 리프레시 토큰 확인하고 있는 경우는 메인화면으로 redirect 해야함
 const LoginPage = () => {
 	// oauth 요청 URL
 	// const githubURL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&scope=repo user&redirect_uri=https://localhost:3000/oauth/github`;

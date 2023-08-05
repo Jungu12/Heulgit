@@ -16,6 +16,7 @@ import CBottomSheet from '@components/common/CBottomSheet';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import { http } from '@utils/http';
+import CommentListBottomSheet from '@components/Home/CommentListBottomSheet';
 
 // 더미 데이터
 const dummyFeedList = [
@@ -379,6 +380,7 @@ const MainPage = () => {
 	const [isCommentOpen, setIsCommentOpen] = useState(false);
 	const [selelctedOption, setSelelctedOption] = useState('');
 	const [selectedLanguage, setSelectedLanguage] = useState('');
+	const [selelctedComment, setSelelctedComment] = useState<number>(-1);
 	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -408,6 +410,11 @@ const MainPage = () => {
 		setStartDate(newStartDate);
 		setEndDate(newEndDate);
 	};
+
+	const onClickComment = useCallback((id: number) => {
+		setSelelctedComment(id);
+		setIsCommentOpen(true);
+	}, []);
 
 	const onClickOutsideCalendar = useCallback(
 		(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -570,11 +577,13 @@ const MainPage = () => {
 				<li onClick={onClickLikeSort}>좋아요 많은순</li>
 			</StyledDropDown>
 			{/* 피드가 담길 곳 */}
-			<FeedItemList feedList={dummyFeedList} />
+			<FeedItemList feedList={dummyFeedList} onClickComment={onClickComment} />
 			<CBottomSheet
 				open={isCommentOpen}
 				onDismiss={() => setIsCommentOpen(false)}
-			></CBottomSheet>
+			>
+				<CommentListBottomSheet postId={selelctedComment} />
+			</CBottomSheet>
 			<Navigation />
 		</StyledMainContainer>
 	);

@@ -25,89 +25,85 @@ import FollowPage from '@pages/FollowPage';
 import LikeViewPage from '@pages/LikeViewPage';
 import ChatDirectPage from '@pages/ChatDirectPage';
 import ChatPage from '@pages/ChatPage';
-import PrivateRoutes from './PrivateRoutes';
-import { useSelector } from 'react-redux';
-import { RootState } from '@store/index';
+// import PrivateRoutes from './PrivateRoutes';
+// import { useSelector } from 'react-redux';
+// import { RootState } from '@store/index';
 
 const RootRouter = () => {
-	const accessToken = useSelector((state: RootState) => state.auth.token);
+	// const accessToken = useSelector((state: RootState) => state.auth.token);
 
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
-				<Route path="/community" element={<CommunityPage />}>
-                    <Route index element={<Navigate replace to="eureka" />}></Route>
-					<Route path="eureka" element={<EurekaPage />}></Route>
-					<Route path="free" element={<FreeBoardPage />}></Route>
-				</Route>
-				<Route
+				{/* <Route
 					element={
 						<PrivateRoutes
 							loginState={accessToken ? true : false}
 							redirectTo="/login"
 						/>
 					}
-				>
-					<Route path="/" element={<MainPage />}></Route>
-					<Route path="/profiles">
-						<Route index element={<NotFound />}></Route>
-						<Route path=":userId">
-							<Route index element={<ProfilePage />}></Route>
-							<Route path="activity" element={<MyActivityPage />}></Route>
-							{/* <Route path="like" element={<MyLikePostPage />}></Route> */}
-							<Route path="like-repo" element={<MyLikeRepoPage />}></Route>
-							<Route path="like-post" element={<MyLikePostPage />}></Route>
-							<Route path="like-comment" element={<MyCommentPage />}></Route>
-							<Route path="commit-edit" element={<CommitEditPage />}></Route>
-							<Route path="follow" element={<FollowPage />}></Route>
-						</Route>
+				> */}
+				<Route path="/" element={<MainPage />}></Route>
+				<Route path="/profiles">
+					<Route index element={<NotFound />}></Route>
+					<Route path=":userId">
+						<Route index element={<ProfilePage />}></Route>
+						<Route path="activity" element={<MyActivityPage />}></Route>
+						{/* <Route path="like" element={<MyLikePostPage />}></Route> */}
+						<Route path="like-repo" element={<MyLikeRepoPage />}></Route>
+						<Route path="like-post" element={<MyLikePostPage />}></Route>
+						<Route path="like-comment" element={<MyCommentPage />}></Route>
+						<Route path="commit-edit" element={<CommitEditPage />}></Route>
+						<Route path="follow" element={<FollowPage />}></Route>
 					</Route>
-					<Route path="/community" element={<CommunityPage />}>
-						<Route path="eureka" element={<EurekaPage />}></Route>
-						<Route path="free" element={<FreeBoardPage />}></Route>
-					</Route>
-					<Route
-						path="/community/eureka/post"
-						element={<CreateEurekaPostPage />}
-					></Route>
-					<Route
-						path="/community/free/post"
-						element={<CreateFreePostPage />}
-					></Route>
-					<Route
-						path="/community/eureka/:id"
-						element={<EurekaPostViewPage />}
-					></Route>
-					<Route
-						path="/community/eureka/:id/like"
-						element={<LikeViewPage />}
-					></Route>
-					<Route
-						path="/community/free/:id"
-						element={<FreePostViewPage />}
-					></Route>
-					<Route
-						path="/community/free/:id/like"
-						element={<LikeViewPage />}
-					></Route>
-					<Route path="/notification" element={<NotificationPage />}></Route>
-					<Route path="/gm">
-						<Route index element={<ChatPage />}></Route>
-						<Route path=":id" element={<ChatDirectPage />}></Route>
-					</Route>
-					<Route path="/repo">
-						<Route index element={<NotFound />}></Route>
-						<Route path=":repoId" element={<RepoViewPage />}></Route>
-						<Route path=":repoId/like" element={<LikeViewPage />}></Route>
-					</Route>
-					<Route path="/search">
-						<Route index element={<SearchPage />}></Route>
-						<Route path=":q" element={<SearchResultPage />}></Route>
-					</Route>
-					<Route path="*" element={<NotFound />}></Route>
 				</Route>
+				<Route path="/community" element={<CommunityPage />}>
+					<Route index element={<Navigate replace to="eureka" />}></Route>
+					<Route path="eureka" element={<EurekaPage />}></Route>
+					<Route path="free" element={<FreeBoardPage />}></Route>
+				</Route>
+				<Route
+					path="/community/eureka/post"
+					element={<CreateEurekaPostPage />}
+				></Route>
+				<Route
+					path="/community/free/post"
+					element={<CreateFreePostPage />}
+				></Route>
+				<Route
+					path="/community/eureka/:id"
+					element={<EurekaPostViewPage />}
+				></Route>
+				<Route
+					path="/community/eureka/:id/like"
+					element={<LikeViewPage />}
+				></Route>
+				<Route
+					path="/community/free/:id"
+					element={<FreePostViewPage />}
+				></Route>
+				<Route
+					path="/community/free/:id/like"
+					element={<LikeViewPage />}
+				></Route>
+				<Route path="/notification" element={<NotificationPage />}></Route>
+				<Route path="/gm">
+					<Route index element={<ChatPage />}></Route>
+					<Route path=":id" element={<ChatDirectPage />}></Route>
+				</Route>
+				<Route path="/repo">
+					<Route index element={<NotFound />}></Route>
+					<Route path=":repoId" element={<RepoViewPage />}></Route>
+					<Route path=":repoId/like" element={<LikeViewPage />}></Route>
+				</Route>
+				<Route path="/search">
+					<Route index element={<SearchPage />}></Route>
+					<Route path=":q" element={<SearchResultPage />}></Route>
+				</Route>
+				<Route path="*" element={<NotFound />}></Route>
+				{/* </Route> */}
 			</Routes>
 		</BrowserRouter>
 	);
