@@ -1,5 +1,5 @@
 import Header from '@components/common/Header';
-import CommentInput from '@components/community/CommentInput';
+import CommentInput from '@pages/community/CommentInput';
 import FreePostCommentList from '@components/community/FreePostCommentList';
 import FreePostViewFeed from '@components/community/FreePostViewFeed';
 import { images } from '@constants/images';

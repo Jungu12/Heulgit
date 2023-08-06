@@ -1,9 +1,7 @@
-import EurekaFeedItemList from '@components/community/EurekaFeedItemList';
 import FreeBoardFeedItemList from '@components/community/FreeBoardFeedItemList';
-import { colors } from '@constants/colors';
+
 import { images } from '@constants/images';
-import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { styled } from 'styled-components';
 
 const StyledViewContainer = styled.div`
@@ -77,8 +75,6 @@ const dummyPosts = [
 ];
 
 const FreeBoardPage = () => {
-	const navigation = useNavigate();
-
 	return (
 		<StyledViewContainer>
 			<FreeBoardFeedItemList feedList={dummyPosts} />

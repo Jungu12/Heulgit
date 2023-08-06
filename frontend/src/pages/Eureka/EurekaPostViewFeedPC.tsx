@@ -9,7 +9,8 @@ import { EurekaPostType } from '@typedef/community/eureka.types';
 const StyledFeedItemContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	margin-top: 56px;
+
+	margin-top: 35px;
 `;
 
 // 탑라인
@@ -156,7 +157,7 @@ type Props = {
 	feed: EurekaPostType;
 };
 
-const EurekaPostViewFeed = ({ feed }: Props) => {
+const EurekaPostViewFeedPC = ({ feed }: Props) => {
 	const navigation = useNavigate();
 
 	// 좋아요 버튼 state
@@ -226,4 +227,4 @@ const EurekaPostViewFeed = ({ feed }: Props) => {
 	);
 };
 
-export default EurekaPostViewFeed;
+export default EurekaPostViewFeedPC;

@@ -1,11 +1,6 @@
-import { colors } from '@constants/colors';
 import React from 'react';
 import { styled } from 'styled-components';
-
-type MessageItemProps = {
-	message: string;
-	$isUser: boolean;
-};
+import { colors } from '@constants/colors';
 
 const StyledMessageBox = styled.div<{ $isUser: boolean }>`
 	display: flex;
@@ -33,7 +28,12 @@ const StyledUserImage = styled.img`
 	background-color: black;
 `;
 
-const ChatBox: React.FC<MessageItemProps> = ({ message, $isUser }) => {
+type MessageItemProps = {
+	message: string;
+	$isUser: boolean;
+};
+
+const ChatBox = ({ message, $isUser }: MessageItemProps) => {
 	return (
 		<StyledMessageBox $isUser={$isUser}>
 			{!$isUser && <StyledUserImage src={''} />}

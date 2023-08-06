@@ -2,11 +2,10 @@ import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import { EurekaPostType } from '@typedef/community/eureka.types';
-import EurekaFeedItem from './EurekaFeedItem';
+import EurekaFeedItem from '@components/community/EurekaFeedItem';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
-	margin-bottom: 70px;
 	scrollbar-width: none; /* 파이어폭스 */
 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
 	&::-webkit-scrollbar {
@@ -25,7 +24,7 @@ type Props = {
 	feedList: EurekaPostType[];
 };
 
-const EurekaFeedItemList = ({ feedList }: Props) => {
+const EurekaFeedItemListPC = ({ feedList }: Props) => {
 	return (
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
@@ -38,4 +37,4 @@ const EurekaFeedItemList = ({ feedList }: Props) => {
 	);
 };
 
-export default EurekaFeedItemList;
+export default EurekaFeedItemListPC;

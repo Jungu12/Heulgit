@@ -4,12 +4,12 @@ import ContentInput from '@components/community/ContentInput';
 import ImageContainer from '@components/community/ImageContainer';
 import RegisterButton from '@components/community/RegisterButton';
 import TitleInput from '@components/community/TitleInput';
-import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+// 자유게시판 게시물 작성 컨테이너
 const StyledCreateFreePostContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -20,8 +20,21 @@ const StyledCreateFreePostContainer = styled.div`
 	overflow-x: hidden;
 	height: calc(100vh - 56px);
 	top: 56px;
+
+	overflow-y: scroll;
+	-ms-overflow-style: none; /* 인터넷 익스플로러 */
+	scrollbar-width: none; /* 파이어폭스 */
+
+	/* 스크롤바 숨기기 (인터넷 익스플로러, 파이어폭스 */
+	&::-webkit-scrollbar {
+		display: none; /* 크롬, 사파리, 엣지 */
+	}
+	&::-ms-scrollbar {
+		display: none; /* 인터넷 익스플로러 */
+	}
 `;
 
+// 내용 길이 수 담는 컨테이너
 const StyledContentLengthContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -32,11 +45,13 @@ const StyledContentLengthContainer = styled.div`
 	width: 100%;
 `;
 
+// 내용 길이 수 이미지
 const StyledContentLengthImg = styled.img`
 	width: 20px;
 	height: 20px;
 `;
 
+// 내용 길이 수 p Tag
 const StyledContentLengthP = styled.p`
 	font-size: 15px;
 

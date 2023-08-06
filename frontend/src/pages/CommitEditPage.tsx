@@ -3,18 +3,19 @@ import styled from 'styled-components';
 import Header from '@components/common/Header';
 import CommitTag from '@components/profile/Commit';
 import { colors } from '@constants/colors';
-// import { colors } from '@constants/colors';
 
 const StyledCommitEditPage = styled.div`
 	/* background-color: ${colors.greyScale.grey2}; */
 `;
-const StyledHeader = styled.div`
-	width: 100%;
-	height: 56px;
-	margin-bottom: 10px;
+const StyledSaveButton = styled.button`
+	margin-right: 20px;
+	background-color: transparent;
+	font-weight: 500;
+	font-size: 15px;
 `;
 
 const CommitPageMiddle = styled.div`
+	margin-top: 70px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -66,9 +67,14 @@ const CommitEditPage = () => {
 			id: 7,
 			title: '# chore',
 			detail:
-				'필드 스크립트, 패키지 매니저 등 설정 파일 수정... 계속길어지면어떻게바뀌지 두줄까지 확인했고 세줄 이상은 어떻게 되려나 그런데 세줄 이상 쓸 일이 있기는 할까 모르겠다',
+				'필드 스크립트, 패키지 매니저 등 설정 파일 수정... 계속길어지면어떻게바뀌지 두줄까지 확인 ',
 		},
-		{ id: 8, title: '# test', detail: '테스트 코드 작성' },
+		{
+			id: 8,
+			title: '# test',
+			detail:
+				'일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십(40자 제한하기)',
+		},
 	]);
 
 	// CommitTag 삭제
@@ -77,6 +83,9 @@ const CommitEditPage = () => {
 			prevTags.filter((tag) => tag.id !== idToDelete),
 		);
 	};
+
+	// commitTags 배열에서 title 값을 추출하여 새로운 배열 생성
+	// const commitTagTitles = commitTags.map((tag) => tag.title);
 
 	// const handleSubmitCommit = (title: string, detail: string) => {
 	// 	// 새로운 CommitTag를 추가합니다.
@@ -90,9 +99,11 @@ const CommitEditPage = () => {
 
 	return (
 		<StyledCommitEditPage>
-			<StyledHeader>
-				<Header title={'커밋 메시지 설정'} children={'저장'}></Header>
-			</StyledHeader>
+			<Header
+				title={'커밋 메시지 설정'}
+				children={<StyledSaveButton>저장</StyledSaveButton>}
+			></Header>
+
 			<CommitPageMiddle>
 				{/* CommitTag 목록을 매핑하여 렌더링 */}
 				{commitTags.map((tag) => (
@@ -104,7 +115,9 @@ const CommitEditPage = () => {
 					/>
 				))}
 			</CommitPageMiddle>
-			<StyledFooter></StyledFooter>
+			<StyledFooter>
+				<div>커밋 등록 버튼</div>
+			</StyledFooter>
 		</StyledCommitEditPage>
 	);
 };

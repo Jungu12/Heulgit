@@ -21,6 +21,11 @@ export const images = {
 		commentButton: '/assets/images/ic-comment.png',
 		contentLength: '/assets/images/ic-contentlengnth.png',
 	},
+	profile: {
+		settingIcon: '/assets/images/ic-setting.png',
+		deleteIcon: '/assets/images/ic-delete.png',
+		crownIcon: '/assets/images/ic-crown.png',
+	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',
 	},

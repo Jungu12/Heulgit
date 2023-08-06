@@ -1,14 +1,11 @@
-import EurekaFeedItemList from '@components/community/EurekaFeedItemList';
-import { colors } from '@constants/colors';
-import { images } from '@constants/images';
-import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { styled } from 'styled-components';
+// 유레카 전체 피드
 
-const StyledViewContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-`;
+import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
+import { images } from '@constants/images';
+import React from 'react';
+import EurekaFeedItemListTablet from '@pages/Eureka/EurekaFeedItemListTablet';
+import EurekaFeedItemListPC from './EurekaFeedItemListPC';
+import EurekaFeedItemListMobile from './EurekaFeedItemListMobile';
 
 // 더미 게시물
 const dummyPosts = [
@@ -105,12 +102,18 @@ const dummyPosts = [
 ];
 
 const EurekaPage = () => {
-	const navigation = useNavigate();
-
 	return (
-		<StyledViewContainer>
-			<EurekaFeedItemList feedList={dummyPosts} />
-		</StyledViewContainer>
+		<>
+			<Mobile>
+				<EurekaFeedItemListMobile feedList={dummyPosts} />
+			</Mobile>
+			<Tablet>
+				<EurekaFeedItemListTablet feedList={dummyPosts} />
+			</Tablet>
+			<PC>
+				<EurekaFeedItemListPC feedList={dummyPosts} />
+			</PC>
+		</>
 	);
 };
 
