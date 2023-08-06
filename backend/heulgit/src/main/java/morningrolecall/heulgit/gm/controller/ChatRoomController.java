@@ -74,4 +74,16 @@ public class ChatRoomController {
 		// Redis에서 해당 채팅방의 채팅 로그를 가져와서 반환한다.
 		return ResponseEntity.ok().body(chatRoomService.findMessage(roomId));
 	}
+
+	// 상대의 포르필에서 gm기능을 활성화시키면 채팅방이 있는지 확인한 후 접속
+	// 없다면 채팅방 생성 후 접속
+	@GetMapping("room/access")
+	@ResponseBody
+	public ResponseEntity<?> chatRoomDetail(@AuthenticationPrincipal String user1, @RequestParam String user2) {
+		logger.debug("chatRoomDetail(), user1 = {}, user2  = {}", user1, user2);
+
+		return ResponseEntity.ok().body(chatRoomService.findAndAddChatRoom(user1, user2));
+	}
+
+	@PostMapping("room/")
 }

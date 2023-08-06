@@ -45,16 +45,20 @@ public class ChatRoomRepository {
 
 	/**
 	 * 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
+	 * Todo : 돌아가는지 확인 필요!!!!!!!!!!!
 	 */
 	public ChatRoom createChatRoom(String user1, String user2) {
-		ChatRoom chatRoom = ChatRoom.builder()
-			.roomId(user1 + user2)
-			.user1(user1)
-			.user2(user2)
-			.build();
-		logger.debug("createChatRoom(), roomId = {}, chatRoomUser1 = {}, chatRoomUser2 = {} ", chatRoom.getRoomId(),
-			chatRoom.getUser1(), chatRoom.getUser2());
-		opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
+		ChatRoom chatRoom = getChatRoom(user1 + ":" + user2);
+		if (chatRoom == null) {
+			chatRoom = ChatRoom.builder()
+				.roomId(user1 + ":" + user2)
+				.user1(user1)
+				.user2(user2)
+				.build();
+			logger.debug("createChatRoom(), roomId = {}, chatRoomUser1 = {}, chatRoomUser2 = {} ", chatRoom.getRoomId(),
+				chatRoom.getUser1(), chatRoom.getUser2());
+			opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
+		}
 		return chatRoom;
 	}
 

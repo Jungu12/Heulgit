@@ -84,4 +84,9 @@ public class ChatRoomService {
 	public boolean isUserSubscribedToChatRoom(String topic, String userId) {
 		return redisSubscriberManager.isUserSubscribedToTopic(topic, userId);
 	}
+
+	// 사용자와 타 유저의 채팅방이 있는지 없는지 확인하고 없다면 생성한다.
+	public ChatRoom findAndAddChatRoom(String user1, String user2) {
+		return chatRoomRepository.createChatRoom(user1, user2);
+	}
 }
