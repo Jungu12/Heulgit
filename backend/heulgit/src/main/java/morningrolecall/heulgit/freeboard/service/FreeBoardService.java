@@ -20,6 +20,7 @@ import morningrolecall.heulgit.freeboard.domain.FreeBoardComment;
 import morningrolecall.heulgit.freeboard.domain.FreeBoardImage;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardDetailResponse;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardRequest;
+import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardUpdateRequest;
 import morningrolecall.heulgit.freeboard.repository.FreeBoardCommentRepository;
 import morningrolecall.heulgit.freeboard.repository.FreeBoardImageRepository;
 import morningrolecall.heulgit.freeboard.repository.FreeBoardRepository;
@@ -120,6 +121,59 @@ public class FreeBoardService {
 
 		freeBoard.addAllImage(freeBoardImages);
 		freeBoardRepository.save(freeBoard);
+	}
+
+	/**
+	 * FreeBoard 게시물 수정
+	 * 1. 게시물 ID로 게시물 조회
+	 * 2. 작성자와 현재 사용자 비교
+	 * 3. 게시물 수정 (작성자 제외 수정 가능)
+	 * 4. 기존 이미지 파일은 모두 제거, 새로운 이미지 파일 저장
+	 * */
+	@Transactional
+	public void updateFreeBoard(String githubId, FreeBoardUpdateRequest freeBoardUpdateRequest) {
+		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardUpdateRequest.getFreeBoardId())
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+
+		if (!githubId.equals(freeBoard.getUser().getGithubId())) {
+			System.out.println("작성자가 아님!!!");
+			return;
+			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
+		}
+
+		freeBoard.setTitle(freeBoardUpdateRequest.getTitle());
+		freeBoard.setContent(freeBoardUpdateRequest.getContent());
+		freeBoard.setUpdatedDate(LocalDateTime.now());
+
+		List<FreeBoardImage> freeBoardImages = makeFreeBoardImages(freeBoard, freeBoardUpdateRequest.getFileUri());
+
+		freeBoardImageRepository.deleteAllByFreeBoard(freeBoard);
+		freeBoardImageRepository.saveAll(freeBoardImages);
+
+		freeBoard.removeAllImage();
+		freeBoard.addAllImage(freeBoardImages);
+
+		freeBoardRepository.save(freeBoard);
+	}
+
+	/**
+	 * 유레카 게시물 삭제
+	 * 1. 게시물 ID로 게시물 조회
+	 * 2. 작성자와 현재 사용자 비교
+	 * 3. 게시물 삭제 (EurekaImage도 삭제되어야 함)
+	 * */
+	@Transactional
+	public void removeFreeBoard(String githubId, Long freeBoardId) {
+		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+
+		if (!githubId.equals(freeBoard.getUser().getGithubId())) {
+			System.out.println("작성자가 아님!!!");
+			return;
+			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
+		}
+
+		freeBoardRepository.delete(freeBoard);
 	}
 
 	/**

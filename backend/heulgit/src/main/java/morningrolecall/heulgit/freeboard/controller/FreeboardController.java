@@ -4,9 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardRequest;
+import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardUpdateRequest;
 import morningrolecall.heulgit.freeboard.service.FreeBoardService;
 
 @RestController
@@ -44,6 +47,28 @@ public class FreeboardController {
 			freeBoardRequest.getContent(), freeBoardRequest.getFileUri().size());
 
 		freeBoardService.addFreeBoard(githubId, freeBoardRequest);
+
+		return ResponseEntity.ok().build();
+	}
+
+	@PutMapping("/posts/update")
+	public ResponseEntity<?> freeBoardUpdate(@AuthenticationPrincipal String userId,
+		@RequestBody FreeBoardUpdateRequest freeBoardUpdateRequest) {
+		logger.debug("freeBoardUpdate(), who = {}, freeBoardId = {}, title = {}, content = {}, imageId = {}",
+			userId, freeBoardUpdateRequest.getFreeBoardId(),
+			freeBoardUpdateRequest.getTitle(),
+			freeBoardUpdateRequest.getContent(), freeBoardUpdateRequest.getFileUri());
+
+		freeBoardService.updateFreeBoard(userId, freeBoardUpdateRequest);
+
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/posts/{freeBoardId}")
+	public ResponseEntity<?> freeBoardRemove(@AuthenticationPrincipal String userId, @PathVariable Long freeBoardId) {
+		logger.debug("freeBoardRemove(), who = {}, freeBoardId = {}", userId, freeBoardId);
+
+		freeBoardService.removeFreeBoard(userId, freeBoardId);
 
 		return ResponseEntity.ok().build();
 	}
