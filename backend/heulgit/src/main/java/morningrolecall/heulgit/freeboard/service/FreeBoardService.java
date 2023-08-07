@@ -283,4 +283,64 @@ public class FreeBoardService {
 		return freeBoardRepository.findFreeBoardByFreeBoardId(eurekaId)
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다.")).getLikedUsers();
 	}
+
+	/**
+	 * 게시물을 제목으로 검색
+	 * 1. 정렬 조건 확인
+	 * 2. 정렬 후 페이지네이션 반환
+	 * */
+	public Slice<FreeBoardDetailResponse> searchTitleFreeBoards(String keyword, String sort, int pages) {
+		if (sort.equals("likes")) {
+			Slice<FreeBoard> freeBoards = freeBoardRepository.findContainsTitleSortedByLikesFreeBoards(keyword,
+				PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+		}
+
+		if (sort.equals("comments")) {
+			Slice<FreeBoard> freeBoards = freeBoardRepository.findContainsTitleSortedByCommentsFreeBoards(keyword,
+				PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+		}
+
+		if (sort.equals("views")) {
+			Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByTitleContains(keyword,
+				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+			return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+		}
+
+		// 최신 순
+		Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByTitleContains(keyword,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+	}
+
+	/**
+	 * 게시물을 작성자 github ID로 검색
+	 * 1. 정렬 조건 확인
+	 * 2. 정렬 후 페이지네이션 반환
+	 * */
+	public Slice<FreeBoardDetailResponse> searchUserFreeBoards(String keyword, String sort, int pages) {
+		if (sort.equals("likes")) {
+			Slice<FreeBoard> freeBoards = freeBoardRepository.findByUserNameSortedByLikesFreeBoards(keyword,
+				PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+		}
+
+		if (sort.equals("comments")) {
+			Slice<FreeBoard> freeBoards = freeBoardRepository.findByUserNameSortedByCommentsFreeBoards(keyword,
+				PageRequest.of(pages - 1, SIZE));
+			return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+		}
+
+		if (sort.equals("views")) {
+			Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByUser_GithubId(keyword,
+				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+			return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+		}
+
+		// 최신 순
+		Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByUser_GithubId(keyword,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+	}
 }

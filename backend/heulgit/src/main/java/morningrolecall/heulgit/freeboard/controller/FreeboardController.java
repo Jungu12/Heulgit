@@ -111,4 +111,20 @@ public class FreeboardController {
 
 		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId));
 	}
+
+	@GetMapping("/search/title")
+	public ResponseEntity<?> freeBoardSearchByTitle(@RequestParam String keyword,
+		@RequestParam String sort, @RequestParam int pages) {
+		logger.debug("freeBoardSearchByTitle(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+
+		return ResponseEntity.ok().body(freeBoardService.searchTitleFreeBoards(keyword, sort, pages));
+	}
+
+	@GetMapping("/search/user")
+	public ResponseEntity<?> freeBoardSearchByUser(@RequestParam String keyword,
+		@RequestParam String sort, @RequestParam int pages) {
+		logger.debug("freeBoardSearchByUser(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+
+		return ResponseEntity.ok().body(freeBoardService.searchUserFreeBoards(keyword, sort, pages));
+	}
 }
