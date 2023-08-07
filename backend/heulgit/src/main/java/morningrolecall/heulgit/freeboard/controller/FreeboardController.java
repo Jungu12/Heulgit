@@ -105,4 +105,10 @@ public class FreeboardController {
 		return ResponseEntity.ok().body(freeBoardService.findMyFreeBoards(userId, pages));
 	}
 
+	@GetMapping("/posts/likes/{freeBoardId}")
+	public ResponseEntity<?> freeBoardLikedUsers(@PathVariable Long freeBoardId) {
+		logger.debug("freeBoardLikedUsers(), freeBoardId = {}", freeBoardId);
+
+		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId));
+	}
 }

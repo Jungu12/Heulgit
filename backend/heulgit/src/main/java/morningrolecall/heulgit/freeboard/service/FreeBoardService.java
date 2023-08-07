@@ -3,6 +3,7 @@ package morningrolecall.heulgit.freeboard.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
@@ -273,5 +274,13 @@ public class FreeBoardService {
 		Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByUser_GithubId(githubId,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+	}
+
+	/**
+	 * 단일 게시물의 좋아요 사용자 목록 반환
+	 * */
+	public Set<User> findLikedUsers(Long eurekaId) {
+		return freeBoardRepository.findFreeBoardByFreeBoardId(eurekaId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다.")).getLikedUsers();
 	}
 }
