@@ -21,6 +21,14 @@ import morningrolecall.heulgit.auth.util.JwtProvider;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	private final JwtProvider jwtProvider;
+	private static final String[] PERMIT_URLS = {
+		/* swagger v3 */
+		"/v3/**",
+		"/swagger-ui/**",
+		"/swagger-resources/**",
+		/* OAuth */
+		"/oauth/**"
+	};
 
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
@@ -52,7 +60,7 @@ public class SecurityConfig {
 
 			.authorizeHttpRequests()
 			// "/oauth/**"에 대한 요청은 모두 허용
-			// .antMatchers("/oauth/**").permitAll()
+			.antMatchers(PERMIT_URLS).permitAll()
 			// 그 외의 요청은 "USER" 권한이 있으면 가능
 			// .anyRequest().hasRole("USER")
 			.anyRequest().permitAll()

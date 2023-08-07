@@ -15,6 +15,7 @@ import 'react-spring-bottom-sheet/dist/style.css';
 import CBottomSheet from '@components/common/CBottomSheet';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
+import { http } from '@utils/http';
 
 // 더미 데이터
 const dummyFeedList = [
@@ -468,6 +469,7 @@ const MainPage = () => {
 	}, [endDate]);
 
 	useEffect(() => {
+		http.get('oauth/me');
 		console.log(isCalendarOpen);
 		if (accessToken) {
 			console.log(accessToken);

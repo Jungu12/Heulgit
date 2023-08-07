@@ -1,11 +1,14 @@
-import RankingGraph from '@components/profile/RankingGraph';
-import CommitGraph from '@components/profile/CommitGraph';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Category from '@components/profile/Category';
 import Navigation from '@components/common/Navigation';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
-import styled from 'styled-components';
+import MyFreeboard from '@components/profile/MyFreeboard';
+import MyEureka from '@components/profile/MyEureka';
+import MyProfile from '@components/profile/MyProfile';
+import { images } from '@constants/images';
 
+const StyledProfilePage = styled.div``;
 const StyledProfileHigh = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -32,12 +35,14 @@ const StyledUserInformation = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-left: 20px;
-	/* justify-content: flex-start; */
-	/* align-items: flex-start; */
 `;
 
 const StyledActivityButton = styled.button`
 	height: 25px;
+	background-color: transparent;
+	img {
+		height: 25px;
+	}
 `;
 
 const StyledProfileLow = styled.div`
@@ -48,39 +53,52 @@ const StyledProfileLow = styled.div`
 	padding: 20px;
 `;
 
-const StyledCommitBox = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border: 1px solid;
-	border-radius: 10px;
-	width: 100%;
-	height: 260px;
-	margin-bottom: 15px;
-`;
-
-const StyledCommitRank = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border: 1px solid;
-	border-radius: 10px;
-	width: 100%;
-	height: 350px;
-`;
-
 const StyledFooter = styled.div`
 	height: 70px;
 `;
 
-const ProfilePage = () => {
+const deleteKeysFromSession = (keys: string[]) => {
+	console.log('Deleting keys:', keys);
+	keys.forEach((key) => sessionStorage.removeItem(key));
+};
+
+const ProfilePage: React.FC = () => {
 	const navigation = useNavigate();
 
+	const [selectedMenu, setSelectedMenu] = useState('');
+	const handleMenuClick = (menu: '프로필' | '유레카' | '자유') => {
+		setSelectedMenu(menu);
+		sessionStorage.setItem('selectedMenu', menu);
+	};
+	useEffect(() => {
+		// selectedMenu가 변경될 때마다 sessionStorage에 저장.
+		const categoryItem = sessionStorage.getItem('selectedMenu') as
+			| '프로필'
+			| '유레카'
+			| '자유';
+
+		if (categoryItem) {
+			setSelectedMenu(categoryItem);
+		} else {
+			setSelectedMenu('프로필');
+		}
+	}, []);
+
+	// 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
+	useEffect(() => {
+		const keysToDelete = ['selectedMenu', 'selectedFollow'];
+
+		if (window.location.pathname === '/profiles/1') {
+			deleteKeysFromSession(keysToDelete);
+		}
+	}, []);
+
 	return (
-		<div>
+		<StyledProfilePage>
 			<StyledProfileHigh>
+				{' '}
 				<StyledUserProfile>
-					<StyledUserImage src="" alt="User" />
+					<StyledUserImage src={''} alt="user_profile" />
 					<StyledUserInformation>
 						<div>유저 이름</div>
 						<div onClick={() => navigation('/profiles/1/follow')}>
@@ -92,33 +110,37 @@ const ProfilePage = () => {
 				<StyledActivityButton
 					onClick={() => navigation('/profiles/1/activity')}
 				>
-					내활동
+					<img src={images.menu} alt="내활동" />
 				</StyledActivityButton>
 			</StyledProfileHigh>
 			<Category
 				menu1={'프로필'}
-				menuRouter1={''}
+				menuRouter1={() => handleMenuClick('프로필')}
 				menu2={'유레카'}
-				menuRouter2={'2'}
-				// 작성한 유레카 페이지로 수정해야 함
+				menuRouter2={() => handleMenuClick('유레카')}
 				menu3={'자유'}
-				menuRouter3={'3'}
+				menuRouter3={() => handleMenuClick('자유')}
+				selectedMenu={selectedMenu} // Category 컴포넌트에 선택된 메뉴 이름을 전달
 			/>
-			<StyledProfileLow>
-				<StyledCommitBox>
-					<CommitGraph></CommitGraph>
-					<button onClick={() => navigation('/profiles/1/commit-edit')}>
-						설정
-					</button>
-				</StyledCommitBox>
-				<StyledCommitRank>
-					<RankingGraph></RankingGraph>
-				</StyledCommitRank>
-			</StyledProfileLow>
+			{selectedMenu === '프로필' && (
+				<StyledProfileLow>
+					<MyProfile />
+				</StyledProfileLow>
+			)}
+			{selectedMenu === '유레카' && (
+				<StyledProfileLow>
+					<MyEureka />
+				</StyledProfileLow>
+			)}
+			{selectedMenu === '자유' && (
+				<StyledProfileLow>
+					<MyFreeboard />
+				</StyledProfileLow>
+			)}
 			<StyledFooter>
 				<Navigation />
 			</StyledFooter>
-		</div>
+		</StyledProfilePage>
 	);
 };
 
