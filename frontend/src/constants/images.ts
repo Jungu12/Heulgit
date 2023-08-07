@@ -28,6 +28,12 @@ export const images = {
 		followIcon: '/assets/images/ic-follow.png',
 		followingIcon: '/assets/images/ic-following.png',
 		rankingIcon: '/assets/images/ic-ranking.png',
+		profileActive: '/assets/images/ic-profilecat-active.png',
+		profileInactive: '/assets/images/ic-profilecat-inactive.png',
+		eurekaActive: '/assets/images/ic-profileceureka-active.png',
+		eurekaInactive: '/assets/images/ic-profileceureka-inactive.png',
+		freeActive: '/assets/images/ic-profilefree-active.png',
+		freeInactive: '/assets/images/ic-profilefree-inactive.png',
 	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',

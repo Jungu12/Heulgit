@@ -98,12 +98,18 @@ const ProfilePageMobile = ({
 			</StyledProfileHigh>
 			<Category
 				menu1={'프로필'}
+				icon11={images.profile.profileActive}
+				icon12={images.profile.profileInactive}
 				menuRouter1={() => handleMenuClick('프로필')}
 				menu2={'유레카'}
+				icon21={images.profile.eurekaActive}
+				icon22={images.profile.eurekaInactive}
 				menuRouter2={() => handleMenuClick('유레카')}
 				menu3={'자유'}
+				icon31={images.profile.freeActive}
+				icon32={images.profile.freeInactive}
 				menuRouter3={() => handleMenuClick('자유')}
-				selectedMenu={selectedMenu} // Category 컴포넌트에 선택된 메뉴 이름을 전달
+				selectedMenu={selectedMenu}
 			/>
 			<Sdiv>
 				<StyledProfileLow>
