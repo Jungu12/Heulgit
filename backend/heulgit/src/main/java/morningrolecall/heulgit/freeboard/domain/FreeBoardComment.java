@@ -30,7 +30,7 @@ import morningrolecall.heulgit.user.domain.User;
 @AllArgsConstructor
 @Table(name = "freeboard_comment")
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties("freeboard")
+@JsonIgnoreProperties("freeBoard")
 public class FreeBoardComment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

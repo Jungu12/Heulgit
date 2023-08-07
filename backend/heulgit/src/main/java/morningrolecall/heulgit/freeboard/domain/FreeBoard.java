@@ -34,6 +34,7 @@ import morningrolecall.heulgit.user.domain.User;
 @NoArgsConstructor
 @Table(name = "freeboard")
 public class FreeBoard {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "freeboard_id", nullable = false)
