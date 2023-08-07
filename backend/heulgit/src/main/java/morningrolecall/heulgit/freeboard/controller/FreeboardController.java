@@ -72,4 +72,11 @@ public class FreeboardController {
 
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/posts/count")
+	public ResponseEntity<?> freeBoardCount() {
+		logger.debug("freeBoardCount()");
+
+		return ResponseEntity.ok().body(freeBoardService.countFreeBoards());
+	}
 }

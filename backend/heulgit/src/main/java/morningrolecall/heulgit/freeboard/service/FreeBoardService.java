@@ -205,4 +205,11 @@ public class FreeBoardService {
 			.build()
 		).collect(Collectors.toList());
 	}
+
+	/**
+	 * 전체 게시물 수 반환
+	 * */
+	public long countFreeBoards() {
+		return freeBoardRepository.count();
+	}
 }
