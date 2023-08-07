@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		logger.debug("[Filter] Token 존재하지 않거나 만료");
 
-		// 유효하지 않은 경우는 403 에러 전달
-		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		// 유효하지 않은 경우는 401 에러 전달
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 }
