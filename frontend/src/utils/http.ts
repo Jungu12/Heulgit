@@ -22,6 +22,7 @@ authAxios.interceptors.request.use(
 		return config;
 	},
 	(error) => {
+		console.log('엑세스 토큰 만료..?');
 		console.error(error);
 		return Promise.reject(error);
 	},

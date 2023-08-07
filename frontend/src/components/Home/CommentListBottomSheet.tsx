@@ -48,6 +48,8 @@ type Props = {
 
 // 받은 postId로 댓글 생성해서 넘기기
 const CommentListBottomSheet = ({ postId }: Props) => {
+	console.log(postId);
+
 	return (
 		<StyledCommentListContainer>
 			{dummyComment.map((comment) => (

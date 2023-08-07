@@ -1,7 +1,6 @@
 import CommitEditPage from '@pages/CommitEditPage';
 import CommunityPage from '@pages/CommunityPage';
 import LoginPage from '@pages/Login/LoginPage';
-import MainPage from '@pages/MainPage';
 import MyActivityPage from '@pages/MyActivityPage';
 import MyLikePostPage from '@pages/MyLikePostPage';
 import MyLikeRepoPage from '@pages/MyLikeRepoPage';
@@ -25,6 +24,7 @@ import FollowPage from '@pages/FollowPage';
 import LikeViewPage from '@pages/LikeViewPage';
 import ChatDirectPage from '@pages/ChatDirectPage';
 import ChatPage from '@pages/ChatPage';
+import MainPage from '@pages/Main/MainPage';
 // import PrivateRoutes from './PrivateRoutes';
 // import { useSelector } from 'react-redux';
 // import { RootState } from '@store/index';
