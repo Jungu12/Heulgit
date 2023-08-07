@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ import morningrolecall.heulgit.gm.service.ChatRoomService;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/gm")
+@RequestMapping("/api/gm")
 public class ChatRoomController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final ChatRoomService chatRoomService;
@@ -77,7 +78,7 @@ public class ChatRoomController {
 
 	// 상대의 포르필에서 gm기능을 활성화시키면 채팅방이 있는지 확인한 후 접속
 	// 없다면 채팅방 생성 후 접속
-	@GetMapping("room/access")
+	@GetMapping("/room/access")
 	@ResponseBody
 	public ResponseEntity<?> chatRoomDetail(@AuthenticationPrincipal String user1, @RequestParam String user2) {
 		logger.debug("chatRoomDetail(), user1 = {}, user2  = {}", user1, user2);
@@ -85,5 +86,13 @@ public class ChatRoomController {
 		return ResponseEntity.ok().body(chatRoomService.findAndAddChatRoom(user1, user2));
 	}
 
-	@PostMapping("room/")
+	@DeleteMapping("/room/out")
+	@ResponseBody
+	public ResponseEntity chatRoomEnterDetail(@AuthenticationPrincipal String user1, @RequestParam String user2) {
+		logger.debug("chatRoomDetail(), user1 = {}, user2 = {}", user1, user2);
+
+		chatRoomService.userLeftChatRoom(user1, user2);
+
+		return ResponseEntity.ok().build();
+	}
 }

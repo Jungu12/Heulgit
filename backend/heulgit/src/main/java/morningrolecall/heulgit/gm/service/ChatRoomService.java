@@ -41,6 +41,8 @@ public class ChatRoomService {
 
 		redisMessageListener.addMessageListener(redisSubscriber, topic);
 		topics.put(roomId, topic);
+
+		userJoinedChatRoom();
 	}
 
 	// roomId로 해당 채팅방의 Topic을 반환한다.
