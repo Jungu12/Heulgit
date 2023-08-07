@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.auth.dto.AccessTokenResponse;
 import morningrolecall.heulgit.auth.dto.CodeDto;
@@ -21,7 +27,7 @@ import morningrolecall.heulgit.auth.dto.OAuthToken;
 import morningrolecall.heulgit.auth.service.AuthService;
 import morningrolecall.heulgit.auth.util.CookieProvider;
 
-// @Api(tags = "OAuth")
+@Api(tags = "OAuth")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/oauth")
@@ -37,13 +43,13 @@ public class AuthController {
 	 * Refresh Token : httpOnly Cookie
 	 * */
 	@PostMapping("/github")
-	// @ApiOperation(value = "Access Token, Refresh Token 발급")
-	// @ApiImplicitParams({
-	// 	@ApiImplicitParam(name = "code", dataTypeClass = String.class, value = "Github로부터 받은 인가 코드", required = true)
-	// })
-	// @ApiResponses(value = {
-	// 	@ApiResponse(responseCode = "200", description = "토큰 발급 성공"),
-	// 	@ApiResponse(responseCode = "500", description = "토큰 발급 실패")})
+	@ApiOperation(value = "Access Token, Refresh Token 발급")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "code", dataTypeClass = String.class, value = "Github로부터 받은 인가 코드", required = true)
+	})
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "토큰 발급 성공"),
+		@ApiResponse(responseCode = "500", description = "토큰 발급 실패")})
 	public ResponseEntity<?> getCode(@RequestBody CodeDto codeDto, HttpServletResponse response) {
 		logger.debug("getCode(), code = {}", codeDto.getCode());
 
@@ -61,10 +67,10 @@ public class AuthController {
 	 * Refresh Token : httpOnly Cookie
 	 * */
 	@GetMapping("/refresh-token")
-	// @ApiOperation(value = "Access Token, Refresh Token 재발급")
-	// @ApiResponses(value = {
-	// 	@ApiResponse(responseCode = "200", description = "토큰 발급 성공"),
-	// 	@ApiResponse(responseCode = "500", description = "토큰 발급 실패")})
+	@ApiOperation(value = "Access Token, Refresh Token 재발급")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "토큰 발급 성공"),
+		@ApiResponse(responseCode = "500", description = "토큰 발급 실패")})
 	public ResponseEntity<?> getToken(HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("getToken(), Token 재발급");
 
@@ -80,10 +86,10 @@ public class AuthController {
 	}
 
 	@GetMapping("/me")
-	// @ApiOperation(value = "사용자 정보 반환")
-	// @ApiResponses(value = {
-	// 	@ApiResponse(responseCode = "200", description = "사용자 정보 반환 성공"),
-	// 	@ApiResponse(responseCode = "500", description = "사용자 정보 반환 실패")})
+	@ApiOperation(value = "사용자 정보 반환")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "사용자 정보 반환 성공"),
+		@ApiResponse(responseCode = "500", description = "사용자 정보 반환 실패")})
 	public ResponseEntity<?> getUserId(@CookieValue(value = "refreshToken") String token) {
 		logger.debug("getUserId()");
 		return ResponseEntity.ok().body(authService.getUserId(token));

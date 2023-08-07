@@ -15,13 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaCommentDto;
 import morningrolecall.heulgit.eureka.service.EurekaCommentService;
+import morningrolecall.heulgit.eureka.service.EurekaService;
+import morningrolecall.heulgit.notification.domain.dto.NotificationCommentRequest;
+import morningrolecall.heulgit.notification.service.NotificationService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/e-comments")
+@RequestMapping("/api/e-comments")
 public class EurekaCommentController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final EurekaCommentService eurekaCommentService;
+	private final NotificationService notificationService;
+	private final EurekaService eurekaService;
 
 	@PostMapping("/comments")
 	public ResponseEntity<?> commentRegister(@AuthenticationPrincipal String githubId,
@@ -32,6 +37,10 @@ public class EurekaCommentController {
 			eurekaCommentDto.getMentionedFollowers());
 
 		eurekaCommentService.addComment(githubId, eurekaCommentDto);
+		String writerId = eurekaService.findEureka(eurekaCommentDto.getEurekaId()).getUser().getGithubId();
+		NotificationCommentRequest notificationCommentRequest = new NotificationCommentRequest(githubId, writerId,
+			"/eureka/posts" + eurekaCommentDto.getEurekaId(), eurekaCommentDto.getContent());
+		notificationService.addCommentNotification(notificationCommentRequest);
 
 		return ResponseEntity.ok().build();
 	}

@@ -62,9 +62,9 @@ dependencies {
     // @ConfigurationProperties 사용을 위함
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-//    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
-//    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
-//    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 }
 
 tasks.named('test') {
