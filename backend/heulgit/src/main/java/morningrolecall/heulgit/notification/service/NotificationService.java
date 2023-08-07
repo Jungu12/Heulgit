@@ -26,6 +26,7 @@ import morningrolecall.heulgit.notification.domain.dto.NotificationCommentReques
 import morningrolecall.heulgit.notification.repository.EmitterRepositoryImpl;
 import morningrolecall.heulgit.notification.domain.dto.NotificationResponse;
 import morningrolecall.heulgit.notification.repository.NotificationRepository;
+import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
@@ -37,6 +38,7 @@ public class NotificationService {
 	private final UserRepository userRepository;
 	private final NotificationMapper notificationMapper;
 	private final EmitterRepositoryImpl emitterRepository;
+	private final RelationRepository relationRepository;
 	private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -125,9 +127,6 @@ public class NotificationService {
 				.name("sse")
 				.data(data, MediaType.APPLICATION_JSON)
 				.reconnectTime(0));
-			// emitter.complete();
-			// emitterRepository.deleteById(id);
-			logger.debug("여기는 실행되니?");
 		} catch (Exception exception) {
 			emitterRepository.deleteById(id);
 			emitter.completeWithError(exception);
@@ -259,7 +258,7 @@ public class NotificationService {
 			} else if (notification.getType() == NotificationType.FOLLOW) {
 				/*TODO: senderId를 가지고
 				   팔로우 여부를 확인하여 실제 값 넣기 */
-				notificationResponses.add(notificationMapper.toFollowResponse(notification, false));
+				notificationResponses.add(notificationMapper.toFollowResponse(notification, relationRepository.existsByFromIdAndToId(receiver.getGithubId(),notification.getSender().getGithubId())));
 			} else if (notification.getType() == NotificationType.LIKE) {
 				notificationResponses.add(notificationMapper.toLikeResponse(notification));
 			} else if (notification.getType() == NotificationType.MENTION) {

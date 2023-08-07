@@ -22,7 +22,7 @@ import morningrolecall.heulgit.notification.service.NotificationService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/notifications")
+@RequestMapping("/api/notifications")
 public class NotificationController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -33,8 +33,8 @@ public class NotificationController {
 		notificationService.addFollowNotification(notificationFollowRequest);
 		return ResponseEntity.ok().build();
 	}
-	@GetMapping(value ="/connect/{githubId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	public SseEmitter connect(@PathVariable String githubId, @RequestHeader(value = "Last-Event-ID",required = false,
+	@GetMapping(value ="/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public SseEmitter connect(@AuthenticationPrincipal String githubId, @RequestHeader(value = "Last-Event-ID",required = false,
 		defaultValue = "") String lastEventId){
 		return notificationService.connect(githubId,lastEventId);
 	}
@@ -53,7 +53,7 @@ public class NotificationController {
 
 
 	@GetMapping("/{githubId}")
-	public ResponseEntity<?> userNotifications(@PathVariable String githubId){
+	public ResponseEntity<?> userNotifications(@AuthenticationPrincipal String githubId){
 		return ResponseEntity.ok().body(notificationService.findNotification(githubId));
 	}
 
