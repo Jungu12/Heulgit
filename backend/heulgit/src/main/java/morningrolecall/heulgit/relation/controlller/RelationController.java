@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import morningrolecall.heulgit.notification.domain.NotificationType;
+import morningrolecall.heulgit.notification.domain.dto.NotificationFollowRequest;
+import morningrolecall.heulgit.notification.service.NotificationService;
 import morningrolecall.heulgit.relation.service.RelationService;
 
 @RestController
@@ -22,6 +25,7 @@ import morningrolecall.heulgit.relation.service.RelationService;
 public class RelationController {
 
 	private final RelationService relationService;
+	private final NotificationService notificationService;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
@@ -54,11 +58,14 @@ public class RelationController {
 	 * @param from : 사용자
 	 * @param userId : 사용자가 팔로우하려는 다른 유저 Github ID
 	 */
-	@PostMapping("/api/follow")
+	@PostMapping("/follow")
 	public ResponseEntity<?> addFollow(@AuthenticationPrincipal String from1, @RequestParam String to) {
 		String from = "user1";
 		logger.debug("addFollow(), from = {}, to = {}", from, to);
 		relationService.addFollow(from, to);
+		NotificationFollowRequest notificationFollowRequest = new NotificationFollowRequest(from1, to, NotificationType.FOLLOW);
+		notificationService.addFollowNotification(notificationFollowRequest);
+
 
 		return ResponseEntity.ok().build();
 	}

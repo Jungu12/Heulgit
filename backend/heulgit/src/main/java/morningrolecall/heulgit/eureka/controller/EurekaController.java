@@ -21,7 +21,7 @@ import morningrolecall.heulgit.eureka.service.EurekaService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/eureka")
+@RequestMapping("/api/eureka")
 public class EurekaController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
