@@ -1,18 +1,23 @@
-import { RootState } from '@store/index';
+import store from '@store/store';
 import Axios, { AxiosRequestHeaders, InternalAxiosRequestConfig } from 'axios';
-import { useSelector } from 'react-redux';
+
 const axios = Axios.create();
 const authAxios = Axios.create();
-axios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
-// axios.defaults.baseURL = 'http://192.168.100.84:8080/';
+// axios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
+axios.defaults.baseURL = 'http://192.168.100.64:8080/api/';
 axios.defaults.withCredentials = true;
-authAxios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
+// authAxios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
+authAxios.defaults.baseURL = 'http://192.168.100.64:8080/api/';
 authAxios.defaults.withCredentials = true;
 
 // 인터셉터 설정
 authAxios.interceptors.request.use(
 	(config: InternalAxiosRequestConfig) => {
-		const accessToken = useSelector((state: RootState) => state.auth.token);
+		console.log('엑세스 토큰 확인');
+
+		const accessToken = store.getState().auth.token;
+		console.log('엑세스 토큰 :', accessToken);
+
 		if (accessToken) {
 			config.headers = config.headers || {};
 			(

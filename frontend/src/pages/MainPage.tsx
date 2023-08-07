@@ -476,7 +476,9 @@ const MainPage = () => {
 	}, [endDate]);
 
 	useEffect(() => {
-		http.get('oauth/me');
+		http.get('oauth/me').catch((err) => {
+			alert(err);
+		});
 		console.log(isCalendarOpen);
 		if (accessToken) {
 			console.log(accessToken);

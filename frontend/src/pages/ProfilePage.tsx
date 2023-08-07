@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import Category from '@components/profile/Category';
 import Navigation from '@components/common/Navigation';
@@ -7,6 +7,8 @@ import MyFreeboard from '@components/profile/MyFreeboard';
 import MyEureka from '@components/profile/MyEureka';
 import MyProfile from '@components/profile/MyProfile';
 import { images } from '@constants/images';
+import { authHttp } from '@utils/http';
+import { ChatRoomType } from '@typedef/gm/gm.types';
 
 const StyledProfilePage = styled.div``;
 const StyledProfileHigh = styled.div`
@@ -70,6 +72,21 @@ const ProfilePage: React.FC = () => {
 		setSelectedMenu(menu);
 		sessionStorage.setItem('selectedMenu', menu);
 	};
+
+	const onClickMessage = useCallback(() => {
+		console.log('채팅방 생성!');
+
+		authHttp
+			.get<ChatRoomType>('gm/room/access/Jungu12')
+			.then((res) => {
+				console.log('[채팅방 있는지 확인]', res);
+				navigation(`/gm/${res.roomId}`, { state: { room: res } });
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
+
 	useEffect(() => {
 		// selectedMenu가 변경될 때마다 sessionStorage에 저장.
 		const categoryItem = sessionStorage.getItem('selectedMenu') as
@@ -105,6 +122,7 @@ const ProfilePage: React.FC = () => {
 							팔로잉 팔로워
 						</div>
 						<div>추가 정보</div>
+						<button onClick={onClickMessage}>메시지 테스트 버튼</button>
 					</StyledUserInformation>
 				</StyledUserProfile>
 				<StyledActivityButton
