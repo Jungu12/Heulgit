@@ -32,7 +32,7 @@ type CategoryProps = {
 	selectedMenu: string; // 선택된 메뉴 이름을 전달받는 속성
 };
 
-const Category = ({
+const CategoryT = ({
 	menu1,
 	menuRouter1,
 	menu2,
@@ -78,4 +78,4 @@ const Category = ({
 	);
 };
 
-export default Category;
+export default CategoryT;
