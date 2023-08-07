@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class RedisSubscriberManager {
+public class RedisInOutManager {
 
 	private final RedisTemplate<String, String> redisTemplate;
 

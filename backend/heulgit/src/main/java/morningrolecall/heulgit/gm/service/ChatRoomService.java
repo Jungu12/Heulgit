@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.gm.dto.ChatMessage;
 import morningrolecall.heulgit.gm.dto.ChatRoom;
 import morningrolecall.heulgit.gm.repository.ChatRoomRepository;
-import morningrolecall.heulgit.gm.util.RedisSubscriberManager;
+import morningrolecall.heulgit.gm.util.RedisInOutManager;
 
 @RequiredArgsConstructor
 @Service
@@ -24,7 +24,7 @@ public class ChatRoomService {
 	private final RedisMessageListenerContainer redisMessageListener;
 	// 구독 처리 서비스
 	private final RedisSubscriber redisSubscriber;
-	private final RedisSubscriberManager redisSubscriberManager;
+	private final RedisInOutManager redisSubscriberManager;
 	private Map<String, ChannelTopic> topics;
 
 	@PostConstruct
@@ -34,7 +34,9 @@ public class ChatRoomService {
 
 	// 채팅방 입장 : redis에 topic을 만들고 pub/sub 통신을 하기 위해 리스너를 설정한다.
 	public void enterChatRoom(String roomId) {
+		String[] userInfo = roomId.split(":");
 		ChannelTopic topic = topics.get(roomId);
+
 		if (topic == null) {
 			topic = new ChannelTopic(roomId);
 		}
@@ -42,7 +44,12 @@ public class ChatRoomService {
 		redisMessageListener.addMessageListener(redisSubscriber, topic);
 		topics.put(roomId, topic);
 
-		userJoinedChatRoom();
+		userJoinedChatRoom(roomId, userInfo[0]);
+		userJoinedChatRoom(roomId, userInfo[1]);
+
+		//모든 메세지 읽음 처리
+		ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
+		chatRoom.markAllMessagesAsRead();
 	}
 
 	// roomId로 해당 채팅방의 Topic을 반환한다.

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
@@ -45,9 +44,9 @@ public class ChatRoomController {
 
 	// 채팅방 생성
 	// Todo : 자신의 githubID 어노테이션으로 들고오는 코드 추가
-	@PostMapping("/room")
+	@PostMapping("/room/{user2}")
 	@ResponseBody
-	public ResponseEntity<?> chatRoomAdd(@AuthenticationPrincipal String user1, @RequestParam String user2) {
+	public ResponseEntity<?> chatRoomAdd(@AuthenticationPrincipal String user1, @PathVariable String user2) {
 		logger.info("chatRoomAdd(), user1 = {}, user2 = {}", user1, user2);
 
 		chatRoomService.addChatRoom(user1, user2);
@@ -78,17 +77,17 @@ public class ChatRoomController {
 
 	// 상대의 포르필에서 gm기능을 활성화시키면 채팅방이 있는지 확인한 후 접속
 	// 없다면 채팅방 생성 후 접속
-	@GetMapping("/room/access")
+	@GetMapping("/room/access/{user2}")
 	@ResponseBody
-	public ResponseEntity<?> chatRoomDetail(@AuthenticationPrincipal String user1, @RequestParam String user2) {
+	public ResponseEntity<?> chatRoomDetail(@AuthenticationPrincipal String user1, @PathVariable String user2) {
 		logger.debug("chatRoomDetail(), user1 = {}, user2  = {}", user1, user2);
 
 		return ResponseEntity.ok().body(chatRoomService.findAndAddChatRoom(user1, user2));
 	}
 
-	@DeleteMapping("/room/out")
+	@DeleteMapping("/room/out/{user2}")
 	@ResponseBody
-	public ResponseEntity chatRoomEnterDetail(@AuthenticationPrincipal String user1, @RequestParam String user2) {
+	public ResponseEntity chatRoomEnterDetail(@AuthenticationPrincipal String user1, @PathVariable String user2) {
 		logger.debug("chatRoomDetail(), user1 = {}, user2 = {}", user1, user2);
 
 		chatRoomService.userLeftChatRoom(user1, user2);

@@ -53,7 +53,7 @@
         },
         methods: {
             findAllRoom: function () {
-                axios.get('/gm/chatrooms/jungu12').then(response => {
+                axios.get('/api/gm/chatrooms/jungu12').then(response => {
                     this.chatrooms = response.data;
                 });
             },
@@ -64,7 +64,7 @@
                 } else {
                     var params = new URLSearchParams();
                     params.append("user2", this.room_name);
-                    axios.post('/gm/room', params)
+                    axios.post('/api/gm/room', params)
                         .then(
                             response => {
                                 alert(response.data.name + "방 개설에 성공하였습니다.")
@@ -81,8 +81,8 @@
                 var sender = prompt('대화명을 입력해 주세요.');
                 localStorage.setItem('wschat.sender', sender);
                 localStorage.setItem('wschat.roomId', roomId);
-                location.href = "/gm/room/enter/" + roomId;
-                axios.get('/gm/chats/jungu12qq').then(response => {
+                location.href = "/api/gm/room/enter/" + roomId;
+                axios.get('/api/gm/chats/jungu12qq').then(response => {
                     this.chatlogs = response.data;
                 });
             }

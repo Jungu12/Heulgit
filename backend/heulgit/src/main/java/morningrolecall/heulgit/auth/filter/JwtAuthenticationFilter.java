@@ -38,8 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		// 	filterChain.doFilter(request, response);
 		// 	return;
 		// }
-
-		if (requestURI.startsWith("/")) {
+		System.out.println(requestURI);
+		if (requestURI.startsWith("/api/oauth") || requestURI.startsWith(("/gm"))) {
 			filterChain.doFilter(request, response);
 			return;
 		}

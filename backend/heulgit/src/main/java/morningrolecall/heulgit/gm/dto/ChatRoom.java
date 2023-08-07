@@ -35,8 +35,19 @@ public class ChatRoom implements Serializable {
 
 	public void markAllMessagesAsRead() {
 		if (chatMessages != null) {
-			for (ChatMessage message : chatMessages) {
-				message.updateRead();
+			for (int i = chatMessages.size() - 1; i >= 0; i--) {
+				ChatMessage curChatMessage = chatMessages.get(i);
+
+				// //내가 보낸 메세지인 경우 continue
+				// if (curChatMessage.getSender().equals(githubId)) {
+				// 	continue;
+				// }
+
+				//신규 메세지들의 읽음처리를 완료한 경우
+				if (curChatMessage.isRead()) {
+					return;
+				}
+				chatMessages.get(i).updateRead();
 			}
 		}
 	}
