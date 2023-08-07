@@ -2,12 +2,12 @@ package morningrolecall.heulgit.freeboard.service;
 
 import java.util.List;
 
-import javax.persistence.NoResultException;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.FreeBoardException;
 import morningrolecall.heulgit.freeboard.domain.FreeBoard;
 import morningrolecall.heulgit.freeboard.domain.FreeBoardComment;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardCommentRequest;
@@ -34,16 +34,16 @@ public class FreeBoardCommentService {
 	@Transactional
 	public void addComment(String githubId, FreeBoardCommentRequest freeBoardCommentRequest) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.USER_NOT_FOUND));
 
 		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardCommentRequest.getFreeBoardId())
-			.orElseThrow(() -> new NoResultException("해당 게시물이 존재하지 않습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
 		FreeBoardComment parentComment = null;
 		if (freeBoardCommentRequest.getParentId() != null) {
 			parentComment = freeBoardCommentRepository.findFreeBoardCommentByCommentId(
 					freeBoardCommentRequest.getParentId())
-				.orElseThrow(() -> new NoResultException("해당 부모 댓글이 존재하지 않습니다."));
+				.orElseThrow(() -> new FreeBoardException(ExceptionCode.PARENT_COMMENT_NOT_FOUND));
 		}
 
 		FreeBoardComment freeBoardComment = FreeBoardComment.builder()
@@ -69,14 +69,13 @@ public class FreeBoardCommentService {
 	@Transactional
 	public void removeComment(String githubId, Long commentId) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.USER_NOT_FOUND));
 
 		FreeBoardComment freeBoardComment = freeBoardCommentRepository.findFreeBoardCommentByCommentId(commentId)
-			.orElseThrow(() -> new NoResultException("해당 댓글은 존재하지 않습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.COMMENT_NOT_FOUND));
 
 		if (!user.getGithubId().equals(freeBoardComment.getUser().getGithubId())) {
-			System.out.println("작성자와 사용자가 일치하지 않습니다.");
-			return;
+			throw new FreeBoardException(ExceptionCode.WRITER_USER_MISMATCH);
 		}
 
 		freeBoardCommentRepository.delete(freeBoardComment);
@@ -85,6 +84,6 @@ public class FreeBoardCommentService {
 	public List<FreeBoardComment> findComments(Long freeBoardId) {
 		return freeBoardCommentRepository.findFreeBoardCommentsByFreeBoardOrderByUpdatedDateDesc(
 			freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
-				.orElseThrow(() -> new NoResultException("해당 게시물은 존재하지 않습니다.")));
+				.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND)));
 	}
 }

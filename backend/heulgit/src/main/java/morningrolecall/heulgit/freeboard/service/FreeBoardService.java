@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.NoResultException;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -16,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.FreeBoardException;
 import morningrolecall.heulgit.freeboard.domain.FreeBoard;
 import morningrolecall.heulgit.freeboard.domain.FreeBoardComment;
 import morningrolecall.heulgit.freeboard.domain.FreeBoardImage;
@@ -75,7 +75,7 @@ public class FreeBoardService {
 	 * */
 	public FreeBoardDetailResponse findFreeBoard(Long freeBoardId) {
 		FreeBoard freeBoard = freeBoardRepository.findFreeBoardAndFreeBoardCommentsByFreeBoardId(freeBoardId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
 		freeBoard.increaseView();
 
@@ -107,7 +107,8 @@ public class FreeBoardService {
 	@Transactional
 	public void addFreeBoard(String githubId, FreeBoardRequest freeBoardRequest) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.USER_NOT_FOUND));
+
 		FreeBoard freeBoard = FreeBoard.builder()
 			.user(user)
 			.title(freeBoardRequest.getTitle())
@@ -134,12 +135,10 @@ public class FreeBoardService {
 	@Transactional
 	public void updateFreeBoard(String githubId, FreeBoardUpdateRequest freeBoardUpdateRequest) {
 		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardUpdateRequest.getFreeBoardId())
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
 		if (!githubId.equals(freeBoard.getUser().getGithubId())) {
-			System.out.println("작성자가 아님!!!");
-			return;
-			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
+			throw new FreeBoardException(ExceptionCode.WRITER_USER_MISMATCH);
 		}
 
 		freeBoard.setTitle(freeBoardUpdateRequest.getTitle());
@@ -166,12 +165,10 @@ public class FreeBoardService {
 	@Transactional
 	public void removeFreeBoard(String githubId, Long freeBoardId) {
 		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
 		if (!githubId.equals(freeBoard.getUser().getGithubId())) {
-			System.out.println("작성자가 아님!!!");
-			return;
-			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
+			throw new FreeBoardException(ExceptionCode.WRITER_USER_MISMATCH);
 		}
 
 		freeBoardRepository.delete(freeBoard);
@@ -221,16 +218,14 @@ public class FreeBoardService {
 	 * 3. 좋아요 후, 저장
 	 * */
 	public void likeFreeBoard(String githubId, Long freeBoardId) {
-		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
-
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자를 찾을 수 업습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.USER_NOT_FOUND));
+
+		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
 		if (freeBoard.getLikedUsers().contains(user)) {
-			System.out.println("이미 좋아요를 눌렀음");
-			return;
-			// throw new IllegalAccessException("사용자가 좋아요를 이미 눌렀습니다.");
+			throw new FreeBoardException(ExceptionCode.LIKE_ALREADY_EXIST);
 		}
 
 		freeBoard.addLikeUser(user);
@@ -245,16 +240,14 @@ public class FreeBoardService {
 	 * 3. 좋아요 취소 후, 저장
 	 * */
 	public void unlikeFreeBoard(String githubId, Long freeBoardId) {
-		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
-
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자를 찾을 수 업습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.USER_NOT_FOUND));
+
+		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
 		if (!freeBoard.getLikedUsers().contains(user)) {
-			System.out.println("좋아요를 누르지 않았음");
-			return;
-			// throw new IllegalAccessException("사용자가 좋아요를 이미 눌렀습니다.");
+			throw new FreeBoardException(ExceptionCode.LIKE_NOT_EXIST);
 		}
 
 		freeBoard.removeLikeUser(user);
@@ -269,7 +262,7 @@ public class FreeBoardService {
 	 * */
 	public Slice<FreeBoardDetailResponse> findMyFreeBoards(String githubId, int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.USER_NOT_FOUND));
 
 		Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByUser_GithubId(githubId,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
@@ -281,7 +274,7 @@ public class FreeBoardService {
 	 * */
 	public Set<User> findLikedUsers(Long eurekaId) {
 		return freeBoardRepository.findFreeBoardByFreeBoardId(eurekaId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다.")).getLikedUsers();
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND)).getLikedUsers();
 	}
 
 	/**
