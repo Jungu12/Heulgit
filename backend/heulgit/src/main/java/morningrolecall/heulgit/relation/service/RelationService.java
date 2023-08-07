@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.RelationException;
 import morningrolecall.heulgit.relation.domain.Relation;
 import morningrolecall.heulgit.relation.domain.dto.RelationUserInfo;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
@@ -31,7 +33,7 @@ public class RelationService {
 		int deleteCount = relationRepository.deleteByFromIdAndToId(from, to);
 
 		if (deleteCount == 0) {
-			throw new RuntimeException("삭제할 정보가 없습니다.");
+			throw new RelationException(ExceptionCode.FOLLOW_CANCEL_FAILED);
 		}
 	}
 
@@ -39,9 +41,7 @@ public class RelationService {
 	public void addFollow(String from, String to) {
 		// 이미 팔로우 관계가 존재하면 아무 작업을 하지 않는다.
 		if (relationRepository.existsByFromIdAndToId(from, to)) {
-			//Todo : 예외처리 코드 추가 필요
-			System.out.println("이미 팔로우가 이루어졌습니다.");
-			return;
+			throw new RelationException(ExceptionCode.ALREADY_FOLLOWED);
 		}
 
 		// 팔로우 관계가 존재하지 않는 경우 새로운 Relation 엔티티를 생성하여 저장한다.
@@ -57,8 +57,9 @@ public class RelationService {
 		List<Relation> relations = relationRepository.findByToId(userId);
 
 		if (relations.isEmpty()) {
-			throw new RuntimeException("조회할 정보가 없습니다.");
+			return new ArrayList<>();
 		}
+
 		//나를 팔로우 하는 유저 목록
 		List<String> followers = relations.stream().map(Relation::getFromId).collect(Collectors.toList());
 		List<RelationUserInfo> userInfos = new ArrayList<>();
@@ -77,7 +78,7 @@ public class RelationService {
 		List<Relation> relations = relationRepository.findByFromId(userId);
 
 		if (relations.isEmpty()) {
-			throw new RuntimeException("조회할 정보가 없습니다.");
+			return new ArrayList<>();
 		}
 
 		//내가 팔로우 하는 유저 목록
@@ -94,4 +95,3 @@ public class RelationService {
 		return userInfos;
 	}
 }
-
