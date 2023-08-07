@@ -79,4 +79,22 @@ public class FreeboardController {
 
 		return ResponseEntity.ok().body(freeBoardService.countFreeBoards());
 	}
+
+	@GetMapping("/posts/like/{freeBoardId}")
+	public ResponseEntity<?> freeBoardLike(@AuthenticationPrincipal String userId, @PathVariable Long freeBoardId) {
+		logger.debug("freeBoardLike(), who = {}, freeBoardId = {}", userId, freeBoardId);
+
+		freeBoardService.likeFreeBoard(userId, freeBoardId);
+
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/posts/unlike/{freeBoardId}")
+	public ResponseEntity<?> freeBoardUnlike(@AuthenticationPrincipal String userId, @PathVariable Long freeBoardId) {
+		logger.debug("freeBoardUnlike(), who = {}, freeBoardId = {}", userId, freeBoardId);
+
+		freeBoardService.unlikeFreeBoard(userId, freeBoardId);
+
+		return ResponseEntity.ok().build();
+	}
 }

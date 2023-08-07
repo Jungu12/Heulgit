@@ -212,4 +212,52 @@ public class FreeBoardService {
 	public long countFreeBoards() {
 		return freeBoardRepository.count();
 	}
+
+	/**
+	 * 게시물 좋아요
+	 * 1. 게시물, 사용자 조회
+	 * 2. 좋아요 여부 확인
+	 * 3. 좋아요 후, 저장
+	 * */
+	public void likeFreeBoard(String githubId, Long freeBoardId) {
+		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(() -> new NoResultException("해당 사용자를 찾을 수 업습니다."));
+
+		if (freeBoard.getLikedUsers().contains(user)) {
+			System.out.println("이미 좋아요를 눌렀음");
+			return;
+			// throw new IllegalAccessException("사용자가 좋아요를 이미 눌렀습니다.");
+		}
+
+		freeBoard.addLikeUser(user);
+
+		freeBoardRepository.save(freeBoard);
+	}
+
+	/**
+	 * 게시물 좋아요 취소
+	 * 1. 게시물, 사용자 조회
+	 * 2. 좋아요 여부 확인
+	 * 3. 좋아요 취소 후, 저장
+	 * */
+	public void unlikeFreeBoard(String githubId, Long freeBoardId) {
+		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(() -> new NoResultException("해당 사용자를 찾을 수 업습니다."));
+
+		if (!freeBoard.getLikedUsers().contains(user)) {
+			System.out.println("좋아요를 누르지 않았음");
+			return;
+			// throw new IllegalAccessException("사용자가 좋아요를 이미 눌렀습니다.");
+		}
+
+		freeBoard.removeLikeUser(user);
+
+		freeBoardRepository.save(freeBoard);
+	}
 }
