@@ -260,4 +260,18 @@ public class FreeBoardService {
 
 		freeBoardRepository.save(freeBoard);
 	}
+
+	/**
+	 * 사용자 본인의 게시물 반환
+	 * 1. 사용자 조회
+	 * 2. 사용자의 게시물 반환
+	 * */
+	public Slice<FreeBoardDetailResponse> findMyFreeBoards(String githubId, int pages) {
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+
+		Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByUser_GithubId(githubId,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
+	}
 }

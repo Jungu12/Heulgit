@@ -97,4 +97,12 @@ public class FreeboardController {
 
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/myposts")
+	public ResponseEntity<?> freeBoardCreatedByMe(@AuthenticationPrincipal String userId, @RequestParam int pages) {
+		logger.debug("freeBoardMyPosts(), who = {}, pages = {}", userId, pages);
+
+		return ResponseEntity.ok().body(freeBoardService.findMyFreeBoards(userId, pages));
+	}
+
 }
