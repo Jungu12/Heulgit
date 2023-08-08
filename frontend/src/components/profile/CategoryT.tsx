@@ -1,98 +1,63 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { colors } from '@constants/colors';
+// import { colors } from '@constants/colors';
 
 const StyledCategory = styled.div`
+	width: 100%;
 	display: flex;
-	justify-content: space-around;
-	align-items: end;
-	height: 50px;
+	flex-direction: column;
+	align-items: start;
 `;
 
 const StyledCategoryButton = styled.button`
-	font-weight: bolder;
-	font-size: 14px;
-	color: ${colors.greyScale.grey4};
-	background-color: transparent;
-	border: none;
-	width: 100%;
-	height: 100%;
-	padding: 15px;
-	border-bottom: 2px solid ${colors.greyScale.grey2};
-
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	justify-content: end;
-
-	img {
-		width: auto;
-		height: 30px;
-		margin: 5px;
-	}
+	width: 100%;
+	font-size: 20px;
+	background-color: transparent;
+	padding: 15px 0;
 `;
 
 const SelectedCategoryButton = styled(StyledCategoryButton)`
-	border-bottom: 2px solid ${colors.primary.primary};
-	color: ${colors.primary.primary};
-`;
-
-const StyledIcon = styled.img`
-	width: 16px;
-	height: 16px;
-	margin-right: 8px;
+	font-weight: bold;
 `;
 
 type CategoryProps = {
 	menu1: string;
-	icon11?: string;
-	icon12?: string;
 	menuRouter1: () => void;
 	menu2: string;
-	icon21?: string;
-	icon22?: string;
 	menuRouter2: () => void;
 	menu3?: string;
-	icon31?: string;
-	icon32?: string;
 	menuRouter3?: () => void;
-	selectedMenu: string;
+	selectedMenu: string; // 선택된 메뉴 이름을 전달받는 속성
 };
 
-const Category = ({
+const CategoryT = ({
 	menu1,
-	icon11,
-	icon12,
 	menuRouter1,
 	menu2,
-	icon21,
-	icon22,
 	menuRouter2,
 	menu3,
-	icon31,
-	icon32,
 	menuRouter3,
-	selectedMenu,
+	selectedMenu, // 선택된 메뉴 이름을 전달받는 속성
 }: CategoryProps) => {
 	return (
 		<StyledCategory>
 			{selectedMenu === menu1 ? (
 				<SelectedCategoryButton onClick={menuRouter1}>
-					{icon11 && <StyledIcon src={icon11} />} {menu1}
+					{menu1}
 				</SelectedCategoryButton>
 			) : (
 				<StyledCategoryButton onClick={menuRouter1}>
-					{icon12 && <StyledIcon src={icon12} />}
 					{menu1}
 				</StyledCategoryButton>
 			)}
 			{selectedMenu === menu2 ? (
 				<SelectedCategoryButton onClick={menuRouter2}>
-					{icon21 && <StyledIcon src={icon21} />} {menu2}
+					{menu2}
 				</SelectedCategoryButton>
 			) : (
 				<StyledCategoryButton onClick={menuRouter2}>
-					{icon22 && <StyledIcon src={icon22} />}
 					{menu2}
 				</StyledCategoryButton>
 			)}
@@ -100,11 +65,10 @@ const Category = ({
 				<>
 					{selectedMenu === menu3 ? (
 						<SelectedCategoryButton onClick={menuRouter3}>
-							{icon31 && <StyledIcon src={icon31} />} {menu3}
+							{menu3}
 						</SelectedCategoryButton>
 					) : (
 						<StyledCategoryButton onClick={menuRouter3}>
-							{icon32 && <StyledIcon src={icon32} />}
 							{menu3}
 						</StyledCategoryButton>
 					)}
@@ -114,4 +78,4 @@ const Category = ({
 	);
 };
 
-export default Category;
+export default CategoryT;

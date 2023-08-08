@@ -10,7 +10,7 @@ export type UserCommitType = {
 
 // POST 사용자 커밋 맵 커스텀
 export type UserCommitCustomType = {
-	map: [{ algo: string }, { cs: string }];
+	map: [{ string: string }];
 };
 
 // 랭킹
