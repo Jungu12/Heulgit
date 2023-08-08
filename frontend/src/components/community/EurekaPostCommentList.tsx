@@ -9,7 +9,7 @@ const StyledCommentListContainer = styled.div`
 	flex-direction: column;
 
 	width: 100%;
-	margin-bottom: 50px;
+	margin-bottom: 60px;
 `;
 
 // 분리 선

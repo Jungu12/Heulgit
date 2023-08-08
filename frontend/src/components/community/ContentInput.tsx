@@ -8,6 +8,7 @@ const StyledContentInputContainer = styled.div`
 	flex-direction: column;
 
 	width: 100%;
+	flex: 1;
 `;
 
 // url 컨테이너
@@ -20,8 +21,8 @@ const StyledURLInput = styled.textarea.attrs({
 	overflow: auto;
 
 	height: 50px;
-	padding: 0px 15px 15px 15px;
-	top: 10px;
+	padding: 10px 15px 15px 15px;
+	/* top: 10px; */
 
 	font-size: 15px;
 	font-weight: bold;
@@ -43,21 +44,24 @@ const StyledContentInput = styled.textarea.attrs({
 	position: relative;
 	overflow: auto;
 
-	height: calc(100vh - 400px);
-
-	padding: 0px 15px 15px 15px;
-	top: 10px;
+	padding: 10px 15px 15px 15px;
+	/* top: 10px; */
 	/* margin: 0 20px; */
 	/* background-color: ${colors.greyScale.grey3}; */
+
+	/* height: 300px; */
 
 	/* textarea 크기 조절 막기 */
 	resize: none;
 
 	font-size: 15px;
 	font-weight: bold;
+	line-height: 1.2;
 
 	border: none;
 	outline: none;
+
+	flex: 1;
 `;
 
 type ContentInputProps = {
@@ -65,10 +69,7 @@ type ContentInputProps = {
 	showURLInput?: boolean; // URL 입력 부분을 보여줄지 여부를 props로 받음
 };
 
-const ContentInput: React.FC<ContentInputProps> = ({
-	onChange,
-	showURLInput = true,
-}) => {
+const ContentInput = ({ onChange, showURLInput = true }: ContentInputProps) => {
 	const [content, setContent] = useState('');
 	const [url, setUrl] = useState('');
 

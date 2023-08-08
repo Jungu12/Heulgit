@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import morningrolecall.heulgit.auth.dto.OAuthToken;
 import morningrolecall.heulgit.auth.dto.TokenInfoResponse;
 import morningrolecall.heulgit.auth.util.JwtProvider;
+import morningrolecall.heulgit.exception.AuthException;
+import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
@@ -72,12 +74,6 @@ public class AuthService {
 
 		User user = extractUser(response.getBody());
 
-		// 사용자 정보 추출이 정상적이지 않은 경우
-		if (user == null) {
-			System.out.println("사용자 정보가 잘못되었습니다.");
-			return null;
-		}
-
 		String githubId = user.getGithubId();
 		// 사용자가 처음 서비스를 이용하는 경우
 		if (userRepository.findUserByGithubId(githubId).isEmpty()) {
@@ -91,70 +87,10 @@ public class AuthService {
 	}
 
 	/**
-	 * 인가 코드를 통해 Github로부터 액세스 토큰을 발급받아 반환
-	 * @param code 인가 코드
-	 * @return String 액세스 토큰
+	 * 토큰으로부터 사용자 ID 추출 후 반환
 	 * */
-	private String getAccessToken(String code) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", "application/json");
-
-		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-
-		ResponseEntity<String> response = restTemplate.exchange(
-			accessTokenUrl + "?client_id=" + clientId + "&client_secret=" + clientSecret + "&code=" + code,
-			HttpMethod.POST,
-			requestEntity,
-			String.class
-		);
-
-		String accessTokenResponse = extractAccessToken(response.getBody());
-
-		if (accessTokenResponse != null) {
-			return accessTokenResponse;
-		} else {
-			throw new RuntimeException("[Exception] Access Token을 얻는데 실패했습니다.");
-		}
-	}
-
-	/**
-	 * 주어진 정보로부터 User 객체를 생성해 반환
-	 * @param data
-	 * @return User
-	 * */
-	private User extractUser(String data) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode jsonNode = objectMapper.readTree(data);
-
-			return new User(jsonNode.get("login").asText(), jsonNode.get("avatar_url").asText(),
-				jsonNode.get("name").asText(),
-				jsonNode.get("bio").asText(), jsonNode.get("company").asText(), jsonNode.get("location").asText(),
-				jsonNode.get("blog").asText());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	/**
-	 * 주어진 응답으로부터 Access Token을 추출해 반환
-	 * @param response 데이터
-	 * @return String Access Token 또는 null
-	 * */
-	private String extractAccessToken(String response) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode jsonNode = objectMapper.readTree(response);
-
-			if (jsonNode.has("access_token")) {
-				return jsonNode.get("access_token").asText();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+	public TokenInfoResponse getUserId(String token) {
+		return new TokenInfoResponse(jwtProvider.getUserId(token));
 	}
 
 	/**
@@ -173,9 +109,64 @@ public class AuthService {
 	}
 
 	/**
-	 * 토큰으로부터 사용자 ID 추출 후 반환
-	 */
-	public TokenInfoResponse getUserId(String token) {
-		return new TokenInfoResponse(jwtProvider.getUserId(token));
+	 * 인가 코드를 통해 Github로부터 액세스 토큰을 발급받아 반환
+	 * @param code 인가 코드
+	 * @return String 액세스 토큰
+	 * */
+	private String getAccessToken(String code) {
+		return extractAccessToken(requestAccessToken(code).getBody());
+	}
+
+	/**
+	 * 주어진 정보로부터 User 객체를 생성해 반환
+	 * @param data
+	 * @return User
+	 * */
+	private User extractUser(String data) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(data);
+
+			return new User(jsonNode.get("login").asText(), jsonNode.get("avatar_url").asText(),
+				jsonNode.get("name").asText(),
+				jsonNode.get("bio").asText(), jsonNode.get("company").asText(), jsonNode.get("location").asText(),
+				jsonNode.get("blog").asText());
+		} catch (Exception e) {
+			throw new AuthException(ExceptionCode.USER_CREATED_FAILED);
+		}
+	}
+
+	/**
+	 * 주어진 응답으로부터 Access Token을 추출해 반환
+	 * @param response 데이터
+	 * @return String Access Token 또는 null
+	 * */
+	private String extractAccessToken(String response) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(response);
+
+			return jsonNode.get("access_token").asText();
+		} catch (Exception e) {
+			throw new AuthException(ExceptionCode.GITHUB_TOKEN_RESPONSE_FAILED);
+		}
+	}
+
+	private ResponseEntity<String> requestAccessToken(String code) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", "application/json");
+
+			HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+			return restTemplate.exchange(
+				accessTokenUrl + "?client_id=" + clientId + "&client_secret=" + clientSecret + "&code=" + code,
+				HttpMethod.POST,
+				requestEntity,
+				String.class
+			);
+		} catch (Exception e) {
+			throw new AuthException(ExceptionCode.GITHUB_ACCESS_TOKEN_FETCH_FAILED);
+		}
 	}
 }

@@ -1,3 +1,4 @@
+import CommentInput from '@components/Home/CommentInput';
 import React from 'react';
 import { BottomSheet } from 'react-spring-bottom-sheet';
 import { styled } from 'styled-components';
@@ -6,6 +7,12 @@ const StyledBottomSheetContainer = styled.div`
 	display: flex;
 	z-index: 100;
 	flex-direction: column;
+`;
+
+const StyledTitle = styled.h1`
+	font-weight: 700;
+	font-size: 16px;
+	margin-bottom: 4px;
 `;
 
 // const StyledContentContainer = styled.div`
@@ -17,10 +24,11 @@ const StyledBottomSheetContainer = styled.div`
 
 type Props = {
 	open: boolean;
-	onDismiss: () => void;
+	children: React.ReactNode;
+	onDismiss?: () => void;
 };
 
-const CBottomSheet = ({ open, onDismiss }: Props) => {
+const CBottomSheet = ({ open, onDismiss, children }: Props) => {
 	return (
 		<StyledBottomSheetContainer>
 			<BottomSheet
@@ -37,14 +45,10 @@ const CBottomSheet = ({ open, onDismiss }: Props) => {
 					maxHeight / 4,
 					maxHeight * 0.6,
 				]}
-				header={
-					<h1 className="flex items-center text-xl justify-center font-bold text-gray-800">
-						댓글시치~
-					</h1>
-				}
-				footer={<input type="text" placeholder="입력창 시치~" />}
+				header={<StyledTitle>댓글</StyledTitle>}
+				footer={<CommentInput />}
 			>
-				바텀시치
+				{children}
 			</BottomSheet>
 		</StyledBottomSheetContainer>
 	);

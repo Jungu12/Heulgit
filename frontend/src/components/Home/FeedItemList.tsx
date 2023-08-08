@@ -25,14 +25,19 @@ const Separation = styled.div`
 
 type Props = {
 	feedList: HeulGitPostType[];
+	onClickComment?: (id: number) => void;
 };
 
-const FeedItemList = ({ feedList }: Props) => {
+const FeedItemList = ({ feedList, onClickComment }: Props) => {
 	return (
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
 				<div key={index}>
-					<FeedItem feed={feed} type="summary" />
+					<FeedItem
+						feed={feed}
+						type="summary"
+						onClickComment={onClickComment}
+					/>
 					<Separation />
 				</div>
 			))}

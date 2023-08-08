@@ -15,7 +15,7 @@ const Mobile = ({ children }: Props) => {
 
 const Tablet = ({ children }: Props) => {
 	const isTablet = useMediaQuery({
-		query: '(min-width:768px) and (max-width:1199px)',
+		query: '(min-width:767px) and (max-width:1200px)',
 	});
 	return <>{isTablet && children}</>;
 };
