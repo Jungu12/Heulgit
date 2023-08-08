@@ -226,10 +226,7 @@ public class EurekaService {
 
 		//DB에 다시 저장
 		eurekaImageRepository.saveAll(eurekaImages);
-		//
-
 		eureka.addAllImage(eurekaImages);
-		//
 		eurekaRepository.save(eureka);
 	}
 
