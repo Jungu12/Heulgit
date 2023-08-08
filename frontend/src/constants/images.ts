@@ -20,6 +20,7 @@ export const images = {
 	},
 	community: {
 		createPost: '/assets/images/ic-create-post.png',
+		createPostIcOnly: '/assets/images/ic-createPost.png',
 		addImg: '/assets/images/ic-add-img.png',
 		likesInactive: '/assets/images/ic-likes-inactive.png',
 		likesActive: '/assets/images/ic-likes-active.png',
@@ -31,6 +32,15 @@ export const images = {
 		settingIcon: '/assets/images/ic-setting.png',
 		deleteIcon: '/assets/images/ic-delete.png',
 		crownIcon: '/assets/images/ic-crown.png',
+		followIcon: '/assets/images/ic-follow.png',
+		followingIcon: '/assets/images/ic-following.png',
+		rankingIcon: '/assets/images/ic-ranking.png',
+		profileActive: '/assets/images/ic-profilecat-active.png',
+		profileInactive: '/assets/images/ic-profilecat-inactive.png',
+		eurekaActive: '/assets/images/ic-profileceureka-active.png',
+		eurekaInactive: '/assets/images/ic-profileceureka-inactive.png',
+		freeActive: '/assets/images/ic-profilefree-active.png',
+		freeInactive: '/assets/images/ic-profilefree-inactive.png',
 	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',

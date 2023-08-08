@@ -1,18 +1,14 @@
+import { HeulGitCommentType } from '@typedef/home/heulgit.types';
 import React from 'react';
 import { styled } from 'styled-components';
+import MyComment from './MyComment';
 import { colors } from '@constants/colors';
-import { EurekaCommentType } from '@typedef/community/eureka.types';
-import EurekaPostComment from './EurekaPostComment';
 
 const StyledCommentListContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-
-	width: 100%;
-	margin-bottom: 60px;
 `;
 
-// 분리 선
 const Separation = styled.div`
 	background-color: ${colors.greyScale.grey3};
 	width: 100%;
@@ -21,15 +17,15 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	comments: EurekaCommentType[];
+	comments: HeulGitCommentType[];
 };
 
-const EurekaPostCommentList = ({ comments }: Props) => {
+const MyCommentList = ({ comments }: Props) => {
 	return (
 		<StyledCommentListContainer>
 			{comments.map((comment) => (
 				<>
-					<EurekaPostComment comment={comment} key={comment.id} />
+					<MyComment comment={comment} key={comment.id} />
 					<Separation />
 				</>
 			))}
@@ -37,4 +33,4 @@ const EurekaPostCommentList = ({ comments }: Props) => {
 	);
 };
 
-export default EurekaPostCommentList;
+export default MyCommentList;
