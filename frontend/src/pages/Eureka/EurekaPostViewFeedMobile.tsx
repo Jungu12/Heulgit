@@ -1,3 +1,5 @@
+// 유레카 게시물 상세페이지 모바일 버전
+
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React, { useCallback, useState } from 'react';

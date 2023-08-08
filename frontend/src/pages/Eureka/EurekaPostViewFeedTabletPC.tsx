@@ -1,3 +1,5 @@
+// 유레카 게시물 상세페이지 테블릿 PC 버전
+
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React, { useCallback, useState } from 'react';
@@ -5,7 +7,7 @@ import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { EurekaPostType } from '@typedef/community/eureka.types';
 
-// 피드 컨테이너
+// 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -24,8 +26,10 @@ const StyledTopLine = styled.div`
 const StyledProfileContainer = styled.div`
 	display: flex;
 	align-items: center;
+
 	font-size: 12px;
 	font-weight: 700;
+
 	gap: 4px;
 	margin-left: 12px;
 	margin-bottom: 20px;
@@ -34,6 +38,7 @@ const StyledProfileContainer = styled.div`
 // 프로필 이미지
 const StyledProfileImage = styled.img`
 	display: flex;
+
 	width: 36px;
 	height: 36px;
 `;
@@ -153,21 +158,11 @@ const StyledUnderline = styled.div`
 	/* margin-bottom: 12px; */
 `;
 
-// 왼쪽 메뉴바
-// const StyledMenuContainer = styled.div`
-// 	display: flex;
-
-// 	width: 124px;
-// 	height: 100%;
-
-// 	background-color: #432434;
-// `;
-
 type Props = {
 	feed: EurekaPostType;
 };
 
-const EurekaPostViewFeedTablet = ({ feed }: Props) => {
+const EurekaPostViewFeedTabletPC = ({ feed }: Props) => {
 	const navigation = useNavigate();
 
 	// 좋아요 버튼 state
@@ -237,4 +232,4 @@ const EurekaPostViewFeedTablet = ({ feed }: Props) => {
 	);
 };
 
-export default EurekaPostViewFeedTablet;
+export default EurekaPostViewFeedTabletPC;

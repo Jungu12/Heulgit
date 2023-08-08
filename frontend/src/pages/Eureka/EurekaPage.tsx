@@ -1,11 +1,10 @@
-// 유레카 전체 피드
+// 커뮤니티 내 유레카 전체 페이지
 
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import { images } from '@constants/images';
 import React from 'react';
-import EurekaFeedItemListTablet from '@pages/Eureka/EurekaFeedItemListTablet';
-import EurekaFeedItemListPC from './EurekaFeedItemListPC';
 import EurekaFeedItemListMobile from './EurekaFeedItemListMobile';
+import EurekaFeedItemListTabletPC from './EurekaFeedItemListTabletPC';
 
 // 더미 게시물
 const dummyPosts = [
@@ -108,10 +107,10 @@ const EurekaPage = () => {
 				<EurekaFeedItemListMobile feedList={dummyPosts} />
 			</Mobile>
 			<Tablet>
-				<EurekaFeedItemListTablet feedList={dummyPosts} />
+				<EurekaFeedItemListTabletPC feedList={dummyPosts} />
 			</Tablet>
 			<PC>
-				<EurekaFeedItemListPC feedList={dummyPosts} />
+				<EurekaFeedItemListTabletPC feedList={dummyPosts} />
 			</PC>
 		</>
 	);

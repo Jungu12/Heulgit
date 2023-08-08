@@ -1,8 +1,10 @@
+// 자유게시판 피드 리스트 테블릿 PC 버전
+
 import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
-import { EurekaPostType } from '@typedef/community/eureka.types';
-import EurekaFeedItem from '../../components/community/EurekaFeedItem';
+import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+import FreeBoardFeedItem from './FreeBoardFeedItem';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -21,15 +23,15 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	feedList: EurekaPostType[];
+	feedList: FreeBoardPostType[];
 };
 
-const EurekaFeedItemListTablet = ({ feedList }: Props) => {
+const FreeBoardFeedItemListTabletPC = ({ feedList }: Props) => {
 	return (
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
 				<div key={index}>
-					<EurekaFeedItem feed={feed} />
+					<FreeBoardFeedItem feed={feed} />
 					<Separation />
 				</div>
 			))}
@@ -37,4 +39,4 @@ const EurekaFeedItemListTablet = ({ feedList }: Props) => {
 	);
 };
 
-export default EurekaFeedItemListTablet;
+export default FreeBoardFeedItemListTabletPC;

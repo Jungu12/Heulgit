@@ -1,16 +1,17 @@
+// 자유게시판 게시물 상세페이지 모바일 버전
+
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import { EurekaPostType } from '@typedef/community/eureka.types';
+import { useNavigate } from 'react-router-dom';
+import { FreeBoardPostType } from '@typedef/community/freeboard.types';
 
 // 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-
-	margin-top: 35px;
+	margin-top: 56px;
 `;
 
 // 탑라인
@@ -106,21 +107,15 @@ const StyledImgContainer = styled.div`
 	/* height: 190px; */
 
 	margin: 0px 12px 12px 12px;
+	background-color: #495c83;
 `;
 
 // 이미지
 const StyledImg = styled.img`
 	max-width: 100%;
-`;
+	/* height: 190px; */
 
-// 링크 컨테이너
-const StyledLink = styled(Link)`
-	margin-left: auto;
-`;
-
-const StyledLinkImg = styled.img`
-	width: 99px !important;
-	height: 28px !important;
+	background-color: aquamarine;
 `;
 
 // 버튼 담는 컨테이너
@@ -145,7 +140,6 @@ const StyledSubDataContainer = styled.div`
 	margin: 8px 12px 12px 12px;
 `;
 
-// 구분 선
 const StyledUnderline = styled.div`
 	width: 100%;
 	border: 1px solid ${colors.greyScale.grey3};
@@ -154,16 +148,13 @@ const StyledUnderline = styled.div`
 `;
 
 type Props = {
-	feed: EurekaPostType;
+	feed: FreeBoardPostType;
 };
 
-const EurekaPostViewFeedPC = ({ feed }: Props) => {
+const FreePostViewFeedMobile = ({ feed }: Props) => {
 	const navigation = useNavigate();
 
-	// 좋아요 버튼 state
 	const [liked, setLiked] = useState(false);
-
-	// 좋아요 버튼 클릭시 이미지 변환
 	const handleLikeClick = () => {
 		setLiked((prevLiked) => !prevLiked);
 	};
@@ -171,10 +162,13 @@ const EurekaPostViewFeedPC = ({ feed }: Props) => {
 	// 이미지 있는 경우에만 컨테이너 보여주기
 	const imageSrc = feed.images.length > 0 ? feed.images[0].file_uri : '';
 
-	// 좋아요 누른 사람 목록 보기
+	const onClickComment = useCallback(() => {
+		console.log('댓글 클릭');
+	}, []);
+
 	const onClickLike = useCallback(() => {
 		navigation('like');
-	}, [navigation, feed.id]);
+	}, []);
 
 	const onClickUserProfile = useCallback(() => {
 		navigation(`/profiles/${feed.user.id}`);
@@ -202,7 +196,6 @@ const EurekaPostViewFeedPC = ({ feed }: Props) => {
 					<StyledImg src={imageSrc} />
 				</StyledImgContainer>
 			)}
-
 			<StyledButtonContainer>
 				<img
 					src={
@@ -211,20 +204,17 @@ const EurekaPostViewFeedPC = ({ feed }: Props) => {
 							: images.community.likesInactive
 					}
 					alt="likesActive"
-					onClick={handleLikeClick}
+					onClick={handleLikeClick} // 좋아요 아이콘 클릭 이벤트 처리
 				/>
 				<img src={images.share} alt="share_button" />
-				<StyledLink to={feed.link}>
-					<StyledLinkImg src={images.gotoGit} />
-				</StyledLink>
 			</StyledButtonContainer>
 			<StyledSubDataContainer>
 				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
-				<div>{`댓글 ${feed.comments}개`}</div>
+				<div onClick={onClickComment}>{`댓글 ${feed.comments}개`}</div>
 			</StyledSubDataContainer>
 			<StyledUnderline />
 		</StyledFeedItemContainer>
 	);
 };
 
-export default EurekaPostViewFeedPC;
+export default FreePostViewFeedMobile;

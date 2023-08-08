@@ -1,8 +1,10 @@
+// 유레카 피드 리스트 테블릿 PC 버전
+
 import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import { EurekaPostType } from '@typedef/community/eureka.types';
-import EurekaFeedItem from '@components/community/EurekaFeedItem';
+import EurekaFeedItem from './EurekaFeedItem';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -11,6 +13,7 @@ const StyledFeedListSection = styled.section`
 	&::-webkit-scrollbar {
 		display: none;
 	}
+	height: 100%;
 `;
 
 const Separation = styled.div`
@@ -24,7 +27,7 @@ type Props = {
 	feedList: EurekaPostType[];
 };
 
-const EurekaFeedItemListPC = ({ feedList }: Props) => {
+const EurekaFeedItemListTabletPC = ({ feedList }: Props) => {
 	return (
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
@@ -37,4 +40,4 @@ const EurekaFeedItemListPC = ({ feedList }: Props) => {
 	);
 };
 
-export default EurekaFeedItemListPC;
+export default EurekaFeedItemListTabletPC;

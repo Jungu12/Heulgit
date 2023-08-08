@@ -1,8 +1,10 @@
+// 유레카 피드 리스트 모바일 버전
+
 import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import { EurekaPostType } from '@typedef/community/eureka.types';
-import EurekaFeedItem from '@components/community/EurekaFeedItem';
+import EurekaFeedItem from './EurekaFeedItem';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;

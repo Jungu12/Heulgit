@@ -1,3 +1,5 @@
+// 자유게시판 단일 피드
+
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React, { useCallback, useState } from 'react';

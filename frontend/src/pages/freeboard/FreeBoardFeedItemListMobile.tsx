@@ -1,3 +1,5 @@
+// 자유게시판 피드 리스트 모바일 버전
+
 import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
@@ -25,7 +27,7 @@ type Props = {
 	feedList: FreeBoardPostType[];
 };
 
-const FreeBoardFeedItemList = ({ feedList }: Props) => {
+const FreeBoardFeedItemListMobile = ({ feedList }: Props) => {
 	return (
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
@@ -38,4 +40,4 @@ const FreeBoardFeedItemList = ({ feedList }: Props) => {
 	);
 };
 
-export default FreeBoardFeedItemList;
+export default FreeBoardFeedItemListMobile;

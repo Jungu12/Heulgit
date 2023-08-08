@@ -1,3 +1,5 @@
+// 자유게시판 게시물 상세페이지 테블릿 PC 버전
+
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import React, { useCallback, useState } from 'react';
@@ -9,7 +11,7 @@ import { FreeBoardPostType } from '@typedef/community/freeboard.types';
 const StyledFeedItemContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	margin-top: 56px;
+	margin-top: 35px;
 `;
 
 // 탑라인
@@ -149,7 +151,7 @@ type Props = {
 	feed: FreeBoardPostType;
 };
 
-const FreePostViewFeed = ({ feed }: Props) => {
+const FreePostViewFeedTabletPC = ({ feed }: Props) => {
 	const navigation = useNavigate();
 
 	const [liked, setLiked] = useState(false);
@@ -215,4 +217,4 @@ const FreePostViewFeed = ({ feed }: Props) => {
 	);
 };
 
-export default FreePostViewFeed;
+export default FreePostViewFeedTabletPC;
