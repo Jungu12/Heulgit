@@ -8,5 +8,4 @@ import lombok.Getter;
 public class FreeBoardRequest {
 	private String title;
 	private String content;
-	private List<String> fileUri;
 }

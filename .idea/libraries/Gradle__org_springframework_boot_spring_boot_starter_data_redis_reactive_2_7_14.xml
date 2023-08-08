@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.boot:spring-boot-starter-data-redis-reactive:2.7.14" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.springframework.boot" artifactId="spring-boot-starter-data-redis-reactive" version="2.7.14" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-redis-reactive/2.7.14/14ad68ff01962f31facd009266daae2e4dd0a03e/spring-boot-starter-data-redis-reactive-2.7.14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-redis-reactive/2.7.14/3429a9f09c1a4cf24777d26604f04fcb1d0e1187/spring-boot-starter-data-redis-reactive-2.7.14-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
