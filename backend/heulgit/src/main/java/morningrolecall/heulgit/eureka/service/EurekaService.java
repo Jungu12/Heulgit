@@ -16,6 +16,7 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +35,7 @@ import morningrolecall.heulgit.eureka.repository.EurekaGithubInfoRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaImageRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaLabelRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaRepository;
+import morningrolecall.heulgit.image.Service.ImageService;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 import morningrolecall.heulgit.util.GithubApiClient;
@@ -50,6 +52,7 @@ public class EurekaService {
 	private final EurekaLabelRepository eurekaLabelRepository;
 	private final UserRepository userRepository;
 	private final GithubApiClient githubApiClient;
+	private final ImageService imageService;
 
 	/**
 	 * 유레카 목록 조회
@@ -57,7 +60,8 @@ public class EurekaService {
 	 * 2. 정렬 후 페이지네이션 반환
 	 * */
 	public Slice<EurekaDetailResponse> findEurekas(String sort, int pages) {
-		if (sort.equals("likes")) {
+		if (sort.equals("like"
+			+ "s")) {
 			Slice<Eureka> eurekas = eurekaRepository.findSortedByLikesEurekas(PageRequest.of(pages - 1, SIZE));
 			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 		}
@@ -126,7 +130,7 @@ public class EurekaService {
 	 * 4. 이미지 파일 리스트 생성 및 유레카 연결, 저장
 	 * */
 	@Transactional
-	public void addEureka(String githubId, EurekaRequest eurekaRequest) {
+	public void addEureka(String githubId, EurekaRequest eurekaRequest,List<MultipartFile> multipartFiles) {
 		User user = userRepository.findUserByGithubId(githubId)
 			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
 		Eureka eureka = Eureka.builder()
@@ -148,8 +152,9 @@ public class EurekaService {
 			List<EurekaLabel> eurekaLabels = parseLabel(githubInfo, eurekaGithubInfo);
 			eurekaLabelRepository.saveAll(eurekaLabels);
 		}
-
-		List<EurekaImage> eurekaImages = makeEurekaImages(eureka, eurekaRequest.getFileUri());
+		// 이미지 S3에 업로드
+		List<String> imageUrls = imageService.uploadFile(githubId,"eureka",multipartFiles);
+		List<EurekaImage> eurekaImages = makeEurekaImages(eureka, imageUrls);
 		eurekaImageRepository.saveAll(eurekaImages);
 
 		eureka.addAllImage(eurekaImages);
@@ -164,7 +169,7 @@ public class EurekaService {
 	 * 4. 기존 이미지 파일은 모두 제거, 새로운 이미지 파일 저장
 	 * */
 	@Transactional
-	public void updateEureka(String githubId, EurekaUpdateRequest eurekaUpdateRequest) {
+	public void updateEureka(String githubId, EurekaUpdateRequest eurekaUpdateRequest,List<MultipartFile> multipartFiles) {
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaUpdateRequest.getEurekaId())
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
 
@@ -202,14 +207,29 @@ public class EurekaService {
 
 		eureka.setLink(eurekaUpdateRequest.getLink());
 
-		List<EurekaImage> eurekaImages = makeEurekaImages(eureka, eurekaUpdateRequest.getFileUri());
+		// S3에서 이미지 삭제
+		List<EurekaImage> deleteEurekaImages = eurekaImageRepository.findEurekaImagesByEureka(eureka);
+		if (deleteEurekaImages != null || !deleteEurekaImages.isEmpty()) {
+			List<String> imageUrls = new ArrayList<>();
+			for(EurekaImage eurekaImage : deleteEurekaImages){
+				imageUrls.add(eurekaImage.getFileUri());
+			}
+			imageService.deleteFile(imageUrls);
+		}
 
 		eurekaImageRepository.deleteAllByEureka(eureka);
-		eurekaImageRepository.saveAll(eurekaImages);
-
 		eureka.removeAllImage();
-		eureka.addAllImage(eurekaImages);
 
+		// 현재 받은 이미지 S3에 업로드
+		List<String> imageUrls = imageService.uploadFile(githubId,"eureka",multipartFiles);
+		List<EurekaImage> eurekaImages = makeEurekaImages(eureka,imageUrls);
+
+		//DB에 다시 저장
+		eurekaImageRepository.saveAll(eurekaImages);
+		//
+
+		eureka.addAllImage(eurekaImages);
+		//
 		eurekaRepository.save(eureka);
 	}
 
@@ -229,7 +249,15 @@ public class EurekaService {
 			return;
 			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
 		}
+		List<EurekaImage> eurekaImages= eurekaImageRepository.findEurekaImagesByEureka(findEureka);
 
+		if (eurekaImages != null || !eurekaImages.isEmpty()) {
+			List<String> imageUrls = new ArrayList<>();
+			for(EurekaImage eurekaImage:eurekaImages){
+				imageUrls.add(eurekaImage.getFileUri());
+			}
+			imageService.deleteFile(imageUrls);
+		}
 		eurekaRepository.delete(findEureka);
 	}
 
