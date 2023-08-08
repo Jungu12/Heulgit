@@ -1,5 +1,7 @@
 package morningrolecall.heulgit.freeboard.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaRequest;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardRequest;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardUpdateRequest;
 import morningrolecall.heulgit.freeboard.service.FreeBoardService;
@@ -40,26 +46,27 @@ public class FreeboardController {
 	}
 
 	@PostMapping("/posts")
-	public ResponseEntity<?> freeBoardRegister(@AuthenticationPrincipal String githubId,
-		@RequestBody FreeBoardRequest freeBoardRequest) {
+	public ResponseEntity<?> freeBoardRegister(@AuthenticationPrincipal String githubId,@RequestPart(value = "file") List<MultipartFile> multipartFiles, @RequestPart(value= "data") FreeBoardRequest freeBoardRequest
+		 ) {
 		logger.debug("freeBoardRegister(), who = {}, title = {}, content = {}, imageId = {}", githubId,
 			freeBoardRequest.getTitle(),
-			freeBoardRequest.getContent(), freeBoardRequest.getFileUri().size());
+			freeBoardRequest.getContent());
 
-		freeBoardService.addFreeBoard(githubId, freeBoardRequest);
+		freeBoardService.addFreeBoard(githubId, freeBoardRequest, multipartFiles);
+
 
 		return ResponseEntity.ok().build();
 	}
 
 	@PutMapping("/posts/update")
 	public ResponseEntity<?> freeBoardUpdate(@AuthenticationPrincipal String userId,
-		@RequestBody FreeBoardUpdateRequest freeBoardUpdateRequest) {
+		@RequestPart(value = "file") List<MultipartFile> multipartFiles, @RequestPart(value= "data") FreeBoardUpdateRequest freeBoardUpdateRequest) {
 		logger.debug("freeBoardUpdate(), who = {}, freeBoardId = {}, title = {}, content = {}, imageId = {}",
 			userId, freeBoardUpdateRequest.getFreeBoardId(),
 			freeBoardUpdateRequest.getTitle(),
-			freeBoardUpdateRequest.getContent(), freeBoardUpdateRequest.getFileUri());
+			freeBoardUpdateRequest.getContent());
 
-		freeBoardService.updateFreeBoard(userId, freeBoardUpdateRequest);
+		freeBoardService.updateFreeBoard(userId, freeBoardUpdateRequest,multipartFiles);
 
 		return ResponseEntity.ok().build();
 	}
