@@ -1,13 +1,13 @@
 import CommitEditPage from '@pages/CommitEditPage';
 import CommunityPage from '@pages/CommunityPage';
 import LoginPage from '@pages/Login/LoginPage';
-import MyActivityPage from '@pages/MyActivityPage';
-import MyLikePostPage from '@pages/MyLikePostPage';
-import MyLikeRepoPage from '@pages/MyLikeRepoPage';
-import MyCommentPage from '@pages/MyCommentPage';
+import MyActivityPage from '@pages/MyActivity/MyActivityPage';
+import MyLikePostPage from '@pages/MyActivity/MyLikePostPage';
+import MyLikeRepoPage from '@pages/MyActivity/MyLikeRepoPage';
+import MyCommentPage from '@pages/MyActivity/MyCommentPage';
 import NotFound from '@pages/NotFound';
 import NotificationPage from '@pages/NotificationPage';
-import ProfilePage from '@pages/ProfilePage';
+import ProfilePage from '@pages/Profile/ProfilePage';
 import RepoViewPage from '@pages/RepoViewPage';
 import SearchPage from '@pages/SearchPage';
 import SearchResultPage from '@pages/SearchResultPage';
@@ -54,7 +54,7 @@ const RootRouter = () => {
 							{/* <Route path="like" element={<MyLikePostPage />}></Route> */}
 							<Route path="like-repo" element={<MyLikeRepoPage />}></Route>
 							<Route path="like-post" element={<MyLikePostPage />}></Route>
-							<Route path="like-comment" element={<MyCommentPage />}></Route>
+							<Route path="comment" element={<MyCommentPage />}></Route>
 							<Route path="commit-edit" element={<CommitEditPage />}></Route>
 							<Route path="follow" element={<FollowPage />}></Route>
 						</Route>
