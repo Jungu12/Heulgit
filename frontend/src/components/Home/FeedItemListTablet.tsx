@@ -5,10 +5,9 @@ import { colors } from '@constants/colors';
 import FeedItem from './FeedItem';
 
 const StyledFeedListSection = styled.section`
-	/* height: calc(100vh - 194px); */
+	max-width: 640px;
 	overflow-y: scroll;
-	margin-top: 123px;
-	margin-bottom: 70px;
+	margin-top: 40px;
 	scrollbar-width: none; /* 파이어폭스 */
 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
 	&::-webkit-scrollbar {
@@ -28,7 +27,7 @@ type Props = {
 	onClickComment?: (id: number) => void;
 };
 
-const FeedItemList = ({ feedList, onClickComment }: Props) => {
+const FeedItemListTablet = ({ feedList, onClickComment }: Props) => {
 	return (
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
@@ -45,4 +44,4 @@ const FeedItemList = ({ feedList, onClickComment }: Props) => {
 	);
 };
 
-export default FeedItemList;
+export default FeedItemListTablet;

@@ -1,7 +1,6 @@
 import CommitEditPage from '@pages/CommitEditPage';
 import CommunityPage from '@pages/CommunityPage';
 import LoginPage from '@pages/Login/LoginPage';
-import MainPage from '@pages/MainPage';
 import MyActivityPage from '@pages/MyActivity/MyActivityPage';
 import MyLikePostPage from '@pages/MyActivity/MyLikePostPage';
 import MyLikeRepoPage from '@pages/MyActivity/MyLikeRepoPage';
@@ -25,6 +24,7 @@ import FollowPage from '@pages/FollowPage';
 import LikeViewPage from '@pages/LikeViewPage';
 import ChatDirectPage from '@pages/ChatDirectPage';
 import ChatPage from '@pages/ChatPage';
+import MainPage from '@pages/Main/MainPage';
 import PrivateRoutes from './PrivateRoutes';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
@@ -37,11 +37,6 @@ const RootRouter = () => {
 			<Routes>
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
-				<Route path="/community" element={<CommunityPage />}>
-                    <Route index element={<Navigate replace to="eureka" />}></Route>
-					<Route path="eureka" element={<EurekaPage />}></Route>
-					<Route path="free" element={<FreeBoardPage />}></Route>
-				</Route>
 				<Route
 					element={
 						<PrivateRoutes
@@ -59,12 +54,13 @@ const RootRouter = () => {
 							{/* <Route path="like" element={<MyLikePostPage />}></Route> */}
 							<Route path="like-repo" element={<MyLikeRepoPage />}></Route>
 							<Route path="like-post" element={<MyLikePostPage />}></Route>
-							<Route path="like-comment" element={<MyCommentPage />}></Route>
+							<Route path="comment" element={<MyCommentPage />}></Route>
 							<Route path="commit-edit" element={<CommitEditPage />}></Route>
 							<Route path="follow" element={<FollowPage />}></Route>
 						</Route>
 					</Route>
 					<Route path="/community" element={<CommunityPage />}>
+						<Route index element={<Navigate replace to="eureka" />}></Route>
 						<Route path="eureka" element={<EurekaPage />}></Route>
 						<Route path="free" element={<FreeBoardPage />}></Route>
 					</Route>

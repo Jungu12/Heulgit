@@ -5,12 +5,18 @@ export const images = {
 	navigation: {
 		homeInactive: '/assets/images/ic-home-inactive.png',
 		homeActive: '/assets/images/ic-home-active.png',
+		homeWhite: '/assets/images/ic-home-white.png',
 		profileInactive: '/assets/images/ic-profile-inactive.png',
 		profileActive: '/assets/images/ic-profile-active.png',
+		profileWhite: '/assets/images/ic-profile-white.png',
 		searchInactive: '/assets/images/ic-search-inactive.png',
 		searchActive: '/assets/images/ic-search-active.png',
+		searchWhite: '/assets/images/ic-search-white.png',
 		communityInactive: '/assets/images/ic-community-inactive.png',
 		communityActive: '/assets/images/ic-community-active.png',
+		communityWhite: '/assets/images/ic-community-white.png',
+		alarmWhite: '/assets/images/ic-alarm-white.png',
+		gmWhite: '/assets/images/ic-gm-white.png',
 	},
 	community: {
 		createPost: '/assets/images/ic-create-post.png',
@@ -56,6 +62,7 @@ export const images = {
 	searchPrimary: '/assets/images/ic-search-primary.png',
 	closePrimary: '/assets/images/ic-close-primary.png',
 	closeBlack: '/assets/images/ic-close-black.png',
+	filter: '/assets/images/ic-filter.png',
 	dummy: {
 		dummy1: '/assets/images/dummy1.png',
 		dummy2: '/assets/images/dummy2.png',

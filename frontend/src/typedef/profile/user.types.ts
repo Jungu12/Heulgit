@@ -50,3 +50,8 @@ export type UserCommentType = {
 		},
 	];
 };
+
+// 유저 정보
+// export type UserType = {
+
+// }
