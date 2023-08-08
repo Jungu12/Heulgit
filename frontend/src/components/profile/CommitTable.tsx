@@ -4,11 +4,9 @@ import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import CommitTableItem from './CommitTableItem';
 
-const StyledCommitTable = styled.div`
-	width: 80vw;
-	width: 80vw;
-	margin-bottom: 15px;
-`;
+// 전체
+const StyledCommitTable = styled.div``;
+// 한 줄
 const StyledWrap = styled.div`
 	display: flex;
 	justify-content: space-around;
@@ -26,11 +24,11 @@ const StyledCount = styled.div`
 	justify-content: center;
 	width: 50%;
 `;
+
 type CommitTag = {
 	type: string;
 	count: number;
 };
-
 type Props = {
 	commitTag: CommitTag[];
 };

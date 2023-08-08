@@ -74,15 +74,11 @@ const StyledSubDataContainer = styled.div`
 type Props = {
 	feed: HeulGitPostType;
 	type: 'summary' | 'full';
+	onClickComment?: (commentId: number) => void;
 };
 
-const FeedItem = ({ feed, type }: Props) => {
+const FeedItem = ({ feed, type, onClickComment }: Props) => {
 	const navigation = useNavigate();
-
-	const onClickComment = useCallback(() => {
-		console.log('댓글 클릭');
-	}, []);
-
 	const onClickLike = useCallback(() => {
 		navigation(`repo/${feed.id}/like`);
 	}, []);
@@ -116,7 +112,9 @@ const FeedItem = ({ feed, type }: Props) => {
 			</StyledButtonContainer>
 			<StyledSubDataContainer>
 				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
-				<div onClick={onClickComment}>{`댓글 ${feed.comments}개`}</div>
+				<div
+					onClick={() => onClickComment && onClickComment(feed.id)}
+				>{`댓글 ${feed.comments}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);

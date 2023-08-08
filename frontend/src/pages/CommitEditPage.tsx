@@ -1,11 +1,71 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import ReactModal from 'react-modal';
 import Header from '@components/common/Header';
+import BigHeader from '@components/profile/BigHeader';
 import CommitTag from '@components/profile/Commit';
 import { colors } from '@constants/colors';
 
+const StyledBox = styled.div`
+	height: 100vh;
+
+	overflow-y: scroll;
+	scrollbar-width: none; /* 파이어폭스 */
+	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+	&::-webkit-scrollbar {
+		display: none;
+	}
+	@media (min-width: 768px) {
+		display: flex;
+		justify-content: center;
+	}
+`;
+
+const StyledSideL = styled.div`
+	height: 100vh;
+	left: 0;
+
+	@media (max-width: 767px) {
+		display: none;
+	}
+	@media (min-width: 768px) {
+		position: fixed;
+		width: 124px;
+		background-color: ${colors.primary.primaryLighten};
+	}
+	@media (min-width: 1200px) {
+		position: fixed;
+		width: 242px;
+		background-color: ${colors.primary.primary};
+	}
+`;
+const StyledSideR = styled.div`
+	height: 100vh;
+	right: 0;
+
+	@media (max-width: 767px) {
+		display: none;
+	}
+	@media (min-width: 768px) {
+		position: fixed;
+		width: 124px;
+		background-color: ${colors.primary.primaryLighten};
+	}
+	@media (min-width: 1200px) {
+		position: fixed;
+		width: 242px;
+		background-color: ${colors.primary.primary};
+	}
+`;
+
 const StyledCommitEditPage = styled.div`
-	/* background-color: ${colors.greyScale.grey2}; */
+	@media (min-width: 767px) {
+		width: 500px;
+	}
+`;
+
+const StyledEditTitle = styled.div`
+	height: 60px;
 `;
 const StyledSaveButton = styled.button`
 	margin-right: 20px;
@@ -15,11 +75,10 @@ const StyledSaveButton = styled.button`
 `;
 
 const CommitPageMiddle = styled.div`
-	margin-top: 70px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 0 20px 50px;
+	padding: 10px 20px 60px;
 `;
 
 const StyledFooter = styled.div`
@@ -33,26 +92,109 @@ const StyledFooter = styled.div`
 	justify-content: center;
 	align-items: center;
 	background-color: white;
+
+	@media (min-width: 768px) {
+		width: 500px;
+	}
+`;
+const CommitPlusButton = styled.button`
+	width: 100%;
+	height: 40px;
+
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid;
+	border-radius: 5px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* background-color: white; */
+	font-weight: bold;
+
+	background-color: ${colors.primary.primary};
+	color: white;
 `;
 
-// const CommitPlusButton = styled.button`
-// 	width: 100%;
-// 	height: 35px;
-
-// 	margin: 10px;
-// 	padding: 10px;
-// 	border: 1px solid;
-// 	border-radius: 5px;
-
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-// 	/* background-color: white; */
-// 	font-weight: bold;
-
-// 	background-color: ${colors.primary.primary};
-// 	color: white;
-// `;
+// 모달
+const customStyles = {
+	overlay: {
+		zIndex: '99',
+		backgroundColor: 'rgba(0, 0, 0, 0.3)', // 오버레이 배경색을 투명하게 설정
+	},
+	content: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		padding: '20px',
+		margin: 'auto',
+		maxWidth: '500px',
+		height: '400px',
+		background: 'rgba(255, 255, 255)',
+		backdropFilter: 'blur(10px)',
+		// webkitBackdropFilter: 'blur(10px)', // -webkit-backdrop-filter 추가
+		zIndex: '99',
+		border: 'none',
+		borderRadius: '20px',
+	},
+};
+const StyledModalContent = styled.div<{
+	$inputContent: boolean;
+	$textareaContent: boolean;
+}>`
+	width: 100%;
+	font-size: 20px;
+	div {
+	}
+	label {
+		margin: 30px 0 10px 0;
+	}
+	input {
+		border: 2px solid;
+		border-radius: 10px;
+		padding: 10px;
+		border-color: ${(props) =>
+			props.$inputContent ? colors.primary.primary : colors.greyScale.grey3};
+	}
+	textarea {
+		height: 100px;
+		border: 2px solid;
+		border-radius: 10px;
+		padding: 10px;
+		border-color: ${(props) =>
+			props.$textareaContent ? colors.primary.primary : colors.greyScale.grey3};
+		resize: none;
+	}
+	input:focus,
+	textarea:focus {
+		outline: 1px solid ${colors.primary.primary};
+		border: 2px solid ${colors.primary.primary};
+	}
+`;
+const StyledModalItem = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
+const StyledModalButtonItem = styled.div`
+	display: flex;
+	justify-content: end;
+	button {
+		border-radius: 10px;
+		margin: 10px;
+		padding: 10px;
+	}
+	button.modal-close {
+		background-color: ${colors.point.red};
+		color: white;
+	}
+	button.modal-submit {
+		color: white;
+		background-color: ${colors.primary.primary};
+	}
+	button.modal-submit:disabled {
+		background-color: ${colors.primary.primaryLighten};
+	}
+`;
 
 const CommitEditPage = () => {
 	// CommitTag 목록 -> 상태로 관리
@@ -84,41 +226,134 @@ const CommitEditPage = () => {
 		);
 	};
 
-	// commitTags 배열에서 title 값을 추출하여 새로운 배열 생성
-	// const commitTagTitles = commitTags.map((tag) => tag.title);
+	// 화면 사이즈별 타이틀 변환
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-	// const handleSubmitCommit = (title: string, detail: string) => {
-	// 	// 새로운 CommitTag를 추가합니다.
-	// 	const newTag = {
-	// 		id: commitTags.length + 1, // 새로운 ID를 부여하거나 다른 방식으로 고유한 ID를 생성하세요.
-	// 		title: `# ${title}`,
-	// 		detail,
-	// 	};
-	// 	setCommitTags((prevTags) => [...prevTags, newTag]);
-	// };
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
+
+	// 모달
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [newCommit, setNewCommit] = useState({ title: '', detail: '' });
+	const handleOpenModal = () => {
+		setIsModalOpen(true);
+	};
+	const handleCloseModal = () => {
+		setNewCommit({ title: '', detail: '' });
+		setIsModalOpen(false);
+	};
+	const handleAddCommit = () => {
+		if (newCommit.title && newCommit.detail) {
+			setCommitTags((prevTags) => [
+				...prevTags,
+				{ ...newCommit, id: Date.now() },
+			]);
+			setNewCommit({ title: '', detail: '' });
+			setIsModalOpen(false);
+		}
+	};
+	const $inputContent = Boolean(newCommit.title);
+	const $textareaContent = Boolean(newCommit.detail);
+	const isSubmitDisabled = !newCommit.title || !newCommit.detail;
 
 	return (
-		<StyledCommitEditPage>
-			<Header
-				title={'커밋 메시지 설정'}
-				children={<StyledSaveButton>저장</StyledSaveButton>}
-			></Header>
+		<StyledBox>
+			<StyledSideL>
+				<div>네비게이션</div>
+			</StyledSideL>
 
-			<CommitPageMiddle>
-				{/* CommitTag 목록을 매핑하여 렌더링 */}
-				{commitTags.map((tag) => (
-					<CommitTag
-						key={tag.id}
-						title={tag.title}
-						detail={tag.detail}
-						onClickDeleteButton={() => handleDeleteCommitTag(tag.id)}
-					/>
-				))}
-			</CommitPageMiddle>
-			<StyledFooter>
-				<div>커밋 등록 버튼</div>
-			</StyledFooter>
-		</StyledCommitEditPage>
+			<StyledCommitEditPage>
+				<StyledEditTitle>
+					{windowWidth <= 768 ? (
+						<Header title={'커밋 메시지 설정'}>
+							<StyledSaveButton>저장</StyledSaveButton>
+						</Header>
+					) : (
+						<BigHeader title={'커밋 메시지 설정'}>
+							<StyledSaveButton>저장</StyledSaveButton>
+						</BigHeader>
+					)}
+				</StyledEditTitle>
+
+				<CommitPageMiddle>
+					{/* CommitTag 목록을 매핑하여 렌더링 */}
+					{commitTags.map((tag) => (
+						<CommitTag
+							key={tag.id}
+							title={tag.title}
+							detail={tag.detail}
+							onClickDeleteButton={() => handleDeleteCommitTag(tag.id)}
+						/>
+					))}
+				</CommitPageMiddle>
+				<StyledFooter>
+					<CommitPlusButton onClick={handleOpenModal}>
+						커밋 메시지 추가
+					</CommitPlusButton>
+				</StyledFooter>
+			</StyledCommitEditPage>
+			<StyledSideR>
+				<div>카테고리</div>
+			</StyledSideR>
+
+			{/* 모달 */}
+			<ReactModal
+				isOpen={isModalOpen}
+				style={customStyles}
+				onRequestClose={handleCloseModal}
+				contentLabel="커밋 메시지 추가"
+			>
+				<StyledModalContent
+					$inputContent={$inputContent}
+					$textareaContent={$textareaContent}
+				>
+					<StyledModalItem>
+						<label htmlFor="commitTitle">커밋 타입</label>
+						<input
+							maxLength={10}
+							type="text"
+							id="commitTitle"
+							value={newCommit.title}
+							onChange={(e) =>
+								setNewCommit({ ...newCommit, title: e.target.value })
+							}
+						/>
+					</StyledModalItem>
+					<StyledModalItem>
+						<label htmlFor="commitDetail">타입 설명</label>
+						<textarea
+							maxLength={40}
+							id="commitDetail"
+							value={newCommit.detail}
+							onChange={(e) =>
+								setNewCommit({ ...newCommit, detail: e.target.value })
+							}
+						/>
+					</StyledModalItem>
+					<StyledModalButtonItem>
+						<button onClick={handleCloseModal} className="modal-close">
+							취소
+						</button>
+						<button
+							onClick={handleAddCommit}
+							className="modal-submit"
+							disabled={isSubmitDisabled}
+						>
+							완료
+						</button>
+					</StyledModalButtonItem>
+				</StyledModalContent>
+			</ReactModal>
+		</StyledBox>
 	);
 };
 
