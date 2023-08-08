@@ -3,11 +3,11 @@ import Axios, { AxiosRequestHeaders, InternalAxiosRequestConfig } from 'axios';
 
 const axios = Axios.create();
 const authAxios = Axios.create();
-// axios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
-axios.defaults.baseURL = 'http://192.168.100.64:8080/api/';
+axios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
+// axios.defaults.baseURL = 'http://192.168.100.64:8080/api/';
 axios.defaults.withCredentials = true;
-// authAxios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
-authAxios.defaults.baseURL = 'http://192.168.100.64:8080/api/';
+authAxios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
+// authAxios.defaults.baseURL = 'http://192.168.100.64:8080/api/';
 authAxios.defaults.withCredentials = true;
 
 // 인터셉터 설정

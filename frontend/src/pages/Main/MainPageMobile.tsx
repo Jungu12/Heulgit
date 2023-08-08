@@ -34,6 +34,7 @@ const StyledMainContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	height: calc(var(--vh, 1vh) * 100);
+	/* height: 100vh; */
 `;
 
 const StyledMainTitleSection = styled.section`
