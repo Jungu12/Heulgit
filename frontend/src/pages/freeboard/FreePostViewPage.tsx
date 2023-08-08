@@ -149,14 +149,6 @@ const CommunityContainerPC = styled.div`
 	}
 `;
 
-// 오른쪽 왼쪽 메뉴바 테블릿 버전
-const StyledMenuContainerPC = styled.div`
-	display: flex;
-	width: 242px;
-
-	background-color: beige;
-`;
-
 const FreePostViewPageMobile = () => {
 	return (
 		<>

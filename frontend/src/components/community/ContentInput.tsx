@@ -1,5 +1,5 @@
 import { colors } from '@constants/colors';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { styled } from 'styled-components';
 
 // 내용 컨테이너

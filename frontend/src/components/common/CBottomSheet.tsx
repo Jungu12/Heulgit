@@ -1,4 +1,4 @@
-import CommentInput from '@pages/community/CommentInput';
+import CommentInput from '@components/Home/CommentInput';
 import React from 'react';
 import { BottomSheet } from 'react-spring-bottom-sheet';
 import { styled } from 'styled-components';

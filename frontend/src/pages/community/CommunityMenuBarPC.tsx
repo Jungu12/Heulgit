@@ -1,5 +1,4 @@
 import { colors } from '@constants/colors';
-import { images } from '@constants/images';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -61,12 +60,6 @@ const StyledFilterButton = styled.button<{ $isactive: boolean }>`
 // 필터 구분 div
 const StyledSeperationDiv = styled.div`
 	height: 30px;
-`;
-
-// 로고 이미지 div
-const StyledLogo = styled.img`
-	width: 120px;
-	height: 120px;
 `;
 
 const CommunityMenuBarPC = () => {
