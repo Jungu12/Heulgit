@@ -97,22 +97,22 @@ const StyledContent = styled.div`
 `;
 
 // 이미지 담는 컨테이너
-const StyledImgContainer = styled.div`
-	display: flex;
-	position: relative;
-	justify-content: start;
-	align-items: center;
+// const StyledImgContainer = styled.div`
+// 	display: flex;
+// 	position: relative;
+// 	justify-content: start;
+// 	align-items: center;
 
-	max-width: 100%;
-	/* height: 190px; */
+// 	max-width: 100%;
+// 	/* height: 190px; */
 
-	margin: 0px 12px 12px 12px;
-`;
+// 	margin: 0px 12px 12px 12px;
+// `;
 
 // 이미지
-const StyledImg = styled.img`
-	max-width: 100%;
-`;
+// const StyledImg = styled.img`
+// 	max-width: 100%;
+// `;
 
 // 링크 컨테이너
 const StyledLink = styled(Link)`
@@ -169,16 +169,13 @@ const EurekaPostViewFeedMobile = ({ feed }: Props) => {
 		setLiked((prevLiked) => !prevLiked);
 	};
 
-	// 이미지 있는 경우에만 컨테이너 보여주기
-	const imageSrc = feed.images.length > 0 ? feed.images[0].file_uri : '';
-
 	// 좋아요 누른 사람 목록 보기
 	const onClickLike = useCallback(() => {
 		navigation('like');
-	}, [navigation, feed.id]);
+	}, [navigation]);
 
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${feed.user.id}`);
+		navigation(`/profiles/${1}`);
 	}, []);
 
 	return (
@@ -186,11 +183,11 @@ const EurekaPostViewFeedMobile = ({ feed }: Props) => {
 			<StyledTitleContainer>{feed.title}</StyledTitleContainer>
 			<StyledTopLine>
 				<StyledProfileContainer onClick={onClickUserProfile}>
-					<StyledProfileImage src={feed.user.avater_url} alt="user_profile" />
+					<StyledProfileImage src={feed.user.avatarUrl} alt="user_profile" />
 					<StyledP>
-						<StyledUserId>{feed.user.id}</StyledUserId>
+						<StyledUserId>{feed.user.githubId}</StyledUserId>
 						<StyledUpdateTime>
-							{feed.updated_date} · 조회 수 {feed.views}회
+							{feed.updatedDate} · 조회 수 {feed.view}회
 						</StyledUpdateTime>
 					</StyledP>
 				</StyledProfileContainer>
@@ -198,11 +195,11 @@ const EurekaPostViewFeedMobile = ({ feed }: Props) => {
 			<StyledContentContainer>
 				<StyledContent>{feed.content}</StyledContent>
 			</StyledContentContainer>
-			{imageSrc && (
+			{/* {imageSrc && (
 				<StyledImgContainer>
 					<StyledImg src={imageSrc} />
 				</StyledImgContainer>
-			)}
+			)} */}
 
 			<StyledButtonContainer>
 				<img
@@ -220,8 +217,10 @@ const EurekaPostViewFeedMobile = ({ feed }: Props) => {
 				</StyledLink>
 			</StyledButtonContainer>
 			<StyledSubDataContainer>
-				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
-				<div>{`댓글 ${feed.comments}개`}</div>
+				<div
+					onClick={onClickLike}
+				>{`좋아요 ${feed.likedUsers.length}개 · `}</div>
+				<div>{`댓글 ${feed.content.length}개`}</div>
 			</StyledSubDataContainer>
 			<StyledUnderline />
 		</StyledFeedItemContainer>

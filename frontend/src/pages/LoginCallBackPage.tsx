@@ -24,7 +24,6 @@ const StyledCallBackContainer = styled.div`
 
 const LoginCallBackPage = () => {
 	const navigation = useNavigate();
-
 	const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
 
 	const getUserId = useCallback(() => {

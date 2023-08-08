@@ -3,7 +3,7 @@ import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import Navigation from '@components/common/Navigation';
 import CommunityCategory from '@components/community/CommunityCategory';
 import FilterCategory from '@components/community/FilterCategory';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -14,6 +14,8 @@ import CommunityMenuBarTablet from './CommunityMenuBarTablet';
 import CommunityFilterTablet from './CommunityFilterTablet';
 import CommunityMenuBarPC from './CommunityMenuBarPC';
 import CommunityFilterPC from './CommunityFilterPC';
+import { EurekaPostType } from '@typedef/community/eureka.types';
+import { getEurekaFeedList } from '@utils/api/eureka/eurekaApi';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -132,6 +134,29 @@ const StyledCreateButtonMobile = styled.button`
 
 const CommunityPage = () => {
 	const navigation = useNavigate();
+	// const [page, setPage] = useState(1);
+	const [feedList, setFeedList] = useState<EurekaPostType[]>([]);
+	const [seletedCommunityTitle, setSeletedCommunityTitle] = useState('유레카');
+	const [seletedSort, setSeletedSort] = useState('전체 보기');
+
+	// 선택된 카테고리 버튼을 토글하는 함수
+	const toggleActive = (category: string) => {
+		setSeletedCommunityTitle(category);
+		if (category === '유레카') {
+			navigation('/community/eureka'); // '유레카' 버튼을 클릭했을 때 '/community/eureka'로 이동
+		} else {
+			navigation('/community/free'); // '자유게시판' 버튼을 클릭했을 때 '/community/free'로 이동
+		}
+	};
+
+	// 컴포넌트 렌더링 시 FeedList 불러옴
+	useEffect(() => {
+		console.log('asdkmaldjasldj');
+
+		getEurekaFeedList(seletedSort, 1).then((res) => {
+			setFeedList(res);
+		});
+	}, []);
 
 	return (
 		<>
@@ -139,10 +164,14 @@ const CommunityPage = () => {
 			<Mobile>
 				<CommunityContainerMobile>
 					<Header title="커뮤니티" type="home" />
-					<CommunityCategory />
-					<FilterCategory />
+					<CommunityCategory
+						button={seletedCommunityTitle}
+						toggleActive={toggleActive}
+						setButton={setSeletedCommunityTitle}
+					/>
+					<FilterCategory button={seletedSort} setButton={setSeletedSort} />
 					<StyledFeedContainerMobile>
-						<Outlet />
+						<Outlet context={{ feedList }} />
 					</StyledFeedContainerMobile>
 					<StyledCreateButtonMobile
 						onClick={() => navigation('/community/free/post')}

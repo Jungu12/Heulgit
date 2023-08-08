@@ -17,22 +17,22 @@ const StyledProfileContainer = styled.div`
 `;
 
 // 프로필 이미지
-const StyledProfile = styled.img`
-	display: flex;
-	width: 32px;
-	height: 32px;
-	border-radius: 50%;
-	margin-left: 12px;
-	margin-right: 12px;
-`;
+// const StyledProfile = styled.img`
+// 	display: flex;
+// 	width: 32px;
+// 	height: 32px;
+// 	border-radius: 50%;
+// 	margin-left: 12px;
+// 	margin-right: 12px;
+// `;
 
 // 유저 ID
-const StyledUserName = styled.p`
-	font-size: 15px;
-	font-weight: 700;
+// const StyledUserName = styled.p`
+// 	font-size: 15px;
+// 	font-weight: 700;
 
-	margin-bottom: 8px;
-`;
+// 	margin-bottom: 8px;
+// `;
 
 // 댓글 내용
 const StyledContentBox = styled.div`
@@ -60,11 +60,11 @@ const StyledReply = styled.p`
 `;
 
 // 몇 분 전
-const StyledTime = styled.div`
-	display: flex;
-	width: 50px;
-	font-size: 13px;
-`;
+// const StyledTime = styled.div`
+// 	display: flex;
+// 	width: 50px;
+// 	font-size: 13px;
+// `;
 
 // 옵션 선택 이미지 디브
 const StyledOptionContainer = styled.div`
@@ -90,15 +90,15 @@ const EurekaPostComment = ({ comment }: Props) => {
 	return (
 		<StyledComment>
 			<StyledProfileContainer>
-				<StyledProfile src={comment.user.avater_url} alt="profile" />
+				{/* <StyledProfile src={comment.user.avater_url} alt="profile" /> */}
 				<StyledContentBox>
-					<StyledUserName>{comment.user.id}</StyledUserName>
+					{/* <StyledUserName>{comment.user.id}</StyledUserName> */}
 					<StyledContent>{comment.content}</StyledContent>
 					<StyledReply>답글 달기</StyledReply>
 				</StyledContentBox>
 			</StyledProfileContainer>
 			<StyledOptionContainer>
-				<StyledTime> {comment.updated_date}</StyledTime>
+				{/* <StyledTime> {comment.updated_date}</StyledTime> */}
 				<img src={images.menu} alt="option" />
 			</StyledOptionContainer>
 		</StyledComment>

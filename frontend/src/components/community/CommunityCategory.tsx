@@ -1,6 +1,6 @@
 import { colors } from '@constants/colors';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect } from 'react';
+import { useLocation  } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 커뮤니티 선택 컨테이너
@@ -35,21 +35,15 @@ const StyledCategoryButton = styled.button<{ $active: boolean }>`
 	padding: 0;
 `;
 
-const CommunityCategory = () => {
-	const navigation = useNavigate();
+type Props = {
+	button: string;
+	toggleActive: (category: string) => void;
+	setButton: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const CommunityCategory = ({ button, toggleActive, setButton }: Props) => {
 	const location = useLocation();
 	const categories = ['유레카', '자유게시판'];
-	const [button, setButton] = useState('유레카');
-
-	// 선택된 카테고리 버튼을 토글하는 함수
-	const toggleActive = (category: string) => {
-		setButton(category);
-		if (category === '유레카') {
-			navigation('/community/eureka'); // '유레카' 버튼을 클릭했을 때 '/community/eureka'로 이동
-		} else {
-			navigation('/community/free'); // '자유게시판' 버튼을 클릭했을 때 '/community/free'로 이동
-		}
-	};
 
 	// 경로 이름에 따라 카테고리 이름을 변경하는 함수
 	const changeCategory = useCallback((name: string) => {
@@ -63,8 +57,9 @@ const CommunityCategory = () => {
 	}, [button]);
 
 	useEffect(() => {
+		console.log(button);
 		const cur = location.pathname.split('community/')[1];
-		setButton(changeCategory(cur)); // 경로 이름에 따라 현재 선택된 버튼을 설정합니다.
+		setButton(changeCategory(cur ?? 'eureka')); // 경로 이름에 따라 현재 선택된 버튼을 설정합니다.
 	}, []);
 
 	return (
