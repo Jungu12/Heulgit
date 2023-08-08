@@ -1,13 +1,10 @@
-import FreeBoardFeedItemList from '@components/community/FreeBoardFeedItemList';
+// 커뮤니티 내 자유게시판 전체 페이지
 
+import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import { images } from '@constants/images';
 import React from 'react';
-import { styled } from 'styled-components';
-
-const StyledViewContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-`;
+import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
+import FreeBoardFeedItemListTabletPC from './FreeBoardFeedItemListTabletPC';
 
 // 더미 게시물
 const dummyPosts = [
@@ -76,9 +73,19 @@ const dummyPosts = [
 
 const FreeBoardPage = () => {
 	return (
-		<StyledViewContainer>
-			<FreeBoardFeedItemList feedList={dummyPosts} />
-		</StyledViewContainer>
+		<>
+			<Mobile>
+				<FreeBoardFeedItemListMobile feedList={dummyPosts} />
+			</Mobile>
+
+			<Tablet>
+				<FreeBoardFeedItemListTabletPC feedList={dummyPosts} />
+			</Tablet>
+
+			<PC>
+				<FreeBoardFeedItemListTabletPC feedList={dummyPosts} />
+			</PC>
+		</>
 	);
 };
 

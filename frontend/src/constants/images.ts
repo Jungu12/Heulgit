@@ -20,6 +20,7 @@ export const images = {
 	},
 	community: {
 		createPost: '/assets/images/ic-create-post.png',
+		createPostIcOnly: '/assets/images/ic-createPost.png',
 		addImg: '/assets/images/ic-add-img.png',
 		likesInactive: '/assets/images/ic-likes-inactive.png',
 		likesActive: '/assets/images/ic-likes-active.png',

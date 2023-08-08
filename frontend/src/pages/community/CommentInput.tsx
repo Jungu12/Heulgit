@@ -1,9 +1,10 @@
+import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import { colors } from '@constants/colors';
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
 
-// 댓글 컨테이너
-const StyledCommentComtainer = styled.div`
+// 댓글 컨테이너 모바일
+const StyledCommentComtainerMobile = styled.div`
 	display: flex;
 	position: fixed;
 	justify-content: space-evenly;
@@ -14,7 +15,24 @@ const StyledCommentComtainer = styled.div`
 	right: 0;
 	/* z-index: 1; */
 
-	height: 50px;
+	height: 60px;
+
+	border-top: solid 1px ${colors.greyScale.grey3};
+	background-color: #fff;
+`;
+
+// 댓글 컨테이너 테블릿 PC
+const StyledCommentComtainerTabletPC = styled.div`
+	display: flex;
+	position: fixed;
+	justify-content: space-evenly;
+	align-items: center;
+
+	width: 520px;
+	/* width: 100vw; */
+	bottom: 0;
+
+	height: 60px;
 
 	border-top: solid 1px ${colors.greyScale.grey3};
 	background-color: #fff;
@@ -22,8 +40,10 @@ const StyledCommentComtainer = styled.div`
 
 // 프로필 이미지
 const StyledProfileImg = styled.img`
-	width: 30px;
-	height: 30px;
+	width: 32px;
+	height: 32px;
+
+	margin: 0 12px;
 
 	border-radius: 50%;
 	background-color: #000000;
@@ -33,7 +53,9 @@ const StyledCommentInputContainer = styled.div`
 	display: flex;
 	align-items: center;
 	position: relative;
-	width: 80%;
+	width: 90%;
+
+	margin-right: 12px;
 `;
 
 // 댓글 input창
@@ -101,19 +123,64 @@ const CommentInput = () => {
 	const isKeywordValid = keyword.trim().length > 0;
 
 	return (
-		<StyledCommentComtainer>
-			<StyledProfileImg />
-			<StyledCommentInputContainer>
-				<StyledCommentInput
-					value={keyword}
-					onChange={handleChange}
-					onKeyDown={handleEnter}
-				/>
-				<StyledRegisterButton $active={isKeywordValid} onClick={handleClick}>
-					등록
-				</StyledRegisterButton>
-			</StyledCommentInputContainer>
-		</StyledCommentComtainer>
+		<>
+			<Mobile>
+				<StyledCommentComtainerMobile>
+					<StyledProfileImg />
+					<StyledCommentInputContainer>
+						<StyledCommentInput
+							value={keyword}
+							onChange={handleChange}
+							onKeyDown={handleEnter}
+						/>
+						<StyledRegisterButton
+							$active={isKeywordValid}
+							onClick={handleClick}
+						>
+							등록
+						</StyledRegisterButton>
+					</StyledCommentInputContainer>
+				</StyledCommentComtainerMobile>
+			</Mobile>
+
+			<Tablet>
+				<StyledCommentComtainerTabletPC>
+					<StyledProfileImg />
+					<StyledCommentInputContainer>
+						<StyledCommentInput
+							value={keyword}
+							onChange={handleChange}
+							onKeyDown={handleEnter}
+						/>
+						<StyledRegisterButton
+							$active={isKeywordValid}
+							onClick={handleClick}
+						>
+							등록
+						</StyledRegisterButton>
+					</StyledCommentInputContainer>
+				</StyledCommentComtainerTabletPC>
+			</Tablet>
+
+			<PC>
+				<StyledCommentComtainerTabletPC>
+					<StyledProfileImg />
+					<StyledCommentInputContainer>
+						<StyledCommentInput
+							value={keyword}
+							onChange={handleChange}
+							onKeyDown={handleEnter}
+						/>
+						<StyledRegisterButton
+							$active={isKeywordValid}
+							onClick={handleClick}
+						>
+							등록
+						</StyledRegisterButton>
+					</StyledCommentInputContainer>
+				</StyledCommentComtainerTabletPC>
+			</PC>
+		</>
 	);
 };
 
