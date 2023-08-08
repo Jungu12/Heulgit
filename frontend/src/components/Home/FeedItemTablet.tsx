@@ -77,7 +77,7 @@ type Props = {
 	onClickComment?: (commentId: number) => void;
 };
 
-const FeedItem = ({ feed, type, onClickComment }: Props) => {
+const FeedItemTablet = ({ feed, type, onClickComment }: Props) => {
 	const navigation = useNavigate();
 	const onClickLike = useCallback(() => {
 		navigation(`repo/${feed.id}/like`);
@@ -120,4 +120,4 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 	);
 };
 
-export default FeedItem;
+export default FeedItemTablet;

@@ -1,7 +1,6 @@
 import CommitEditPage from '@pages/CommitEditPage';
 import CommunityPage from '@pages/CommunityPage';
 import LoginPage from '@pages/Login/LoginPage';
-import MainPage from '@pages/MainPage';
 import MyActivityPage from '@pages/MyActivityPage';
 import MyLikePostPage from '@pages/MyLikePostPage';
 import MyLikeRepoPage from '@pages/MyLikeRepoPage';
@@ -25,6 +24,7 @@ import FollowPage from '@pages/FollowPage';
 import LikeViewPage from '@pages/LikeViewPage';
 import ChatDirectPage from '@pages/ChatDirectPage';
 import ChatPage from '@pages/ChatPage';
+import MainPage from '@pages/Main/MainPage';
 import PrivateRoutes from './PrivateRoutes';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
@@ -37,11 +37,6 @@ const RootRouter = () => {
 			<Routes>
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
-				<Route path="/community" element={<CommunityPage />}>
-                    <Route index element={<Navigate replace to="eureka" />}></Route>
-					<Route path="eureka" element={<EurekaPage />}></Route>
-					<Route path="free" element={<FreeBoardPage />}></Route>
-				</Route>
 				<Route
 					element={
 						<PrivateRoutes
@@ -65,6 +60,7 @@ const RootRouter = () => {
 						</Route>
 					</Route>
 					<Route path="/community" element={<CommunityPage />}>
+						<Route index element={<Navigate replace to="eureka" />}></Route>
 						<Route path="eureka" element={<EurekaPage />}></Route>
 						<Route path="free" element={<FreeBoardPage />}></Route>
 					</Route>
