@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import morningrolecall.heulgit.exception.eureka.EurekaException;
-
 @RestControllerAdvice
 public class ExceptionAdvice {
 	private final Logger logger = LoggerFactory.getLogger(getClass());

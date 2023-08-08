@@ -1,13 +1,12 @@
 package morningrolecall.heulgit.user.service;
 
-import javax.persistence.NoResultException;
-
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.auth.repository.AuthRepository;
 import morningrolecall.heulgit.exception.AuthException;
 import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.UserException;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
@@ -28,7 +27,17 @@ public class UserService {
 
 	public User findUser(String githubId) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
+			.orElseThrow(() -> new UserException(ExceptionCode.USER_NOT_FOUND));
 		return user;
 	}
+
+	// public Object findCommitInfo() {
+	// 	HttpHeaders headers = new HttpHeaders();
+	// 	headers.set("Accept", "application/json");
+	// 	// 1. db에 저장 된 commitTypes들을 들고 온다.
+	// 	List<String> commitTypes =
+	// 	Map<String, Integer> commitInfo =
+	// 	// 2. 해당 사용자의 모든 repo를 긁어 온다(공식 api)
+	// 	// 3. 모든 레포를 돌면서 commit type이 일치하는게 있는지 확인하고 있다면 ++ 해준다.
+	// }
 }

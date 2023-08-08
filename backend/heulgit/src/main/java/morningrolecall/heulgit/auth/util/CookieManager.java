@@ -13,4 +13,15 @@ public class CookieManager {
 			.sameSite("None")
 			.build();
 	}
+
+	public static ResponseCookie expireCookie(String token) {
+
+		return ResponseCookie.from("refreshToken", token)
+			.path("/")
+			.httpOnly(true)
+			.maxAge(0)
+			.secure(true)
+			.sameSite("None")
+			.build();
+	}
 }
