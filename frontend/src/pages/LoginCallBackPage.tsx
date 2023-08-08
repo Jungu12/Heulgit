@@ -27,20 +27,31 @@ const LoginCallBackPage = () => {
 
 	const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
 
+	const getUserId = useCallback(() => {
+		http
+			.get('oauth/me')
+			.then((res) => console.log(res))
+			.catch((err) => console.log(err));
+	}, []);
+
 	const getToken = useCallback(
 		async (code: string) => {
 			http
 				.post<{
 					accessToken: string;
 					refreshToken: string;
-				}>(`http://i9d211.p.ssafy.io:9001/oauth/github`, {
+				}>(`oauth/github`, {
 					code: code,
 				})
 				.then((response) => {
+					const { accessToken } = response;
 					console.log(response);
-					// 로그인 성공 시 토큰 저장하고 홈화면으로 보내기
-					dispatch(setToken(response.accessToken));
+					// 로그인 성공 시 토큰과 아이콘 저장하고 홈화면으로 보내기
+					dispatch(setToken(accessToken));
 					navigation('/');
+				})
+				.then(() => {
+					getUserId();
 				})
 				.catch((error) => {
 					console.log(error);
