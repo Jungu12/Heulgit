@@ -3,16 +3,19 @@
 import Header from '@components/common/Header';
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import CommentInput from '@pages/community/CommentInput';
-// import EurekaPostCommentList from '@components/community/EurekaPostCommentList';
+import EurekaPostCommentList from '@components/community/EurekaPostCommentList';
 // import { images } from '@constants/images';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import EurekaPostViewFeedMobile from './EurekaPostViewFeedMobile';
+import EurekaPostViewFeedMobile from './EurekaPostViewFeedMobile';
 // import EurekaPostViewFeedTabletPC from './EurekaPostViewFeedTabletPC';
 import CommunityMenuBarTablet from '@pages/community/CommunityMenuBarTablet';
 import CommunityMenuBarPC from '@pages/community/CommunityMenuBarPC';
 import CommunityFilterTablet from '@pages/community/CommunityFilterTablet';
 import CommunityFilterPC from '@pages/community/CommunityFilterPC';
+import { useParams } from 'react-router-dom';
+import { EurekaPostResponseType } from '@typedef/community/eureka.types';
+import { authHttp } from '@utils/http';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -81,13 +84,26 @@ const CommunityContainerPC = styled.div`
 `;
 
 const EurekaPostViewPage = () => {
+	const { id } = useParams();
+	const [feed, setFeed] = useState<EurekaPostResponseType>();
+
+	const loadPost = useCallback(() => {
+		authHttp.get<EurekaPostResponseType>(`eureka/posts/${id}`).then((res) => {
+			setFeed(res);
+		});
+	}, []);
+
+	useEffect(() => {
+		loadPost();
+	}, []);
+
 	return (
 		<>
 			<Mobile>
 				<CommunityContainerMobile>
 					<Header title="상세 페이지"></Header>
-					{/* <EurekaPostViewFeedMobile feed={dummyPost} />
-					<EurekaPostCommentList comments={dummyComment} /> */}
+					<EurekaPostViewFeedMobile feed={feed ?? null} />
+					<EurekaPostCommentList comments={feed?.eurekaComments ?? []} />
 					<CommentInput />
 				</CommunityContainerMobile>
 			</Mobile>

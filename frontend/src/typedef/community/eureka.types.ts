@@ -62,6 +62,22 @@ export type EurekaFeedResponseType = {
 	empty: true;
 };
 
+// 유레카 게시글 반환 타입
+export type EurekaPostResponseType = {
+	eurekaId: number;
+	user: UserType;
+	title: string;
+	content: string;
+	updatedDate: string;
+	view: number;
+	link: string;
+	eurekaImages: EurekaImageType;
+	likedUsers: UserType[];
+	eurekaComments: EurekaCommentType[];
+	eurekaGithubInfo: EurekaGithubInfoType;
+	eurekaLabels: EurekaLabelType[];
+};
+
 export type EurekaImageType = {
 	eurekaImageId: number;
 	fileUri: string;
@@ -78,4 +94,11 @@ export type EurekaGithubInfoType = {
 export type EurekaLabelType = {
 	name: string;
 	description: string;
+};
+
+// 유레카 게시글 쓰기 타입
+export type EurekaWriteType = {
+	title: string;
+	content: string;
+	link: string;
 };

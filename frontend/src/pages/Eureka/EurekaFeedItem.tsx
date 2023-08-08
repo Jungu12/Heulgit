@@ -139,7 +139,7 @@ const EurekaFeedItem = ({ feed }: Props) => {
 
 	// 유레카 피드 상세보기 페이지로 이동
 	const onClickFeedItem = useCallback(() => {
-		navigation(`${1}`);
+		navigation(`${feed.eurekaId}`);
 	}, []);
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
@@ -186,7 +186,9 @@ const EurekaFeedItem = ({ feed }: Props) => {
 				<div
 					onClick={onClickLike}
 				>{`좋아요 ${feed.likedUsers.length}개 · `}</div>
-				<div onClick={onClickComment}>{`댓글 ${feed.content.length}개`}</div>
+				<div
+					onClick={onClickComment}
+				>{`댓글 ${feed.eurekaComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);

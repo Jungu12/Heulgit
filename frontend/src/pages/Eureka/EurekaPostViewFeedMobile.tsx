@@ -5,7 +5,7 @@ import { images } from '@constants/images';
 import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { EurekaPostType } from '@typedef/community/eureka.types';
+import { EurekaPostResponseType } from '@typedef/community/eureka.types';
 
 // 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
@@ -155,7 +155,7 @@ const StyledUnderline = styled.div`
 `;
 
 type Props = {
-	feed: EurekaPostType;
+	feed: EurekaPostResponseType | null;
 };
 
 const EurekaPostViewFeedMobile = ({ feed }: Props) => {
@@ -177,6 +177,10 @@ const EurekaPostViewFeedMobile = ({ feed }: Props) => {
 	const onClickUserProfile = useCallback(() => {
 		navigation(`/profiles/${1}`);
 	}, []);
+
+	if (!feed) {
+		return <div>loading...</div>;
+	}
 
 	return (
 		<StyledFeedItemContainer>

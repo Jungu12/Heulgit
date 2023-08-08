@@ -1,3 +1,7 @@
+export type AuthType = {
+	accessToken: string;
+};
+
 export type SortType = {
 	empty: boolean;
 	sorted: boolean;
