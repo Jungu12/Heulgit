@@ -5,9 +5,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,17 +53,17 @@ public class UserController {
 	 * @param githubId
 	 * @return
 	 */
-	@GetMapping("/{githubId}")
-	public ResponseEntity<?> userDetail(@PathVariable String githubId) {
+	@GetMapping("")
+	public ResponseEntity<?> userDetail(@AuthenticationPrincipal String githubId) {
 		logger.debug("userDetail(), githubId = {}", githubId);
 
 		return ResponseEntity.ok().body(userService.findUser(githubId));
 	}
 
-	@GetMapping("/commit-analyze/{githubId}")
-	public ResponseEntity commitInfoList(@PathVariable String githubId) {
-		logger.debug("commitList(), githubId = {}", githubId);
-
-		return ResponseEntity.ok().body(userService.findCommitInfo());
-	}
+	// @GetMapping("/commit-analyze/{githubId}")
+	// public ResponseEntity commitInfoList(@PathVariable String githubId) {
+	// 	logger.debug("commitList(), githubId = {}", githubId);
+	//
+	// 	return ResponseEntity.ok().body(userService.findCommitInfo());
+	// }
 }
