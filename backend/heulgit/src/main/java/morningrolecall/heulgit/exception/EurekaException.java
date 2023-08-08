@@ -1,18 +1,16 @@
-package morningrolecall.heulgit.exception.eureka;
+package morningrolecall.heulgit.exception;
 
 import org.springframework.http.HttpStatus;
 
+import lombok.AllArgsConstructor;
 import morningrolecall.heulgit.exception.ExceptionCode;
 
+@AllArgsConstructor
 public class EurekaException extends RuntimeException {
 	private final ExceptionCode exceptionCode;
 
-	public EurekaException(ExceptionCode exceptionCode) {
-		this.exceptionCode = exceptionCode;
-	}
-
 	public String getMessage() {
-		return exceptionCode.getMessage();
+		return "[Eureka] " + exceptionCode.getMessage();
 	}
 
 	public HttpStatus getHttpStatus() {
