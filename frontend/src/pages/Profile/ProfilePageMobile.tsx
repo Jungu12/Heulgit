@@ -49,7 +49,14 @@ const StyledActivityButtonItem = styled.button`
 `;
 
 const SboxTop = styled.div``;
-const CateDiv = styled.div``;
+const CateDiv = styled.div`
+	height: 85px;
+
+	position: sticky;
+	top: 0;
+	background-color: white; /* Add a background color for better visibility */
+	z-index: 1;
+`;
 const Sdiv = styled.div``;
 const StyledProfileLow = styled.div`
 	/* display: flex; */

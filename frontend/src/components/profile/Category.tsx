@@ -2,11 +2,21 @@ import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 
+type StyledCategoryProps = {
+	hasIcon: boolean;
+};
+
+const StyledCategoryWrapper = styled.div<StyledCategoryProps>`
+	/* display: flex; */
+	/* justify-content: space-around; */
+	/* align-items: end; */
+	height: ${(props) => (props.hasIcon ? '60px' : '50px')};
+`;
+
 const StyledCategory = styled.div`
 	display: flex;
 	justify-content: space-around;
 	align-items: end;
-	height: 50px;
 `;
 
 const StyledCategoryButton = styled.button`
@@ -18,7 +28,7 @@ const StyledCategoryButton = styled.button`
 	width: 100%;
 	height: 100%;
 	padding: 15px;
-	border-bottom: 2px solid ${colors.greyScale.grey2};
+	border-bottom: 3px solid ${colors.greyScale.grey3};
 
 	display: flex;
 	flex-direction: column;
@@ -33,7 +43,7 @@ const StyledCategoryButton = styled.button`
 `;
 
 const SelectedCategoryButton = styled(StyledCategoryButton)`
-	border-bottom: 2px solid ${colors.primary.primary};
+	border-bottom: 3px solid ${colors.primary.primary};
 	color: ${colors.primary.primary};
 `;
 
@@ -74,43 +84,47 @@ const Category = ({
 	menuRouter3,
 	selectedMenu,
 }: CategoryProps) => {
+	const hasIcon = icon11 || icon12 || icon21 || icon22 || icon31 || icon32;
+
 	return (
-		<StyledCategory>
-			{selectedMenu === menu1 ? (
-				<SelectedCategoryButton onClick={menuRouter1}>
-					{icon11 && <StyledIcon src={icon11} />} {menu1}
-				</SelectedCategoryButton>
-			) : (
-				<StyledCategoryButton onClick={menuRouter1}>
-					{icon12 && <StyledIcon src={icon12} />}
-					{menu1}
-				</StyledCategoryButton>
-			)}
-			{selectedMenu === menu2 ? (
-				<SelectedCategoryButton onClick={menuRouter2}>
-					{icon21 && <StyledIcon src={icon21} />} {menu2}
-				</SelectedCategoryButton>
-			) : (
-				<StyledCategoryButton onClick={menuRouter2}>
-					{icon22 && <StyledIcon src={icon22} />}
-					{menu2}
-				</StyledCategoryButton>
-			)}
-			{menu3 && (
-				<>
-					{selectedMenu === menu3 ? (
-						<SelectedCategoryButton onClick={menuRouter3}>
-							{icon31 && <StyledIcon src={icon31} />} {menu3}
-						</SelectedCategoryButton>
-					) : (
-						<StyledCategoryButton onClick={menuRouter3}>
-							{icon32 && <StyledIcon src={icon32} />}
-							{menu3}
-						</StyledCategoryButton>
-					)}
-				</>
-			)}
-		</StyledCategory>
+		<StyledCategoryWrapper hasIcon={!!hasIcon}>
+			<StyledCategory>
+				{selectedMenu === menu1 ? (
+					<SelectedCategoryButton onClick={menuRouter1}>
+						{icon11 && <StyledIcon src={icon11} />} {menu1}
+					</SelectedCategoryButton>
+				) : (
+					<StyledCategoryButton onClick={menuRouter1}>
+						{icon12 && <StyledIcon src={icon12} />}
+						{menu1}
+					</StyledCategoryButton>
+				)}
+				{selectedMenu === menu2 ? (
+					<SelectedCategoryButton onClick={menuRouter2}>
+						{icon21 && <StyledIcon src={icon21} />} {menu2}
+					</SelectedCategoryButton>
+				) : (
+					<StyledCategoryButton onClick={menuRouter2}>
+						{icon22 && <StyledIcon src={icon22} />}
+						{menu2}
+					</StyledCategoryButton>
+				)}
+				{menu3 && (
+					<>
+						{selectedMenu === menu3 ? (
+							<SelectedCategoryButton onClick={menuRouter3}>
+								{icon31 && <StyledIcon src={icon31} />} {menu3}
+							</SelectedCategoryButton>
+						) : (
+							<StyledCategoryButton onClick={menuRouter3}>
+								{icon32 && <StyledIcon src={icon32} />}
+								{menu3}
+							</StyledCategoryButton>
+						)}
+					</>
+				)}
+			</StyledCategory>
+		</StyledCategoryWrapper>
 	);
 };
 
