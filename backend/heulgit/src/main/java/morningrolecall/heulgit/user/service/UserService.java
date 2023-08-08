@@ -34,6 +34,10 @@ public class UserService {
 	// public Object findCommitInfo() {
 	// 	HttpHeaders headers = new HttpHeaders();
 	// 	headers.set("Accept", "application/json");
+	//
+	// 	HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+	//
+	// 	ResponseEntity<String> response = restT
 	// 	// 1. db에 저장 된 commitTypes들을 들고 온다.
 	// 	List<String> commitTypes =
 	// 	Map<String, Integer> commitInfo =
