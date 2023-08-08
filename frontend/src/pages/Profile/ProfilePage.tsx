@@ -9,7 +9,7 @@ import { styled } from 'styled-components';
 const StyledProfile = styled.div`
 	height: 100vh;
 
-	overflow-y: scroll;
+	overflow-y: auto;
 	scrollbar-width: none; /* 파이어폭스 */
 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
 	&::-webkit-scrollbar {
@@ -17,9 +17,9 @@ const StyledProfile = styled.div`
 	}
 `;
 
-const deleteKeysFromSession = (keys: string[]) => {
-	keys.forEach((key) => sessionStorage.removeItem(key));
-};
+// const deleteKeysFromSession = (keys: string[]) => {
+// 	keys.forEach((key) => sessionStorage.removeItem(key));
+// };
 
 const ProfilePage = () => {
 	const navigation = useNavigate();
@@ -43,14 +43,14 @@ const ProfilePage = () => {
 		}
 	}, []);
 
-	// 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
-	useEffect(() => {
-		const keysToDelete = ['selectedMenu', 'selectedFollow'];
+	// // 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
+	// useEffect(() => {
+	// 	const keysToDelete = ['selectedMenu', 'selectedFollow'];
 
-		if (window.location.pathname === '/profiles/1') {
-			deleteKeysFromSession(keysToDelete);
-		}
-	}, []);
+	// 	if (window.location.pathname === '/profiles/1') {
+	// 		deleteKeysFromSession(keysToDelete);
+	// 	}
+	// }, []);
 
 	return (
 		<StyledProfile>

@@ -82,8 +82,12 @@ const SytledTitle = styled.div`
 	display: flex;
 	justify-content: start;
 	align-items: center;
+	margin-right: auto;
 	img {
 		height: 24px;
+	}
+	div {
+		margin: 0 5px;
 	}
 `;
 

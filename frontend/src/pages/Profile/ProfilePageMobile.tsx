@@ -34,18 +34,26 @@ const StyledUserInformation = styled.div`
 	flex-direction: column;
 	margin-left: 20px;
 `;
-const StyledActivityButton = styled.button`
+const StyledActivityButton = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: end;
+`;
+const StyledActivityButtonItem = styled.button`
 	height: 25px;
 	background-color: transparent;
 	img {
 		height: 25px;
 	}
+	padding: 5px;
 `;
 
+const SboxTop = styled.div``;
+const CateDiv = styled.div``;
 const Sdiv = styled.div``;
 const StyledProfileLow = styled.div`
-	display: flex;
-	flex-direction: column;
+	/* display: flex; */
+	/* flex-direction: column; */
 	justify-content: center;
 	align-items: center;
 	padding: 20px;
@@ -69,7 +77,6 @@ const ProfilePageMobile = ({
 	return (
 		<StyledProfilePage>
 			<StyledProfileHigh>
-				{' '}
 				<StyledUserProfile>
 					<StyledUserImage src={''} alt="user_profile" />
 					<StyledUserInformation>
@@ -80,44 +87,49 @@ const ProfilePageMobile = ({
 						<div>추가 정보</div>
 					</StyledUserInformation>
 				</StyledUserProfile>
-				<div>
-					<StyledActivityButton
+				<StyledActivityButton>
+					<StyledActivityButtonItem
 						onClick={() => navigation('/profiles/1/activity')}
 					>
 						<img src={images.menu} alt="내활동" />
-					</StyledActivityButton>
+					</StyledActivityButtonItem>
 					<div>
-						<StyledActivityButton onClick={() => navigation('/profiles/1')}>
+						<StyledActivityButtonItem onClick={() => navigation('/profiles/1')}>
 							<img src={images.profile.followIcon} alt="팔로우" />
-						</StyledActivityButton>
-						<StyledActivityButton onClick={() => navigation('/gm')}>
+						</StyledActivityButtonItem>
+						<StyledActivityButtonItem onClick={() => navigation('/gm')}>
 							<img src={images.gitMessage} alt="채팅" />
-						</StyledActivityButton>
+						</StyledActivityButtonItem>
 					</div>
-				</div>
+				</StyledActivityButton>
 			</StyledProfileHigh>
-			<Category
-				menu1={'프로필'}
-				icon11={images.profile.profileActive}
-				icon12={images.profile.profileInactive}
-				menuRouter1={() => handleMenuClick('프로필')}
-				menu2={'유레카'}
-				icon21={images.profile.eurekaActive}
-				icon22={images.profile.eurekaInactive}
-				menuRouter2={() => handleMenuClick('유레카')}
-				menu3={'자유'}
-				icon31={images.profile.freeActive}
-				icon32={images.profile.freeInactive}
-				menuRouter3={() => handleMenuClick('자유')}
-				selectedMenu={selectedMenu}
-			/>
-			<Sdiv>
-				<StyledProfileLow>
-					{selectedMenu === '프로필' && <MyProfile />}
-					{selectedMenu === '유레카' && <MyEureka />}
-					{selectedMenu === '자유' && <MyFreeboard />}
-				</StyledProfileLow>
-			</Sdiv>
+			<SboxTop>
+				<CateDiv>
+					<Category
+						menu1={'프로필'}
+						icon11={images.profile.profileActive}
+						icon12={images.profile.profileInactive}
+						menuRouter1={() => handleMenuClick('프로필')}
+						menu2={'유레카'}
+						icon21={images.profile.eurekaActive}
+						icon22={images.profile.eurekaInactive}
+						menuRouter2={() => handleMenuClick('유레카')}
+						menu3={'자유'}
+						icon31={images.profile.freeActive}
+						icon32={images.profile.freeInactive}
+						menuRouter3={() => handleMenuClick('자유')}
+						selectedMenu={selectedMenu}
+					/>
+				</CateDiv>
+				<Sdiv>
+					<StyledProfileLow>
+						{selectedMenu === '프로필' && <MyProfile />}
+						{selectedMenu === '유레카' && <MyEureka />}
+						{selectedMenu === '자유' && <MyFreeboard />}
+					</StyledProfileLow>
+				</Sdiv>
+			</SboxTop>
+
 			<StyledFooter>
 				<Navigation />
 			</StyledFooter>

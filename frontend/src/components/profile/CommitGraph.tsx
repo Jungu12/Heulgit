@@ -45,7 +45,11 @@ export const CommitGraph = ({ labels }: CommitGraphProps) => {
 		},
 	};
 
-	return <Radar data={data} options={options} />;
+	return (
+		<div>
+			<Radar data={data} options={options} />
+		</div>
+	);
 };
 
 export default CommitGraph;
