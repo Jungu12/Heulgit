@@ -15,6 +15,7 @@ public enum ExceptionCode {
 	GITHUB_USER_FETCH_FAILED(HttpStatus.BAD_GATEWAY, "GITHUB 사용자 정보 요청에 실패했습니다."),
 	GITHUB_ACCESS_TOKEN_FETCH_FAILED(HttpStatus.BAD_GATEWAY, "GITHUB Access Token 요청에 실패했습니다."),
 	GITHUB_TOKEN_RESPONSE_FAILED(HttpStatus.BAD_GATEWAY, "GITHUB 토큰 정보 추출에 실패했습니다."),
+	TOKEN_DELETE_FAILED(HttpStatus.NOT_FOUND, "해당 토큰이 존재하지 않습니다."),
 
 	/* Eureka */
 	WRITER_USER_MISMATCH(HttpStatus.FORBIDDEN, "작성자와 사용자가 다릅니다."),

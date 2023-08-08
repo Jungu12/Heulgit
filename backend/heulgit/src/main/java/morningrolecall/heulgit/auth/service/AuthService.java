@@ -84,7 +84,9 @@ public class AuthService {
 			userRepository.save(user);
 		}
 
-		// JWT 생성!
+		//JWT생성하고, Redis에 Token 저장하는 로직 추가 필요
+
+		// JWT 생성!(수정 예정)
 		return new OAuthToken(jwtProvider.generateAccessToken(githubId), jwtProvider.generateRefreshToken(githubId));
 	}
 
@@ -172,7 +174,7 @@ public class AuthService {
 
 	/**
 	 * 토큰으로부터 사용자 ID 추출 후 반환
-	 * */
+	 */
 	public TokenInfoResponse getUserId(String token) {
 		return new TokenInfoResponse(jwtProvider.getUserId(token));
 	}
