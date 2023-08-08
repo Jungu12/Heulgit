@@ -35,32 +35,30 @@ const dummyRankingList = [
 ];
 // 더미 데이터 끝
 
+//전체 컨테이너
+const StyledBox = styled.div`
+	width: 100%;
+`;
+
+// 커밋 그래프
 const StyledCommitBox = styled.div`
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	border: 1px solid;
 	border-radius: 10px;
 	margin-bottom: 20px;
-`;
-const StyledWrap = styled.div`
-	width: 100%;
-`;
-const StyledDiv = styled.div`
-	display: flex;
-	justify-content: center;
-	width: 80vw;
-`;
-const StyledCommitRank = styled.div`
-	display: flex;
-	flex-direction: column;
-	/* justify-content: center; */
-	align-items: center;
-	border: 1px solid;
-	border-radius: 10px;
-	width: 100%;
-	/* height: 250px; */
 	padding: 20px;
+`;
+const StyledCommitList = styled.div`
+	/* 타블렛 이상이면 적용 */
+	@media (min-width: 768px) {
+		display: flex;
+	}
+`;
+const StyledCommitItem = styled.div`
+	@media (min-width: 768px) {
+		width: 50%;
+	}
 `;
 const StyledActivityButton = styled.button`
 	background-color: transparent;
@@ -69,7 +67,28 @@ const StyledActivityButton = styled.button`
 		height: auto;
 	}
 	margin-left: auto;
-	padding: 10px;
+`;
+
+// 랭킹 그래프
+const StyledRankBox = styled.div`
+	display: flex;
+	flex-direction: column;
+	border: 1px solid;
+	border-radius: 10px;
+	padding: 20px;
+	align-items: center;
+`;
+const SytledTitle = styled.div`
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	margin-right: auto;
+	img {
+		height: 24px;
+	}
+	div {
+		margin: 0 5px;
+	}
 `;
 
 const MyProfile = () => {
@@ -95,26 +114,32 @@ const MyProfile = () => {
 	];
 
 	return (
-		<StyledWrap>
+		<StyledBox>
 			<StyledCommitBox>
 				<StyledActivityButton
 					onClick={() => navigation('/profiles/1/commit-edit')}
 				>
 					<img src={images.profile.settingIcon} alt="설정" />
 				</StyledActivityButton>
-				<StyledDiv>
-					<CommitGraph labels={commitLabels} />
-				</StyledDiv>
-				<StyledDiv>
-					<CommitTable commitTag={commitInfos} />
-				</StyledDiv>
+				<StyledCommitList>
+					<StyledCommitItem>
+						<CommitGraph labels={commitLabels} />
+					</StyledCommitItem>
+					<StyledCommitItem>
+						<CommitTable commitTag={commitInfos} />
+					</StyledCommitItem>
+				</StyledCommitList>
 			</StyledCommitBox>
 
-			<StyledCommitRank>
-				<div>열심히 하시잖아</div>
+			<StyledRankBox>
+				<SytledTitle>
+					<img src={images.profile.rankingIcon} alt="팔로우" />
+					<div className="ranking-title">열심히 하시잖아</div>
+					<div className="ranking-tag">feat</div>
+				</SytledTitle>
 				<RankingGraph rankingList={dummyRankingList} />
-			</StyledCommitRank>
-		</StyledWrap>
+			</StyledRankBox>
+		</StyledBox>
 	);
 };
 

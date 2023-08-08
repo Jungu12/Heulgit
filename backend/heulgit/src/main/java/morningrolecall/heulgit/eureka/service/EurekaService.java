@@ -1,6 +1,8 @@
 package morningrolecall.heulgit.eureka.service;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,18 +17,26 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.Eureka;
 import morningrolecall.heulgit.eureka.domain.EurekaComment;
+import morningrolecall.heulgit.eureka.domain.EurekaGithubInfo;
 import morningrolecall.heulgit.eureka.domain.EurekaImage;
+import morningrolecall.heulgit.eureka.domain.EurekaLabel;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaDetailResponse;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaRequest;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.eureka.repository.EurekaCommentRepository;
+import morningrolecall.heulgit.eureka.repository.EurekaGithubInfoRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaImageRepository;
+import morningrolecall.heulgit.eureka.repository.EurekaLabelRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaRepository;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
+import morningrolecall.heulgit.util.GithubApiClient;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +46,10 @@ public class EurekaService {
 	private final EurekaRepository eurekaRepository;
 	private final EurekaImageRepository eurekaImageRepository;
 	private final EurekaCommentRepository eurekaCommentRepository;
+	private final EurekaGithubInfoRepository eurekaGithubInfoRepository;
+	private final EurekaLabelRepository eurekaLabelRepository;
 	private final UserRepository userRepository;
+	private final GithubApiClient githubApiClient;
 
 	/**
 	 * 유레카 목록 조회
@@ -82,6 +95,10 @@ public class EurekaService {
 			eureka);
 		eureka.setEurekaComments(eurekaComments);
 
+		EurekaGithubInfo eurekaGithubInfo = eurekaGithubInfoRepository.findEurekaGithubInfoByEureka(eureka)
+			.orElseThrow(() -> new NoResultException("이슈나 풀리퀘스트의 내용이 존재하지 않습니다."));
+		List<EurekaLabel> eurekaLabels = eurekaLabelRepository.findEurekaLabelsByEurekaGithubInfo(eurekaGithubInfo);
+
 		eurekaRepository.save(eureka);
 
 		return EurekaDetailResponse.builder()
@@ -89,13 +106,14 @@ public class EurekaService {
 			.user(eureka.getUser())
 			.title(eureka.getTitle())
 			.content(eureka.getContent())
-			.readme("")
 			.updatedDate(eureka.getUpdatedDate())
 			.view(eureka.getView())
 			.link(eureka.getLink())
 			.eurekaImages(eureka.getEurekaImages())
 			.likedUsers(eureka.getLikedUsers())
 			.eurekaComments(eurekaComments)
+			.eurekaGithubInfo(eurekaGithubInfo)
+			.eurekaLabels(eurekaLabels)
 			.build();
 	}
 
@@ -104,7 +122,8 @@ public class EurekaService {
 	 * 이미지 파일이 있다면 EurekaImage 등록
 	 * 1. 사용자 조회
 	 * 2. 유레카 생성 및 저장
-	 * 3. 이미지 파일 리스트 생성 및 유레카 연결, 저장
+	 * 3. 이슈(풀리퀘스트) 정보 생성 및 저장
+	 * 4. 이미지 파일 리스트 생성 및 유레카 연결, 저장
 	 * */
 	@Transactional
 	public void addEureka(String githubId, EurekaRequest eurekaRequest) {
@@ -114,10 +133,21 @@ public class EurekaService {
 			.user(user)
 			.title(eurekaRequest.getTitle())
 			.content(eurekaRequest.getContent())
+			.updatedDate(LocalDateTime.now())
 			.link(eurekaRequest.getLink())
 			.build();
 
 		eurekaRepository.save(eureka);
+
+		// 이슈(풀리퀘스트) 정보 조회
+		if (eurekaRequest.getLink() != null) {
+			String githubInfo = githubApiClient.requestGithubInfo(eurekaRequest.getLink());
+			EurekaGithubInfo eurekaGithubInfo = parseGithubInfo(githubInfo, eureka);
+			eurekaGithubInfoRepository.save(eurekaGithubInfo);
+
+			List<EurekaLabel> eurekaLabels = parseLabel(githubInfo, eurekaGithubInfo);
+			eurekaLabelRepository.saveAll(eurekaLabels);
+		}
 
 		List<EurekaImage> eurekaImages = makeEurekaImages(eureka, eurekaRequest.getFileUri());
 		eurekaImageRepository.saveAll(eurekaImages);
@@ -147,6 +177,29 @@ public class EurekaService {
 		eureka.setTitle(eurekaUpdateRequest.getTitle());
 		eureka.setContent(eurekaUpdateRequest.getContent());
 		eureka.setUpdatedDate(LocalDateTime.now());
+
+		// Link가 변경되었다면, 이슈(풀리퀘스트) 정보 갱신
+		// 기존의 EurekaGithubInfo, EurekaLabel을 변경해야 함
+		if (!eureka.getLink().equals(eurekaUpdateRequest.getLink())) {
+			String githubInfo = githubApiClient.requestGithubInfo(eurekaUpdateRequest.getLink());
+
+			EurekaGithubInfo eurekaGithubInfo = eurekaGithubInfoRepository.findEurekaGithubInfoByEureka(eureka)
+				.orElseThrow(() -> new NoResultException("해당 이슈(풀리퀘스트) 정보가 존재하지 않습니다."));
+			List<EurekaLabel> eurekaLabels = eurekaLabelRepository.findEurekaLabelsByEurekaGithubInfo(eurekaGithubInfo);
+
+			EurekaGithubInfo newEurekaGithubInfo = parseGithubInfo(githubInfo, eureka);
+
+			eurekaGithubInfo.updateTitle(newEurekaGithubInfo.getTitle());
+			eurekaGithubInfo.updateBody(newEurekaGithubInfo.getBody());
+			eurekaGithubInfo.updateState(newEurekaGithubInfo.isState());
+			eurekaGithubInfo.updateUpdatedDate(newEurekaGithubInfo.getUpdatedDate());
+
+			eurekaGithubInfoRepository.save(eurekaGithubInfo);
+			
+			eurekaLabelRepository.deleteAll(eurekaLabels);
+			eurekaLabelRepository.saveAll(parseLabel(githubInfo, eurekaGithubInfo));
+		}
+
 		eureka.setLink(eurekaUpdateRequest.getLink());
 
 		List<EurekaImage> eurekaImages = makeEurekaImages(eureka, eurekaUpdateRequest.getFileUri());
@@ -341,6 +394,10 @@ public class EurekaService {
 	 * */
 	private List<EurekaDetailResponse> toResponse(Slice<Eureka> eurekas) {
 		return eurekas.getContent().stream().map(eureka -> {
+			EurekaGithubInfo eurekaGithubInfo = eurekaGithubInfoRepository.findEurekaGithubInfoByEureka(eureka)
+				.orElseThrow(() -> new NoResultException("이슈나 풀리퀘스트에 대한 정보가 존재하지 않습니다."));
+			List<EurekaLabel> eurekaLabels = eurekaLabelRepository.findEurekaLabelsByEurekaGithubInfo(eurekaGithubInfo);
+
 			return EurekaDetailResponse.builder()
 				.eurekaId(eureka.getEurekaId())
 				.user(eureka.getUser())
@@ -348,12 +405,70 @@ public class EurekaService {
 				.content(eureka.getContent())
 				.updatedDate(eureka.getUpdatedDate())
 				.link(eureka.getLink())
-				.readme("")
 				.view(eureka.getView())
 				.eurekaImages(eureka.getEurekaImages())
 				.likedUsers(eureka.getLikedUsers())
 				.eurekaComments(eureka.getEurekaComments())
+				.eurekaGithubInfo(eurekaGithubInfo)
+				.eurekaLabels(eurekaLabels)
 				.build();
 		}).collect(Collectors.toList());
+	}
+
+	private EurekaGithubInfo parseGithubInfo(String info, Eureka eureka) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(info);
+
+			return EurekaGithubInfo.builder()
+				.title(jsonNode.get("title").asText())
+				.state(jsonNode.get("state").asBoolean())
+				.updatedDate(convertToLocalDateTime(jsonNode.get("updated_at").asText()))
+				.body(jsonNode.get("body").asText())
+				.comments(jsonNode.get("comments").asInt())
+				.eureka(eureka)
+				.build();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private List<EurekaLabel> parseLabel(String info, EurekaGithubInfo eurekaGithubInfo) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode labelsNode = objectMapper.readTree(info).get("labels");
+
+			List<EurekaLabel> labels = new ArrayList<>();
+
+			if (labelsNode != null && labelsNode.isArray()) {
+				for (JsonNode labelNode : labelsNode) {
+					EurekaLabel eurekaLabel = EurekaLabel.builder()
+						.name(labelNode.get("name").asText())
+						.description(labelNode.get("description").asText())
+						.eurekaGithubInfo(eurekaGithubInfo)
+						.build();
+
+					labels.add(eurekaLabel);
+				}
+			}
+
+			return labels;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private LocalDateTime convertToLocalDateTime(String date) {
+		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+
+		// String을 ZonedDateTime으로 변환
+		ZonedDateTime zonedDateTime = ZonedDateTime.parse(date, formatter);
+
+		// ZonedDateTime을 LocalDateTime으로 변환
+		return zonedDateTime.toLocalDateTime();
 	}
 }

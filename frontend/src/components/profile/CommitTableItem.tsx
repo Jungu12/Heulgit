@@ -2,6 +2,7 @@ import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 
+//
 const StyledWrap = styled.div`
 	display: flex;
 	justify-content: space-around;
