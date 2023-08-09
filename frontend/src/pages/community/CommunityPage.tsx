@@ -15,7 +15,7 @@ import CommunityFilterTablet from './CommunityFilterTablet';
 import CommunityMenuBarPC from './CommunityMenuBarPC';
 import CommunityFilterPC from './CommunityFilterPC';
 import { EurekaPostType } from '@typedef/community/eureka.types';
-import { getEurekaFeedList } from '@utils/api/Eureka/eurekaApi';
+import { getEurekaFeedList } from '@utils/api/eureka/eurekaApi';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
