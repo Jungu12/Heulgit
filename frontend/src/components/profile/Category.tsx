@@ -20,6 +20,8 @@ const StyledCategory = styled.div`
 `;
 
 const StyledCategoryButton = styled.button`
+	cursor: pointer;
+
 	font-weight: bolder;
 	font-size: 14px;
 	color: ${colors.greyScale.grey4};

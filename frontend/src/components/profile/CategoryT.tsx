@@ -11,6 +11,8 @@ const StyledCategory = styled.div`
 `;
 
 const StyledCategoryButton = styled.button`
+	cursor: pointer;
+
 	display: flex;
 	flex-direction: column;
 	width: 100%;

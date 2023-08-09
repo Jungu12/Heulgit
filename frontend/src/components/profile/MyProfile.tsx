@@ -218,6 +218,7 @@ const StyledCommitItem = styled.div`
 	}
 `;
 const StyledActivityButton = styled.button`
+	cursor: pointer;
 	background-color: transparent;
 	img {
 		width: 20px;
@@ -255,6 +256,7 @@ const StyledTitleItem = styled.div`
 `;
 const StyledTitleButton = styled.div`
 	button {
+		cursor: pointer;
 		background-color: transparent;
 		margin-left: 10px;
 		color: ${colors.primary.primatyDark};

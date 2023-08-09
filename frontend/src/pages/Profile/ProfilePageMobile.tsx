@@ -7,7 +7,7 @@ import MyFreeboard from '@components/profile/MyFreeboard';
 import MyEureka from '@components/profile/MyEureka';
 import MyProfile from '@components/profile/MyProfile';
 import { images } from '@constants/images';
-
+// import { UserType } from '@typedef/common.types';
 const StyledProfilePage = styled.div``;
 
 const StyledProfileHigh = styled.div`
@@ -33,32 +33,47 @@ const StyledUserImage = styled.img`
 const StyledUserInformation = styled.div`
 	display: flex;
 	flex-direction: column;
-
 	margin-left: 20px;
 	font-size: 20px;
+
 	div {
 		height: 25px;
+		margin-bottom: 5px;
 	}
-	.user-follower {
+	.user-follow {
 		display: flex;
 		justify-content: center;
 	}
 `;
 const StyledFollowing = styled.div`
-	background-color: aquamarine;
+	cursor: pointer;
+	/* background-color: aquamarine; */
 	width: 100px;
 `;
 const StyledFollower = styled.div`
+	cursor: pointer;
 	width: 100px;
+`;
+
+// 버튼 스타일
+const StyledMyButton = styled.div`
+	padding: 0 20px;
+`;
+const StyledUserButton = styled.div`
+	display: flex;
+	width: 100vw;
+	padding: 0 20px;
+	justify-content: space-between;
 `;
 const StyledActivityButton = styled.div`
 	display: flex;
 	position: absolute;
-	right: 20px;
+	right: 0;
 	flex-direction: column;
 	align-items: end;
 `;
 const StyledActivityButtonItem = styled.button`
+	cursor: pointer;
 	height: 25px;
 	background-color: transparent;
 	img {
@@ -93,6 +108,7 @@ type ProfileProps = {
 	handleMenuClick: (menu: '프로필' | '유레카' | '자유') => void;
 	navigation: ReturnType<typeof useNavigate>;
 	selectedMenu: string;
+	// userData: UserType;
 };
 
 const ProfilePageMobile = ({
@@ -107,35 +123,48 @@ const ProfilePageMobile = ({
 					<StyledUserImage src={''} alt="user_profile" />
 					<StyledUserInformation>
 						<div className="user-name">유저 이름</div>
-						<div className="user-follower">
+						<div className="user-follow">
 							<StyledFollowing
 								onClick={() => navigation('/profiles/1/following')}
 							>
-								팔로잉
+								팔로잉 20
 							</StyledFollowing>
 							<StyledFollower
 								onClick={() => navigation('/profiles/1/follower')}
 							>
-								팔로워
+								팔로워 20
 							</StyledFollower>
 						</div>
 						<div className="user-info">추가 정보</div>
 					</StyledUserInformation>
 				</StyledUserProfile>
+
+				{/* 내활동 | 팔로우,채팅,뒤로가기 버튼 */}
 				<StyledActivityButton>
-					<StyledActivityButtonItem
-						onClick={() => navigation('/profiles/1/activity')}
-					>
-						<img src={images.menu} alt="내활동" />
-					</StyledActivityButtonItem>
-					<div>
-						<StyledActivityButtonItem onClick={() => navigation('/profiles/1')}>
-							<img src={images.profile.followIcon} alt="팔로우" />
+					<StyledUserButton>
+						<div>
+							<StyledActivityButtonItem onClick={() => navigation(-1)}>
+								<img src={images.header.back} alt="뒤로가기" />
+							</StyledActivityButtonItem>
+						</div>
+						<div>
+							<StyledActivityButtonItem
+								onClick={() => navigation('/profiles/1')}
+							>
+								<img src={images.profile.followIcon} alt="팔로우" />
+							</StyledActivityButtonItem>
+							<StyledActivityButtonItem onClick={() => navigation('/gm')}>
+								<img src={images.gitMessage} alt="채팅" />
+							</StyledActivityButtonItem>
+						</div>
+					</StyledUserButton>
+					<StyledMyButton>
+						<StyledActivityButtonItem
+							onClick={() => navigation('/profiles/1/activity')}
+						>
+							<img src={images.profile.settingIcon} alt="내활동" />
 						</StyledActivityButtonItem>
-						<StyledActivityButtonItem onClick={() => navigation('/gm')}>
-							<img src={images.gitMessage} alt="채팅" />
-						</StyledActivityButtonItem>
-					</div>
+					</StyledMyButton>
 				</StyledActivityButton>
 			</StyledProfileHigh>
 			<SboxTop>

@@ -68,6 +68,7 @@ const StyledEditTitle = styled.div`
 	height: 60px;
 `;
 const StyledSaveButton = styled.button`
+	cursor: pointer;
 	margin-right: 20px;
 	background-color: transparent;
 	font-weight: 500;
@@ -98,6 +99,7 @@ const StyledFooter = styled.div`
 	}
 `;
 const CommitPlusButton = styled.button`
+	cursor: pointer;
 	width: 100%;
 	height: 40px;
 
@@ -186,13 +188,16 @@ const StyledModalButtonItem = styled.div`
 	button.modal-close {
 		background-color: ${colors.point.red};
 		color: white;
+		cursor: pointer;
 	}
 	button.modal-submit {
 		color: white;
 		background-color: ${colors.primary.primary};
+		cursor: pointer;
 	}
 	button.modal-submit:disabled {
 		background-color: ${colors.primary.primaryLighten};
+		cursor: default;
 	}
 `;
 
