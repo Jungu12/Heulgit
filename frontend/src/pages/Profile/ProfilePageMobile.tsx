@@ -14,6 +14,7 @@ const StyledProfileHigh = styled.div`
 	display: flex;
 	justify-content: space-between;
 	padding: 20px;
+	position: relative;
 `;
 const StyledUserProfile = styled.div`
 	display: flex;
@@ -32,10 +33,28 @@ const StyledUserImage = styled.img`
 const StyledUserInformation = styled.div`
 	display: flex;
 	flex-direction: column;
+
 	margin-left: 20px;
+	font-size: 20px;
+	div {
+		height: 25px;
+	}
+	.user-follower {
+		display: flex;
+		justify-content: center;
+	}
+`;
+const StyledFollowing = styled.div`
+	background-color: aquamarine;
+	width: 100px;
+`;
+const StyledFollower = styled.div`
+	width: 100px;
 `;
 const StyledActivityButton = styled.div`
 	display: flex;
+	position: absolute;
+	right: 20px;
 	flex-direction: column;
 	align-items: end;
 `;
@@ -87,11 +106,20 @@ const ProfilePageMobile = ({
 				<StyledUserProfile>
 					<StyledUserImage src={''} alt="user_profile" />
 					<StyledUserInformation>
-						<div>유저 이름</div>
-						<div onClick={() => navigation('/profiles/1/follow')}>
-							팔로잉 팔로워
+						<div className="user-name">유저 이름</div>
+						<div className="user-follower">
+							<StyledFollowing
+								onClick={() => navigation('/profiles/1/following')}
+							>
+								팔로잉
+							</StyledFollowing>
+							<StyledFollower
+								onClick={() => navigation('/profiles/1/follower')}
+							>
+								팔로워
+							</StyledFollower>
 						</div>
-						<div>추가 정보</div>
+						<div className="user-info">추가 정보</div>
 					</StyledUserInformation>
 				</StyledUserProfile>
 				<StyledActivityButton>

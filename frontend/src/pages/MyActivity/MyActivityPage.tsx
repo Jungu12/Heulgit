@@ -24,7 +24,7 @@ const StyledSideL = styled.div`
 	}
 	@media (min-width: 768px) {
 		width: 124px;
-		background-color: ${colors.primary.primaryLighten};
+		background-color: ${colors.primary.primary};
 	}
 	@media (min-width: 1200px) {
 		width: 242px;
@@ -41,7 +41,7 @@ const StyledSideR = styled.div`
 	}
 	@media (min-width: 768px) {
 		width: 124px;
-		background-color: ${colors.primary.primaryLighten};
+		background-color: ${colors.primary.primary};
 	}
 	@media (min-width: 1200px) {
 		width: 242px;

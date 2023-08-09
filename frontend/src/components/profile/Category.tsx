@@ -3,14 +3,14 @@ import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 
 type StyledCategoryProps = {
-	hasIcon: boolean;
+	$hasIcon: boolean;
 };
 
 const StyledCategoryWrapper = styled.div<StyledCategoryProps>`
 	/* display: flex; */
 	/* justify-content: space-around; */
 	/* align-items: end; */
-	height: ${(props) => (props.hasIcon ? '60px' : '50px')};
+	height: ${(props) => (props.$hasIcon ? '60px' : '50px')};
 `;
 
 const StyledCategory = styled.div`
@@ -28,7 +28,7 @@ const StyledCategoryButton = styled.button`
 	width: 100%;
 	height: 100%;
 	padding: 15px;
-	border-bottom: 3px solid ${colors.greyScale.grey3};
+	border-bottom: 2px solid ${colors.greyScale.grey3};
 
 	display: flex;
 	flex-direction: column;
@@ -43,7 +43,7 @@ const StyledCategoryButton = styled.button`
 `;
 
 const SelectedCategoryButton = styled(StyledCategoryButton)`
-	border-bottom: 3px solid ${colors.primary.primary};
+	border-bottom: 2px solid ${colors.primary.primary};
 	color: ${colors.primary.primary};
 `;
 
@@ -84,10 +84,10 @@ const Category = ({
 	menuRouter3,
 	selectedMenu,
 }: CategoryProps) => {
-	const hasIcon = icon11 || icon12 || icon21 || icon22 || icon31 || icon32;
+	const $hasIcon = icon11 || icon12 || icon21 || icon22 || icon31 || icon32;
 
 	return (
-		<StyledCategoryWrapper hasIcon={!!hasIcon}>
+		<StyledCategoryWrapper $hasIcon={!!$hasIcon}>
 			<StyledCategory>
 				{selectedMenu === menu1 ? (
 					<SelectedCategoryButton onClick={menuRouter1}>

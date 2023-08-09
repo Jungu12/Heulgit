@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import CommitTable from '@components/profile/CommitTable';
 import RankingGraph from '@components/profile/RankingGraph';
 import CommitGraph from '@components/profile/CommitGraph';
 import { useNavigate } from 'react-router-dom';
 import { images } from '@constants/images';
+import { colors } from '@constants/colors';
 
 // 더미 데이터
-const dummyRankingList = [
+const dummyRankingList1 = [
 	{
 		github_id: 'bbong-sil',
 		count: 37,
@@ -31,6 +32,162 @@ const dummyRankingList = [
 	{
 		github_id: 'summer',
 		count: 93,
+	},
+];
+const dummyRankingList2 = [
+	{
+		github_id: 'bbong-sil',
+		count: 37,
+	},
+	{
+		github_id: 'kim.sg',
+		count: 142,
+	},
+	{
+		github_id: 'klb',
+		count: 89,
+	},
+	{
+		github_id: 'nabi',
+		count: 56,
+	},
+	{
+		github_id: 'siri',
+		count: 372,
+	},
+	{
+		github_id: 'summer',
+		count: 93,
+	},
+];
+const dummyRankingList3 = [
+	{
+		github_id: 'bbong-sil',
+		count: 37,
+	},
+	{
+		github_id: 'kim.sg',
+		count: 152,
+	},
+	{
+		github_id: 'klb',
+		count: 89,
+	},
+	{
+		github_id: 'nabi',
+		count: 6,
+	},
+	{
+		github_id: 'siri',
+		count: 72,
+	},
+	{
+		github_id: 'summer',
+		count: 93,
+	},
+];
+const dummyRankingList4 = [
+	{
+		github_id: 'bbong-sil',
+		count: 137,
+	},
+	{
+		github_id: 'kim.sg',
+		count: 52,
+	},
+	{
+		github_id: 'klb',
+		count: 9,
+	},
+	{
+		github_id: 'nabi',
+		count: 6,
+	},
+	{
+		github_id: 'siri',
+		count: 72,
+	},
+	{
+		github_id: 'summer',
+		count: 43,
+	},
+];
+const dummyRankingList5 = [
+	{
+		github_id: 'bbong-sil',
+		count: 97,
+	},
+	{
+		github_id: 'kim.sg',
+		count: 182,
+	},
+	{
+		github_id: 'klb',
+		count: 9,
+	},
+	{
+		github_id: 'nabi',
+		count: 6,
+	},
+	{
+		github_id: 'siri',
+		count: 2,
+	},
+	{
+		github_id: 'summer',
+		count: 93,
+	},
+];
+const dummyRankingList6 = [
+	{
+		github_id: 'bbong-sil',
+		count: 7,
+	},
+	{
+		github_id: 'kim.sg',
+		count: 12,
+	},
+	{
+		github_id: 'klb',
+		count: 89,
+	},
+	{
+		github_id: 'nabi',
+		count: 6,
+	},
+	{
+		github_id: 'siri',
+		count: 2,
+	},
+	{
+		github_id: 'summer',
+		count: 3,
+	},
+];
+const dummyRankingList7 = [
+	{
+		github_id: 'bbong-sil',
+		count: 37,
+	},
+	{
+		github_id: 'kim.sg',
+		count: 12,
+	},
+	{
+		github_id: 'klb',
+		count: 89,
+	},
+	{
+		github_id: 'nabi',
+		count: 6,
+	},
+	{
+		github_id: 'siri',
+		count: 72,
+	},
+	{
+		github_id: 'summer',
+		count: 193,
 	},
 ];
 // 더미 데이터 끝
@@ -78,7 +235,13 @@ const StyledRankBox = styled.div`
 	padding: 20px;
 	align-items: center;
 `;
-const SytledTitle = styled.div`
+const StyledTitle = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+`;
+const StyledTitleItem = styled.div`
 	display: flex;
 	justify-content: start;
 	align-items: center;
@@ -88,6 +251,13 @@ const SytledTitle = styled.div`
 	}
 	div {
 		margin: 0 5px;
+	}
+`;
+const StyledTitleButton = styled.div`
+	button {
+		background-color: transparent;
+		margin-left: 10px;
+		color: ${colors.primary.primatyDark};
 	}
 `;
 
@@ -111,7 +281,39 @@ const MyProfile = () => {
 		{ type: 'style', count: 20 },
 		{ type: 'docs', count: 15 },
 		{ type: 'study', count: 5 },
+		{ type: 'chore', count: 8 },
 	];
+
+	const [currentTagIndex, setCurrentTagIndex] = useState(0);
+	const tags = ['feat', 'fix', 'algo', 'style', 'docs', 'study', 'chore'];
+	const handlePrevTag = () => {
+		setCurrentTagIndex((currentTagIndex + 6) % tags.length);
+	};
+	const handleNextTag = () => {
+		setCurrentTagIndex((currentTagIndex + 1) % tags.length);
+	};
+
+	// dummyRankingList를 선택된 태그에 따라 변경
+	const getDummyRankingList = (tag: string) => {
+		switch (tag) {
+			case 'feat':
+				return dummyRankingList1;
+			case 'fix':
+				return dummyRankingList2;
+			case 'algo':
+				return dummyRankingList3;
+			case 'style':
+				return dummyRankingList4;
+			case 'docs':
+				return dummyRankingList5;
+			case 'study':
+				return dummyRankingList6;
+			case 'chore':
+				return dummyRankingList7;
+			default:
+				return [];
+		}
+	};
 
 	return (
 		<StyledBox>
@@ -132,12 +334,20 @@ const MyProfile = () => {
 			</StyledCommitBox>
 
 			<StyledRankBox>
-				<SytledTitle>
-					<img src={images.profile.rankingIcon} alt="팔로우" />
-					<div className="ranking-title">열심히 하시잖아</div>
-					<div className="ranking-tag">feat</div>
-				</SytledTitle>
-				<RankingGraph rankingList={dummyRankingList} />
+				<StyledTitle>
+					<StyledTitleItem>
+						<img src={images.profile.rankingIcon} alt="팔로우" />
+						<div className="ranking-title">열심히 하시잖아</div>
+						<div className="ranking-tag">{tags[currentTagIndex]}</div>
+					</StyledTitleItem>
+					<StyledTitleButton>
+						<button onClick={handlePrevTag}> ◀ </button>
+						<button onClick={handleNextTag}> ▶ </button>
+					</StyledTitleButton>
+				</StyledTitle>
+				<RankingGraph
+					rankingList={getDummyRankingList(tags[currentTagIndex])}
+				/>
 			</StyledRankBox>
 		</StyledBox>
 	);

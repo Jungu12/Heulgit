@@ -1,3 +1,4 @@
+import { colors } from '@constants/colors';
 import React from 'react';
 import { styled } from 'styled-components';
 // import { colors } from '@constants/colors';
@@ -16,10 +17,12 @@ const StyledCategoryButton = styled.button`
 	font-size: 20px;
 	background-color: transparent;
 	padding: 15px 0;
+	color: ${colors.primary.primaryLighten};
 `;
 
 const SelectedCategoryButton = styled(StyledCategoryButton)`
 	font-weight: bold;
+	color: white;
 `;
 
 type CategoryProps = {
