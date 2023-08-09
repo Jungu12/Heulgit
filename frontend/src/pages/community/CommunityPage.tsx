@@ -129,10 +129,11 @@ const StyledFilterButton = styled.button`
 const CommunityPage = () => {
 	const navigation = useNavigate();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
-	// const [page, setPage] = useState(1);
+	const [page, setPage] = useState(1);
 	const [feedList, setFeedList] = useState<EurekaPostType[]>([]);
 	const [seletedCommunityTitle, setSeletedCommunityTitle] = useState('유레카');
 	const [seletedSort, setSeletedSort] = useState('전체 보기');
+	const [eurekaHasMore, setEurekaHasMore] = useState(true);
 
 	const onClickFilter = useCallback(() => {
 		setIsFilterOpen(true);
@@ -163,17 +164,37 @@ const CommunityPage = () => {
 	useEffect(() => {
 		console.log('새로운 피드리스트 불러오기!');
 
-		getEurekaFeedList(seletedSort, 1).then((res) => {
+		getEurekaFeedList(seletedSort, page).then((res) => {
 			setFeedList(res);
 			console.log('새로운 데이터', res);
 		});
 	}, []);
 
+	const eurekaNextPageLoad = useCallback(async () => {
+		console.log('다음 페이지 부르기');
+		const nextPage = page + 1;
+		setPage(nextPage);
+		getEurekaFeedList(seletedSort, nextPage).then((res) => {
+			if (res.length === 0) {
+				setEurekaHasMore(false);
+			}
+
+			const newFeedList = [...feedList, ...res];
+			setFeedList(newFeedList);
+			console.log(res);
+			console.log(newFeedList);
+		});
+	}, [seletedSort, page, feedList]);
+
 	useEffect(() => {
-		getEurekaFeedList(seletedSort, 1).then((res) => {
+		getEurekaFeedList(seletedSort, page).then((res) => {
 			setFeedList(res);
 		});
 	}, [seletedCommunityTitle]);
+
+	useEffect(() => {
+		console.log('[현재 페이지]', page);
+	}, [page]);
 
 	return (
 		<>
@@ -188,7 +209,7 @@ const CommunityPage = () => {
 					/>
 					<FilterCategory button={seletedSort} setButton={setSeletedSort} />
 					<StyledFeedContainerMobile>
-						<Outlet context={{ feedList }} />
+						<Outlet context={{ feedList, eurekaHasMore, eurekaNextPageLoad }} />
 					</StyledFeedContainerMobile>
 					<StyledCreateButtonMobile
 						onClick={() =>
