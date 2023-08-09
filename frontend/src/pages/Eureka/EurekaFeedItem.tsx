@@ -2,7 +2,7 @@
 
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { EurekaPostType } from '@typedef/community/eureka.types';

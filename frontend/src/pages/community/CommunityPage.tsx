@@ -129,7 +129,7 @@ const StyledFilterButton = styled.button`
 const CommunityPage = () => {
 	const navigation = useNavigate();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
-	// const [page, setPage] = useState(1);
+	const [page, setPage] = useState(1);
 	const [feedList, setFeedList] = useState<EurekaPostType[]>([]);
 	const [seletedCommunityTitle, setSeletedCommunityTitle] = useState('유레카');
 	const [seletedSort, setSeletedSort] = useState('전체 보기');
@@ -160,16 +160,6 @@ const CommunityPage = () => {
 		return 'eureka';
 	}, []);
 
-	// 컴포넌트 렌더링 시 FeedList 불러옴
-	useEffect(() => {
-		console.log('새로운 피드리스트 불러오기!');
-
-		getEurekaFeedList(seletedSort, page).then((res) => {
-			setFeedList(res);
-			console.log('새로운 데이터', res);
-		});
-	}, []);
-
 	const eurekaNextPageLoad = useCallback(async () => {
 		console.log('다음 페이지 부르기');
 		const nextPage = page + 1;
@@ -185,6 +175,16 @@ const CommunityPage = () => {
 			console.log(newFeedList);
 		});
 	}, [seletedSort, page, feedList]);
+
+	// 컴포넌트 렌더링 시 FeedList 불러옴
+	useEffect(() => {
+		console.log('새로운 피드리스트 불러오기!');
+
+		getEurekaFeedList(seletedSort, page).then((res) => {
+			setFeedList(res);
+			console.log('새로운 데이터', res);
+		});
+	}, []);
 
 	useEffect(() => {
 		getEurekaFeedList(seletedSort, page).then((res) => {

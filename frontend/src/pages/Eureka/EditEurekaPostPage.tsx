@@ -6,11 +6,14 @@ import RegisterButton from '@components/community/RegisterButton';
 import TitleInput from '@components/community/TitleInput';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import { EurekaWriteType } from '@typedef/community/eureka.types';
+import {
+	EurekaPostResponseType,
+	EurekaWriteType,
+} from '@typedef/community/eureka.types';
 import { isGitHubIssuesOrPullUrl, readFileAsDataURL } from '@utils/eureka';
 import { authHttp } from '@utils/http';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 유레카 게시물 작성 컨테이너
@@ -64,8 +67,9 @@ const StyledImageSlideContainer = styled.div`
 	}
 `;
 
-const CreateEurekaPostPage: React.FC = () => {
+const EditEurekaPostPage: React.FC = () => {
 	// 연결하기
+	const { id } = useParams();
 	const navigation = useNavigate();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	// 선택된 이미지 파일들을 관리하는 상태 변수
@@ -79,6 +83,24 @@ const CreateEurekaPostPage: React.FC = () => {
 		content: '',
 		link: '',
 	});
+
+	const loadPost = useCallback(async () => {
+		authHttp.get<EurekaPostResponseType>(`eureka/posts/${id}`).then((res) => {
+			console.log(res);
+			res.eurekaImages;
+			res.eurekaImages.forEach((imgUrl) => {
+				const cur = imgUrl.fileUri;
+				setImageUrl((prevImageUrl) => prevImageUrl.concat(cur));
+			});
+
+			const post: EurekaWriteType = {
+				title: res.title,
+				content: res.content,
+				link: res.link,
+			};
+			setPostInput(post);
+		});
+	}, []);
 
 	const titleInputChangeHandler = (value: string) => {
 		// 타이틀 인풋의 입력값을 콘솔에 출력
@@ -127,18 +149,14 @@ const CreateEurekaPostPage: React.FC = () => {
 			});
 		}
 
-		// 글쓰기 등록 버튼 비활성화
 		setIsRegisterButtonEnabled(false);
 
 		// 글쓰기 완료 되면 게시글 목록으로 이동
 		authHttp
-			.post('eureka/posts', formData, {
+			.post(`eureka/posts/update/${id}`, formData, {
 				'Content-Type': 'multipart/form-data',
 			})
-			.then(() => navigation('/community/eureka'))
-			.catch((err) => {
-				console.error(err);
-			});
+			.then(() => navigation('/community/eureka'));
 	}, [postInput, selectedImages, navigation]);
 
 	// 파일 업로드 함수
@@ -175,6 +193,12 @@ const CreateEurekaPostPage: React.FC = () => {
 		inputRef.current.click();
 	}, []);
 
+	// id로 게시글 내용 부르기
+	useEffect(() => {
+		console.log(id);
+		loadPost();
+	}, []);
+
 	useEffect(() => {
 		if (
 			postInput?.title.trim().length > 0 &&
@@ -184,10 +208,6 @@ const CreateEurekaPostPage: React.FC = () => {
 			setIsRegisterButtonEnabled(true);
 		}
 	}, [postInput]);
-
-	useEffect(() => {
-		console.log(imageUrl);
-	}, [imageUrl]);
 
 	return (
 		<StyledCreateEurekaPostContainer>
@@ -227,4 +247,4 @@ const CreateEurekaPostPage: React.FC = () => {
 	);
 };
 
-export default CreateEurekaPostPage;
+export default EditEurekaPostPage;

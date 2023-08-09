@@ -29,6 +29,7 @@ import PrivateRoutes from './PrivateRoutes';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import Test from '@pages/Eureka/Test';
+import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
 
 const RootRouter = () => {
 	const accessToken = useSelector((state: RootState) => state.auth.token);
@@ -77,6 +78,10 @@ const RootRouter = () => {
 					<Route
 						path="/community/eureka/:id"
 						element={<EurekaPostViewPage />}
+					></Route>
+					<Route
+						path="/community/eureka/:id/edit"
+						element={<EditEurekaPostPage />}
 					></Route>
 					<Route
 						path="/community/eureka/:id/like"

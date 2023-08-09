@@ -16,10 +16,12 @@ import CommunityFilterPC from '@pages/community/CommunityFilterPC';
 import CommunitySideBarContent from '@pages/community/CommunitySideBarContent';
 import Sidebar from '@components/common/Sidebar';
 import TabletNavigation from '@components/common/TabletNavigation';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { EurekaPostResponseType } from '@typedef/community/eureka.types';
 import { authHttp } from '@utils/http';
 import { images } from '@constants/images';
+import { RootState } from '@store/index';
+import { useSelector } from 'react-redux';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -102,8 +104,11 @@ const CommunityContainerPC = styled.div`
 `;
 
 const EurekaPostViewPage = () => {
+	const navigation = useNavigate();
 	const { id } = useParams();
+	const userId = useSelector((state: RootState) => state.user.user?.githubId);
 	const [feed, setFeed] = useState<EurekaPostResponseType>();
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	const loadPost = useCallback(() => {
 		authHttp.get<EurekaPostResponseType>(`eureka/posts/${id}`).then((res) => {
@@ -124,12 +129,41 @@ const EurekaPostViewPage = () => {
 	const onClickClose = useCallback(() => {
 		setIsFilterOpen(false);
 	}, []);
+
+	const onClickMenu = useCallback(() => {
+		setIsMenuOpen(true);
+	}, []);
+
+	const onClickMenuClose = useCallback(() => {
+		setIsMenuOpen(false);
+	}, []);
+
+	const onClickEdit = useCallback(() => {
+		navigation(`/community/eureka/${id}/edit`);
+	}, []);
+
+	const onClickDelete = useCallback(() => {
+		if (confirm('정말 삭제하시겠습니까?')) {
+			authHttp.delete(`eureka/posts/${id}`).then(() => {
+				navigation('/community/eureka');
+			});
+		}
+	}, []);
+
 	return (
 		<>
 			<Mobile>
 				<CommunityContainerMobile>
 					<Header title="상세 페이지"></Header>
-					<EurekaPostViewFeedMobile feed={feed ?? null} />
+					<EurekaPostViewFeedMobile
+						feed={feed ?? null}
+						userId={userId!}
+						isMenuOpen={isMenuOpen}
+						onClickMenu={onClickMenu}
+						onClickDelete={onClickDelete}
+						onClickMenuClose={onClickMenuClose}
+						onClickEdit={onClickEdit}
+					/>
 					<EurekaPostCommentList comments={feed?.eurekaComments ?? []} />
 					<CommentInput />
 				</CommunityContainerMobile>
