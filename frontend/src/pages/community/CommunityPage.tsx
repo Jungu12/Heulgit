@@ -3,13 +3,15 @@ import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import Navigation from '@components/common/Navigation';
 import CommunityCategory from '@components/community/CommunityCategory';
 import FilterCategory from '@components/community/FilterCategory';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import CommunityMenuBarPC from './CommunityMenuBarPC';
 import CommunityFilterPC from './CommunityFilterPC';
+import { EurekaPostType } from '@typedef/community/eureka.types';
+import { getEurekaFeedList } from '@utils/api/eureka/eurekaApi';
 import TabletNavigation from '@components/common/TabletNavigation';
 import Sidebar from '@components/common/Sidebar';
 import CommunitySideBarContent from './CommunitySideBarContent';
@@ -126,8 +128,11 @@ const StyledFilterButton = styled.button`
 
 const CommunityPage = () => {
 	const navigation = useNavigate();
-
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
+	// const [page, setPage] = useState(1);
+	const [feedList, setFeedList] = useState<EurekaPostType[]>([]);
+	const [seletedCommunityTitle, setSeletedCommunityTitle] = useState('유레카');
+	const [seletedSort, setSeletedSort] = useState('전체 보기');
 
 	const onClickFilter = useCallback(() => {
 		setIsFilterOpen(true);
@@ -137,19 +142,60 @@ const CommunityPage = () => {
 		setIsFilterOpen(false);
 	}, []);
 
+	// 선택된 카테고리 버튼을 토글하는 함수
+	const toggleActive = (category: string) => {
+		setSeletedCommunityTitle(category);
+		if (category === '유레카') {
+			navigation('/community/eureka'); // '유레카' 버튼을 클릭했을 때 '/community/eureka'로 이동
+		} else {
+			navigation('/community/free'); // '자유게시판' 버튼을 클릭했을 때 '/community/free'로 이동
+		}
+	};
+
+	const chageCommunityTitle = useCallback((category: string) => {
+		if (category === '자유게시판') {
+			return 'free';
+		}
+		return 'eureka';
+	}, []);
+
+	// 컴포넌트 렌더링 시 FeedList 불러옴
+	useEffect(() => {
+		console.log('새로운 피드리스트 불러오기!');
+
+		getEurekaFeedList(seletedSort, 1).then((res) => {
+			setFeedList(res);
+			console.log('새로운 데이터', res);
+		});
+	}, []);
+
+	useEffect(() => {
+		getEurekaFeedList(seletedSort, 1).then((res) => {
+			setFeedList(res);
+		});
+	}, [seletedCommunityTitle]);
+
 	return (
 		<>
 			{/* 모바일 버전 */}
 			<Mobile>
 				<CommunityContainerMobile>
 					<Header title="커뮤니티" type="home" />
-					<CommunityCategory />
-					<FilterCategory />
+					<CommunityCategory
+						button={seletedCommunityTitle}
+						toggleActive={toggleActive}
+						setButton={setSeletedCommunityTitle}
+					/>
+					<FilterCategory button={seletedSort} setButton={setSeletedSort} />
 					<StyledFeedContainerMobile>
-						<Outlet />
+						<Outlet context={{ feedList }} />
 					</StyledFeedContainerMobile>
 					<StyledCreateButtonMobile
-						onClick={() => navigation('/community/free/post')}
+						onClick={() =>
+							navigation(
+								`/community/${chageCommunityTitle(seletedCommunityTitle)}/post`,
+							)
+						}
 					/>
 					<Navigation />
 				</CommunityContainerMobile>
