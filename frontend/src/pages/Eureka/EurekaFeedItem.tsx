@@ -6,6 +6,7 @@ import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { EurekaPostType } from '@typedef/community/eureka.types';
+import { getTimeAgo } from '@utils/date';
 
 const StyledFeedItemContainer = styled.div`
 	display: flex;
@@ -31,6 +32,7 @@ const StyledProfileContainer = styled.div`
 const StyledProfileImage = styled.img`
 	width: 36px;
 	height: 36px;
+	border-radius: 50%;
 `;
 
 const StyledUpdateTime = styled.p`
@@ -73,22 +75,22 @@ const StyledContentContainer = styled.div`
 `;
 
 // 이미지 담는 컨테이너
-const StyledImgContainer = styled.div`
-	display: flex;
-	position: relative;
-	justify-content: start;
-	align-items: center;
+// const StyledImgContainer = styled.div`
+// 	display: flex;
+// 	position: relative;
+// 	justify-content: start;
+// 	align-items: center;
 
-	max-width: 100%;
-	/* height: 190px; */
+// 	max-width: 100%;
+// 	/* height: 190px; */
 
-	margin: 20px 12px 0 12px;
-`;
+// 	margin: 20px 12px 0 12px;
+// `;
 
 // 이미지
-const StyledImg = styled.img`
-	max-width: 100%;
-`;
+// const StyledImg = styled.img`
+// 	max-width: 100%;
+// `;
 
 const StyledButtonContainer = styled.div`
 	display: flex;
@@ -117,9 +119,6 @@ type Props = {
 const EurekaFeedItem = ({ feed }: Props) => {
 	const navigation = useNavigate();
 
-	// 이미지 있는 경우에만 컨테이너 보여주기
-	const imageSrc = feed.images.length > 0 ? feed.images[0].file_uri : '';
-
 	// 좋아요 이미지 변환
 	const [liked, setLiked] = useState(false);
 
@@ -135,17 +134,17 @@ const EurekaFeedItem = ({ feed }: Props) => {
 
 	// 좋아요 누른 유저 목록 페이지로 이동
 	const onClickLike = useCallback(() => {
-		navigation(`${feed.id}/like`);
+		navigation(`${1}/like`);
 	}, []);
 
 	// 유레카 피드 상세보기 페이지로 이동
 	const onClickFeedItem = useCallback(() => {
-		navigation(`${feed.id}`);
+		navigation(`${feed.eurekaId}`);
 	}, []);
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${feed.user.id}`);
+		navigation(`/profiles/${1}`);
 	}, []);
 
 	return (
@@ -153,20 +152,20 @@ const EurekaFeedItem = ({ feed }: Props) => {
 			<StyledTopLine>
 				{/* 프로필 */}
 				<StyledProfileContainer onClick={onClickUserProfile}>
-					<StyledProfileImage src={feed.user.avater_url} alt="user_profile" />
-					<p>{feed.user.id}</p>
+					<StyledProfileImage src={feed.user.avatarUrl} alt="user_profile" />
+					<p>{feed.user.githubId}</p>
 				</StyledProfileContainer>
-				<StyledUpdateTime>{feed.updated_date}</StyledUpdateTime>
+				<StyledUpdateTime>{getTimeAgo(feed.updatedDate)}</StyledUpdateTime>
 			</StyledTopLine>
 			{/* 피드 */}
 			<StyledFeedContentContainer onClick={onClickFeedItem}>
 				<StyledTitleContainer>{feed.title}</StyledTitleContainer>
 				<StyledContentContainer>{feed.content}</StyledContentContainer>
-				{imageSrc && (
+				{/* {imageSrc && (
 					<StyledImgContainer>
 						<StyledImg src={imageSrc} />
 					</StyledImgContainer>
-				)}
+				)} */}
 			</StyledFeedContentContainer>
 			{/* 버튼 */}
 			<StyledButtonContainer>
@@ -184,8 +183,12 @@ const EurekaFeedItem = ({ feed }: Props) => {
 			</StyledButtonContainer>
 			{/* 좋아요 및 댓글 */}
 			<StyledSubDataContainer>
-				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
-				<div onClick={onClickComment}>{`댓글 ${feed.comments}개`}</div>
+				<div
+					onClick={onClickLike}
+				>{`좋아요 ${feed.likedUsers.length}개 · `}</div>
+				<div
+					onClick={onClickComment}
+				>{`댓글 ${feed.eurekaComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);

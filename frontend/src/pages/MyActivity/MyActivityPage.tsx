@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
+import { authHttp } from '@utils/http';
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -78,6 +79,17 @@ const MyActivityPage = () => {
 	// 화면 사이즈별 타이틀 변환
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+	const onClickLogout = useCallback(() => {
+		authHttp
+			.get('users/logout')
+			.then(() => {
+				alert('로그아웃 되었습니다.');
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	}, []);
+
 	useEffect(() => {
 		const handleResize = () => {
 			setWindowWidth(window.innerWidth);
@@ -117,7 +129,7 @@ const MyActivityPage = () => {
 					<StyledActivityMenu onClick={() => navigation('/profiles/1/comment')}>
 						내가 작성한 댓글
 					</StyledActivityMenu>
-					<StyledActivityMenu className="user-logout">
+					<StyledActivityMenu className="user-logout" onClick={onClickLogout}>
 						로그아웃
 					</StyledActivityMenu>
 				</div>

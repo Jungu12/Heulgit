@@ -12,8 +12,10 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.eureka.domain.EurekaImage;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.FreeBoardException;
 import morningrolecall.heulgit.freeboard.domain.FreeBoard;
@@ -25,6 +27,7 @@ import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardUpdateRequest;
 import morningrolecall.heulgit.freeboard.repository.FreeBoardCommentRepository;
 import morningrolecall.heulgit.freeboard.repository.FreeBoardImageRepository;
 import morningrolecall.heulgit.freeboard.repository.FreeBoardRepository;
+import morningrolecall.heulgit.image.Service.ImageService;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
@@ -36,6 +39,7 @@ public class FreeBoardService {
 	private final FreeBoardCommentRepository freeBoardCommentRepository;
 	private final FreeBoardImageRepository freeBoardImageRepository;
 	private final UserRepository userRepository;
+	private final ImageService imageService;
 
 	/**
 	 * 자유게시판 목록 조회
@@ -105,7 +109,7 @@ public class FreeBoardService {
 	 * 3. 이미지 파일 리스트 생성 및 게시물 연결, 저장
 	 * */
 	@Transactional
-	public void addFreeBoard(String githubId, FreeBoardRequest freeBoardRequest) {
+	public void addFreeBoard(String githubId, FreeBoardRequest freeBoardRequest, List<MultipartFile> multipartFiles) {
 		User user = userRepository.findUserByGithubId(githubId)
 			.orElseThrow(() -> new FreeBoardException(ExceptionCode.USER_NOT_FOUND));
 
@@ -117,10 +121,10 @@ public class FreeBoardService {
 			.build();
 
 		freeBoardRepository.save(freeBoard);
-
-		List<FreeBoardImage> freeBoardImages = makeFreeBoardImages(freeBoard, freeBoardRequest.getFileUri());
+		// 이미지 S3에 업로드
+		List<String> imageUrls = imageService.uploadFile(githubId,"freeboard",multipartFiles);
+		List<FreeBoardImage> freeBoardImages = makeFreeBoardImages(freeBoard, imageUrls);
 		freeBoardImageRepository.saveAll(freeBoardImages);
-
 		freeBoard.addAllImage(freeBoardImages);
 		freeBoardRepository.save(freeBoard);
 	}
@@ -133,7 +137,7 @@ public class FreeBoardService {
 	 * 4. 기존 이미지 파일은 모두 제거, 새로운 이미지 파일 저장
 	 * */
 	@Transactional
-	public void updateFreeBoard(String githubId, FreeBoardUpdateRequest freeBoardUpdateRequest) {
+	public void updateFreeBoard(String githubId, FreeBoardUpdateRequest freeBoardUpdateRequest,List<MultipartFile> multipartFiles) {
 		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardUpdateRequest.getFreeBoardId())
 			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
@@ -145,15 +149,28 @@ public class FreeBoardService {
 		freeBoard.setContent(freeBoardUpdateRequest.getContent());
 		freeBoard.setUpdatedDate(LocalDateTime.now());
 
-		List<FreeBoardImage> freeBoardImages = makeFreeBoardImages(freeBoard, freeBoardUpdateRequest.getFileUri());
+		List<FreeBoardImage> deleteFreeBoardImages = freeBoardImageRepository.findFreeBoardImageByFreeBoard(freeBoard);
+
+		if (deleteFreeBoardImages != null || !deleteFreeBoardImages.isEmpty()) {
+			List<String> imageUrls = new ArrayList<>();
+			for(FreeBoardImage deleteFreeBoardImage : deleteFreeBoardImages){
+				imageUrls.add(deleteFreeBoardImage.getFileUri());
+			}
+			imageService.deleteFile(imageUrls);
+		}
 
 		freeBoardImageRepository.deleteAllByFreeBoard(freeBoard);
-		freeBoardImageRepository.saveAll(freeBoardImages);
-
 		freeBoard.removeAllImage();
-		freeBoard.addAllImage(freeBoardImages);
 
+
+		// 현재 받은 이미지 S3에 업로드
+		List<String> imageUrls = imageService.uploadFile(githubId,"freeboard",multipartFiles);
+		List<FreeBoardImage> freeBoardImages = makeFreeBoardImages(freeBoard, imageUrls);
+
+		freeBoardImageRepository.saveAll(freeBoardImages);
+		freeBoard.addAllImage(freeBoardImages);
 		freeBoardRepository.save(freeBoard);
+
 	}
 
 	/**
@@ -171,7 +188,20 @@ public class FreeBoardService {
 			throw new FreeBoardException(ExceptionCode.WRITER_USER_MISMATCH);
 		}
 
+		List<FreeBoardImage> freeBoardImages = freeBoardImageRepository.findFreeBoardImageByFreeBoard(freeBoard);
+		if (freeBoardImages != null || !freeBoardImages.isEmpty()) {
+			List<String> imageUrls = new ArrayList<>();
+			for(FreeBoardImage freeBoardImage:freeBoardImages){
+				imageUrls.add(freeBoardImage.getFileUri());
+			}
+			imageService.deleteFile(imageUrls);
+		}
 		freeBoardRepository.delete(freeBoard);
+
+
+
+
+
 	}
 
 	/**
