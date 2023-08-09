@@ -28,6 +28,7 @@ import MainPage from '@pages/Main/MainPage';
 import PrivateRoutes from './PrivateRoutes';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
+import Test from '@pages/Eureka/Test';
 
 const RootRouter = () => {
 	const accessToken = useSelector((state: RootState) => state.auth.token);
@@ -37,6 +38,7 @@ const RootRouter = () => {
 			<Routes>
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
+				<Route path="/test" element={<Test />}></Route>
 				<Route
 					element={
 						<PrivateRoutes

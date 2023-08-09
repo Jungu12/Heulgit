@@ -8,10 +8,13 @@ import { EurekaPostType } from '@typedef/community/eureka.types';
 
 type OutletProps = {
 	feedList: EurekaPostType[];
+	eurekaHasMore: boolean;
+	eurekaNextPageLoad: () => Promise<void>;
 };
 
 const EurekaPage = () => {
-	const { feedList } = useOutletContext<OutletProps>();
+	const { feedList, eurekaHasMore, eurekaNextPageLoad } =
+		useOutletContext<OutletProps>();
 
 	useEffect(() => {
 		console.log(feedList);
@@ -24,7 +27,11 @@ const EurekaPage = () => {
 	return (
 		<>
 			<Mobile>
-				<EurekaFeedItemListMobile feedList={feedList} />
+				<EurekaFeedItemListMobile
+					feedList={feedList}
+					eurekaHasMore={eurekaHasMore}
+					eurekaNextPageLoad={eurekaNextPageLoad}
+				/>
 			</Mobile>
 			<Tablet>
 				<EurekaFeedItemListTabletPC feedList={feedList} />
