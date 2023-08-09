@@ -1,5 +1,6 @@
 import { colors } from '@constants/colors';
-import React, { ChangeEvent, useState } from 'react';
+import { EurekaWriteType } from '@typedef/community/eureka.types';
+import React, { ChangeEvent } from 'react';
 import { styled } from 'styled-components';
 
 // 내용 컨테이너
@@ -65,32 +66,39 @@ const StyledContentInput = styled.textarea.attrs({
 `;
 
 type ContentInputProps = {
+	postInput?: EurekaWriteType;
 	onChange: (value: string) => void;
+	onChangeLink?: (value: string) => void;
 	showURLInput?: boolean; // URL 입력 부분을 보여줄지 여부를 props로 받음
 };
 
-const ContentInput = ({ onChange, showURLInput = true }: ContentInputProps) => {
-	const [content, setContent] = useState('');
-	const [url, setUrl] = useState('');
-
+const ContentInput = ({
+	onChange,
+	onChangeLink,
+	postInput,
+	showURLInput = true,
+}: ContentInputProps) => {
 	const contentChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		const inputValue = e.target.value;
-		setContent(inputValue);
 		onChange(inputValue);
 	};
 
 	const urlChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		const inputValue = e.target.value;
-		setUrl(inputValue);
-		onChange(inputValue);
+		if (onChangeLink) {
+			onChangeLink(inputValue);
+		}
 	};
 
 	return (
 		<StyledContentInputContainer>
 			{showURLInput && (
-				<StyledURLInput onChange={urlChangeHandler} value={url} />
+				<StyledURLInput onChange={urlChangeHandler} value={postInput?.link} />
 			)}
-			<StyledContentInput onChange={contentChangeHandler} value={content} />
+			<StyledContentInput
+				onChange={contentChangeHandler}
+				value={postInput?.content}
+			/>
 		</StyledContentInputContainer>
 	);
 };
