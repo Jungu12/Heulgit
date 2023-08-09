@@ -13,7 +13,7 @@ export function getTimeAgo(dateString: string): string {
 	const seconds = Math.floor(timeDiff / 1000);
 
 	if (seconds < 60) {
-		return `${seconds}초 전`;
+		return `방금 전`;
 	}
 
 	const minutes = Math.floor(seconds / 60);

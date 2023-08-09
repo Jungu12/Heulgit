@@ -205,6 +205,10 @@ const StyledDropDown = styled.ul`
 		visibility: visible;
 		transform: translateY(0);
 	}
+
+	li {
+		cursor: pointer;
+	}
 `;
 
 const StyledCalendarContainer = styled.div`
