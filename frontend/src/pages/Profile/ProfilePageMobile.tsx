@@ -130,7 +130,7 @@ const ProfilePageMobile = ({
 				<StyledUserProfile>
 					<StyledUserImage src={user?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
-						<div className="user-name">{user?.name}</div>
+						<div className="user-name">{user?.githubId}</div>
 						<div className="user-follow">
 							<StyledFollowing
 								onClick={() => navigation('/profiles/1/following')}
@@ -145,18 +145,19 @@ const ProfilePageMobile = ({
 						</div>
 						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
 						<div className="user-info">
-							<p>{user?.name}</p>
-							<p>{user?.company}</p>
-							<p>{user?.location}</p>
-							<p>{user?.blog}</p>
-							<p>{user?.bio}</p>
+							<p>추가정보</p>
+							{user?.name && <p>{user?.name}</p>}
+							{user?.company && <p>{user?.company}</p>}
+							{user?.location && <p>{user?.location}</p>}
+							{user?.blog && <p>{user?.blog}</p>}
+							{user?.bio && <p>{user?.bio}</p>}
 						</div>
 					</StyledUserInformation>
 				</StyledUserProfile>
 
 				{/* 내활동 | 팔로우,채팅,뒤로가기 버튼 */}
 				<StyledActivityButton>
-					{userId === user?.githubId ? (
+					{userId !== user?.githubId ? (
 						<StyledUserButton>
 							<div>
 								<StyledActivityButtonItem onClick={() => navigation(-1)}>
