@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect } from 'react';
-import { lotties } from '@constants/lotties';
-import catUp from '../../animation_lkrkgwed.json';
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import LoginMobilePage from './LoginPageMobile';
 import LoginPageTablet from './LoginPageTablet';
