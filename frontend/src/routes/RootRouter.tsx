@@ -44,11 +44,11 @@ const RootRouter = () => {
 			.get('auth/me')
 			.then((res) => {
 				console.log('로그인 중', res);
-				setIsLogin(true);
+				setIsLogin(false);
 			})
 			.catch(() => {
 				console.log('비로그인');
-				setIsLogin(false);
+				setIsLogin(true);
 			});
 	}, []);
 
