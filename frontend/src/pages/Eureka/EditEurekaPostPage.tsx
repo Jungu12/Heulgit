@@ -87,7 +87,6 @@ const EditEurekaPostPage: React.FC = () => {
 	const loadPost = useCallback(async () => {
 		authHttp.get<EurekaPostResponseType>(`eureka/posts/${id}`).then((res) => {
 			console.log(res);
-			res.eurekaImages;
 			res.eurekaImages.forEach((imgUrl) => {
 				const cur = imgUrl.fileUri;
 				setImageUrl((prevImageUrl) => prevImageUrl.concat(cur));

@@ -2,14 +2,11 @@
 
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { EurekaPostResponseType } from '@typedef/community/eureka.types';
 import ReactModal from 'react-modal';
-import { useSelector } from 'react-redux';
-import { RootState } from '@store/index';
-import { log } from 'console';
 
 // 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`

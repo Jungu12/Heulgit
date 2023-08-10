@@ -196,6 +196,13 @@ const CommunityPage = () => {
 		console.log('[현재 페이지]', page);
 	}, [page]);
 
+	useEffect(() => {
+		setPage(1);
+		getEurekaFeedList(seletedSort, 1).then((res) => {
+			setFeedList(res);
+		});
+	}, [seletedSort]);
+
 	return (
 		<>
 			{/* 모바일 버전 */}
