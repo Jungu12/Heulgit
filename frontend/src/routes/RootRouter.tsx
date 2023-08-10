@@ -40,18 +40,20 @@ const RootRouter = () => {
 	// const accessToken = useSelector((state: RootState) => state.auth.token);
 
 	useEffect(() => {
-		authHttp
-			.get<AuthType>('oauth/refresh-token')
-			.then((res) => {
-				console.log('로그인 중', res);
+		const checkLoginStatus = async () => {
+			try {
+				const response = await authHttp.get<AuthType>('oauth/refresh-token');
+				console.log('로그인 중', response);
 				setIsLogin(true);
-				dispatch(setToken(res.accessToken));
-			})
-			.catch(() => {
+				dispatch(setToken(response.accessToken));
+			} catch (error) {
 				console.log('비로그인');
 				setIsLogin(false);
-			});
-	}, []);
+			}
+		};
+
+		checkLoginStatus();
+	}, [dispatch]);
 
 	return (
 		<BrowserRouter>
