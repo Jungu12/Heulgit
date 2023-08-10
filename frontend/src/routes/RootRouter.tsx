@@ -41,7 +41,7 @@ const RootRouter = () => {
 
 	useEffect(() => {
 		http
-			.get('auth/me')
+			.get('oauth/me')
 			.then((res) => {
 				console.log('로그인 중', res);
 				setIsLogin(false);
