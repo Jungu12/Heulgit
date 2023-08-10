@@ -49,7 +49,7 @@ public class UserService {
 	@Value("${github.user.repo.commit-url}")
 	private String commitUrl;
 	@Value("${github.api.token}")
-	private final String githubApiToken = "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";
+	private final String githubApiToken;
 
 	public void logout(String userId) {
 		int deleteCount = authRepository.deleteJwt(userId);
@@ -147,7 +147,7 @@ public class UserService {
 		List<RankingInfo> rankingInfos = new ArrayList<>();
 
 		//내가 팔로우 한 유저 가져오기 (DB)
-		
+
 		// 유저의 한달 내 repo 긁어오기 (github API)
 
 		// 유저의 한달 내 repo 안의 커밋 긁어오기 (github API)
