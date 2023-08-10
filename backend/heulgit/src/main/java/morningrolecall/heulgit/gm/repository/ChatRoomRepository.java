@@ -55,8 +55,7 @@ public class ChatRoomRepository {
 				.user1(user1)
 				.user2(user2)
 				.build();
-			logger.debug("createChatRoom(), roomId = {}, chatRoomUser1 = {}, chatRoomUser2 = {} ", chatRoom.getRoomId(),
-				chatRoom.getUser1(), chatRoom.getUser2());
+
 			opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
 		}
 		return chatRoom;

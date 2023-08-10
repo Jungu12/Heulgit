@@ -57,13 +57,29 @@ public class ChatRoomService {
 		return topics.get(roomId);
 	}
 
-	// 채팅방을 생성한다.
+	// 사용자와 타 유저의 채팅방이 있는지 없는지 확인하고 없다면 생성한다.
 	public ChatRoom addChatRoom(String user1, String user2) {
 		return chatRoomRepository.createChatRoom(user1, user2);
 	}
 
-	// 메세지를 저장한다.
+	// 메세지를 읽음 처리와 동시에 저장한다.
 	public void saveMessage(ChatMessage message) {
+		String[] users = message.getRoomId().split(":");
+		for (String user : users) {
+			//메세지 송신자 확인
+			if (user.equals(message.getSender())) {
+				continue;
+			}
+
+			//현재 채팅방에 접속해 있는지 확인
+			if (!isUserSubscribedToChatRoom(message.getRoomId(), user)) {
+				continue;
+			}
+
+			//메세지 읽음 처리
+			message.updateRead();
+		}
+
 		ChatRoom curChatRoom = chatRoomRepository.getChatRoom(message.getRoomId());
 		chatRoomRepository.updateChatRoom(curChatRoom, message);
 	}
@@ -92,10 +108,5 @@ public class ChatRoomService {
 	// 사용자가 특정 topic(채팅방)에 구독 중인지 확인한다.
 	public boolean isUserSubscribedToChatRoom(String topic, String userId) {
 		return redisSubscriberManager.isUserSubscribedToTopic(topic, userId);
-	}
-
-	// 사용자와 타 유저의 채팅방이 있는지 없는지 확인하고 없다면 생성한다.
-	public ChatRoom findAndAddChatRoom(String user1, String user2) {
-		return chatRoomRepository.createChatRoom(user1, user2);
 	}
 }
