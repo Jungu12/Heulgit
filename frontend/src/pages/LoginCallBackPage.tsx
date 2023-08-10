@@ -1,5 +1,5 @@
 import { setToken } from '@store/auth';
-import { http } from '@utils/http';
+import { authHttp, http } from '@utils/http';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,8 @@ import { styled } from 'styled-components';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Lottie from 'lottie-react';
 import loadingCat from '../loading.json';
+import { UserType } from '@typedef/common.types';
+import { setUser } from '@store/user';
 
 const StyledCallBackContainer = styled.div`
 	display: flex;
@@ -24,14 +26,23 @@ const StyledCallBackContainer = styled.div`
 
 const LoginCallBackPage = () => {
 	const navigation = useNavigate();
-
 	const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
 
-	const getUserId = useCallback(() => {
-		http
-			.get('oauth/me')
-			.then((res) => console.log(res))
-			.catch((err) => console.log(err));
+	// const getUserId = useCallback(() => {
+	// 	http
+	// 		.get('oauth/me')
+	// 		.then((res) => console.log(res))
+	// 		.catch((err) => console.log(err));
+	// }, []);
+	const setUserData = useCallback(async () => {
+		authHttp
+			.get<UserType>('users')
+			.then((res) => {
+				dispatch(setUser(res));
+			})
+			.catch((err) => {
+				console.error(err);
+			});
 	}, []);
 
 	const getToken = useCallback(
@@ -51,7 +62,7 @@ const LoginCallBackPage = () => {
 					navigation('/', { replace: true });
 				})
 				.then(() => {
-					getUserId();
+					setUserData();
 				})
 				.catch((error) => {
 					console.log(error);
