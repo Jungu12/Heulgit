@@ -259,7 +259,7 @@ const CommitEditPage = () => {
 		if (newCommit.title && newCommit.detail) {
 			setCommitTags((prevTags) => [
 				...prevTags,
-				{ ...newCommit, id: Date.now() },
+				{ ...newCommit, title: `# ${newCommit.title}`, id: Date.now() }, // Prepend "# " to the title
 			]);
 			setNewCommit({ title: '', detail: '' });
 			setIsModalOpen(false);
@@ -343,7 +343,7 @@ const CommitEditPage = () => {
 
 								// 타이틀 중복 검사
 								const isDuplicate = commitTags.some(
-									(tag) => tag.title === newTitle,
+									(tag) => tag.title === `# ${newTitle}`,
 								);
 								if (isDuplicate) {
 									setErrorMessage('중복되는 커밋 타입이 있습니다.');
