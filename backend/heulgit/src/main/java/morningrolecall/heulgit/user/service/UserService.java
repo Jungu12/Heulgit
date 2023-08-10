@@ -48,6 +48,7 @@ public class UserService {
 	private String userInfoUrl;
 	@Value("${github.user.repo.commit-url}")
 	private String commitUrl;
+	@Value("${github.api.token}")
 	private final String githubApiToken = "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";
 
 	public void logout(String userId) {
