@@ -30,30 +30,27 @@ import Test from '@pages/Eureka/Test';
 import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
 import FollowerPage from '@pages/FollowerPage';
 import { http } from '@utils/http';
-import { useDispatch } from 'react-redux';
-import { setToken } from '@store/auth';
-import { AuthType } from '@typedef/common.types';
+// import { useDispatch } from 'react-redux';
+// import { setToken } from '@store/auth';
+// import { AuthType } from '@typedef/common.types';
 
 const RootRouter = () => {
 	const [isLogin, setIsLogin] = useState(false);
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 	// const accessToken = useSelector((state: RootState) => state.auth.token);
 
 	useEffect(() => {
-		const checkLoginStatus = async () => {
-			try {
-				const response = await http.get<AuthType>('oauth/refresh-token');
-				console.log('로그인 중', response);
+		http
+			.get('auth/me')
+			.then((res) => {
+				console.log('로그인 중', res);
 				setIsLogin(true);
-				dispatch(setToken(response.accessToken));
-			} catch (error) {
+			})
+			.catch(() => {
 				console.log('비로그인');
 				setIsLogin(false);
-			}
-		};
-
-		checkLoginStatus();
-	}, [dispatch]);
+			});
+	}, []);
 
 	return (
 		<BrowserRouter>
