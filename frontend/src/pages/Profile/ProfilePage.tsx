@@ -29,6 +29,14 @@ const ProfilePage = () => {
 		setSelectedMenu(menu);
 		sessionStorage.setItem('selectedMenu', menu);
 	};
+
+	// const onClickGM = useCallback(
+	// 	() => {
+
+	// 	},
+	// 	[],
+	// )
+
 	useEffect(() => {
 		// selectedMenu가 변경될 때마다 sessionStorage에 저장.
 		const categoryItem = sessionStorage.getItem('selectedMenu') as
