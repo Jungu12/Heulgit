@@ -25,10 +25,10 @@ const StyledCommentComtainerMobile = styled.div`
 const StyledCommentComtainerTabletPC = styled.div`
 	display: flex;
 	position: fixed;
-	justify-content: space-evenly;
+	/* justify-content: space-evenly; */
 	align-items: center;
 
-	width: 520px;
+	width: 640px;
 	/* width: 100vw; */
 	bottom: 0;
 

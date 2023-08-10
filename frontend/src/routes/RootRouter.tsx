@@ -29,6 +29,7 @@ import PrivateRoutes from './PrivateRoutes';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import Test from '@pages/Eureka/Test';
+import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
 
 const RootRouter = () => {
 	const accessToken = useSelector((state: RootState) => state.auth.token);
@@ -56,13 +57,13 @@ const RootRouter = () => {
 							{/* <Route path="like" element={<MyLikePostPage />}></Route> */}
 							<Route path="like-repo" element={<MyLikeRepoPage />}></Route>
 							<Route path="like-post" element={<MyLikePostPage />}></Route>
-							<Route path="comment" element={<MyCommentPage />}></Route>
+							<Route path="like-comment" element={<MyCommentPage />}></Route>
 							<Route path="commit-edit" element={<CommitEditPage />}></Route>
 							<Route path="follow" element={<FollowPage />}></Route>
 						</Route>
 					</Route>
 					<Route path="/community" element={<CommunityPage />}>
-						<Route index element={<Navigate replace to="eureka" />}></Route>
+						<Route index element={<Navigate replace to="eureka" />} />
 						<Route path="eureka" element={<EurekaPage />}></Route>
 						<Route path="free" element={<FreeBoardPage />}></Route>
 					</Route>
@@ -77,6 +78,10 @@ const RootRouter = () => {
 					<Route
 						path="/community/eureka/:id"
 						element={<EurekaPostViewPage />}
+					></Route>
+					<Route
+						path="/community/eureka/:id/edit"
+						element={<EditEurekaPostPage />}
 					></Route>
 					<Route
 						path="/community/eureka/:id/like"

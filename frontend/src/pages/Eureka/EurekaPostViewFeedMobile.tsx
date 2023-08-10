@@ -6,6 +6,7 @@ import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { EurekaPostResponseType } from '@typedef/community/eureka.types';
+import ReactModal from 'react-modal';
 
 // 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
@@ -156,9 +157,23 @@ const StyledUnderline = styled.div`
 
 type Props = {
 	feed: EurekaPostResponseType | null;
+	userId: string;
+	isMenuOpen: boolean;
+	onClickMenu: () => void;
+	onClickMenuClose: () => void;
+	onClickEdit: () => void;
+	onClickDelete: () => void;
 };
 
-const EurekaPostViewFeedMobile = ({ feed }: Props) => {
+const EurekaPostViewFeedMobile = ({
+	feed,
+	userId,
+	isMenuOpen,
+	onClickMenu,
+	onClickEdit,
+	onClickDelete,
+	onClickMenuClose,
+}: Props) => {
 	const navigation = useNavigate();
 
 	// 좋아요 버튼 state
@@ -184,6 +199,9 @@ const EurekaPostViewFeedMobile = ({ feed }: Props) => {
 
 	return (
 		<StyledFeedItemContainer>
+			{userId === feed.user.githubId && (
+				<img src={images.menu} onClick={onClickMenu} />
+			)}
 			<StyledTitleContainer>{feed.title}</StyledTitleContainer>
 			<StyledTopLine>
 				<StyledProfileContainer onClick={onClickUserProfile}>
@@ -227,6 +245,11 @@ const EurekaPostViewFeedMobile = ({ feed }: Props) => {
 				<div>{`댓글 ${feed.content.length}개`}</div>
 			</StyledSubDataContainer>
 			<StyledUnderline />
+			<ReactModal isOpen={isMenuOpen}>
+				<div onClick={onClickEdit}>수정</div>
+				<div onClick={onClickDelete}>삭제</div>
+				<div onClick={onClickMenuClose}>닫기</div>
+			</ReactModal>
 		</StyledFeedItemContainer>
 	);
 };
