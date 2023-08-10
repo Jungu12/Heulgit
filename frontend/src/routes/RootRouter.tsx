@@ -29,7 +29,7 @@ import PrivateRoutes from './PrivateRoutes';
 import Test from '@pages/Eureka/Test';
 import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
 import FollowerPage from '@pages/FollowerPage';
-import { authHttp } from '@utils/http';
+import { http } from '@utils/http';
 import { useDispatch } from 'react-redux';
 import { setToken } from '@store/auth';
 import { AuthType } from '@typedef/common.types';
@@ -42,7 +42,7 @@ const RootRouter = () => {
 	useEffect(() => {
 		const checkLoginStatus = async () => {
 			try {
-				const response = await authHttp.get<AuthType>('oauth/refresh-token');
+				const response = await http.get<AuthType>('oauth/refresh-token');
 				console.log('로그인 중', response);
 				setIsLogin(true);
 				dispatch(setToken(response.accessToken));
