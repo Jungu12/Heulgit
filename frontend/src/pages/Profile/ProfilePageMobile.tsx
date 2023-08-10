@@ -109,6 +109,7 @@ const StyledFooter = styled.div`
 
 type ProfileProps = {
 	handleMenuClick: (menu: '프로필' | '유레카' | '자유') => void;
+	onClickGM: () => void;
 	navigation: ReturnType<typeof useNavigate>;
 	selectedMenu: string;
 	// userData: UserType;
@@ -116,6 +117,7 @@ type ProfileProps = {
 
 const ProfilePageMobile = ({
 	handleMenuClick,
+	onClickGM,
 	navigation,
 	selectedMenu,
 }: ProfileProps) => {
@@ -167,7 +169,7 @@ const ProfilePageMobile = ({
 								>
 									<img src={images.profile.followIcon} alt="팔로우" />
 								</StyledActivityButtonItem>
-								<StyledActivityButtonItem onClick={() => navigation('/gm')}>
+								<StyledActivityButtonItem onClick={onClickGM}>
 									<img src={images.gitMessage} alt="채팅" />
 								</StyledActivityButtonItem>
 							</div>

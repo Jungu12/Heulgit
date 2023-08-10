@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import ProfilePageMobile from './ProfilePageMobile';
 import ProfilePageTablet from './ProfilePageTablet';
 import ProfilePageWeb from './ProfilePageWeb';
 import { styled } from 'styled-components';
+import { authHttp } from '@utils/http';
+import { ChatRoomType } from '@typedef/gm/gm.types';
 
 const StyledProfile = styled.div`
 	height: 100vh;
@@ -23,6 +25,7 @@ const StyledProfile = styled.div`
 
 const ProfilePage = () => {
 	const navigation = useNavigate();
+	const { userId } = useParams();
 
 	const [selectedMenu, setSelectedMenu] = useState('');
 	const handleMenuClick = (menu: '프로필' | '유레카' | '자유') => {
@@ -30,12 +33,11 @@ const ProfilePage = () => {
 		sessionStorage.setItem('selectedMenu', menu);
 	};
 
-	// const onClickGM = useCallback(
-	// 	() => {
-
-	// 	},
-	// 	[],
-	// )
+	const onClickGM = useCallback(() => {
+		authHttp.get<ChatRoomType>(`gm/room/access/${userId}`).then((res) => {
+			navigation(`/gm/${res.roomId}`);
+		});
+	}, []);
 
 	useEffect(() => {
 		// selectedMenu가 변경될 때마다 sessionStorage에 저장.
@@ -65,6 +67,7 @@ const ProfilePage = () => {
 			<Mobile>
 				<ProfilePageMobile
 					handleMenuClick={handleMenuClick}
+					onClickGM={onClickGM}
 					navigation={navigation}
 					selectedMenu={selectedMenu}
 				/>
