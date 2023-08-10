@@ -59,9 +59,9 @@ const LoginCallBackPage = () => {
 					console.log(response);
 					// 로그인 성공 시 토큰과 아이콘 저장하고 홈화면으로 보내기
 					dispatch(setToken(accessToken));
-					navigation('/', { replace: true });
 				})
 				.then(() => {
+					navigation('/', { replace: true });
 					setUserData();
 				})
 				.catch((error) => {
