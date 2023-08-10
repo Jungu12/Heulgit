@@ -59,11 +59,11 @@ const LoginCallBackPage = () => {
 					console.log(response);
 					// 로그인 성공 시 토큰과 아이콘 저장 및 로컬 스토리지에 로그인 정보 저장하고 홈화면으로 보내기
 					dispatch(setToken(accessToken));
-					localStorage.setItem('login', 'true');
+					window.localStorage.setItem('login', 'true');
 				})
 				.then(() => {
-					navigation('/', { replace: true });
-					setUserData();
+					// navigation('/', { replace: true });
+					setUserData().then(() => navigation('/', { replace: true }));
 				})
 				.catch((error) => {
 					console.log(error);

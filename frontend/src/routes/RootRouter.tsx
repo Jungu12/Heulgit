@@ -29,16 +29,9 @@ import PrivateRoutes from './PrivateRoutes';
 import Test from '@pages/Eureka/Test';
 import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
 import FollowerPage from '@pages/FollowerPage';
-// import { http } from '@utils/http';
-// import { useDispatch } from 'react-redux';
-// import { setToken } from '@store/auth';
-// import { AuthType } from '@typedef/common.types';
 
 const RootRouter = () => {
 	const [isLogin, setIsLogin] = useState(false);
-	// const dispatch = useDispatch();
-	// const accessToken = useSelector((state: RootState) => state.auth.token);
-	// const isLogin = localStorage.getItem('login');
 
 	useEffect(() => {
 		const flag = localStorage.getItem('login') ? true : false;
