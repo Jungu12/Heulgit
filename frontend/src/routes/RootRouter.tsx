@@ -11,7 +11,7 @@ import ProfilePage from '@pages/Profile/ProfilePage';
 import RepoViewPage from '@pages/RepoViewPage';
 import SearchPage from '@pages/SearchPage';
 import SearchResultPage from '@pages/SearchResultPage';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CreateEurekaPostPage from '@pages/CreateEurekaPostPage';
 import FreePostViewPage from '@pages/freeboard/FreePostViewPage';
@@ -35,10 +35,15 @@ import FollowerPage from '@pages/FollowerPage';
 // import { AuthType } from '@typedef/common.types';
 
 const RootRouter = () => {
-	// const [isLogin, setIsLogin] = useState(false);
+	const [isLogin, setIsLogin] = useState(false);
 	// const dispatch = useDispatch();
 	// const accessToken = useSelector((state: RootState) => state.auth.token);
-	const isLogin = localStorage.getItem('login');
+	// const isLogin = localStorage.getItem('login');
+
+	useEffect(() => {
+		const flag = localStorage.getItem('login') ? true : false;
+		setIsLogin(flag);
+	}, []);
 
 	return (
 		<BrowserRouter>
@@ -47,12 +52,7 @@ const RootRouter = () => {
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
 				<Route path="/test" element={<Test />}></Route>
 				<Route
-					element={
-						<PrivateRoutes
-							loginState={isLogin ? true : false}
-							redirectTo="/login"
-						/>
-					}
+					element={<PrivateRoutes loginState={isLogin} redirectTo="/login" />}
 				>
 					<Route path="/" element={<MainPage />}></Route>
 					<Route path="/profiles">
