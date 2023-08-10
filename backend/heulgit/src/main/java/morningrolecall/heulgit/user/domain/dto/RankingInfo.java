@@ -13,6 +13,6 @@ public class RankingInfo {
 
 	private String githubId;
 
-	private String count;
+	private int count;
 
 }

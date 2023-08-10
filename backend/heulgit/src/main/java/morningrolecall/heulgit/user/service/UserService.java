@@ -6,9 +6,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -28,6 +30,8 @@ import morningrolecall.heulgit.auth.repository.AuthRepository;
 import morningrolecall.heulgit.exception.AuthException;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.UserException;
+import morningrolecall.heulgit.relation.domain.Relation;
+import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.user.domain.CommitAnalyze;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.domain.dto.CommitType;
@@ -43,13 +47,14 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final AuthRepository authRepository;
 	private final CommitAnalyzeRepository commitAnalyzeRepository;
+	private final RelationRepository relationRepository;
 	private final RestTemplate restTemplate;
 	@Value("${github.user.repo-url}")
 	private String userInfoUrl;
 	@Value("${github.user.repo.commit-url}")
 	private String commitUrl;
 	@Value("${github.api.token}")
-	private final String githubApiToken;
+	private String githubApiToken;
 
 	public void logout(String userId) {
 		int deleteCount = authRepository.deleteJwt(userId);
@@ -66,13 +71,8 @@ public class UserService {
 	}
 
 	public Object findCommitInfo(String githubId) {
-		// 해당 사용자의 모든 repo를 긁어 온다(공식 api)
-		ResponseEntity<String> response = getRepoInfo(githubId);
-
-		//사용자의 모든 repo 저장하는 List
-		List<GitRepository> tmpRepos = extractRepos(response.getBody());
-		//사용자의 한달 내로 업데이트 된 repo 저장하는 List
-		List<GitRepository> repos = findUpdatedRepoInOneMonth(tmpRepos);
+		// 해당 사용자의 1달 내 update된 repo를 긁어 온다(공식 api)
+		List<GitRepository> repos = getRepoInfo(githubId);
 
 		//  db에 저장 된 commitTypes들을 들고 온다.
 		List<CommitAnalyze> commits = commitAnalyzeRepository.findAllByGithubId(githubId);
@@ -85,11 +85,7 @@ public class UserService {
 		}
 
 		// 해당 사용자의 commit message를 긁어 온다(공식 api)
-		List<String> commitMessages = new ArrayList<>();
-		for (GitRepository repo : repos) {
-			response = getCommitMessageInfo(githubId, repo.getName());
-			commitMessages.addAll(extractCommits(response.getBody()));
-		}
+		List<String> commitMessages = getCommitMessageInfo(githubId, repos);
 
 		//commit message List에서 commit type 파싱
 		for (String commitMessage : commitMessages) {
@@ -106,7 +102,7 @@ public class UserService {
 		return commitInfo;
 	}
 
-	public ResponseEntity<String> getRepoInfo(String githubId) {
+	public List<GitRepository> getRepoInfo(String githubId) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", "application/json");
 		headers.set("Authorization", "Bearer " + githubApiToken);
@@ -122,38 +118,75 @@ public class UserService {
 			String.class
 		);
 
-		return response;
+		//사용자의 모든 repo 저장하는 List
+		List<GitRepository> tmpRepos = extractRepos(response.getBody());
+		//사용자의 한달 내로 업데이트 된 repo 저장하는 List
+		List<GitRepository> repos = findUpdatedRepoInOneMonth(tmpRepos);
+
+		return repos;
 	}
 
-	public ResponseEntity<String> getCommitMessageInfo(String githubId, String repoName) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", "application/json");
-		headers.set("Authorization", "Bearer " + githubApiToken);
-		headers.set("X-GitHub-Api-Version", "2022-11-28");
+	public List<String> getCommitMessageInfo(String githubId, List<GitRepository> repos) {
+		List<String> commitMessages = new ArrayList<>();
+		for (GitRepository repo : repos) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", "application/json");
+			headers.set("Authorization", "Bearer " + githubApiToken);
+			headers.set("X-GitHub-Api-Version", "2022-11-28");
 
-		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+			HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
-		ResponseEntity<String> response = restTemplate.exchange(
-			commitUrl + "/" + githubId + "/" + repoName + "/commits",
-			HttpMethod.GET,
-			requestEntity,
-			String.class
-		);
+			ResponseEntity<String> response = restTemplate.exchange(
+				commitUrl + "/" + githubId + "/" + repo.getName() + "/commits",
+				HttpMethod.GET,
+				requestEntity,
+				String.class
+			);
 
-		return response;
+			commitMessages.addAll(extractCommits(response.getBody()));
+		}
+		return commitMessages;
 	}
 
 	public List<RankingInfo> getRankingInfo(String githubId, String type) {
 		List<RankingInfo> rankingInfos = new ArrayList<>();
 
 		//내가 팔로우 한 유저 가져오기 (DB)
+		List<Relation> relations = relationRepository.findByFromId(githubId);
+		List<String> followings;
 
-		// 유저의 한달 내 repo 긁어오기 (github API)
+		if (relations.isEmpty()) {
+			followings = new ArrayList<>();
+		} else {
+			//내가 팔로우 하는 유저 목록
+			followings = relations.stream().map(Relation::getToId).collect(Collectors.toList());
+		}
+		followings.add(githubId);
 
-		// 유저의 한달 내 repo 안의 커밋 긁어오기 (github API)
+		for (String following : followings) {
+			// 유저의 한달 내 repo 긁어오기 (github API)
+			List<GitRepository> repos = getRepoInfo(following);
+			// 유저의 한달 내 repo 안의 커밋 긁어오기 (github API)
+			List<String> commitMessages = getCommitMessageInfo(githubId, repos);
+
+			int count = 0;
+
+			for (String commitMessage : commitMessages) {
+
+				String[] commit = commitMessage.split("\\(");
+				String commitType = commit[0];
+
+				if (commitType.equals(type)) {
+					count++;
+				}
+			}
+
+			rankingInfos.add(new RankingInfo(githubId, count));
+		}
+		Collections.sort(rankingInfos, ((o1, o2) -> o2.getCount() - o1.getCount()));
 
 		// type과 일치하는 commit message 개수 count
-		return null;
+		return rankingInfos;
 	}
 
 	public List<String> extractCommits(String data) {
