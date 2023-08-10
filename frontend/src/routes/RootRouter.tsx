@@ -11,7 +11,7 @@ import ProfilePage from '@pages/Profile/ProfilePage';
 import RepoViewPage from '@pages/RepoViewPage';
 import SearchPage from '@pages/SearchPage';
 import SearchResultPage from '@pages/SearchResultPage';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CreateEurekaPostPage from '@pages/CreateEurekaPostPage';
 import FreePostViewPage from '@pages/freeboard/FreePostViewPage';
@@ -26,14 +26,32 @@ import ChatDirectPage from '@pages/ChatDirectPage';
 import ChatPage from '@pages/ChatPage';
 import MainPage from '@pages/Main/MainPage';
 import PrivateRoutes from './PrivateRoutes';
-import { useSelector } from 'react-redux';
-import { RootState } from '@store/index';
 import Test from '@pages/Eureka/Test';
 import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
 import FollowerPage from '@pages/FollowerPage';
+import { authHttp } from '@utils/http';
+import { useDispatch } from 'react-redux';
+import { setToken } from '@store/auth';
+import { AuthType } from '@typedef/common.types';
 
 const RootRouter = () => {
-	const accessToken = useSelector((state: RootState) => state.auth.token);
+	const [isLogin, setIsLogin] = useState(false);
+	const dispatch = useDispatch();
+	// const accessToken = useSelector((state: RootState) => state.auth.token);
+
+	useEffect(() => {
+		authHttp
+			.get<AuthType>('oauth/refresh-token')
+			.then((res) => {
+				console.log('로그인 중', res);
+				setIsLogin(true);
+				dispatch(setToken(res.accessToken));
+			})
+			.catch(() => {
+				console.log('비로그인');
+				setIsLogin(false);
+			});
+	}, []);
 
 	return (
 		<BrowserRouter>
@@ -42,12 +60,7 @@ const RootRouter = () => {
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
 				<Route path="/test" element={<Test />}></Route>
 				<Route
-					element={
-						<PrivateRoutes
-							loginState={accessToken ? true : false}
-							redirectTo="/login"
-						/>
-					}
+					element={<PrivateRoutes loginState={isLogin} redirectTo="/login" />}
 				>
 					<Route path="/" element={<MainPage />}></Route>
 					<Route path="/profiles">

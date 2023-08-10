@@ -146,11 +146,11 @@ const ProfilePageMobile = ({
 						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
 						<div className="user-info">
 							<p>추가정보</p>
-							{user?.name && <p>{user?.name}</p>}
-							{user?.company && <p>{user?.company}</p>}
-							{user?.location && <p>{user?.location}</p>}
-							{user?.blog && <p>{user?.blog}</p>}
-							{user?.bio && <p>{user?.bio}</p>}
+							{user?.name !== 'null' && <p>{user?.name}</p>}
+							{user?.company !== 'null' && <p>{user?.company}</p>}
+							{user?.location !== 'null' && <p>{user?.location}</p>}
+							{user?.blog !== 'null' && <p>{user?.blog}</p>}
+							{user?.bio !== 'null' && <p>{user?.bio}</p>}
 						</div>
 					</StyledUserInformation>
 				</StyledUserProfile>
