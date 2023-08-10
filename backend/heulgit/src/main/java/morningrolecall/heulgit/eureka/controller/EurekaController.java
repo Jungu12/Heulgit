@@ -1,7 +1,11 @@
 package morningrolecall.heulgit.eureka.controller;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaRequest;
@@ -21,7 +27,7 @@ import morningrolecall.heulgit.eureka.service.EurekaService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/eureka")
+@RequestMapping("/api/eureka")
 public class EurekaController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -41,34 +47,44 @@ public class EurekaController {
 		return ResponseEntity.ok().body(eurekaService.findEureka(eurekaId));
 	}
 
-	@PostMapping("/posts")
+	@PostMapping(value ="/posts",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> eurekaRegister(@AuthenticationPrincipal String githubId,
-		@RequestBody EurekaRequest eurekaRequest) {
-		logger.debug("eurekaRegister(), who = {}, title = {}, content = {}, imageId = {}, link = {}", githubId,
+		@RequestPart(value = "file", required = false) List<MultipartFile> multipartFiles, @RequestPart(value= "data") EurekaRequest eurekaRequest ) {
+		logger.debug("eurekaRegister(), who = {}, title = {}, content = {}, link = {}", githubId,
 			eurekaRequest.getTitle(),
-			eurekaRequest.getContent(), eurekaRequest.getFileUri().size(), eurekaRequest.getLink());
-
-		eurekaService.addEureka(githubId, eurekaRequest);
+			eurekaRequest.getContent(),eurekaRequest.getLink());
+		if (multipartFiles != null) {
+			// multipartFiles가 null이 아닐 때의 처리
+			eurekaService.addEureka(githubId, eurekaRequest, multipartFiles);
+		} else {
+			// multipartFiles가 null일 때의 처리
+			eurekaService.addEureka(githubId, eurekaRequest, Collections.emptyList());
+		}
 
 		return ResponseEntity.ok().build();
 	}
 
-	@PutMapping("/posts/update")
-	public ResponseEntity<?> eurekaUpdate(@AuthenticationPrincipal String userId,
-		@RequestBody EurekaUpdateRequest eurekaUpdateRequest) {
+	@PostMapping(value = "/posts/update/{eurekaId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> eurekaUpdate(@AuthenticationPrincipal String userId, @PathVariable Long eurekaId,
+		@RequestPart(value = "file",required = false) List<MultipartFile> multipartFiles, @RequestPart(value= "data") EurekaUpdateRequest eurekaUpdateRequest) {
 		logger.debug("eurekaUpdate(), who = {}, eurekaId = {}, title = {}, content = {}, imageId = {}, link = {}",
-			userId, eurekaUpdateRequest.getEurekaId(),
+			userId,
 			eurekaUpdateRequest.getTitle(),
-			eurekaUpdateRequest.getContent(), eurekaUpdateRequest.getFileUri(), eurekaUpdateRequest.getLink());
+			eurekaUpdateRequest.getContent(), eurekaUpdateRequest.getLink());
 
-		eurekaService.updateEureka(userId, eurekaUpdateRequest);
-
+		if (multipartFiles != null) {
+			// multipartFiles가 null이 아닐 때의 처리
+			eurekaService.updateEureka(eurekaId,userId, eurekaUpdateRequest, multipartFiles);
+		} else {
+			// multipartFiles가 null일 때의 처리
+			eurekaService.updateEureka(eurekaId,userId, eurekaUpdateRequest, Collections.emptyList());
+		}
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/posts/{eurekaId}")
 	public ResponseEntity<?> eurekaRemove(@AuthenticationPrincipal String userId, @PathVariable Long eurekaId) {
-		logger.debug("eurekaRemove(), who = {}, eurekaId = {}", userId, eurekaId);
+		logger.debug("eurekaRemove(), who = {}, eurekaId = {}",userId, eurekaId);
 
 		eurekaService.removeEureka(userId, eurekaId);
 

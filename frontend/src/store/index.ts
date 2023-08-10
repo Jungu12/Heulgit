@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import counter from './counter';
 import auth from './auth';
+import user from './user';
 
 const rootReducer = combineReducers({
 	counter,
 	auth,
+	user,
 });
 
 // 루트 리듀서를 내보내주세요.
