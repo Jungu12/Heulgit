@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -54,6 +56,8 @@ public class EurekaService {
 	private final GithubApiClient githubApiClient;
 	private final ImageService imageService;
 
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 	/**
 	 * 유레카 목록 조회
 	 * 1. 정렬 조건 확인
@@ -79,6 +83,9 @@ public class EurekaService {
 
 		Slice<Eureka> eurekas = eurekaRepository.findSliceBy(
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		logger.debug("{}");
+
+
 		return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 	}
 
@@ -169,8 +176,8 @@ public class EurekaService {
 	 * 4. 기존 이미지 파일은 모두 제거, 새로운 이미지 파일 저장
 	 * */
 	@Transactional
-	public void updateEureka(String githubId, EurekaUpdateRequest eurekaUpdateRequest,List<MultipartFile> multipartFiles) {
-		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaUpdateRequest.getEurekaId())
+	public void updateEureka(Long eurekaId,String githubId, EurekaUpdateRequest eurekaUpdateRequest,List<MultipartFile> multipartFiles) {
+		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
 
 		if (!githubId.equals(eureka.getUser().getGithubId())) {
