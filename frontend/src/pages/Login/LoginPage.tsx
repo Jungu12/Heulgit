@@ -19,10 +19,9 @@ const LoginPage = () => {
 
 	useEffect(() => {
 		if (localStorage.getItem('login')) {
+			console.log('로그이인!');
 			navigation('/');
 		}
-		console.log(lotties.catUp);
-		console.log(catUp);
 	}, []);
 
 	return (

@@ -35,6 +35,7 @@ const RootRouter = () => {
 
 	useEffect(() => {
 		const flag = localStorage.getItem('login') ? true : false;
+		console.log('[flag]', flag);
 		setIsLogin(flag);
 	}, []);
 
