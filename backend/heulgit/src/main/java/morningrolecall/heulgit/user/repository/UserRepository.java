@@ -8,4 +8,5 @@ import morningrolecall.heulgit.user.domain.User;
 
 public interface UserRepository extends JpaRepository<User, String> {
 	Optional<User> findUserByGithubId(String githubId);
+
 }
