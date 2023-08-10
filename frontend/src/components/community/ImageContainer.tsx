@@ -6,14 +6,20 @@ const StyledImgContainer = styled.div`
 	display: flex;
 	position: relative;
 	justify-content: center;
+	align-items: center;
+
+	background-color: #ffffff;
 
 	width: 100%;
-	top: 20px;
+	/* height: 100%; */
+
+	/* margin: 20px 0; */
+	padding: 0 20px 20px 20px;
 `;
 
 const StyledImg = styled.img`
 	width: calc(100vw - 60px);
-	height: 220px;
+	height: 200px;
 	background-color: ${colors.greyScale.grey4};
 
 	border-radius: 20px;

@@ -1,4 +1,5 @@
 // import { colors } from '@constants/colors';
+import { EurekaWriteType } from '@typedef/community/eureka.types';
 import React, { ChangeEvent } from 'react';
 import { styled } from 'styled-components';
 
@@ -22,7 +23,7 @@ const StlyedTitleInput = styled.textarea.attrs({
 	height: 50px;
 	padding: 15px 15px 0 15px;
 
-	font-size: 20px;
+	font-size: 18px;
 	font-weight: bold;
 
 	resize: none;
@@ -32,10 +33,11 @@ const StlyedTitleInput = styled.textarea.attrs({
 `;
 
 type TitleInputProps = {
+	postInput?: EurekaWriteType;
 	onChange: (value: string) => void;
 };
 
-const TitleInput: React.FC<TitleInputProps> = ({ onChange }) => {
+const TitleInput: React.FC<TitleInputProps> = ({ postInput, onChange }) => {
 	// 입력값이 변경될 때마다 onChange 이벤트 핸들러 실행
 	const titleChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		onChange(e.target.value);
@@ -43,7 +45,10 @@ const TitleInput: React.FC<TitleInputProps> = ({ onChange }) => {
 
 	return (
 		<StyledTitleContainer>
-			<StlyedTitleInput onChange={titleChangeHandler} />
+			<StlyedTitleInput
+				value={postInput?.title}
+				onChange={titleChangeHandler}
+			/>
 		</StyledTitleContainer>
 	);
 };

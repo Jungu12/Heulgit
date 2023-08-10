@@ -1,50 +1,58 @@
 import CommitEditPage from '@pages/CommitEditPage';
-import CommunityPage from '@pages/CommunityPage';
+import CommunityPage from '@pages/community/CommunityPage';
 import LoginPage from '@pages/Login/LoginPage';
-import MainPage from '@pages/MainPage';
-import MyActivityPage from '@pages/MyActivityPage';
-import MyLikePostPage from '@pages/MyLikePostPage';
-import MyLikeRepoPage from '@pages/MyLikeRepoPage';
-import MyCommentPage from '@pages/MyCommentPage';
+import MyActivityPage from '@pages/MyActivity/MyActivityPage';
+import MyLikePostPage from '@pages/MyActivity/MyLikePostPage';
+import MyLikeRepoPage from '@pages/MyActivity/MyLikeRepoPage';
+import MyCommentPage from '@pages/MyActivity/MyCommentPage';
 import NotFound from '@pages/NotFound';
 import NotificationPage from '@pages/NotificationPage';
-import ProfilePage from '@pages/ProfilePage';
+import ProfilePage from '@pages/Profile/ProfilePage';
 import RepoViewPage from '@pages/RepoViewPage';
 import SearchPage from '@pages/SearchPage';
 import SearchResultPage from '@pages/SearchResultPage';
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CreateEurekaPostPage from '@pages/CreateEurekaPostPage';
-import FreePostViewPage from '@pages/FreePostViewPage';
-import CreateFreePostPage from '@pages/CreateFreePostPage';
-import EurekaPostViewPage from '@pages/EurekaPostViewPage';
+import FreePostViewPage from '@pages/freeboard/FreePostViewPage';
+import CreateFreePostPage from '@pages/community/CreateFreePostPage';
+import EurekaPostViewPage from '@pages/Eureka/EurekaPostViewPage';
 import LoginCallBackPage from '@pages/LoginCallBackPage';
-import EurekaPage from '@pages/EurekaPage';
-import FreeBoardPage from '@pages/FreeBoardPage';
-import FollowPage from '@pages/FollowPage';
+import EurekaPage from '@pages/Eureka/EurekaPage';
+import FreeBoardPage from '@pages/freeboard/FreeBoardPage';
+// import FollowPage from '@pages/FollowPage';
 import LikeViewPage from '@pages/LikeViewPage';
 import ChatDirectPage from '@pages/ChatDirectPage';
 import ChatPage from '@pages/ChatPage';
+import MainPage from '@pages/Main/MainPage';
 import PrivateRoutes from './PrivateRoutes';
-import { useSelector } from 'react-redux';
-import { RootState } from '@store/index';
+import Test from '@pages/Eureka/Test';
+import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
+import FollowerPage from '@pages/FollowerPage';
+// import { http } from '@utils/http';
+// import { useDispatch } from 'react-redux';
+// import { setToken } from '@store/auth';
+// import { AuthType } from '@typedef/common.types';
 
 const RootRouter = () => {
-	const accessToken = useSelector((state: RootState) => state.auth.token);
+	const [isLogin, setIsLogin] = useState(false);
+	// const dispatch = useDispatch();
+	// const accessToken = useSelector((state: RootState) => state.auth.token);
+	// const isLogin = localStorage.getItem('login');
+
+	useEffect(() => {
+		const flag = localStorage.getItem('login') ? true : false;
+		setIsLogin(flag);
+	}, []);
 
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
-
+				<Route path="/test" element={<Test />}></Route>
 				<Route
-					element={
-						<PrivateRoutes
-							loginState={accessToken ? true : false}
-							redirectTo="/login"
-						/>
-					}
+					element={<PrivateRoutes loginState={isLogin} redirectTo="/login" />}
 				>
 					<Route path="/" element={<MainPage />}></Route>
 					<Route path="/profiles">
@@ -57,10 +65,11 @@ const RootRouter = () => {
 							<Route path="like-post" element={<MyLikePostPage />}></Route>
 							<Route path="like-comment" element={<MyCommentPage />}></Route>
 							<Route path="commit-edit" element={<CommitEditPage />}></Route>
-							<Route path="follow" element={<FollowPage />}></Route>
+							<Route path="follow" element={<FollowerPage />}></Route>
 						</Route>
 					</Route>
 					<Route path="/community" element={<CommunityPage />}>
+						<Route index element={<Navigate replace to="eureka" />} />
 						<Route path="eureka" element={<EurekaPage />}></Route>
 						<Route path="free" element={<FreeBoardPage />}></Route>
 					</Route>
@@ -75,6 +84,10 @@ const RootRouter = () => {
 					<Route
 						path="/community/eureka/:id"
 						element={<EurekaPostViewPage />}
+					></Route>
+					<Route
+						path="/community/eureka/:id/edit"
+						element={<EditEurekaPostPage />}
 					></Route>
 					<Route
 						path="/community/eureka/:id/like"

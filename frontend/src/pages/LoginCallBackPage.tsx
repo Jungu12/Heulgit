@@ -1,5 +1,5 @@
 import { setToken } from '@store/auth';
-import { http } from '@utils/http';
+import { authHttp, http } from '@utils/http';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,8 @@ import { styled } from 'styled-components';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Lottie from 'lottie-react';
 import loadingCat from '../loading.json';
+import { UserType } from '@typedef/common.types';
+import { setUser } from '@store/user';
 
 const StyledCallBackContainer = styled.div`
 	display: flex;
@@ -24,14 +26,23 @@ const StyledCallBackContainer = styled.div`
 
 const LoginCallBackPage = () => {
 	const navigation = useNavigate();
-
 	const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
 
-	const getUserId = useCallback(() => {
-		http
-			.get('oauth/me')
-			.then((res) => console.log(res))
-			.catch((err) => console.log(err));
+	// const getUserId = useCallback(() => {
+	// 	http
+	// 		.get('oauth/me')
+	// 		.then((res) => console.log(res))
+	// 		.catch((err) => console.log(err));
+	// }, []);
+	const setUserData = useCallback(async () => {
+		authHttp
+			.get<UserType>('users')
+			.then((res) => {
+				dispatch(setUser(res));
+			})
+			.catch((err) => {
+				console.error(err);
+			});
 	}, []);
 
 	const getToken = useCallback(
@@ -46,18 +57,19 @@ const LoginCallBackPage = () => {
 				.then((response) => {
 					const { accessToken } = response;
 					console.log(response);
-					// 로그인 성공 시 토큰과 아이콘 저장하고 홈화면으로 보내기
+					// 로그인 성공 시 토큰과 아이콘 저장 및 로컬 스토리지에 로그인 정보 저장하고 홈화면으로 보내기
 					dispatch(setToken(accessToken));
-					navigation('/');
+					localStorage.setItem('login', 'true');
 				})
 				.then(() => {
-					getUserId();
+					navigation('/', { replace: true });
+					setUserData();
 				})
 				.catch((error) => {
 					console.log(error);
 					// 로그인 실패 시 에러메시지 띄우고 다시 로그인 화면으로
 					alert('로그인에 실패했습니다.');
-					navigation('/login');
+					navigation('/login', { replace: true });
 				});
 		},
 		[navigation, dispatch],
