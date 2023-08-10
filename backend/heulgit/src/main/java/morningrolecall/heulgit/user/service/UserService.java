@@ -36,7 +36,7 @@ import morningrolecall.heulgit.user.domain.CommitAnalyze;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.domain.dto.CommitType;
 import morningrolecall.heulgit.user.domain.dto.GitRepository;
-import morningrolecall.heulgit.user.domain.dto.RankingInfo;
+import morningrolecall.heulgit.user.domain.dto.RankingDetail;
 import morningrolecall.heulgit.user.repository.CommitAnalyzeRepository;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
@@ -148,8 +148,8 @@ public class UserService {
 		return commitMessages;
 	}
 
-	public List<RankingInfo> getRankingInfo(String githubId, String type) {
-		List<RankingInfo> rankingInfos = new ArrayList<>();
+	public List<RankingDetail> getRankingInfo(String githubId, String type) {
+		List<RankingDetail> rankingDetails = new ArrayList<>();
 
 		//내가 팔로우 한 유저 가져오기 (DB)
 		List<Relation> relations = relationRepository.findByFromId(githubId);
@@ -181,12 +181,12 @@ public class UserService {
 				}
 			}
 
-			rankingInfos.add(new RankingInfo(githubId, count));
+			rankingDetails.add(new RankingDetail(githubId, count));
 		}
-		Collections.sort(rankingInfos, ((o1, o2) -> o2.getCount() - o1.getCount()));
+		Collections.sort(rankingDetails, ((o1, o2) -> o2.getCount() - o1.getCount()));
 
 		// type과 일치하는 commit message 개수 count
-		return rankingInfos;
+		return rankingDetails;
 	}
 
 	public List<String> extractCommits(String data) {

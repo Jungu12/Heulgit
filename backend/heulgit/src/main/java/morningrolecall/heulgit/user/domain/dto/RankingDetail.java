@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RankingInfo {
+public class RankingDetail {
 
 	private String githubId;
 
