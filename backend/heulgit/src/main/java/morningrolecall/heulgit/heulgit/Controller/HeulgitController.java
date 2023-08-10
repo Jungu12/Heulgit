@@ -23,11 +23,11 @@ public class HeulgitController {
 	private final HeulgitService heulgitService;
 
 
-	@GetMapping("/test")
-	public ResponseEntity<?> addHeulgit(){
-		heulgitService.fetchAndSaveTopRepositories();
-		return ResponseEntity.ok().build();
-	}
+	// @GetMapping("/test")
+	// public ResponseEntity<?> addHeulgit(){
+	// 	heulgitService.fetchAndSaveTopRepositories();
+	// 	return ResponseEntity.ok().build();
+	// }
 
 
 	// @GetMapping("/posts")
