@@ -6,6 +6,28 @@ import BigHeader from '@components/profile/BigHeader';
 import CommitTag from '@components/profile/Commit';
 import { colors } from '@constants/colors';
 
+// 더미
+const dummyData = [
+	{ id: 1, title: '# feat', detail: '새로운 기능 개발' },
+	{ id: 2, title: '# fix', detail: '버그 수정' },
+	{ id: 3, title: '# docs', detail: '문서 작업' },
+	{ id: 4, title: '# style', detail: '코드 스타일링' },
+	{ id: 5, title: '# refactor', detail: '코드 리팩토링' },
+	{ id: 6, title: '# test', detail: '테스트 코드 작성' },
+	{
+		id: 7,
+		title: '# chore',
+		detail:
+			'필드 스크립트, 패키지 매니저 등 설정 파일 수정... 계속길어지면어떻게바뀌지 두줄까지 확인 ',
+	},
+	{
+		id: 8,
+		title: '# test',
+		detail:
+			'일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십(40자 제한하기)',
+	},
+];
+
 const StyledBox = styled.div`
 	height: 100vh;
 
@@ -68,6 +90,7 @@ const StyledEditTitle = styled.div`
 	height: 60px;
 `;
 const StyledSaveButton = styled.button`
+	cursor: pointer;
 	margin-right: 20px;
 	background-color: transparent;
 	font-weight: 500;
@@ -98,6 +121,7 @@ const StyledFooter = styled.div`
 	}
 `;
 const CommitPlusButton = styled.button`
+	cursor: pointer;
 	width: 100%;
 	height: 40px;
 
@@ -129,10 +153,9 @@ const customStyles = {
 		padding: '20px',
 		margin: 'auto',
 		maxWidth: '500px',
-		height: '400px',
+		height: '450px',
 		background: 'rgba(255, 255, 255)',
 		backdropFilter: 'blur(10px)',
-		// webkitBackdropFilter: 'blur(10px)', // -webkit-backdrop-filter 추가
 		zIndex: '99',
 		border: 'none',
 		borderRadius: '20px',
@@ -149,24 +172,22 @@ const StyledModalContent = styled.div<{
 	label {
 		margin: 30px 0 10px 0;
 	}
-	input {
-		border: 2px solid;
-		border-radius: 10px;
-		padding: 10px;
-		border-color: ${(props) =>
-			props.$inputContent ? colors.primary.primary : colors.greyScale.grey3};
-	}
+	input,
 	textarea {
-		height: 100px;
 		border: 2px solid;
 		border-radius: 10px;
 		padding: 10px;
 		border-color: ${(props) =>
 			props.$textareaContent ? colors.primary.primary : colors.greyScale.grey3};
+	}
+
+	textarea {
+		height: 100px;
 		resize: none;
 	}
-	input:focus,
-	textarea:focus {
+
+	textarea:focus,
+	input:focus {
 		outline: 1px solid ${colors.primary.primary};
 		border: 2px solid ${colors.primary.primary};
 	}
@@ -174,6 +195,9 @@ const StyledModalContent = styled.div<{
 const StyledModalItem = styled.div`
 	display: flex;
 	flex-direction: column;
+	div {
+		height: 25px;
+	}
 `;
 const StyledModalButtonItem = styled.div`
 	display: flex;
@@ -186,38 +210,32 @@ const StyledModalButtonItem = styled.div`
 	button.modal-close {
 		background-color: ${colors.point.red};
 		color: white;
+		cursor: pointer;
 	}
 	button.modal-submit {
 		color: white;
 		background-color: ${colors.primary.primary};
+		cursor: pointer;
 	}
 	button.modal-submit:disabled {
 		background-color: ${colors.primary.primaryLighten};
+		cursor: default;
 	}
 `;
 
 const CommitEditPage = () => {
-	// CommitTag 목록 -> 상태로 관리
-	const [commitTags, setCommitTags] = useState([
-		{ id: 1, title: '# feat', detail: '새로운 기능 개발' },
-		{ id: 2, title: '# fix', detail: '버그 수정' },
-		{ id: 3, title: '# docs', detail: '문서 작업' },
-		{ id: 4, title: '# style', detail: '코드 스타일링' },
-		{ id: 5, title: '# refactor', detail: '코드 리팩토링' },
-		{ id: 6, title: '# test', detail: '테스트 코드 작성' },
-		{
-			id: 7,
-			title: '# chore',
-			detail:
-				'필드 스크립트, 패키지 매니저 등 설정 파일 수정... 계속길어지면어떻게바뀌지 두줄까지 확인 ',
-		},
-		{
-			id: 8,
-			title: '# test',
-			detail:
-				'일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십(40자 제한하기)',
-		},
-	]);
+	const [commitTags, setCommitTags] = useState(dummyData);
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [newCommit, setNewCommit] = useState({ title: '', detail: '' });
+	const [errorMessage, setErrorMessage] = useState('');
+
+	const $inputContent = Boolean(newCommit.title);
+	const $textareaContent = Boolean(newCommit.detail);
+	const isSubmitDisabled =
+		!newCommit.title ||
+		!newCommit.detail ||
+		commitTags.some((tag) => tag.title === newCommit.title);
 
 	// CommitTag 삭제
 	const handleDeleteCommitTag = (idToDelete: number) => {
@@ -226,31 +244,17 @@ const CommitEditPage = () => {
 		);
 	};
 
-	// 화면 사이즈별 타이틀 변환
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-	useEffect(() => {
-		const handleResize = () => {
-			setWindowWidth(window.innerWidth);
-		};
-
-		window.addEventListener('resize', handleResize);
-
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
-	}, []);
-
 	// 모달
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [newCommit, setNewCommit] = useState({ title: '', detail: '' });
 	const handleOpenModal = () => {
 		setIsModalOpen(true);
+		setErrorMessage('');
 	};
 	const handleCloseModal = () => {
 		setNewCommit({ title: '', detail: '' });
 		setIsModalOpen(false);
 	};
+
+	// 커밋 추가
 	const handleAddCommit = () => {
 		if (newCommit.title && newCommit.detail) {
 			setCommitTags((prevTags) => [
@@ -259,11 +263,20 @@ const CommitEditPage = () => {
 			]);
 			setNewCommit({ title: '', detail: '' });
 			setIsModalOpen(false);
+			setErrorMessage('');
 		}
 	};
-	const $inputContent = Boolean(newCommit.title);
-	const $textareaContent = Boolean(newCommit.detail);
-	const isSubmitDisabled = !newCommit.title || !newCommit.detail;
+
+	// 화면 사이즈별 타이틀 변환
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+		window.addEventListener('resize', handleResize);
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
 
 	return (
 		<StyledBox>
@@ -323,10 +336,27 @@ const CommitEditPage = () => {
 							type="text"
 							id="commitTitle"
 							value={newCommit.title}
-							onChange={(e) =>
-								setNewCommit({ ...newCommit, title: e.target.value })
-							}
+							placeholder="커밋 타입을 입력해주세요."
+							onChange={(e) => {
+								const newTitle = e.target.value;
+								setNewCommit({ ...newCommit, title: newTitle });
+
+								// 타이틀 중복 검사
+								const isDuplicate = commitTags.some(
+									(tag) => tag.title === newTitle,
+								);
+								if (isDuplicate) {
+									setErrorMessage('중복되는 커밋 타입이 있습니다.');
+								} else {
+									setErrorMessage('');
+								}
+							}}
 						/>
+						<div
+							style={{ color: 'red', textAlign: 'center', marginTop: '10px' }}
+						>
+							{errorMessage}
+						</div>
 					</StyledModalItem>
 					<StyledModalItem>
 						<label htmlFor="commitDetail">타입 설명</label>
@@ -334,6 +364,7 @@ const CommitEditPage = () => {
 							maxLength={40}
 							id="commitDetail"
 							value={newCommit.detail}
+							placeholder="커밋 타입에 대한 설명을 입력해주세요."
 							onChange={(e) =>
 								setNewCommit({ ...newCommit, detail: e.target.value })
 							}
