@@ -146,6 +146,13 @@ public class UserService {
 	public List<RankingInfo> getRankingInfo(String githubId, String type) {
 		List<RankingInfo> rankingInfos = new ArrayList<>();
 
+		//내가 팔로우 한 유저 가져오기 (DB)
+		
+		// 유저의 한달 내 repo 긁어오기 (github API)
+
+		// 유저의 한달 내 repo 안의 커밋 긁어오기 (github API)
+
+		// type과 일치하는 commit message 개수 count
 		return null;
 	}
 
