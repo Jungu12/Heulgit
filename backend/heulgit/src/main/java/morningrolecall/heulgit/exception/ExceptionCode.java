@@ -28,6 +28,9 @@ public enum ExceptionCode {
 
 	/* User */
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사용자가 존재하지 않습니다."),
+	REPOSITORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사용자의 레포지토리가 존재하지 않습니다."),
+	COMMIT_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사용자의 커밋 타입이 존재하지 않습니다."),
+	COMMIT_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사용자의 최근 1달간 커밋 메세지가 존재하지 않습니다."),
 
 	/* Relation */
 	FOLLOW_CANCEL_FAILED(HttpStatus.BAD_REQUEST, "팔로우를 취소할 수 없습니다."),
