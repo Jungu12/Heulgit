@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import morningrolecall.heulgit.auth.service.AuthService;
 import morningrolecall.heulgit.auth.util.CookieManager;
-import morningrolecall.heulgit.user.domain.dto.CommitType;
+import morningrolecall.heulgit.user.domain.dto.UserCommitTypeRequest;
 import morningrolecall.heulgit.user.service.UserService;
 
 @RestController
@@ -92,26 +92,67 @@ public class UserController {
 	}
 
 	/**
+	 * 유저의 커밋 타입을 조회한다.
+	 * @param githubId
+	 * @return
+	 */
+	@GetMapping("/commit-type")
+	public ResponseEntity<?> commitTypeList(@AuthenticationPrincipal String githubId) {
+		logger.debug("commitTypeList(), githubId = {}", githubId);
+
+		return ResponseEntity.ok().body(userService.getMyCommitType(githubId));
+	}
+
+	/**
 	 * 사용자는 커밋 분석에 사용할 매핑 정보를 커스텀할 수 있다.
 	 * @param githubId
-	 * @param commitTypes
+	 * @param userCommitTypeRespons
 	 * @return
 	 */
 	@PostMapping("/commit-custom")
 	public ResponseEntity<?> commitTypeModify(@AuthenticationPrincipal String githubId,
-		@RequestBody List<CommitType> commitTypes) {
+		@RequestBody List<UserCommitTypeRequest> userCommitTypeRespons) {
 		logger.debug("commitTypeModify(), githubId = {}", githubId);
 
-		userService.modifyCommitType(githubId, commitTypes);
+		userService.modifyCommitType(githubId, userCommitTypeRespons);
 
 		return ResponseEntity.ok().build();
 	}
 
+	/**
+	 * 사용자는 사용자가 팔로우한 사람들의 랭킹을 볼 수 있다.
+	 * @param githubId
+	 * @param type
+	 * @return
+	 */
 	@GetMapping("/ranking")
 	public ResponseEntity<?> rankingDetail(@AuthenticationPrincipal String githubId,
 		@RequestParam("type") String type) {
 		logger.debug("rankingDetail(), githubId = {}, type = {}", githubId, type);
 
 		return ResponseEntity.ok().body(userService.getRankingInfo(githubId, type));
+	}
+
+	@GetMapping("/activities/my-likes")
+	public ResponseEntity<?> myLikesPostsList(@AuthenticationPrincipal String githubId) {
+		logger.debug("myLikesPostsList(), githubId = {}");
+
+		return null;
+		// return userService.findMyLikesPosts(githubId);
+	}
+
+	@GetMapping("/activities/my-comments")
+	public ResponseEntity<?> myCommentsList(@AuthenticationPrincipal String githubId) {
+		logger.debug("myCommentsList(), githubId = {}");
+
+		return null;
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<?> followingsList(@AuthenticationPrincipal String githubId,
+		@RequestParam("keyword") String keyword) {
+		logger.debug("followingList(), githubId = {}");
+
+		return ResponseEntity.ok().body(userService.findFollowingsByKeyword(githubId, keyword));
 	}
 }

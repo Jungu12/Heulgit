@@ -4,12 +4,10 @@ import javax.persistence.Column;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class GitRepository {
+public class UserRepositoryResponse {
 
 	private String name;
 

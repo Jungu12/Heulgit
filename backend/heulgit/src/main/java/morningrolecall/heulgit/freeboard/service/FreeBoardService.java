@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
-import morningrolecall.heulgit.eureka.domain.EurekaImage;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.FreeBoardException;
 import morningrolecall.heulgit.freeboard.domain.FreeBoard;
@@ -122,7 +121,7 @@ public class FreeBoardService {
 
 		freeBoardRepository.save(freeBoard);
 		// 이미지 S3에 업로드
-		List<String> imageUrls = imageService.uploadFile(githubId,"freeboard",multipartFiles);
+		List<String> imageUrls = imageService.uploadFile(githubId, "freeboard", multipartFiles);
 		List<FreeBoardImage> freeBoardImages = makeFreeBoardImages(freeBoard, imageUrls);
 		freeBoardImageRepository.saveAll(freeBoardImages);
 		freeBoard.addAllImage(freeBoardImages);
@@ -137,7 +136,8 @@ public class FreeBoardService {
 	 * 4. 기존 이미지 파일은 모두 제거, 새로운 이미지 파일 저장
 	 * */
 	@Transactional
-	public void updateFreeBoard(String githubId, FreeBoardUpdateRequest freeBoardUpdateRequest,List<MultipartFile> multipartFiles) {
+	public void updateFreeBoard(String githubId, FreeBoardUpdateRequest freeBoardUpdateRequest,
+		List<MultipartFile> multipartFiles) {
 		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardUpdateRequest.getFreeBoardId())
 			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
@@ -153,7 +153,7 @@ public class FreeBoardService {
 
 		if (deleteFreeBoardImages != null || !deleteFreeBoardImages.isEmpty()) {
 			List<String> imageUrls = new ArrayList<>();
-			for(FreeBoardImage deleteFreeBoardImage : deleteFreeBoardImages){
+			for (FreeBoardImage deleteFreeBoardImage : deleteFreeBoardImages) {
 				imageUrls.add(deleteFreeBoardImage.getFileUri());
 			}
 			imageService.deleteFile(imageUrls);
@@ -162,9 +162,8 @@ public class FreeBoardService {
 		freeBoardImageRepository.deleteAllByFreeBoard(freeBoard);
 		freeBoard.removeAllImage();
 
-
 		// 현재 받은 이미지 S3에 업로드
-		List<String> imageUrls = imageService.uploadFile(githubId,"freeboard",multipartFiles);
+		List<String> imageUrls = imageService.uploadFile(githubId, "freeboard", multipartFiles);
 		List<FreeBoardImage> freeBoardImages = makeFreeBoardImages(freeBoard, imageUrls);
 
 		freeBoardImageRepository.saveAll(freeBoardImages);
@@ -191,16 +190,12 @@ public class FreeBoardService {
 		List<FreeBoardImage> freeBoardImages = freeBoardImageRepository.findFreeBoardImageByFreeBoard(freeBoard);
 		if (freeBoardImages != null || !freeBoardImages.isEmpty()) {
 			List<String> imageUrls = new ArrayList<>();
-			for(FreeBoardImage freeBoardImage:freeBoardImages){
+			for (FreeBoardImage freeBoardImage : freeBoardImages) {
 				imageUrls.add(freeBoardImage.getFileUri());
 			}
 			imageService.deleteFile(imageUrls);
 		}
 		freeBoardRepository.delete(freeBoard);
-
-
-
-
 
 	}
 
