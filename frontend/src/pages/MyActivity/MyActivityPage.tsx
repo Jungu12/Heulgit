@@ -25,7 +25,7 @@ const StyledSideL = styled.div`
 	}
 	@media (min-width: 768px) {
 		width: 124px;
-		background-color: ${colors.primary.primaryLighten};
+		background-color: ${colors.primary.primary};
 	}
 	@media (min-width: 1200px) {
 		width: 242px;
@@ -42,7 +42,7 @@ const StyledSideR = styled.div`
 	}
 	@media (min-width: 768px) {
 		width: 124px;
-		background-color: ${colors.primary.primaryLighten};
+		background-color: ${colors.primary.primary};
 	}
 	@media (min-width: 1200px) {
 		width: 242px;
@@ -55,11 +55,22 @@ const StyledActivity = styled.div`
 		width: 500px;
 	}
 `;
+
 const StyledActivityMenu = styled.div`
+	:hover {
+		background-color: ${colors.greyScale.grey2};
+		border-radius: 10px;
+	}
+`;
+const StyledActivityMenuItem = styled.div`
+	cursor: pointer;
 	display: flex;
 	align-items: center;
 	height: 40px;
 	margin: 10px;
+	padding: 10px;
+	font-size: 18px;
+
 	@media (min-width: 768px) {
 		font-size: 20px;
 	}
@@ -115,24 +126,29 @@ const MyActivityPage = () => {
 						<BigHeader title={'내활동'}></BigHeader>
 					)}
 				</StyledEditTitle>
-				<div>
-					<StyledActivityMenu
+				<StyledActivityMenu>
+					<StyledActivityMenuItem
 						onClick={() => navigation('/profiles/1/like-repo')}
 					>
 						좋아요 한 흘깃
-					</StyledActivityMenu>
-					<StyledActivityMenu
+					</StyledActivityMenuItem>
+					<StyledActivityMenuItem
 						onClick={() => navigation('/profiles/1/like-post')}
 					>
 						좋아요 한 게시물
-					</StyledActivityMenu>
-					<StyledActivityMenu onClick={() => navigation('/profiles/1/comment')}>
+					</StyledActivityMenuItem>
+					<StyledActivityMenuItem
+						onClick={() => navigation('/profiles/1/comment')}
+					>
 						내가 작성한 댓글
-					</StyledActivityMenu>
-					<StyledActivityMenu className="user-logout" onClick={onClickLogout}>
+					</StyledActivityMenuItem>
+					<StyledActivityMenuItem
+						className="user-logout"
+						onClick={onClickLogout}
+					>
 						로그아웃
-					</StyledActivityMenu>
-				</div>
+					</StyledActivityMenuItem>
+				</StyledActivityMenu>
 			</StyledActivity>
 			<StyledSideR>
 				<div>카테고리</div>
