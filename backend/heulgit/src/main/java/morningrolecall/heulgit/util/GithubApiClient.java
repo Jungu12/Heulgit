@@ -1,9 +1,12 @@
 package morningrolecall.heulgit.util;
 
+import java.time.LocalDateTime;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -60,4 +63,19 @@ public class GithubApiClient {
 
 		return result.toString();
 	}
+
+	/*
+	*
+	* */
+	// @Scheduled(cron = "* * * * * *")
+	// public void updateRepositories() {
+	//
+	// }
+
+	// @Scheduled(cron = "* * * * * *")
+	public void loadRepositories() {
+		String repositoryCallUrl = "https://api.github.com/search/repositories?q=stars:>500";
+
+	}
+
 }

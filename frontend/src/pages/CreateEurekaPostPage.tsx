@@ -71,6 +71,7 @@ const CreateEurekaPostPage: React.FC = () => {
 	// 선택된 이미지 파일들을 관리하는 상태 변수
 	const [selectedImages, setSelectedImages] = useState<FileList | null>(null);
 	const [imageUrl, setImageUrl] = useState<string[]>([]);
+	const [isRegisterButtonEnabled, setIsRegisterButtonEnabled] = useState(false);
 
 	// post 시 보내야 하는 body
 	const [postInput, setPostInput] = useState<EurekaWriteType>({
@@ -126,12 +127,18 @@ const CreateEurekaPostPage: React.FC = () => {
 			});
 		}
 
+		// 글쓰기 등록 버튼 비활성화
+		setIsRegisterButtonEnabled(false);
+
 		// 글쓰기 완료 되면 게시글 목록으로 이동
 		authHttp
 			.post('eureka/posts', formData, {
 				'Content-Type': 'multipart/form-data',
 			})
-			.then(() => navigation('/community/eureka'));
+			.then(() => navigation('/community/eureka'))
+			.catch((err) => {
+				console.error(err);
+			});
 	}, [postInput, selectedImages, navigation]);
 
 	// 파일 업로드 함수
@@ -168,11 +175,15 @@ const CreateEurekaPostPage: React.FC = () => {
 		inputRef.current.click();
 	}, []);
 
-	// 등록 버튼 활성화 여부를 결정하는 함수
-	const isRegisterButtonEnabled =
-		postInput?.title.trim().length > 0 &&
-		postInput?.content.trim().length > 0 &&
-		postInput.link.trim().length > 0;
+	useEffect(() => {
+		if (
+			postInput?.title.trim().length > 0 &&
+			postInput?.content.trim().length > 0 &&
+			postInput.link.trim().length > 0
+		) {
+			setIsRegisterButtonEnabled(true);
+		}
+	}, [postInput]);
 
 	useEffect(() => {
 		console.log(imageUrl);

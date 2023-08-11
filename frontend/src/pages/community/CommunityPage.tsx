@@ -6,16 +6,15 @@ import FilterCategory from '@components/community/FilterCategory';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-
-import CommunityMenuBarTablet from './CommunityMenuBarTablet';
-import CommunityFilterTablet from './CommunityFilterTablet';
 import CommunityMenuBarPC from './CommunityMenuBarPC';
 import CommunityFilterPC from './CommunityFilterPC';
 import { EurekaPostType } from '@typedef/community/eureka.types';
 import { getEurekaFeedList } from '@utils/api/eureka/eurekaApi';
+import TabletNavigation from '@components/common/TabletNavigation';
+import Sidebar from '@components/common/Sidebar';
+import CommunitySideBarContent from './CommunitySideBarContent';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -51,8 +50,12 @@ const StyledFeedContainerMobile = styled.div`
 // 커뮤니티 테블릿 버전
 const CommunityContainerTabletPC = styled.div`
 	display: flex;
+	justify-content: center;
+
+	margin-left: 125px;
 	height: 100vh;
-	justify-content: space-between;
+
+	/* justify-content: space-between; */
 	/* align-items: center; */
 
 	overflow-y: scroll;
@@ -75,7 +78,7 @@ const StyledFeedContainerTabletPC = styled.div`
 	flex-direction: column;
 
 	margin-top: 35px;
-	width: 520px;
+	/* width: 520px; */
 `;
 // 테블릿 버전 끝
 
@@ -85,7 +88,7 @@ const StyledFeedContainerPC = styled.div`
 	position: relative;
 	flex-direction: column;
 
-	width: 520px;
+	/* width: 520px; */
 	margin-top: 35px;
 `;
 
@@ -110,34 +113,35 @@ const StyledCreateButtonMobile = styled.button`
 	background-position: center;
 `;
 
-// 게시물 작성 버튼 테블릿 PC
-// const StyledCreateButtonTabletPC = styled.button`
-// 	display: flex;
-// 	position: fixed;
+const StyledFilterButton = styled.button`
+	position: fixed;
+	top: 32px;
+	right: 30px;
+	cursor: pointer;
+	background: none;
 
-// 	bottom: 5%;
-// 	right: 5%;
-
-// 	width: 70px;
-// 	height: 70px;
-
-// 	border: none;
-// 	border-radius: 50%;
-// 	background-color: ${colors.primary.primary};
-
-// 	padding: 0;
-// 	background-image: url(${images.community.createPost});
-// 	background-size: 60%;
-// 	background-repeat: no-repeat;
-// 	background-position: center;
-// `;
+	img {
+		width: 44px;
+		height: 44px;
+	}
+`;
 
 const CommunityPage = () => {
 	const navigation = useNavigate();
-	// const [page, setPage] = useState(1);
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
+	const [page, setPage] = useState(1);
 	const [feedList, setFeedList] = useState<EurekaPostType[]>([]);
 	const [seletedCommunityTitle, setSeletedCommunityTitle] = useState('유레카');
 	const [seletedSort, setSeletedSort] = useState('전체 보기');
+	const [eurekaHasMore, setEurekaHasMore] = useState(true);
+
+	const onClickFilter = useCallback(() => {
+		setIsFilterOpen(true);
+	}, []);
+
+	const onClickClose = useCallback(() => {
+		setIsFilterOpen(false);
+	}, []);
 
 	// 선택된 카테고리 버튼을 토글하는 함수
 	const toggleActive = (category: string) => {
@@ -156,21 +160,48 @@ const CommunityPage = () => {
 		return 'eureka';
 	}, []);
 
+	const eurekaNextPageLoad = useCallback(async () => {
+		console.log('다음 페이지 부르기');
+		const nextPage = page + 1;
+		setPage(nextPage);
+		getEurekaFeedList(seletedSort, nextPage).then((res) => {
+			if (res.length === 0) {
+				setEurekaHasMore(false);
+			}
+
+			const newFeedList = [...feedList, ...res];
+			setFeedList(newFeedList);
+			console.log(res);
+			console.log(newFeedList);
+		});
+	}, [seletedSort, page, feedList]);
+
 	// 컴포넌트 렌더링 시 FeedList 불러옴
 	useEffect(() => {
 		console.log('새로운 피드리스트 불러오기!');
 
-		getEurekaFeedList(seletedSort, 1).then((res) => {
+		getEurekaFeedList(seletedSort, page).then((res) => {
 			setFeedList(res);
 			console.log('새로운 데이터', res);
 		});
 	}, []);
 
 	useEffect(() => {
-		getEurekaFeedList(seletedSort, 1).then((res) => {
+		getEurekaFeedList(seletedSort, page).then((res) => {
 			setFeedList(res);
 		});
 	}, [seletedCommunityTitle]);
+
+	useEffect(() => {
+		console.log('[현재 페이지]', page);
+	}, [page]);
+
+	useEffect(() => {
+		setPage(1);
+		getEurekaFeedList(seletedSort, 1).then((res) => {
+			setFeedList(res);
+		});
+	}, [seletedSort]);
 
 	return (
 		<>
@@ -185,7 +216,7 @@ const CommunityPage = () => {
 					/>
 					<FilterCategory button={seletedSort} setButton={setSeletedSort} />
 					<StyledFeedContainerMobile>
-						<Outlet context={{ feedList }} />
+						<Outlet context={{ feedList, eurekaHasMore, eurekaNextPageLoad }} />
 					</StyledFeedContainerMobile>
 					<StyledCreateButtonMobile
 						onClick={() =>
@@ -201,11 +232,17 @@ const CommunityPage = () => {
 			{/* 테블릿 버전 */}
 			<Tablet>
 				<CommunityContainerTabletPC>
-					<CommunityMenuBarTablet />
+					<TabletNavigation />
 					<StyledFeedContainerTabletPC>
 						<Outlet />
 					</StyledFeedContainerTabletPC>
-					<CommunityFilterTablet />
+					{/* 우측 필터 버튼 */}
+					<StyledFilterButton onClick={onClickFilter}>
+						<img src={images.filter} alt="filter" />
+					</StyledFilterButton>
+					<Sidebar open={isFilterOpen}>
+						<CommunitySideBarContent onClickClose={onClickClose} />
+					</Sidebar>
 				</CommunityContainerTabletPC>
 			</Tablet>
 

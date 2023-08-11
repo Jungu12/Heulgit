@@ -16,7 +16,7 @@ export const getEurekaFeedList = async (sort: string, page: number) => {
 
 	try {
 		const response = await authHttp.get<EurekaFeedResponseType>(
-			`/eureka/posts?sort=${sortType.get(sort)}&pages=${page}`,
+			`eureka/posts?sort=${sortType.get(sort)}&pages=${page}`,
 		);
 		return response.content;
 	} catch (error) {

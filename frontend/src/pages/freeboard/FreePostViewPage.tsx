@@ -4,14 +4,16 @@ import Header from '@components/common/Header';
 import CommentInput from '@pages/community/CommentInput';
 import FreePostCommentList from '@components/community/FreePostCommentList';
 import { images } from '@constants/images';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import FreePostViewFeedMobile from '@pages/freeboard/FreePostViewFeedMobile';
 import FreePostViewFeedTabletPC from './FreePostViewFeedTabletPC';
 import CommunityMenuBar from '@pages/community/CommunityMenuBarPC';
 import CommunityFilterPC from '@pages/community/CommunityFilterPC';
-import CommunityFilterTablet from '@pages/community/CommunityFilterTablet';
+import CommunitySideBarContent from '@pages/community/CommunitySideBarContent';
+import Sidebar from '@components/common/Sidebar';
+import TabletNavigation from '@components/common/TabletNavigation';
 
 // 더미 상세 게시물
 const dummyPost = {
@@ -104,7 +106,7 @@ const CommunityContainerMobile = styled.div`
 const StyledFreeBoardPostViewTablet = styled.div`
 	display: flex;
 
-	justify-content: space-between;
+	justify-content: center;
 `;
 
 // 커뮤니티 테블릿 버전
@@ -113,7 +115,8 @@ const CommunityContainerTablet = styled.div`
 	flex-direction: column;
 	/* align-items: center; */
 
-	width: 520px;
+	max-width: 640px;
+	margin-left: 125px;
 
 	overflow-y: scroll;
 	scrollbar-width: none; /* 파이어폭스 */
@@ -123,9 +126,22 @@ const CommunityContainerTablet = styled.div`
 	}
 `;
 
+const StyledFilterButton = styled.button`
+	position: fixed;
+	top: 32px;
+	right: 30px;
+	cursor: pointer;
+	background: none;
+
+	img {
+		width: 44px;
+		height: 44px;
+	}
+`;
+
 // 테블릿 끝
 
-// 유레카 상세페이지 PC버전
+// 상세페이지 PC버전
 const StyledFreeBoardPostViewPC = styled.div`
 	display: flex;
 
@@ -149,7 +165,17 @@ const CommunityContainerPC = styled.div`
 	}
 `;
 
-const FreePostViewPageMobile = () => {
+const FreePostViewPage = () => {
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+	const onClickFilter = useCallback(() => {
+		setIsFilterOpen(true);
+	}, []);
+
+	const onClickClose = useCallback(() => {
+		setIsFilterOpen(false);
+	}, []);
+
 	return (
 		<>
 			<Mobile>
@@ -163,13 +189,19 @@ const FreePostViewPageMobile = () => {
 
 			<Tablet>
 				<StyledFreeBoardPostViewTablet>
-					<CommunityMenuBar />
+					<TabletNavigation />
 					<CommunityContainerTablet>
 						<FreePostViewFeedTabletPC feed={dummyPost} />
 						<FreePostCommentList comments={dummyComment} />
 						<CommentInput />
 					</CommunityContainerTablet>
-					<CommunityFilterTablet />
+					{/* 우측 필터 버튼 */}
+					<StyledFilterButton onClick={onClickFilter}>
+						<img src={images.filter} alt="filter" />
+					</StyledFilterButton>
+					<Sidebar open={isFilterOpen}>
+						<CommunitySideBarContent onClickClose={onClickClose} />
+					</Sidebar>
 				</StyledFreeBoardPostViewTablet>
 			</Tablet>
 
@@ -188,4 +220,4 @@ const FreePostViewPageMobile = () => {
 	);
 };
 
-export default FreePostViewPageMobile;
+export default FreePostViewPage;

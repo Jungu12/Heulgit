@@ -71,7 +71,7 @@ export type EurekaPostResponseType = {
 	updatedDate: string;
 	view: number;
 	link: string;
-	eurekaImages: EurekaImageType;
+	eurekaImages: EurekaImageType[];
 	likedUsers: UserType[];
 	eurekaComments: EurekaCommentType[];
 	eurekaGithubInfo: EurekaGithubInfoType;

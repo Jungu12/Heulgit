@@ -2,11 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import Category from '@components/profile/Category';
 import Navigation from '@components/common/Navigation';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import MyFreeboard from '@components/profile/MyFreeboard';
 import MyEureka from '@components/profile/MyEureka';
 import MyProfile from '@components/profile/MyProfile';
 import { images } from '@constants/images';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/index';
 // import { UserType } from '@typedef/common.types';
 const StyledProfilePage = styled.div``;
 
@@ -35,6 +37,7 @@ const StyledUserInformation = styled.div`
 	flex-direction: column;
 	margin-left: 20px;
 	font-size: 20px;
+	gap: 4px;
 
 	div {
 		height: 25px;
@@ -106,6 +109,7 @@ const StyledFooter = styled.div`
 
 type ProfileProps = {
 	handleMenuClick: (menu: '프로필' | '유레카' | '자유') => void;
+	onClickGM: () => void;
 	navigation: ReturnType<typeof useNavigate>;
 	selectedMenu: string;
 	// userData: UserType;
@@ -113,58 +117,73 @@ type ProfileProps = {
 
 const ProfilePageMobile = ({
 	handleMenuClick,
+	onClickGM,
 	navigation,
 	selectedMenu,
 }: ProfileProps) => {
+	const { userId } = useParams();
+	const user = useSelector((state: RootState) => state.user.user);
+
 	return (
 		<StyledProfilePage>
 			<StyledProfileHigh>
 				<StyledUserProfile>
-					<StyledUserImage src={''} alt="user_profile" />
+					<StyledUserImage src={user?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
-						<div className="user-name">유저 이름</div>
+						<div className="user-name">{user?.githubId}</div>
 						<div className="user-follow">
 							<StyledFollowing
 								onClick={() => navigation('/profiles/1/following')}
 							>
-								팔로잉 20
+								{`팔로잉 20`}
 							</StyledFollowing>
 							<StyledFollower
 								onClick={() => navigation('/profiles/1/follower')}
 							>
-								팔로워 20
+								{`팔로워 20`}
 							</StyledFollower>
 						</div>
-						<div className="user-info">추가 정보</div>
+						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
+						<div className="user-info">
+							<p>추가정보</p>
+							{user?.name !== 'null' && <p>{user?.name}</p>}
+							{user?.company !== 'null' && <p>{user?.company}</p>}
+							{user?.location !== 'null' && <p>{user?.location}</p>}
+							{user?.blog !== 'null' && <p>{user?.blog}</p>}
+							{user?.bio !== 'null' && <p>{user?.bio}</p>}
+						</div>
 					</StyledUserInformation>
 				</StyledUserProfile>
 
 				{/* 내활동 | 팔로우,채팅,뒤로가기 버튼 */}
 				<StyledActivityButton>
-					<StyledUserButton>
-						<div>
-							<StyledActivityButtonItem onClick={() => navigation(-1)}>
-								<img src={images.header.back} alt="뒤로가기" />
-							</StyledActivityButtonItem>
-						</div>
-						<div>
+					{userId !== user?.githubId ? (
+						<StyledUserButton>
+							<div>
+								<StyledActivityButtonItem onClick={() => navigation(-1)}>
+									<img src={images.header.back} alt="뒤로가기" />
+								</StyledActivityButtonItem>
+							</div>
+							<div>
+								<StyledActivityButtonItem
+									onClick={() => navigation('/profiles/1')}
+								>
+									<img src={images.profile.followIcon} alt="팔로우" />
+								</StyledActivityButtonItem>
+								<StyledActivityButtonItem onClick={onClickGM}>
+									<img src={images.gitMessage} alt="채팅" />
+								</StyledActivityButtonItem>
+							</div>
+						</StyledUserButton>
+					) : (
+						<StyledMyButton>
 							<StyledActivityButtonItem
-								onClick={() => navigation('/profiles/1')}
+								onClick={() => navigation('/profiles/1/activity')}
 							>
-								<img src={images.profile.followIcon} alt="팔로우" />
+								<img src={images.profile.settingIcon} alt="내활동" />
 							</StyledActivityButtonItem>
-							<StyledActivityButtonItem onClick={() => navigation('/gm')}>
-								<img src={images.gitMessage} alt="채팅" />
-							</StyledActivityButtonItem>
-						</div>
-					</StyledUserButton>
-					<StyledMyButton>
-						<StyledActivityButtonItem
-							onClick={() => navigation('/profiles/1/activity')}
-						>
-							<img src={images.profile.settingIcon} alt="내활동" />
-						</StyledActivityButtonItem>
-					</StyledMyButton>
+						</StyledMyButton>
+					)}
 				</StyledActivityButton>
 			</StyledProfileHigh>
 			<SboxTop>
