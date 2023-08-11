@@ -5,26 +5,21 @@ import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import CommitTag from '@components/profile/Commit';
 import { colors } from '@constants/colors';
+import { UserCommitCustomType } from '@typedef/profile/user.types';
+import { useHref } from 'react-router';
 
 // 더미
 const dummyData = [
-	{ id: 1, title: '# feat', detail: '새로운 기능 개발' },
-	{ id: 2, title: '# fix', detail: '버그 수정' },
-	{ id: 3, title: '# docs', detail: '문서 작업' },
-	{ id: 4, title: '# style', detail: '코드 스타일링' },
-	{ id: 5, title: '# refactor', detail: '코드 리팩토링' },
-	{ id: 6, title: '# test', detail: '테스트 코드 작성' },
+	{ id: 1, type: '# feat', description: '새로운 기능 개발' },
+	{ id: 2, type: '# fix', description: '버그 수정' },
+	{ id: 3, type: '# docs', description: '문서 작업' },
+	{ id: 4, type: '# style', description: '코드 스타일링' },
+	{ id: 5, type: '# refactor', description: '코드 리팩토링' },
+	{ id: 6, type: '# test', description: '테스트 코드 작성' },
 	{
 		id: 7,
-		title: '# chore',
-		detail:
-			'필드 스크립트, 패키지 매니저 등 설정 파일 수정... 계속길어지면어떻게바뀌지 두줄까지 확인 ',
-	},
-	{
-		id: 8,
-		title: '# test',
-		detail:
-			'일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십(40자 제한하기)',
+		type: '# chore',
+		description: '필드 스크립트, 패키지 매니저 등 설정 파일 수정 ',
 	},
 ];
 
@@ -86,7 +81,7 @@ const StyledCommitEditPage = styled.div`
 	}
 `;
 
-const StyledEditTitle = styled.div`
+const StyledEditType = styled.div`
 	height: 60px;
 `;
 const StyledSaveButton = styled.button`
@@ -227,15 +222,15 @@ const CommitEditPage = () => {
 	const [commitTags, setCommitTags] = useState(dummyData);
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [newCommit, setNewCommit] = useState({ title: '', detail: '' });
+	const [newCommit, setNewCommit] = useState({ type: '', description: '' });
 	const [errorMessage, setErrorMessage] = useState('');
 
-	const $inputContent = Boolean(newCommit.title);
-	const $textareaContent = Boolean(newCommit.detail);
+	const $inputContent = Boolean(newCommit.type);
+	const $textareaContent = Boolean(newCommit.description);
 	const isSubmitDisabled =
-		!newCommit.title ||
-		!newCommit.detail ||
-		commitTags.some((tag) => tag.title === newCommit.title);
+		!newCommit.type ||
+		!newCommit.description ||
+		commitTags.some((tag) => tag.type === newCommit.type);
 
 	// CommitTag 삭제
 	const handleDeleteCommitTag = (idToDelete: number) => {
@@ -250,18 +245,18 @@ const CommitEditPage = () => {
 		setErrorMessage('');
 	};
 	const handleCloseModal = () => {
-		setNewCommit({ title: '', detail: '' });
+		setNewCommit({ type: '', description: '' });
 		setIsModalOpen(false);
 	};
 
 	// 커밋 추가
 	const handleAddCommit = () => {
-		if (newCommit.title && newCommit.detail) {
+		if (newCommit.type && newCommit.description) {
 			setCommitTags((prevTags) => [
 				...prevTags,
-				{ ...newCommit, title: `# ${newCommit.title}`, id: Date.now() }, // Prepend "# " to the title
+				{ ...newCommit, type: `# ${newCommit.type}`, id: Date.now() },
 			]);
-			setNewCommit({ title: '', detail: '' });
+			setNewCommit({ type: '', description: '' });
 			setIsModalOpen(false);
 			setErrorMessage('');
 		}
@@ -285,7 +280,7 @@ const CommitEditPage = () => {
 			</StyledSideL>
 
 			<StyledCommitEditPage>
-				<StyledEditTitle>
+				<StyledEditType>
 					{windowWidth <= 768 ? (
 						<Header title={'커밋 메시지 설정'}>
 							<StyledSaveButton>저장</StyledSaveButton>
@@ -295,15 +290,15 @@ const CommitEditPage = () => {
 							<StyledSaveButton>저장</StyledSaveButton>
 						</BigHeader>
 					)}
-				</StyledEditTitle>
+				</StyledEditType>
 
 				<CommitPageMiddle>
 					{/* CommitTag 목록을 매핑하여 렌더링 */}
 					{commitTags.map((tag) => (
 						<CommitTag
 							key={tag.id}
-							title={tag.title}
-							detail={tag.detail}
+							type={tag.type}
+							description={tag.description}
 							onClickDeleteButton={() => handleDeleteCommitTag(tag.id)}
 						/>
 					))}
@@ -330,20 +325,20 @@ const CommitEditPage = () => {
 					$textareaContent={$textareaContent}
 				>
 					<StyledModalItem>
-						<label htmlFor="commitTitle">커밋 타입</label>
+						<label htmlFor="committype">커밋 타입</label>
 						<input
-							maxLength={10}
+							maxLength={45}
 							type="text"
-							id="commitTitle"
-							value={newCommit.title}
+							id="commitType"
+							value={newCommit.type}
 							placeholder="커밋 타입을 입력해주세요."
 							onChange={(e) => {
-								const newTitle = e.target.value;
-								setNewCommit({ ...newCommit, title: newTitle });
+								const newtype = e.target.value;
+								setNewCommit({ ...newCommit, type: newtype });
 
 								// 타이틀 중복 검사
 								const isDuplicate = commitTags.some(
-									(tag) => tag.title === `# ${newTitle}`,
+									(tag) => tag.type === `# ${newtype}`,
 								);
 								if (isDuplicate) {
 									setErrorMessage('중복되는 커밋 타입이 있습니다.');
@@ -359,14 +354,14 @@ const CommitEditPage = () => {
 						</div>
 					</StyledModalItem>
 					<StyledModalItem>
-						<label htmlFor="commitDetail">타입 설명</label>
+						<label htmlFor="commitDescription">타입 설명</label>
 						<textarea
-							maxLength={40}
-							id="commitDetail"
-							value={newCommit.detail}
+							maxLength={255}
+							id="commitDescription"
+							value={newCommit.description}
 							placeholder="커밋 타입에 대한 설명을 입력해주세요."
 							onChange={(e) =>
-								setNewCommit({ ...newCommit, detail: e.target.value })
+								setNewCommit({ ...newCommit, description: e.target.value })
 							}
 						/>
 					</StyledModalItem>

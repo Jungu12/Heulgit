@@ -226,9 +226,9 @@ const ProfilePageWeb = ({
 				</StyledUserProfileBox>
 
 				<StyledProfileLow>
-					{selectedMenu === '프로필' && <MyProfile />}
-					{selectedMenu === '유레카' && <MyEureka />}
-					{selectedMenu === '자유' && <MyFreeboard />}
+					{/* {selectedMenu === '프로필' && <MyProfile />} */}
+					{/* {selectedMenu === '유레카' && <MyEureka />} */}
+					{/* {selectedMenu === '자유' && <MyFreeboard />} */}
 				</StyledProfileLow>
 			</StyledProfilePage>
 			<StyledR>

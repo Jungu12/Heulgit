@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Category from '@components/profile/Category';
 import Navigation from '@components/common/Navigation';
@@ -10,6 +10,7 @@ import { images } from '@constants/images';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 // import { UserType } from '@typedef/common.types';
+
 const StyledProfilePage = styled.div``;
 
 const StyledProfileHigh = styled.div`
@@ -91,7 +92,7 @@ const CateDiv = styled.div`
 
 	position: sticky;
 	top: 0;
-	background-color: white; /* Add a background color for better visibility */
+	background-color: white;
 	z-index: 1;
 `;
 const Sdiv = styled.div``;
@@ -123,6 +124,7 @@ const ProfilePageMobile = ({
 }: ProfileProps) => {
 	const { userId } = useParams();
 	const user = useSelector((state: RootState) => state.user.user);
+	const [view, setView] = useState(false);
 
 	return (
 		<StyledProfilePage>
@@ -133,24 +135,43 @@ const ProfilePageMobile = ({
 						<div className="user-name">{user?.githubId}</div>
 						<div className="user-follow">
 							<StyledFollowing
-								onClick={() => navigation('/profiles/1/following')}
+								onClick={() =>
+									navigation(`/profiles/${user?.githubId}/following`)
+								}
 							>
 								{`팔로잉 20`}
 							</StyledFollowing>
 							<StyledFollower
-								onClick={() => navigation('/profiles/1/follower')}
+								onClick={() =>
+									navigation(`/profiles/${user?.githubId}/follower`)
+								}
 							>
 								{`팔로워 20`}
 							</StyledFollower>
 						</div>
 						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
 						<div className="user-info">
-							<p>추가정보</p>
-							{user?.name !== 'null' && <p>{user?.name}</p>}
-							{user?.company !== 'null' && <p>{user?.company}</p>}
-							{user?.location !== 'null' && <p>{user?.location}</p>}
-							{user?.blog !== 'null' && <p>{user?.blog}</p>}
-							{user?.bio !== 'null' && <p>{user?.bio}</p>}
+							<p
+								onClick={() => {
+									setView(!view);
+								}}
+							>
+								추가정보{' '}
+								{view ? (
+									<img src={images.arrowUpBlack} alt="up" />
+								) : (
+									<img src={images.arrowDownBlack} alt="down" />
+								)}
+							</p>
+							{view && (
+								<>
+									{user?.name !== 'null' && <p>{user?.name}</p>}
+									{user?.company !== 'null' && <p>{user?.company}</p>}
+									{user?.location !== 'null' && <p>{user?.location}</p>}
+									{user?.blog !== 'null' && <p>{user?.blog}</p>}
+									{user?.bio !== 'null' && <p>{user?.bio}</p>}
+								</>
+							)}
 						</div>
 					</StyledUserInformation>
 				</StyledUserProfile>
@@ -166,7 +187,7 @@ const ProfilePageMobile = ({
 							</div>
 							<div>
 								<StyledActivityButtonItem
-									onClick={() => navigation('/profiles/1')}
+									onClick={() => navigation(`/profiles/${user?.githubId}`)}
 								>
 									<img src={images.profile.followIcon} alt="팔로우" />
 								</StyledActivityButtonItem>
@@ -178,7 +199,9 @@ const ProfilePageMobile = ({
 					) : (
 						<StyledMyButton>
 							<StyledActivityButtonItem
-								onClick={() => navigation('/profiles/1/activity')}
+								onClick={() =>
+									navigation(`/profiles/${user?.githubId}/activity`)
+								}
 							>
 								<img src={images.profile.settingIcon} alt="내활동" />
 							</StyledActivityButtonItem>
@@ -206,9 +229,15 @@ const ProfilePageMobile = ({
 				</CateDiv>
 				<Sdiv>
 					<StyledProfileLow>
-						{selectedMenu === '프로필' && <MyProfile />}
-						{selectedMenu === '유레카' && <MyEureka />}
-						{selectedMenu === '자유' && <MyFreeboard />}
+						{selectedMenu === '프로필' && user !== null && (
+							<MyProfile user={user} />
+						)}
+						{selectedMenu === '유레카' && user !== null && (
+							<MyEureka user={user} />
+						)}
+						{selectedMenu === '자유' && user !== null && (
+							<MyFreeboard user={user} />
+						)}
 					</StyledProfileLow>
 				</Sdiv>
 			</SboxTop>

@@ -6,6 +6,7 @@ import CommitGraph from '@components/profile/CommitGraph';
 import { useNavigate } from 'react-router-dom';
 import { images } from '@constants/images';
 import { colors } from '@constants/colors';
+import { UserType } from '@typedef/common.types';
 
 // 더미 데이터
 const dummyRankingList1 = [
@@ -263,7 +264,11 @@ const StyledTitleButton = styled.div`
 	}
 `;
 
-const MyProfile = () => {
+type MyProfileProps = {
+	user: UserType;
+};
+
+const MyProfile = ({ user }: MyProfileProps) => {
 	const navigation = useNavigate();
 
 	const commitLabels = [
@@ -321,7 +326,7 @@ const MyProfile = () => {
 		<StyledBox>
 			<StyledCommitBox>
 				<StyledActivityButton
-					onClick={() => navigation('/profiles/1/commit-edit')}
+					onClick={() => navigation(`/profiles/${user?.githubId}/commit-edit`)}
 				>
 					<img src={images.profile.settingIcon} alt="설정" />
 				</StyledActivityButton>

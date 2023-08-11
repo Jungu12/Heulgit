@@ -2,6 +2,7 @@ import React from 'react';
 import { styled } from 'styled-components';
 import { images } from '@constants/images';
 import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
+import { UserType } from '@typedef/common.types';
 
 const StyledBox = styled.div`
 	margin-bottom: -70px;
@@ -73,9 +74,14 @@ const dummyPosts = [
 	},
 ];
 
-const MyFreeboard = () => {
+type MyProfileProps = {
+	user: UserType;
+};
+
+const MyFreeboard = ({ user }: MyProfileProps) => {
 	return (
 		<StyledBox>
+			${user?.githubId}
 			<FreeBoardFeedItemListMobile feedList={dummyPosts} />
 		</StyledBox>
 	);

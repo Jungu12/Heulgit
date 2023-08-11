@@ -1,3 +1,4 @@
+import { UserType } from '@typedef/common.types';
 import React from 'react';
 import { styled } from 'styled-components';
 // import { colors } from '@constants/colors';
@@ -103,9 +104,14 @@ const StyledBox = styled.div`
 // 	},
 // ];
 
-const MyEureka = () => {
+type MyProfileProps = {
+	user: UserType;
+};
+
+const MyEureka = ({ user }: MyProfileProps) => {
 	return (
 		<StyledBox>
+			${user?.githubId}
 			{/* <EurekaFeedItemListMobile feedList={dummyPosts} /> */}
 		</StyledBox>
 	);
