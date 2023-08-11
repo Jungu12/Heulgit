@@ -7,13 +7,20 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,8 +35,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.heulgit.domain.Heulgit;
+// import morningrolecall.heulgit.heulgit.domain.HeulgitSpecification;
+import morningrolecall.heulgit.heulgit.domain.HeulgitComment;
+import morningrolecall.heulgit.heulgit.domain.HeulgitSpecification;
+import morningrolecall.heulgit.heulgit.domain.dto.HeulgitDetailResponse;
 import morningrolecall.heulgit.heulgit.repository.HeulgitCommentRepository;
 import morningrolecall.heulgit.heulgit.repository.HeulgitRepository;
+import morningrolecall.heulgit.user.domain.User;
+import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -40,12 +53,18 @@ public class HeulgitService {
 	private final RestTemplate restTemplate;
 	private final HeulgitRepository heulgitRepository;
 	private final HeulgitCommentRepository heulgitCommentRepository;
+	private final UserRepository userRepository;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	/**
 	 * 흘깃 목록 조회
 	 * 1. 어떻게 할까요...?
 	 * 2. 정렬 후 페이지네이션 반환
 	 */
+	public Slice<HeulgitDetailResponse> findHeulgits(int pages){
+		System.out.println("findHeulgits");
+		Slice<Heulgit> heulgits = heulgitRepository.findSliceBy(PageRequest.of(pages - 1, 20));
+		return new SliceImpl<>(toResponse(heulgits),heulgits.getPageable(), heulgits.hasNext());
+	}
 
 
 
@@ -58,29 +77,24 @@ public class HeulgitService {
 	 * 5.들을 정렬하여 페이지네이션 반환
 	 */
 
-	// public Page<Heulgit> searchHeulgits(boolean hasLikes, boolean hasStars, String language,
-	// 	ZonedDateTime startDate, ZonedDateTime endDate,
-	// 	Pageable pageable) {
-	// 	Specification<Heulgit> spec = Specification.where(null);
-	//
-	// 	if (hasLikes) {
-	// 		spec = spec.and(HeulgitSpecification.hasLikes(true));
-	// 	}
-	//
-	// 	if (hasStars) {
-	// 		spec = spec.and(HeulgitSpecification.hasStars(true));
-	// 	}
-	//
-	// 	if (language != null) {
-	// 		spec = spec.and(HeulgitSpecification.hasLanguage(language));
-	// 	}
-	//
-	// 	if (startDate != null && endDate != null) {
-	// 		spec = spec.and(HeulgitSpecification.isUpdatedDateBetween(startDate, endDate));
-	// 	}
-	//
-	// 	return heulgitRepository.findAll(spec, pageable);
-	// }
+	public Page<Heulgit> searchHeulgits(String sort, String language,
+		LocalDateTime startDate, LocalDateTime endDate,
+		Pageable pageable) {
+		Specification<Heulgit> spec = Specification.where(null);
+
+		if(sort != null){
+			spec = spec.and(HeulgitSpecification.hasSort(sort));
+		}
+		if (language != null) {
+			spec = spec.and(HeulgitSpecification.hasLanguage(language));
+		}
+
+		if (startDate != null && endDate != null) {
+			spec = spec.and(HeulgitSpecification.isUpdatedDateBetween(startDate, endDate));
+		}
+
+		return heulgitRepository.findAll(spec, pageable);
+	}
 
 
 
@@ -91,6 +105,34 @@ public class HeulgitService {
 	 * 3. 댓글 조회
 	 * 4. 저장 및 반환
 	 */
+	public HeulgitDetailResponse findHeulgit(Long heulgitId){
+		Heulgit heulgit = heulgitRepository.findHeulgitAndHeulgitCommentsByHeulgitId(heulgitId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+
+		heulgit.increaseView();
+
+		List<HeulgitComment> heulgitComments = heulgitCommentRepository.findHeulgitCommentsByHeulgitOrderByUpdatedDateDesc(heulgit);
+		heulgit.setHeulgitComments(heulgitComments);
+		heulgitRepository.save(heulgit);
+
+		boolean isRegistered = userRepository.existsById(heulgit.getGithubId());
+
+		return HeulgitDetailResponse.builder()
+			.heulgitId(heulgit.getHeulgitId())
+			.githubId(heulgit.getGithubId())
+			.avatarUrl(heulgit.getAvatarUrl())
+			.heulgitName(heulgit.getHeulgitName())
+			.content(heulgit.getContent())
+			.star(heulgit.getStar())
+			.updatedDate(heulgit.getUpdatedDate())
+			.language(heulgit.getLanguage())
+			.view(heulgit.getView())
+			.isRegistered(isRegistered)
+			.likedUsers(heulgit.getLikedUsers())
+			.heulgitComments(heulgit.getHeulgitComments())
+			.build();
+
+	}
 
 	/**
 	 * 전제 흘깃 게시물 수 반환
@@ -106,6 +148,23 @@ public class HeulgitService {
 	 * 2. 좋아요 여부 확인
 	 * 3. 좋아요 후, 저장
 	 */
+	public void likeHeulgit(String githubId, Long heulgitId) {
+		Heulgit heulgit = heulgitRepository.findHeulgitByHeulgitId(heulgitId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(()-> new NoResultException("해당 사용자를 찾을 수 없습니다."));
+
+		if(heulgit.getLikedUsers().contains(user)){
+			System.out.println("이미 좋아요를 눌렀음");
+			return;
+		}
+		heulgit.addLikeUser(user);
+
+		heulgitRepository.save(heulgit);
+
+	}
+
 
 	/**
 	 * 게시물 좋아요 취소
@@ -113,11 +172,37 @@ public class HeulgitService {
 	 * 2. 좋아요 여부 확인
 	 * 3. 좋아요 취소 후, 저장
 	 * */
+	public void unlikeHeulgit(String githubId, Long heulgitId){
+		Heulgit heulgit = heulgitRepository.findHeulgitByHeulgitId(heulgitId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(()-> new NoResultException("해당 사용자를 찾을 수 없습니다."));
+
+		if(!heulgit.getLikedUsers().contains(user)){
+			System.out.println("좋아요를 누르지 않았음");
+			return;
+		}
+
+		heulgit.removeLikeUser(user);
+
+		heulgitRepository.save(heulgit);
+
+
+	}
+	/**
+	 * 게시물을 제목으로 검색
+	 * 1. 정렬 조건 확인
+	 * 2. 정렬 후 페이지네이션 반환
+	 * */
+
+
+
 
 	/**
 	 * 게시물을 작성자 github ID로 검색
 	 * 1. 정렬 조건 확인
-	 * 2. 정렬 후 페이지네이션 밚솬
+	 * 2. 정렬 후 페이지네이션 반환
 	 */
 
 
@@ -130,6 +215,32 @@ public class HeulgitService {
 	/**
 	 * 단일 게시물의 좋아요 사용자 목록 반환
 	 * */
+
+
+	/**
+	 * Slice<Heulgit>를 List<HeulgitDetailResponse>로 변환
+	 * */
+	private List<HeulgitDetailResponse> toResponse(Slice<Heulgit> heulgits) {
+		return heulgits.getContent().stream().map(heulgit ->{
+			boolean isRegistered = userRepository.existsById(heulgit.getGithubId());
+
+			return HeulgitDetailResponse.builder()
+				.heulgitId(heulgit.getHeulgitId())
+				.githubId(heulgit.getGithubId())
+				.avatarUrl(heulgit.getAvatarUrl())
+				.heulgitName(heulgit.getHeulgitName())
+				.content(heulgit.getContent())
+				.star(heulgit.getStar())
+				.updatedDate(heulgit.getUpdatedDate())
+				.language(heulgit.getLanguage())
+				.view(heulgit.getView())
+				.isRegistered(isRegistered)
+				.likedUsers(heulgit.getLikedUsers())
+				.heulgitComments(heulgit.getHeulgitComments())
+				.build();
+		}).collect(Collectors.toList());
+
+	}
 	// public void fetchAndSaveTopRepositories() {
 	// 	int itemsPerPage = 100;
 	// 	int totalItemsToFetch = 10;
