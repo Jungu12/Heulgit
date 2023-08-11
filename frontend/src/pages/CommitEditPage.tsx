@@ -5,20 +5,20 @@ import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import CommitTag from '@components/profile/Commit';
 import { colors } from '@constants/colors';
-import { UserCommitCustomType } from '@typedef/profile/user.types';
-import { useHref } from 'react-router';
+import { authHttp } from '@utils/http';
+import { UserCommitCustomData } from '@typedef/profile/user.types';
 
 // 더미
-const dummyData = [
-	{ id: 1, type: '# feat', description: '새로운 기능 개발' },
-	{ id: 2, type: '# fix', description: '버그 수정' },
-	{ id: 3, type: '# docs', description: '문서 작업' },
-	{ id: 4, type: '# style', description: '코드 스타일링' },
-	{ id: 5, type: '# refactor', description: '코드 리팩토링' },
-	{ id: 6, type: '# test', description: '테스트 코드 작성' },
+const basicData = [
+	{ type: 'feat', description: '새로운 기능 개발' },
+	{ type: 'fix', description: '버그 수정' },
+	{ type: 'docs', description: '문서 작업' },
+	{ type: 'style', description: '코드 스타일링' },
+	{ type: 'refactor', description: '코드 리팩토링' },
+	{ type: 'test', description: '테스트 코드 작성' },
 	{
 		id: 7,
-		type: '# chore',
+		type: 'chore',
 		description: '필드 스크립트, 패키지 매니저 등 설정 파일 수정 ',
 	},
 ];
@@ -219,7 +219,9 @@ const StyledModalButtonItem = styled.div`
 `;
 
 const CommitEditPage = () => {
-	const [commitTags, setCommitTags] = useState(dummyData);
+	// const navigation = useNavigate();
+
+	const [commitTags, setCommitTags] = useState(basicData);
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [newCommit, setNewCommit] = useState({ type: '', description: '' });
@@ -233,9 +235,9 @@ const CommitEditPage = () => {
 		commitTags.some((tag) => tag.type === newCommit.type);
 
 	// CommitTag 삭제
-	const handleDeleteCommitTag = (idToDelete: number) => {
+	const handleDeleteCommitTag = (idToDelete: string) => {
 		setCommitTags((prevTags) =>
-			prevTags.filter((tag) => tag.id !== idToDelete),
+			prevTags.filter((tag) => tag.type !== idToDelete),
 		);
 	};
 
@@ -254,12 +256,23 @@ const CommitEditPage = () => {
 		if (newCommit.type && newCommit.description) {
 			setCommitTags((prevTags) => [
 				...prevTags,
-				{ ...newCommit, type: `# ${newCommit.type}`, id: Date.now() },
+				{ ...newCommit, type: `${newCommit.type}`, id: Date.now() },
 			]);
 			setNewCommit({ type: '', description: '' });
 			setIsModalOpen(false);
 			setErrorMessage('');
 		}
+	};
+
+	// 커밋 메시지 저장
+	const handleSaveButtonClick = () => {
+		console.log(commitTags);
+		authHttp
+			.post('users/commit-custom', commitTags) // API 요청
+			.then(() => console.log(commitTags))
+			.catch((error) => {
+				console.error('커밋 메시지 저장에 실패했습니다.', error);
+			});
 	};
 
 	// 화면 사이즈별 타이틀 변환
@@ -273,6 +286,19 @@ const CommitEditPage = () => {
 		};
 	}, []);
 
+	// 커밋 메시지 불러오기
+	useEffect(() => {
+		authHttp
+			.get<UserCommitCustomData[]>('/users/commit-type') // API 요청
+			.then((response) => {
+				setCommitTags(response); // 받아온 데이터를 commitTags 상태에 설정
+				console.log('커밋 메시지를 불러왔습니다.', response);
+			})
+			.catch((error) => {
+				console.error('커밋 메시지를 불러오지 못했습니다.', error);
+			});
+	}, []);
+
 	return (
 		<StyledBox>
 			<StyledSideL>
@@ -283,11 +309,15 @@ const CommitEditPage = () => {
 				<StyledEditType>
 					{windowWidth <= 768 ? (
 						<Header title={'커밋 메시지 설정'}>
-							<StyledSaveButton>저장</StyledSaveButton>
+							<StyledSaveButton onClick={handleSaveButtonClick}>
+								저장
+							</StyledSaveButton>
 						</Header>
 					) : (
 						<BigHeader title={'커밋 메시지 설정'}>
-							<StyledSaveButton>저장</StyledSaveButton>
+							<StyledSaveButton onClick={handleSaveButtonClick}>
+								저장
+							</StyledSaveButton>
 						</BigHeader>
 					)}
 				</StyledEditType>
@@ -296,10 +326,10 @@ const CommitEditPage = () => {
 					{/* CommitTag 목록을 매핑하여 렌더링 */}
 					{commitTags.map((tag) => (
 						<CommitTag
-							key={tag.id}
+							key={tag.type}
 							type={tag.type}
 							description={tag.description}
-							onClickDeleteButton={() => handleDeleteCommitTag(tag.id)}
+							onClickDeleteButton={() => handleDeleteCommitTag(tag.type)}
 						/>
 					))}
 				</CommitPageMiddle>
@@ -338,7 +368,7 @@ const CommitEditPage = () => {
 
 								// 타이틀 중복 검사
 								const isDuplicate = commitTags.some(
-									(tag) => tag.type === `# ${newtype}`,
+									(tag) => tag.type === `${newtype}`,
 								);
 								if (isDuplicate) {
 									setErrorMessage('중복되는 커밋 타입이 있습니다.');

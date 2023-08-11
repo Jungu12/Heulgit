@@ -18,6 +18,13 @@ export type UserCommitCustomType = {
 	];
 };
 
+// POST 사용자 커밋 맵 커스텀 받아오기
+export type UserCommitCustomData = {
+	githubId: string;
+	type: string;
+	description: string;
+};
+
 // 랭킹
 export type UserRankingType = {
 	github_id: string;
