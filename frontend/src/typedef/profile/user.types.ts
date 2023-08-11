@@ -10,7 +10,12 @@ export type UserCommitType = {
 
 // POST 사용자 커밋 맵 커스텀
 export type UserCommitCustomType = {
-	map: [{ string: string }];
+	map: [
+		{
+			type: string;
+			description: string;
+		},
+	];
 };
 
 // 랭킹
@@ -50,8 +55,3 @@ export type UserCommentType = {
 		},
 	];
 };
-
-// 유저 정보
-// export type UserType = {
-
-// }
