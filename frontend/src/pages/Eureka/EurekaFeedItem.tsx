@@ -10,6 +10,7 @@ import { getTimeAgo } from '@utils/date';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
+import ImageSlider from '@components/Home/ImageSlider';
 
 const StyledFeedItemContainer = styled.div`
 	display: flex;
@@ -120,17 +121,30 @@ const StyledSubDataContainer = styled.div`
 	}
 `;
 
+const StyledImageSliderContainer = styled.div`
+	margin: 24px 0px 12px 0px;
+	padding: 0 12px;
+
+	img {
+		display: flex;
+		max-width: 100%;
+		margin: 0 auto;
+	}
+`;
+
 type Props = {
 	feed: EurekaPostType;
+	onClickComment: (id: number) => void;
 };
 
-const EurekaFeedItem = ({ feed }: Props) => {
+const EurekaFeedItem = ({ feed, onClickComment }: Props) => {
 	const navigation = useNavigate();
 	const githubId = useSelector((state: RootState) => state.user.user?.githubId);
 
 	// 좋아요 이미지 변환
 	const [liked, setLiked] = useState(false);
 	const [likeNum, setLikeNum] = useState(feed.likedUsers.length);
+	const imgUrl = feed.eurekaImages;
 
 	// 좋아요 클릭시 변환 이벤트
 	const handleLikeClick = () => {
@@ -151,11 +165,6 @@ const EurekaFeedItem = ({ feed }: Props) => {
 		}
 	};
 
-	// 댓글 모달 나오게 할 거
-	const onClickComment = useCallback(() => {
-		console.log('댓글 클릭');
-	}, []);
-
 	// 좋아요 누른 유저 목록 페이지로 이동
 	const onClickLike = useCallback(() => {
 		navigation(`${1}/like`);
@@ -164,12 +173,16 @@ const EurekaFeedItem = ({ feed }: Props) => {
 	// 유레카 피드 상세보기 페이지로 이동
 	const onClickFeedItem = useCallback(() => {
 		navigation(`${feed.eurekaId}`);
-	}, []);
+	}, [feed]);
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
 	const onClickUserProfile = useCallback(() => {
 		navigation(`/profiles/${1}`);
 	}, []);
+
+	useEffect(() => {
+		console.log(feed);
+	}, [feed]);
 
 	useEffect(() => {
 		const found = feed.likedUsers.find((user) => user.githubId === githubId);
@@ -178,6 +191,7 @@ const EurekaFeedItem = ({ feed }: Props) => {
 		} else {
 			setLiked(false);
 		}
+		setLikeNum(feed.likedUsers.length);
 	}, [feed]);
 
 	return (
@@ -194,11 +208,12 @@ const EurekaFeedItem = ({ feed }: Props) => {
 			<StyledFeedContentContainer onClick={onClickFeedItem}>
 				<StyledTitleContainer>{feed.title}</StyledTitleContainer>
 				<StyledContentContainer>{feed.content}</StyledContentContainer>
-				{/* {imageSrc && (
-					<StyledImgContainer>
-						<StyledImg src={imageSrc} />
-					</StyledImgContainer>
-				)} */}
+
+				{imgUrl && (
+					<StyledImageSliderContainer>
+						<ImageSlider images={imgUrl.map((url) => url.fileUri)} />
+					</StyledImageSliderContainer>
+				)}
 			</StyledFeedContentContainer>
 			{/* 버튼 */}
 			<StyledButtonContainer>
@@ -217,7 +232,7 @@ const EurekaFeedItem = ({ feed }: Props) => {
 			<StyledSubDataContainer>
 				<div onClick={onClickLike}>{`좋아요 ${likeNum}개 · `}</div>
 				<div
-					onClick={onClickComment}
+					onClick={() => onClickComment(feed.eurekaId)}
 				>{`댓글 ${feed.eurekaComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>

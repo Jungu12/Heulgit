@@ -33,7 +33,7 @@ const EurekaFeedItemListTabletPC = ({ feedList }: Props) => {
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
 				<div key={index}>
-					<EurekaFeedItem feed={feed} />
+					<EurekaFeedItem feed={feed} onClickComment={() => {}} />
 					<Separation />
 				</div>
 			))}
