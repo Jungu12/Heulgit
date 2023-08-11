@@ -1,6 +1,8 @@
 package morningrolecall.heulgit.freeboard.domain;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -88,7 +90,10 @@ public class FreeBoard {
 	}
 
 	public void setUpdatedDate(LocalDateTime updatedDate) {
-		this.updatedDate = updatedDate;
+		LocalDateTime utcTime = updatedDate;
+		ZonedDateTime seoulTime = utcTime.atZone(ZoneId.of("Asia/Seoul"));
+		LocalDateTime seoulLocalDateTime = seoulTime.toLocalDateTime();
+		this.updatedDate = seoulLocalDateTime;
 	}
 
 	public void increaseView() {
