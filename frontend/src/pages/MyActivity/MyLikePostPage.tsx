@@ -304,7 +304,7 @@ const MyLikePostPage = () => {
 					)}
 					{selectedPost === '자유' && (
 						<div>
-							<FreeBoardFeedItemListMobile feedList={dummyFreePosts} />
+							{/* <FreeBoardFeedItemListMobile feedList={dummyFreePosts} /> */}
 						</div>
 					)}
 				</p>
