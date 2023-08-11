@@ -15,6 +15,8 @@ import { getEurekaFeedList } from '@utils/api/eureka/eurekaApi';
 import TabletNavigation from '@components/common/TabletNavigation';
 import Sidebar from '@components/common/Sidebar';
 import CommunitySideBarContent from './CommunitySideBarContent';
+import { getFreeBoardFeedList } from '@utils/api/freeBoard/freeBoardApi';
+import { FreeBoardPostType } from '@typedef/community/freeboard.types';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -131,6 +133,10 @@ const CommunityPage = () => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [page, setPage] = useState(1);
 	const [feedList, setFeedList] = useState<EurekaPostType[]>([]);
+	const [freeBoardFeedList, setfreeBoardFeedList] = useState<
+		FreeBoardPostType[]
+	>([]);
+
 	const [seletedCommunityTitle, setSeletedCommunityTitle] = useState('유레카');
 	const [seletedSort, setSeletedSort] = useState('전체 보기');
 	const [eurekaHasMore, setEurekaHasMore] = useState(true);
@@ -187,10 +193,18 @@ const CommunityPage = () => {
 	}, []);
 
 	useEffect(() => {
-		getEurekaFeedList(seletedSort, page).then((res) => {
-			setFeedList(res);
-		});
-	}, [seletedCommunityTitle]);
+		if (seletedCommunityTitle === '유레카') {
+			getEurekaFeedList(seletedSort, page).then((res) => {
+				setFeedList(res);
+			});
+		} else if (seletedCommunityTitle === '자유게시판') {
+			getFreeBoardFeedList(seletedSort, page).then((res) => {
+				console.log(res);
+
+				setfreeBoardFeedList(res);
+			});
+		}
+	}, [seletedCommunityTitle, seletedSort, page]);
 
 	useEffect(() => {
 		console.log('[현재 페이지]', page);
@@ -216,7 +230,14 @@ const CommunityPage = () => {
 					/>
 					<FilterCategory button={seletedSort} setButton={setSeletedSort} />
 					<StyledFeedContainerMobile>
-						<Outlet context={{ feedList, eurekaHasMore, eurekaNextPageLoad }} />
+						<Outlet
+							context={{
+								feedList,
+								freeBoardFeedList,
+								eurekaHasMore,
+								eurekaNextPageLoad,
+							}}
+						/>
 					</StyledFeedContainerMobile>
 					<StyledCreateButtonMobile
 						onClick={() =>

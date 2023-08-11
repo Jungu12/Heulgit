@@ -53,7 +53,7 @@ public class Heulgit {
 	private Integer star;
 
 	@Column(name = "updated_date", nullable = false)
-	private ZonedDateTime updatedDate;
+	private LocalDateTime updatedDate;
 
 	@Column(name = "language")
 	private String language;
@@ -89,11 +89,16 @@ public class Heulgit {
 		this.heulgitComments.add(comment);
 	}
 	public void removeComment(HeulgitComment comment){
+
 		this.heulgitComments.remove(comment);
 	}
 
 	public void addLikeUser(User user){
 		this.likedUsers.add(user);
+	}
+
+	public void removeLikeUser(User user) {
+		this.likedUsers.remove(user);
 	}
 
 

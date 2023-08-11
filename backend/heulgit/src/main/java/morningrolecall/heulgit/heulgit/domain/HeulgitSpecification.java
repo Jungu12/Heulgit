@@ -1,29 +1,32 @@
-// package morningrolecall.heulgit.heulgit.domain;
-//
-// import org.springframework.data.jpa.domain.Specification;
-//
-// import lombok.RequiredArgsConstructor;
-//
-// @RequiredArgsConstructor
-// public class HeulgitSpecification {
-// 	public static Specification<Heulgit> hasLikes(boolean hasLikes){
-// 		return (root, query, criteriaBuilder) -> hasLikes ?
-// 			criteriaBuilder.gt(root.get("likes"), 0) :
-// 			criteriaBuilder.conjunction();
-// 	}
-//
-// 	public static Specification<Heulgit> hasStars(boolean hasStars) {
-// 		return (root, query, criteriaBuilder) -> hasStars ?
-// 			criteriaBuilder.gt(root.get("stars"), 0) :
-// 			criteriaBuilder.conjunction();
-// 	}
-//
-// 	public static Specification<Heulgit> hasLanguage(String language) {
-// 		return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("language"), language);
-// 	}
-//
-// 	public static Specification<Heulgit> isUpdatedDateBetween(ZonedDateTime startDate, ZonedDateTime endDate) {
-// 		return (root, query, criteriaBuilder) ->
-// 			criteriaBuilder.between(root.get("updatedDate"), startDate, endDate);
-// 	}
-// }
+package morningrolecall.heulgit.heulgit.domain;
+
+import java.time.LocalDateTime;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class HeulgitSpecification {
+	public static Specification<Heulgit> hasSort(String hasSorts){
+		return (root, query, criteriaBuilder) -> {
+			if ("likes".equals(hasSorts)) {
+				return criteriaBuilder.gt(root.get("like"), 0);
+			} else if ("stars".equals(hasSorts)) {
+				return criteriaBuilder.gt(root.get("star"), 0);
+			} else {
+				return criteriaBuilder.conjunction();
+			}
+		};
+
+	}
+
+	public static Specification<Heulgit> hasLanguage(String language) {
+		return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("language"), language);
+	}
+
+	public static Specification<Heulgit> isUpdatedDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
+		return (root, query, criteriaBuilder) ->
+			criteriaBuilder.between(root.get("updatedDate"), startDate, endDate);
+	}
+}

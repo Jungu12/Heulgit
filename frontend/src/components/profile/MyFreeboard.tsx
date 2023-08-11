@@ -76,7 +76,7 @@ const dummyPosts = [
 const MyFreeboard = () => {
 	return (
 		<StyledBox>
-			<FreeBoardFeedItemListMobile feedList={dummyPosts} />
+			{/* <FreeBoardFeedItemListMobile feedList={dummyPosts} /> */}
 		</StyledBox>
 	);
 };
