@@ -1,8 +1,8 @@
-import React from 'react';
-import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import { EurekaCommentType } from '@typedef/community/eureka.types';
-// import Comment from '@components/Home/Comment';
+import React from 'react';
+import { styled } from 'styled-components';
+import EurekaComment from './EurekaComment';
 
 const StyledCommentListContainer = styled.div`
 	display: flex;
@@ -16,16 +16,17 @@ const Separation = styled.div`
 	margin-top: 20px;
 `;
 
-type EurekaProps = {
-	eurekaComments: EurekaCommentType[];
+type Props = {
+	commentList: EurekaCommentType[];
+	onClickDelete: (commentId: number) => void;
 };
 
-const PostViewComment = ({ eurekaComments }: EurekaProps) => {
+const EurekaCommentList = ({ commentList, onClickDelete }: Props) => {
 	return (
 		<StyledCommentListContainer>
-			{eurekaComments.map((comment) => (
+			{commentList.map((comment) => (
 				<div key={comment.commentId}>
-					{/* <Comment comment={comment} /> */}
+					<EurekaComment comment={comment} onClickDelete={onClickDelete} />
 					<Separation />
 				</div>
 			))}
@@ -33,4 +34,4 @@ const PostViewComment = ({ eurekaComments }: EurekaProps) => {
 	);
 };
 
-export default PostViewComment;
+export default EurekaCommentList;

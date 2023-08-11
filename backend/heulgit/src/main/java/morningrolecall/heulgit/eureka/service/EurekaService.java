@@ -1,6 +1,7 @@
 package morningrolecall.heulgit.eureka.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -144,7 +145,7 @@ public class EurekaService {
 			.user(user)
 			.title(eurekaRequest.getTitle())
 			.content(eurekaRequest.getContent())
-			.updatedDate(LocalDateTime.now())
+			.updatedDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
 			.link(eurekaRequest.getLink())
 			.build();
 
@@ -188,7 +189,7 @@ public class EurekaService {
 
 		eureka.setTitle(eurekaUpdateRequest.getTitle());
 		eureka.setContent(eurekaUpdateRequest.getContent());
-		eureka.setUpdatedDate(LocalDateTime.now());
+		eureka.setUpdatedDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
 		// Link가 변경되었다면, 이슈(풀리퀘스트) 정보 갱신
 		// 기존의 EurekaGithubInfo, EurekaLabel을 변경해야 함
