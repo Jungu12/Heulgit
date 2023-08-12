@@ -8,6 +8,7 @@ import EurekaFeedItem from './EurekaFeedItem';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
+	max-width: 640px;
 	scrollbar-width: none; /* 파이어폭스 */
 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
 	&::-webkit-scrollbar {
@@ -32,7 +33,7 @@ const EurekaFeedItemListTabletPC = ({ feedList }: Props) => {
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
 				<div key={index}>
-					<EurekaFeedItem feed={feed} />
+					<EurekaFeedItem feed={feed} onClickComment={() => {}} />
 					<Separation />
 				</div>
 			))}

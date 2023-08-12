@@ -136,9 +136,9 @@ public class FreeBoardService {
 	 * 4. 기존 이미지 파일은 모두 제거, 새로운 이미지 파일 저장
 	 * */
 	@Transactional
-	public void updateFreeBoard(String githubId, FreeBoardUpdateRequest freeBoardUpdateRequest,
+	public void updateFreeBoard(Long freeBoardId, String githubId, FreeBoardUpdateRequest freeBoardUpdateRequest,
 		List<MultipartFile> multipartFiles) {
-		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardUpdateRequest.getFreeBoardId())
+		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
 			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND));
 
 		if (!githubId.equals(freeBoard.getUser().getGithubId())) {

@@ -48,6 +48,7 @@ const StyledDetail = styled.div`
 `;
 
 const StyledDeleteButton = styled.button`
+	cursor: pointer;
 	color: ${colors.primary.primatyDark};
 	background-color: transparent;
 	width: 30px;

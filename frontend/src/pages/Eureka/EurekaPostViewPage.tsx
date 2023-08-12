@@ -2,116 +2,48 @@
 
 import Header from '@components/common/Header';
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
-import CommentInput from '@pages/community/CommentInput';
 import EurekaPostCommentList from '@components/community/EurekaPostCommentList';
-import { images } from '@constants/images';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Sidebar from '@components/common/Sidebar';
+import TabletNavigation from '@components/common/TabletNavigation';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+	EurekaCommentWriteType,
+	EurekaPostResponseType,
+} from '@typedef/community/eureka.types';
+import { authHttp } from '@utils/http';
+import { images } from '@constants/images';
+import { RootState } from '@store/index';
+import { useSelector } from 'react-redux';
 import EurekaPostViewFeedMobile from './EurekaPostViewFeedMobile';
-import EurekaPostViewFeedTabletPC from './EurekaPostViewFeedTabletPC';
-import CommunityMenuBarTablet from '@pages/community/CommunityMenuBarTablet';
+import CommentInput from '@pages/community/CommentInput';
+import CommunitySideBarContent from '@pages/community/CommunitySideBarContent';
 import CommunityMenuBarPC from '@pages/community/CommunityMenuBarPC';
-import CommunityFilterTablet from '@pages/community/CommunityFilterTablet';
 import CommunityFilterPC from '@pages/community/CommunityFilterPC';
+import ReactModal from 'react-modal';
+import { colors } from '@constants/colors';
 
-// 더미 상세 게시물
-const dummyPost = {
-	id: 1,
-	title: '유레카유레카유레카유레카유레카유레카유레카유레카유레카유레카',
-	link: 'https://documenter.getpostman.com/view/13967981/2s946h8Y2g#16996026-070b-4757-9300-8c54ee73ae1a',
-	user: {
-		id: 'jungu12',
-		avater_url: images.dummy.dummy1,
+const customStyles = {
+	overlay: {
+		backgroundColor: 'rgba(0, 0, 0, 0.3)', // 오버레이 배경색을 투명하게 설정
+		zIndex: '100',
 	},
-	images: [{ file_uri: images.dummy.dummy4 }],
-	updated_date: '2023-07-24',
-	content:
-		'석류랑 민트 소스 들어가 있다길래 신기해서 먹어봤는데 별로더라...양패티 쓰면 민트소스 많이 쓰는건 아는데 석류는 첨 봤거든? 진짜 석류를 간 건지 씨도 막 씹히고 하는데 맛 자체는 잘 모르겠다... 기왕 먹을거면 민트 소스만 먹어 친구들',
-	likes: 30,
-	views: 20,
-	comments: 20,
+	content: {
+		top: 'auto',
+		left: '50%',
+		width: '100%',
+		right: 'auto',
+		bottom: '-40px',
+		marginRight: '-50%',
+		transform: 'translate(-50%, -50%)',
+		zIndex: '100',
+		display: 'flex',
+		border: 'none',
+		background: 'none',
+		padding: '0 12px',
+	},
 };
-
-// 더미 댓글
-const dummyComment = [
-	{
-		id: 123,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '첫 번째 댓글이지롱',
-		updated_date: '38분 전',
-		parent_id: 12,
-		order: 1,
-	},
-	{
-		id: 1235,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '어쩌라고',
-		updated_date: '38분 전',
-		parent_id: 12,
-		order: 1,
-	},
-	{
-		id: 1234,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '집에 보내줘~~!~!~!!!',
-		updated_date: '38분 전',
-		parent_id: 12,
-		order: 1,
-	},
-	{
-		id: 1234,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '으핰핰 오늘 지각했지롱',
-		updated_date: '38분 전',
-		parent_id: 12,
-		order: 1,
-	},
-	{
-		id: 12355,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '보통 오류가 아닙니다 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
-		updated_date: '38분 전',
-		parent_id: 12,
-		order: 1,
-	},
-	{
-		id: 12355,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '보통 오류가 아닙니다 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
-		updated_date: '38분 전',
-		parent_id: 12,
-		order: 1,
-	},
-	{
-		id: 12355,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '보통 오류가 아닙니다 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
-		updated_date: '38분 전',
-		parent_id: 12,
-		order: 1,
-	},
-];
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -134,7 +66,7 @@ const CommunityContainerMobile = styled.div`
 const StyledEurekaPostViewTablet = styled.div`
 	display: flex;
 
-	justify-content: space-between;
+	justify-content: center;
 `;
 
 // 커뮤니티 테블릿 버전
@@ -143,7 +75,8 @@ const CommunityContainerTablet = styled.div`
 	flex-direction: column;
 	/* align-items: center; */
 
-	width: 520px; /* 태블릿 최소 768 - 양 옆 메뉴바들 124*2 = 520px */
+	max-width: 640px;
+	margin-left: 125px;
 	height: 100vh;
 
 	overflow-y: scroll;
@@ -151,6 +84,19 @@ const CommunityContainerTablet = styled.div`
 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
 	&::-webkit-scrollbar {
 		display: none;
+	}
+`;
+
+const StyledFilterButton = styled.button`
+	position: fixed;
+	top: 32px;
+	right: 30px;
+	cursor: pointer;
+	background: none;
+
+	img {
+		width: 44px;
+		height: 44px;
 	}
 `;
 // 테블릿 끝
@@ -179,27 +125,245 @@ const CommunityContainerPC = styled.div`
 	}
 `;
 
+const StyledMenuItem = styled.div`
+	height: 60px;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+	font-weight: 400;
+	font-size: 18px;
+	cursor: pointer;
+`;
+
+const StyledMenuContainer = styled.div`
+	margin-top: auto;
+	/* padding: 12px 20px; */
+	width: 100%;
+	background-color: white;
+	border-radius: 16px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+`;
+
+const StyledUnderline = styled.div`
+	width: 100%;
+	border: 1px solid ${colors.greyScale.grey3};
+
+	/* margin-bottom: 12px; */
+`;
+
 const EurekaPostViewPage = () => {
+	const navigation = useNavigate();
+	const { id } = useParams();
+	const userId = useSelector((state: RootState) => state.user.user?.githubId);
+	const [feed, setFeed] = useState<EurekaPostResponseType>();
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	// 좋아요 버튼 state
+	const [liked, setLiked] = useState(false);
+	const [likeNum, setLikeNum] = useState(0);
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
+	const [input, setInput] = useState('');
+	const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
+	const [seletedComment, setseletedComment] = useState(-1);
+
+	// 좋아요 클릭시 변환 이벤트
+	const handleLikeClick = () => {
+		if (feed) {
+			if (liked) {
+				authHttp
+					.get(`eureka/posts/unlike/${feed.eurekaId}?userId=${userId}`)
+					.then(() => {
+						setLiked((prev) => !prev);
+						setLikeNum((prev) => prev - 1);
+					});
+			} else {
+				authHttp
+					.get(`eureka/posts/like/${feed.eurekaId}?userId=${userId}`)
+					.then(() => {
+						setLiked((prev) => !prev);
+						setLikeNum((prev) => prev + 1);
+					});
+			}
+		}
+	};
+
+	// 좋아요 누른 사람 목록 보기
+	const onClickLike = useCallback(() => {
+		navigation('like');
+	}, [navigation]);
+
+	const onClickUserProfile = useCallback(() => {
+		navigation(`/profiles/${1}`);
+	}, []);
+
+	const loadPost = useCallback(() => {
+		authHttp.get<EurekaPostResponseType>(`eureka/posts/${id}`).then((res) => {
+			setFeed(res);
+		});
+	}, []);
+
+	const onClickFilter = useCallback(() => {
+		setIsFilterOpen(true);
+	}, []);
+
+	const onClickClose = useCallback(() => {
+		setIsFilterOpen(false);
+	}, []);
+
+	const onClickMenu = useCallback(() => {
+		setIsMenuOpen(true);
+	}, []);
+
+	const onClickMenuClose = useCallback(() => {
+		setIsMenuOpen(false);
+	}, []);
+
+	const onClickEdit = useCallback(() => {
+		navigation(`/community/eureka/${id}/edit`);
+	}, []);
+
+	const onClickDelete = useCallback(() => {
+		if (confirm('정말 삭제하시겠습니까?')) {
+			authHttp.delete(`eureka/posts/${id}`).then(() => {
+				navigation('/community/eureka');
+			});
+		}
+	}, [id, authHttp]);
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setInput(e.target.value);
+	};
+
+	const onSubmitComment = useCallback(async () => {
+		if (input.trim() === '') return;
+
+		try {
+			await authHttp.post<EurekaCommentWriteType>('e-comments/comments', {
+				content: input,
+				eurekaId: feed?.eurekaId,
+				mentioedFollowers: [],
+				parentId: null,
+			});
+			setInput('');
+			loadPost();
+		} catch (err) {
+			console.error(err);
+		}
+	}, [authHttp, input, feed]);
+
+	const onClickCommentMenuOpen = useCallback((commentId: number) => {
+		console.log(commentId, '선택된 메뉴 오픈');
+
+		setIsCommentMenuOpen(true);
+		setseletedComment(commentId);
+	}, []);
+
+	const onClickCommentMenuClose = useCallback(
+		() => setIsCommentMenuOpen(false),
+		[],
+	);
+
+	const onClickCommentDelete = useCallback(() => {
+		console.log('삭제할 댓글 번호', seletedComment);
+
+		if (confirm('정말 삭제하시겠습니까?')) {
+			authHttp.delete(`e-comments/${seletedComment}`).then(() => {
+				alert('댓글이 삭제됬습니다.');
+				setIsCommentMenuOpen(false);
+				loadPost();
+			});
+		}
+	}, [authHttp, seletedComment]);
+
+	useEffect(() => {
+		loadPost();
+	}, []);
+
+	// 좋아요 한 목록에 내가 있나 확인
+	useEffect(() => {
+		if (feed) {
+			const found = feed.likedUsers.find((user) => user.githubId === userId);
+			if (found) {
+				setLiked(true);
+			} else {
+				setLiked(false);
+			}
+			setLikeNum(feed.likedUsers.length);
+		}
+	}, [feed]);
+
 	return (
 		<>
 			<Mobile>
 				<CommunityContainerMobile>
 					<Header title="상세 페이지"></Header>
-					<EurekaPostViewFeedMobile feed={dummyPost} />
-					<EurekaPostCommentList comments={dummyComment} />
-					<CommentInput />
+					<EurekaPostViewFeedMobile
+						feed={feed ?? null}
+						userId={userId!}
+						liked={liked}
+						likeNum={likeNum}
+						handleLikeClick={handleLikeClick}
+						onClickLike={onClickLike}
+						onClickUserProfile={onClickUserProfile}
+						isMenuOpen={isMenuOpen}
+						onClickMenu={onClickMenu}
+						onClickDelete={onClickDelete}
+						onClickMenuClose={onClickMenuClose}
+						onClickEdit={onClickEdit}
+					/>
+					<EurekaPostCommentList
+						comments={feed?.eurekaComments ?? []}
+						onClickCommentMenuOpen={onClickCommentMenuOpen}
+					/>
+					<CommentInput
+						input={input}
+						onSubmitComment={onSubmitComment}
+						handleInputChange={handleInputChange}
+					/>
+					<ReactModal
+						isOpen={isCommentMenuOpen}
+						onRequestClose={onClickCommentMenuClose}
+						style={customStyles}
+					>
+						<StyledMenuContainer>
+							<StyledMenuItem
+								style={{ color: 'red' }}
+								onClick={onClickCommentDelete}
+							>
+								삭제
+							</StyledMenuItem>
+							<StyledUnderline />
+							<StyledMenuItem onClick={onClickCommentMenuClose}>
+								닫기
+							</StyledMenuItem>
+						</StyledMenuContainer>
+					</ReactModal>
 				</CommunityContainerMobile>
 			</Mobile>
 
 			<Tablet>
 				<StyledEurekaPostViewTablet>
-					<CommunityMenuBarTablet />
+					<TabletNavigation />
 					<CommunityContainerTablet>
-						<EurekaPostViewFeedTabletPC feed={dummyPost} />
-						<EurekaPostCommentList comments={dummyComment} />
-						<CommentInput />
+						{/* <EurekaPostViewFeedTabletPC feed={dummyPost} />
+						<EurekaPostCommentList comments={dummyComment} /> */}
+						<CommentInput
+							input={input}
+							onSubmitComment={onSubmitComment}
+							handleInputChange={handleInputChange}
+						/>
 					</CommunityContainerTablet>
-					<CommunityFilterTablet />
+					{/* 우측 필터 버튼 */}
+					<StyledFilterButton onClick={onClickFilter}>
+						<img src={images.filter} alt="filter" />
+					</StyledFilterButton>
+					<Sidebar open={isFilterOpen}>
+						<CommunitySideBarContent onClickClose={onClickClose} />
+					</Sidebar>
 				</StyledEurekaPostViewTablet>
 			</Tablet>
 
@@ -207,9 +371,13 @@ const EurekaPostViewPage = () => {
 				<StyledEurekaPostViewPC>
 					<CommunityMenuBarPC />
 					<CommunityContainerPC>
-						<EurekaPostViewFeedTabletPC feed={dummyPost} />
-						<EurekaPostCommentList comments={dummyComment} />
-						<CommentInput />
+						{/* <EurekaPostViewFeedTabletPC feed={dummyPost} />
+						<EurekaPostCommentList comments={dummyComment} /> */}
+						<CommentInput
+							input={input}
+							onSubmitComment={onSubmitComment}
+							handleInputChange={handleInputChange}
+						/>
 					</CommunityContainerPC>
 					<CommunityFilterPC />
 				</StyledEurekaPostViewPC>

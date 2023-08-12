@@ -64,6 +64,8 @@ export const images = {
 	closePrimary: '/assets/images/ic-close-primary.png',
 	closeBlack: '/assets/images/ic-close-black.png',
 	filter: '/assets/images/ic-filter.png',
+	noUser: '/assets/images/ic-no-user.png',
+	send: '/assets/images/ic-send.png',
 	dummy: {
 		dummy1: '/assets/images/dummy1.png',
 		dummy2: '/assets/images/dummy2.png',

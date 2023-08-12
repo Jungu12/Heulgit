@@ -1,6 +1,7 @@
 package morningrolecall.heulgit.eureka.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -54,6 +57,8 @@ public class EurekaService {
 	private final GithubApiClient githubApiClient;
 	private final ImageService imageService;
 
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 	/**
 	 * 유레카 목록 조회
 	 * 1. 정렬 조건 확인
@@ -79,6 +84,9 @@ public class EurekaService {
 
 		Slice<Eureka> eurekas = eurekaRepository.findSliceBy(
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		logger.debug("{}");
+
+
 		return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 	}
 
@@ -137,7 +145,7 @@ public class EurekaService {
 			.user(user)
 			.title(eurekaRequest.getTitle())
 			.content(eurekaRequest.getContent())
-			.updatedDate(LocalDateTime.now())
+			.updatedDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
 			.link(eurekaRequest.getLink())
 			.build();
 
@@ -169,8 +177,8 @@ public class EurekaService {
 	 * 4. 기존 이미지 파일은 모두 제거, 새로운 이미지 파일 저장
 	 * */
 	@Transactional
-	public void updateEureka(String githubId, EurekaUpdateRequest eurekaUpdateRequest,List<MultipartFile> multipartFiles) {
-		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaUpdateRequest.getEurekaId())
+	public void updateEureka(Long eurekaId,String githubId, EurekaUpdateRequest eurekaUpdateRequest,List<MultipartFile> multipartFiles) {
+		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
 			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
 
 		if (!githubId.equals(eureka.getUser().getGithubId())) {
@@ -181,7 +189,7 @@ public class EurekaService {
 
 		eureka.setTitle(eurekaUpdateRequest.getTitle());
 		eureka.setContent(eurekaUpdateRequest.getContent());
-		eureka.setUpdatedDate(LocalDateTime.now());
+		eureka.setUpdatedDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
 		// Link가 변경되었다면, 이슈(풀리퀘스트) 정보 갱신
 		// 기존의 EurekaGithubInfo, EurekaLabel을 변경해야 함

@@ -205,6 +205,10 @@ const StyledDropDown = styled.ul`
 		visibility: visible;
 		transform: translateY(0);
 	}
+
+	li {
+		cursor: pointer;
+	}
 `;
 
 const StyledCalendarContainer = styled.div`
@@ -363,7 +367,6 @@ const MainPageMobile = ({
 				isOpen={isLanguageOpen}
 				style={customStyles}
 				overlayClassName="custom-overlay"
-				// className="modal"
 			>
 				<LanguageSearchModal onClickLanguage={onClickLanguage} />
 			</ReactModal>
@@ -384,6 +387,15 @@ const MainPageMobile = ({
 			<CBottomSheet
 				open={isCommentOpen}
 				onDismiss={() => setIsCommentOpen(false)}
+				onHandleComment={function (
+					e: React.ChangeEvent<HTMLInputElement>,
+				): void {
+					console.log(e.target.value);
+				}}
+				input={''}
+				onClickSubbmit={function (): Promise<void> {
+					throw new Error('Function not implemented.');
+				}}
 			>
 				<CommentListBottomSheet postId={selelctedComment} />
 			</CBottomSheet>

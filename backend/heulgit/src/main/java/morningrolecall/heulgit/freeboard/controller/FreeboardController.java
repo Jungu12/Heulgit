@@ -1,9 +1,11 @@
 package morningrolecall.heulgit.freeboard.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,29 +47,41 @@ public class FreeboardController {
 		return ResponseEntity.ok().body(freeBoardService.findFreeBoard(freeboardId));
 	}
 
-	@PostMapping("/posts")
-	public ResponseEntity<?> freeBoardRegister(@AuthenticationPrincipal String githubId,@RequestPart(value = "file") List<MultipartFile> multipartFiles, @RequestPart(value= "data") FreeBoardRequest freeBoardRequest
+	@PostMapping(value ="/posts",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> freeBoardRegister(@AuthenticationPrincipal String githubId
+		,@RequestPart(value = "file", required = false) List<MultipartFile> multipartFiles, @RequestPart(value= "data") FreeBoardRequest freeBoardRequest
 		 ) {
 		logger.debug("freeBoardRegister(), who = {}, title = {}, content = {}, imageId = {}", githubId,
 			freeBoardRequest.getTitle(),
 			freeBoardRequest.getContent());
+		if (multipartFiles != null) {
+			// multipartFiles가 null이 아닐 때의 처리
+			freeBoardService.addFreeBoard(githubId, freeBoardRequest, multipartFiles);
+		} else {
+			// multipartFiles가 null일 때의 처리
+			freeBoardService.addFreeBoard(githubId, freeBoardRequest, Collections.emptyList());
+		}
 
-		freeBoardService.addFreeBoard(githubId, freeBoardRequest, multipartFiles);
 
 
 		return ResponseEntity.ok().build();
 	}
 
-	@PutMapping("/posts/update")
-	public ResponseEntity<?> freeBoardUpdate(@AuthenticationPrincipal String userId,
-		@RequestPart(value = "file") List<MultipartFile> multipartFiles, @RequestPart(value= "data") FreeBoardUpdateRequest freeBoardUpdateRequest) {
+	@PostMapping(value = "/posts/update/{freeBoardId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> freeBoardUpdate(@AuthenticationPrincipal String userId, @PathVariable Long freeBoardId,
+		@RequestPart(value = "file", required = false) List<MultipartFile> multipartFiles, @RequestPart(value= "data") FreeBoardUpdateRequest freeBoardUpdateRequest) {
 		logger.debug("freeBoardUpdate(), who = {}, freeBoardId = {}, title = {}, content = {}, imageId = {}",
-			userId, freeBoardUpdateRequest.getFreeBoardId(),
+			userId, freeBoardId,
 			freeBoardUpdateRequest.getTitle(),
 			freeBoardUpdateRequest.getContent());
 
-		freeBoardService.updateFreeBoard(userId, freeBoardUpdateRequest,multipartFiles);
-
+		if (multipartFiles != null) {
+			// multipartFiles가 null이 아닐 때의 처리
+			freeBoardService.updateFreeBoard(freeBoardId,userId, freeBoardUpdateRequest, multipartFiles);
+		} else {
+			// multipartFiles가 null일 때의 처리
+			freeBoardService.updateFreeBoard(freeBoardId,userId, freeBoardUpdateRequest, Collections.emptyList());
+		}
 		return ResponseEntity.ok().build();
 	}
 

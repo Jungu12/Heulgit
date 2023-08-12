@@ -1,6 +1,7 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
+// import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
 import React from 'react';
 import { styled } from 'styled-components';
 
@@ -90,15 +91,15 @@ const FreePostComment = ({ comment }: Props) => {
 	return (
 		<StyledComment>
 			<StyledProfileContainer>
-				<StyledProfile src={comment.user.avater_url} alt="profile" />
+				<StyledProfile src={comment.user.avatarUrl} alt="profile" />
 				<StyledContentBox>
-					<StyledUserName>{comment.user.id}</StyledUserName>
+					<StyledUserName>{comment.user.githubId}</StyledUserName>
 					<StyledContent>{comment.content}</StyledContent>
 					<StyledReply>답글 달기</StyledReply>
 				</StyledContentBox>
 			</StyledProfileContainer>
 			<StyledOptionContainer>
-				<StyledTime> {comment.updated_date}</StyledTime>
+				<StyledTime> {comment.updatedDate}</StyledTime>
 				<img src={images.menu} alt="option" />
 			</StyledOptionContainer>
 		</StyledComment>

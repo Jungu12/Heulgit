@@ -1,6 +1,8 @@
 package morningrolecall.heulgit.eureka.domain;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,7 +62,10 @@ public class EurekaGithubInfo {
 	}
 
 	public void updateUpdatedDate(LocalDateTime updatedDate) {
-		this.updatedDate = updatedDate;
+		LocalDateTime utcTime = updatedDate;
+		ZonedDateTime seoulTime = utcTime.atZone(ZoneId.of("Asia/Seoul"));
+		LocalDateTime seoulLocalDateTime = seoulTime.toLocalDateTime();
+		this.updatedDate = seoulLocalDateTime;;
 	}
 
 	public void updateBody(String body) {

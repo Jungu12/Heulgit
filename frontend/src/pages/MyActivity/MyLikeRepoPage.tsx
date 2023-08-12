@@ -149,6 +149,13 @@ const StyledBox = styled.div`
 		display: flex;
 		justify-content: center;
 	}
+
+	overflow-y: auto;
+	scrollbar-width: none; /* 파이어폭스 */
+	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+	&::-webkit-scrollbar {
+		display: none;
+	}
 `;
 
 const StyledSideL = styled.div`
@@ -161,7 +168,7 @@ const StyledSideL = styled.div`
 	}
 	@media (min-width: 768px) {
 		width: 124px;
-		background-color: ${colors.primary.primaryLighten};
+		background-color: ${colors.primary.primary};
 	}
 	@media (min-width: 1200px) {
 		width: 242px;
@@ -178,7 +185,7 @@ const StyledSideR = styled.div`
 	}
 	@media (min-width: 768px) {
 		width: 124px;
-		background-color: ${colors.primary.primaryLighten};
+		background-color: ${colors.primary.primary};
 	}
 	@media (min-width: 1200px) {
 		width: 242px;

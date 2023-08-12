@@ -148,6 +148,13 @@ public class UserController {
 		return null;
 	}
 
+	/**
+	 * 사용자 멘션시 사용할 유저 검색 API
+	 * 키워드를 포함한 userId들을 조회한다.
+	 * @param githubId
+	 * @param keyword
+	 * @return
+	 */
 	@GetMapping("/search")
 	public ResponseEntity<?> followingsList(@AuthenticationPrincipal String githubId,
 		@RequestParam("keyword") String keyword) {
