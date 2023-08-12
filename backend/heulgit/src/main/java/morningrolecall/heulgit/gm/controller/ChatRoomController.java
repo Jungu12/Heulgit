@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,13 +23,6 @@ public class ChatRoomController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final ChatRoomService chatRoomService;
 	private final ChatRoomRepository chatRoomRepository;
-
-	// 채팅 리스트 화면
-	// 화면 반환 api 삭제 예정
-	@GetMapping("/room")
-	public String rooms(Model model) {
-		return "/chat/room";
-	}
 
 	// 모든 채팅방 목록 반환
 	// Todo : 자신의 githubID 어노테이션으로 자신의 채팅방 조회하는 로직 추가
@@ -52,14 +44,6 @@ public class ChatRoomController {
 		chatRoomService.addChatRoom(user1, user2);
 
 		return ResponseEntity.ok().body(chatRoomService.addChatRoom(user1, user2));
-	}
-
-	// 채팅방 입장 화면(삭제 예정)
-	@GetMapping("/room/enter/{roomId}")
-	public String roomDetail(Model model, @PathVariable String roomId) {
-		model.addAttribute("roomId", roomId);
-		logger.info("roomDetail(), roomId = {}", roomId);
-		return "/chat/roomdetail";
 	}
 
 	//채팅 로그 가져오기
@@ -85,6 +69,7 @@ public class ChatRoomController {
 		return ResponseEntity.ok().body(chatRoomService.addChatRoom(user1, user2));
 	}
 
+	// 유저가 채팅방을 떠나 유저의 토픽을 삭제
 	@DeleteMapping("/room/out/{user2}")
 	@ResponseBody
 	public ResponseEntity<?> chatRoomEnterDetail(@AuthenticationPrincipal String user1, @PathVariable String user2) {
