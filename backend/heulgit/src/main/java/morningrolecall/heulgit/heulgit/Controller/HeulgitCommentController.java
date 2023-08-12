@@ -1,5 +1,7 @@
 package morningrolecall.heulgit.heulgit.Controller;
 
+import javax.persistence.NoResultException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import morningrolecall.heulgit.heulgit.domain.dto.HeulgitCommentDto;
 import morningrolecall.heulgit.notification.domain.Notification;
 import morningrolecall.heulgit.notification.domain.dto.NotificationCommentRequest;
 import morningrolecall.heulgit.notification.service.NotificationService;
+import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @RestController
@@ -54,7 +57,7 @@ public class HeulgitCommentController {
 		@PathVariable long commentId) {
 		logger.debug("commentRemove(), who = {}, commentId = {}", githubId, commentId);
 
-		heulgitCommentService.removeComment("LEEILHO", commentId);
+		heulgitCommentService.removeComment(githubId, commentId);
 		return ResponseEntity.ok().build();
 
 	}
@@ -64,6 +67,13 @@ public class HeulgitCommentController {
 		logger.debug("commentList(), eurekaId = {}", heulgitId);
 
 		return ResponseEntity.ok().body(heulgitCommentService.findComments(heulgitId));
+	}
+
+	@GetMapping("/my-comments")
+	public ResponseEntity<?> myCommentList(@AuthenticationPrincipal String githubId, int pages){
+		logger.debug("myCommentList(),who={}, pages={}",githubId,pages);
+		return ResponseEntity.ok().body(heulgitCommentService.findMyComments(githubId,1));
+
 	}
 
 }

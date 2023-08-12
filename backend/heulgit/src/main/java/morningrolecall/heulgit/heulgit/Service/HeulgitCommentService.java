@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.heulgit.domain.Heulgit;
 import morningrolecall.heulgit.heulgit.domain.HeulgitComment;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitCommentDto;
+import morningrolecall.heulgit.heulgit.domain.dto.HeulgitCommentResponse;
 import morningrolecall.heulgit.heulgit.repository.HeulgitCommentRepository;
 import morningrolecall.heulgit.heulgit.repository.HeulgitRepository;
 import morningrolecall.heulgit.user.domain.User;
@@ -23,6 +28,7 @@ public class HeulgitCommentService {
 	private final HeulgitCommentRepository heulgitCommentRepository;
 	private final HeulgitRepository heulgitRepository;
 	private final UserRepository userRepository;
+	private final int SIZE = 20;
 
 	/**
 	 * 댓글 등록
@@ -87,5 +93,16 @@ public class HeulgitCommentService {
 		return heulgitCommentRepository.findHeulgitCommentsByHeulgitOrderByUpdatedDateDesc(
 			heulgitRepository.findHeulgitByHeulgitId(heulgitId)
 				.orElseThrow(()-> new NoResultException("헤당 게시물이 존재 하지 않습니다")));
+	}
+
+	
+	/**
+	 * 1. 내가 흘깃에 단 댓글 조회
+	 * 2. 페이지네이션 처리*/
+	public Slice<HeulgitComment> findMyComments(String githubId, int pages) {
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+		Slice<HeulgitComment> comments = heulgitCommentRepository.findHeulgitCommentsByUserOrderByUpdatedDateDesc(user, PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return  comments;
 	}
 }

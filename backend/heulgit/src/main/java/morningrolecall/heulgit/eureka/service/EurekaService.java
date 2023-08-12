@@ -503,5 +503,6 @@ public class EurekaService {
 
 		// ZonedDateTime을 LocalDateTime으로 변환
 		return zonedDateTime.toLocalDateTime();
+
 	}
 }
