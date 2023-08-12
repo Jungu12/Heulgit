@@ -36,6 +36,7 @@ import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.relation.service.RelationService;
 import morningrolecall.heulgit.user.domain.CommitAnalyze;
 import morningrolecall.heulgit.user.domain.User;
+import morningrolecall.heulgit.user.domain.dto.UserCommitInfoResponse;
 import morningrolecall.heulgit.user.domain.dto.UserCommitTypeRequest;
 import morningrolecall.heulgit.user.domain.dto.UserDetail;
 import morningrolecall.heulgit.user.domain.dto.UserPostResponse;
@@ -76,7 +77,7 @@ public class UserService {
 		return user;
 	}
 
-	public Map<String, Integer> findCommitInfo(String githubId) {
+	public List<UserCommitInfoResponse> findCommitInfo(String githubId) {
 		// 해당 사용자의 1달 내 update된 repo를 긁어 온다(공식 api)
 		List<UserRepositoryResponse> repos = getRepoInfo(githubId);
 
@@ -86,6 +87,7 @@ public class UserService {
 		// 모든 레포를 돌면서 commit type이 일치하는게 있는지 확인하고 있다면 value + 1
 		Map<String, Integer> commitInfo = new HashMap<>();
 		commitInfo.put("etc", 0);
+
 		for (CommitAnalyze commit : commits) {
 			commitInfo.put(commit.getType(), 0);
 		}
@@ -105,7 +107,15 @@ public class UserService {
 			}
 		}
 
-		return commitInfo;
+		List<UserCommitInfoResponse> commitInfos = new ArrayList<>();
+		for (Map.Entry<String, Integer> entry : commitInfo.entrySet()) {
+			commitInfos.add(UserCommitInfoResponse.builder()
+				.type(entry.getKey())
+				.count(entry.getValue())
+				.build());
+		}
+
+		return commitInfos;
 	}
 
 	public List<CommitAnalyze> getMyCommitType(String githubId) {

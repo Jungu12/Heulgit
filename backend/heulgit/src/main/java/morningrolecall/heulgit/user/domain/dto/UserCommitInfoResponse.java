@@ -7,10 +7,9 @@ import lombok.Getter;
 @Builder
 @Getter
 @AllArgsConstructor
-public class UserCommitTypeRequest {
+public class UserCommitInfoResponse {
 
 	private String type;
 
-	private String description;
-
+	private int count;
 }
