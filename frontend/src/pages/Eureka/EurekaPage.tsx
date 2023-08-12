@@ -16,10 +16,6 @@ const EurekaPage = () => {
 	const { feedList, eurekaHasMore, eurekaNextPageLoad } =
 		useOutletContext<OutletProps>();
 
-	useEffect(() => {
-		console.log(feedList);
-	}, []);
-
 	if (!feedList.length) {
 		return <div>loading...</div>;
 	}

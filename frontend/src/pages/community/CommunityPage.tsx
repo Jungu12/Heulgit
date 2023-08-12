@@ -171,7 +171,7 @@ const CommunityPage = () => {
 		const nextPage = page + 1;
 		setPage(nextPage);
 		getEurekaFeedList(seletedSort, nextPage).then((res) => {
-			if (res.length === 0) {
+			if (res.length < 20) {
 				setEurekaHasMore(false);
 			}
 
@@ -187,6 +187,9 @@ const CommunityPage = () => {
 		console.log('새로운 피드리스트 불러오기!');
 
 		getEurekaFeedList(seletedSort, page).then((res) => {
+			if (res.length < 20) {
+				setEurekaHasMore(false);
+			}
 			setFeedList(res);
 			console.log('새로운 데이터', res);
 		});

@@ -1,5 +1,5 @@
 // 유레카 피드 리스트 모바일 버전
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import {
@@ -42,7 +42,8 @@ const EurekaFeedItemListMobile = ({
 	eurekaHasMore,
 	eurekaNextPageLoad,
 }: Props) => {
-	const scrollContinaerRef = useRef<HTMLDivElement>(null);
+	// const scrollContainerRef = useRef<HTMLDivElement>(null);
+	const infiniteScrollRef = useRef<InfiniteScroll>(null);
 	const [isCommentOpen, setIsCommentOpen] = useState(false);
 	const [seletedComment, setSeletedComment] = useState(-1);
 	const [commentInput, setCommentInput] = useState('');
@@ -119,14 +120,24 @@ const EurekaFeedItemListMobile = ({
 		}
 	}, [seletedComment]);
 
+	// useEffect(() => {
+	// 	// feedList가 변경될 때마다 스크롤을 맨 위로 이동
+	// 	if (infiniteScrollRef.current) {
+	// 		infiniteScrollRef.current.scrollTo(0);
+	// 	}
+	// }, [feedList]);
+
 	return (
-		<StyledFeedListSection ref={scrollContinaerRef}>
+		<StyledFeedListSection>
 			<InfiniteScroll
 				dataLength={feedList.length}
 				next={eurekaNextPageLoad}
 				hasMore={eurekaHasMore}
 				loader={<div>로딩중...</div>}
 				height={`calc(100vh - 234px)`}
+				ref={infiniteScrollRef} // infiniteScrollRef를 컴포넌트에 연결
+				initialScrollY={0}
+				scrollableTarget={'toptop'}
 			>
 				{feedList.map((feed, index) => (
 					<div key={index}>
