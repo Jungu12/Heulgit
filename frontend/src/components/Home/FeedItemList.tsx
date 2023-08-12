@@ -5,10 +5,10 @@ import { colors } from '@constants/colors';
 import FeedItem from './FeedItem';
 
 const StyledFeedListSection = styled.section`
-	height: calc(100vh - 194px);
+	/* height: calc(100vh - 194px); */
 	overflow-y: scroll;
 	margin-top: 123px;
-	margin-bottom: 61px;
+	margin-bottom: 70px;
 	scrollbar-width: none; /* 파이어폭스 */
 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
 	&::-webkit-scrollbar {
@@ -25,14 +25,19 @@ const Separation = styled.div`
 
 type Props = {
 	feedList: HeulGitPostType[];
+	onClickComment?: (id: number) => void;
 };
 
-const FeedItemList = ({ feedList }: Props) => {
+const FeedItemList = ({ feedList, onClickComment }: Props) => {
 	return (
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
 				<div key={index}>
-					<FeedItem feed={feed} type="summary" />
+					<FeedItem
+						feed={feed}
+						type="summary"
+						onClickComment={onClickComment}
+					/>
 					<Separation />
 				</div>
 			))}

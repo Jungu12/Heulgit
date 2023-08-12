@@ -9,7 +9,7 @@ import { styled } from 'styled-components';
 const StyledSearchContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
+	height: calc(var(--vh, 1vh) * 100);
 
 	div {
 		margin-right: calc(50% - 62px);
@@ -140,7 +140,7 @@ const SearchPage = () => {
 
 	return (
 		<StyledSearchContainer>
-			<Header title={seletedSearchCategory}>
+			<Header title={seletedSearchCategory} type="home">
 				<img
 					src={isOpen ? images.arrowUpBlack : images.arrowDownBlack}
 					onClick={() => setIsOpen(!isOpen)}

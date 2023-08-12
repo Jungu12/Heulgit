@@ -41,25 +41,28 @@ const StyledChildContainer = styled.div`
 type Props = {
 	title: string;
 	children?: React.ReactNode;
+	type?: 'home';
 	onClickBackButton?: () => void;
 };
 
-const Header = ({ title, children, onClickBackButton }: Props) => {
+const Header = ({ title, children, onClickBackButton, type }: Props) => {
 	const navigation = useNavigate();
 
 	return (
 		<StyledHeaderContainer>
 			<StyledTitle>{title}</StyledTitle>
-			<StyledBackButton
-				onClick={
-					onClickBackButton ??
-					(() => {
-						navigation(-1);
-					})
-				}
-				src={images.header.back}
-				alt="back button"
-			/>
+			{type !== 'home' && (
+				<StyledBackButton
+					onClick={
+						onClickBackButton ??
+						(() => {
+							navigation(-1);
+						})
+					}
+					src={images.header.back}
+					alt="back button"
+				/>
+			)}
 			<StyledChildContainer>{children}</StyledChildContainer>
 		</StyledHeaderContainer>
 	);

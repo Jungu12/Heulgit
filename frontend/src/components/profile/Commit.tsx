@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
+import { images } from '@constants/images';
 
 const StyledCommitTag = styled.div`
 	display: flex;
@@ -47,11 +48,17 @@ const StyledDetail = styled.div`
 `;
 
 const StyledDeleteButton = styled.button`
+	cursor: pointer;
 	color: ${colors.primary.primatyDark};
 	background-color: transparent;
 	width: 30px;
 	border: 0px;
 	font-weight: bold;
+
+	img {
+		height: 16px;
+		width: 16px;
+	}
 `;
 
 type Props = {
@@ -80,7 +87,7 @@ const CommitTag = ({ title, detail, onClickDeleteButton }: Props) => {
 					})
 				}
 			>
-				X
+				<img src={images.profile.deleteIcon} alt="삭제" />
 			</StyledDeleteButton>
 		</StyledCommitTag>
 	);

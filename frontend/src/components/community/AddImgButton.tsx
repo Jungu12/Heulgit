@@ -24,8 +24,12 @@ const StyledAddImgButton = styled.button`
 	background-position: center;
 `;
 
-const AddImgButton = () => {
-	return <StyledAddImgButton />;
+type Props = {
+	onClick?: () => void;
+};
+
+const AddImgButton = ({ onClick }: Props) => {
+	return <StyledAddImgButton onClick={onClick} />;
 };
 
 export default AddImgButton;

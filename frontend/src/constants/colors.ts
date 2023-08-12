@@ -14,4 +14,7 @@ export const colors = {
 		grey5: '#767676',
 		black: '#111111',
 	},
+	point: {
+		red: '#D23D3D',
+	},
 };

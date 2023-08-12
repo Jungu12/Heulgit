@@ -54,4 +54,21 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+img {
+	 -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+	user-select: none;
+}
+
+/* 바텀시트 css */
+.comment-bottom-sheet > div {
+	z-index: 100;
+}
 `;

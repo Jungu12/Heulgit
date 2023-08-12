@@ -11,7 +11,7 @@ const StyledRegisterButton = styled.button<{ disabled: boolean }>`
 	margin-right: 30px;
 
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 600;
 
 	/* 활성화 상태에 대한 추가적인 스타일 */
 	${({ disabled }) =>
