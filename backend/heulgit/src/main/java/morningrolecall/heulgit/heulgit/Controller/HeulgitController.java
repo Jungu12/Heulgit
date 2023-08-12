@@ -40,47 +40,31 @@ public class HeulgitController {
 
 	@GetMapping("/posts")
 	public ResponseEntity<?> heulgitList(
-		// @RequestParam(required = false) String language,
-		// @RequestParam(required = false) String sort,
-		// @RequestParam(name = "start-year", required = false) Integer startYear,
-		// @RequestParam(name = "start-month", required = false) Integer startMonth,
-		// @RequestParam(name = "end-year", required = false) Integer endYear,
-		// @RequestParam(name = "end-month", required = false) Integer endMonth,
+		@RequestParam(required = false) String language,
+		@RequestParam(required = false) String sort,
+		@RequestParam(name = "start-year", required = false) Integer startYear,
+		@RequestParam(name = "start-month", required = false) Integer startMonth,
+		@RequestParam(name = "end-year", required = false) Integer endYear,
+		@RequestParam(name = "end-month", required = false) Integer endMonth,
 		@RequestParam int pages) {
 
-		// logger.debug("heulgitList(), language = {},"
-		// 		+ " sort = {}, startYear = {}, startMonth = {},"
-		// 		+ "  endYear ={} , endMonth, pages = {}," ,language,sort,startYear,
-		// 	startMonth, endYear, endMonth,pages);
+		logger.debug("heulgitList(), language = {},"
+				+ " sort = {}, startYear = {}, startMonth = {},"
+				+ "  endYear ={} , endMonth, pages = {}," ,language,sort,startYear,
+			startMonth, endYear, endMonth,pages);
+		LocalDateTime startDate;
+		LocalDateTime endDate;
+		if (startYear != null && startMonth != null && endYear != null && endMonth != null){
+			startDate = LocalDateTime.of(startYear,startMonth,1,0,0);
+			LocalDate lastDayOfMonth = LocalDate.of(endYear, endMonth, 1).withDayOfMonth(LocalDate.of(endYear, endMonth, 1).lengthOfMonth());
+			LocalTime lastTimeOfDay = LocalTime.of(23, 59, 59);
+			endDate = LocalDateTime.of(lastDayOfMonth, lastTimeOfDay);
+		} else{
+			startDate = null;
+			endDate = null;
 
-		// boolean hasLikes = false;
-		// boolean hasStars = false;
-		// if(sort.equals("likes")){
-		// 	hasLikes = true;
-		// } else if(sort.equals("stars")){
-		// 	hasStars = true;
-		// }
-		//
-		//
-		//
-		// if (startYear != null && startMonth != null && endYear != null && endMonth != null){
-		// 	LocalDateTime startDate = LocalDateTime.of(startYear,startMonth,1,0,0);
-		// 	LocalDate lastDayOfMonth = LocalDate.of(endYear, endMonth, 1).withDayOfMonth(LocalDate.of(endYear, endMonth, 1).lengthOfMonth());
-		// 	LocalTime lastTimeOfDay = LocalTime.of(23, 59, 59);
-		//
-		// 	// LocalDateTime으로 합쳐서 출력
-		// 	LocalDateTime endDate = LocalDateTime.of(lastDayOfMonth, lastTimeOfDay);
-		// 	Pageable pageable = PageRequest.of(pages - 1, 20);
-		//
-		// 	heulgitService.searchHeulgits(sort, language,startDate,endDate,pageable);
-		// } else{
-		//
-		//
-		// }
-
-		logger.debug("heulgitList()");
-
-		return ResponseEntity.ok().body(heulgitService.findHeulgits(pages));
+		}
+		return ResponseEntity.ok().body(heulgitService.searchHeulgits(sort,language,startDate,endDate,pages));
 	}
 
 	@GetMapping("/posts/{heulgitId}")
@@ -100,7 +84,6 @@ public class HeulgitController {
 	public ResponseEntity<?> heulgitLike(@AuthenticationPrincipal String userId,
 		@PathVariable Long heulgitId) {
 		logger.debug("heulgitLike(), who = {}, heulgitId = {}",userId,heulgitId);
-
 		heulgitService.likeHeulgit(userId, heulgitId);
 
 		return ResponseEntity.ok().build();
@@ -111,9 +94,32 @@ public class HeulgitController {
 		@PathVariable Long heulgitId){
 		logger.debug("heulgitUnlike(), who ={}, heulgitId",userId, heulgitId);
 
-		heulgitService.unlikeHeulgit("LEEILHO", heulgitId);
+		heulgitService.unlikeHeulgit(userId, heulgitId);
 
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/myposts")
+	public ResponseEntity<?> heulgitMyPosts(@AuthenticationPrincipal String userId, @RequestParam int pages) {
+		logger.debug("heulgitMyPosts(), who = {}, sort ={}",userId, pages);
+		return ResponseEntity.ok().body(heulgitService.searchUserHeulgits(userId, pages));
+	}
+	@GetMapping("/search/title")
+	public ResponseEntity<?> heulgitTitleSearch(@RequestParam String keyword, @RequestParam int pages){
+		logger.debug("heulgitTitleSearch(), keyword = {}, sort ={}",keyword, pages);
+		return ResponseEntity.ok().body(heulgitService.searchTitleHueglits(keyword,pages));
+	}
+	@GetMapping("/search/user")
+	public ResponseEntity<?> heulgitUserSearch(@RequestParam String keyword,@RequestParam int pages) {
+		logger.debug("huelgitUserSearch(), keyword = {}, pages = {}", keyword, pages);
+		return ResponseEntity.ok().body(heulgitService.searchUserHeulgits(keyword, pages));
+	}
+
+	@GetMapping("/mylikes")
+	public ResponseEntity<?> heulgitMyLikes(@AuthenticationPrincipal String githubId, @RequestParam int pages) {
+		logger.debug("heuglitMyLikes() who = {}, pages={}",githubId,pages);
+		return ResponseEntity.ok().body(heulgitService.findMyLikeHeulgits(githubId,1));
+
 	}
 
 
