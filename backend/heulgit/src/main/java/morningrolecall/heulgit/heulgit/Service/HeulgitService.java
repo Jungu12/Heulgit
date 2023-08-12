@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.eureka.domain.Eureka;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaDetailResponse;
 import morningrolecall.heulgit.heulgit.domain.Heulgit;
 // import morningrolecall.heulgit.heulgit.domain.HeulgitSpecification;
 import morningrolecall.heulgit.heulgit.domain.HeulgitComment;
@@ -55,16 +58,6 @@ public class HeulgitService {
 	private final HeulgitCommentRepository heulgitCommentRepository;
 	private final UserRepository userRepository;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	/**
-	 * 흘깃 목록 조회
-	 * 1. 어떻게 할까요...?
-	 * 2. 정렬 후 페이지네이션 반환
-	 */
-	public Slice<HeulgitDetailResponse> findHeulgits(int pages){
-		System.out.println("findHeulgits");
-		Slice<Heulgit> heulgits = heulgitRepository.findSliceBy(PageRequest.of(pages - 1, 20));
-		return new SliceImpl<>(toResponse(heulgits),heulgits.getPageable(), heulgits.hasNext());
-	}
 
 
 
@@ -77,25 +70,60 @@ public class HeulgitService {
 	 * 5.들을 정렬하여 페이지네이션 반환
 	 */
 
-	public Page<Heulgit> searchHeulgits(String sort, String language,
+	public Slice<HeulgitDetailResponse> searchHeulgits(String sort, String language,
 		LocalDateTime startDate, LocalDateTime endDate,
-		Pageable pageable) {
-		Specification<Heulgit> spec = Specification.where(null);
+		int pages) {
+		Slice<Heulgit> heulgits;
+		Pageable pageable = PageRequest.of(pages - 1, 20);
 
-		if(sort != null){
-			spec = spec.and(HeulgitSpecification.hasSort(sort));
-		}
-		if (language != null) {
-			spec = spec.and(HeulgitSpecification.hasLanguage(language));
+		if ("likes".equals(sort)) {
+			if (language != null && startDate != null && endDate != null) {
+				heulgits = heulgitRepository.findSortedByLikesSearchByLanguageAndDateHeulgits(language, startDate, endDate, pageable);
+				System.out.println("좋아요순, 언어, 날짜");
+			} else if (language != null) {
+				heulgits = heulgitRepository.findSortedByLikesSearchByLanguageHeulgits(language, pageable);
+				System.out.println("좋아요순, 언어");
+			} else if (startDate != null && endDate != null){
+				System.out.println("좋아요순, 날짜");
+				heulgits = heulgitRepository.findSortedByLikesSearchByDate(startDate,endDate,pageable);
+			}  else {
+				System.out.println("좋아요순");
+				heulgits = heulgitRepository.findSortedByLikesHeulgits(pageable);
+			}
+		} else if ("stars".equals(sort)) {
+			if (language != null && startDate != null && endDate != null) {
+				heulgits = heulgitRepository.findSortedByStarsSearchByLanguageAndDateHeulgits(language, startDate, endDate, pageable);
+				System.out.println("스타 많은 순 ,언어, 날짜");
+
+			} else if (language != null) {
+				heulgits = heulgitRepository.findSortedByStarsSearchByLanguageHeulgits(language, pageable);
+				System.out.println("스타 많은 순, 언어");
+			} else if( startDate != null && endDate != null) {
+				System.out.println("스타 많은 순, 날짜");
+				heulgits = heulgitRepository.findSortedByStarsSearchByDateHeulgits(startDate,endDate,pageable);
+			} else {
+				heulgits = heulgitRepository.findSortedByStarsHeulgits(pageable);
+				System.out.println("스타 많은 순");
+			}
+		} else if (language != null && startDate != null && endDate != null) {
+			heulgits = heulgitRepository.findSearchByLanguageAndDateHeulgits(language, startDate, endDate, pageable);
+			System.out.println("언어, 날짜");
+
+		} else if (language != null) {
+			heulgits = heulgitRepository.findSearchByLanguageHeulgits(language, pageable);
+			System.out.println("언어");
+		} else if (startDate != null && endDate != null) {
+			heulgits = heulgitRepository.findSearchByDateHeulgits(startDate, endDate, pageable);
+			System.out.println("날짜");
+		} else {
+			heulgits = heulgitRepository.findRandomHeulgits(pageable);
+
 		}
 
-		if (startDate != null && endDate != null) {
-			spec = spec.and(HeulgitSpecification.isUpdatedDateBetween(startDate, endDate));
-		}
+		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
 
-		return heulgitRepository.findAll(spec, pageable);
+
 	}
-
 
 
 	/**
@@ -128,7 +156,7 @@ public class HeulgitService {
 			.language(heulgit.getLanguage())
 			.view(heulgit.getView())
 			.isRegistered(isRegistered)
-			.likedUsers(heulgit.getLikedUsers())
+			// .likedUsers(heulgit.getLikedUsers())
 			.heulgitComments(heulgit.getHeulgitComments())
 			.build();
 
@@ -195,8 +223,12 @@ public class HeulgitService {
 	 * 1. 정렬 조건 확인
 	 * 2. 정렬 후 페이지네이션 반환
 	 * */
+	public Slice<HeulgitDetailResponse> searchTitleHueglits(String keyword,int pages){
+		Slice<Heulgit> heulgits = heulgitRepository.findSliceByHeulgitNameContains(keyword,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
 
-
+	}
 
 
 	/**
@@ -204,17 +236,51 @@ public class HeulgitService {
 	 * 1. 정렬 조건 확인
 	 * 2. 정렬 후 페이지네이션 반환
 	 */
+	public Slice<HeulgitDetailResponse> searchUserHeulgits(String githubId,int pages){
+
+		Slice<Heulgit> heulgits = heulgitRepository.findSliceByGithubId(githubId,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
+
+	}
+
 
 
 	/**
-	 * 사용자 본인의 게시물 반환
+	 * 사용자 본인의 github 게시물 반환
 	 * 1. 사용자 조회
 	 * 2. 사용자의 게시물 반환
 	 * */
+	public Slice<HeulgitDetailResponse> findMyHeulgits(String githubId, int pages) {
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+
+		Slice<Heulgit> heulgits = heulgitRepository.findSliceByGithubId(githubId,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
+	}
 
 	/**
 	 * 단일 게시물의 좋아요 사용자 목록 반환
 	 * */
+	public Set<User> findLikedUsers(Long heulgitId) {
+		return heulgitRepository.findHeulgitByHeulgitId(heulgitId)
+			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다.")).getLikedUsers();
+	}
+
+	/**
+	 * 내가 좋아요한 레포 목록 반환*/
+	public Slice<HeulgitDetailResponse> findMyLikeHeulgits(String githubId, int pages) {
+		User user = userRepository.findUserByGithubId(githubId)
+			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+		Slice<Heulgit> heulgits = heulgitRepository.findByLikedUsersContains(user,
+			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
+	}
+
+
+
+
 
 
 	/**
