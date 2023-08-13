@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -63,7 +64,7 @@ public class HeulgitCommentController {
 	}
 
 	@GetMapping("/{heulgitId}")
-	public ResponseEntity<?> commentList(@PathVariable Long heulgitId) {
+	public ResponseEntity<?> commentList(@PathVariable Long heulgitId,int pages) {
 		logger.debug("commentList(), eurekaId = {}", heulgitId);
 
 		return ResponseEntity.ok().body(heulgitCommentService.findComments(heulgitId));
@@ -75,5 +76,15 @@ public class HeulgitCommentController {
 		return ResponseEntity.ok().body(heulgitCommentService.findMyComments(githubId,1));
 
 	}
+	@GetMapping("/parent-comments")
+	public ResponseEntity<?> parentCommmentList(@RequestParam Long heulgitId ,@RequestParam int pages){
+		logger.debug("parentCommmentList(), pages={}",pages);
+		return ResponseEntity.ok().body(heulgitCommentService.findParentComments(heulgitId,pages));
+	}
+	@GetMapping("/child-comments")
+	public ResponseEntity<?> childCommentList(@RequestParam Long heulgitId, @RequestParam Long parentId, int pages){
+		logger.debug("childCommentList(),heulgitId={},parentId={}, pages={}",heulgitId,parentId,pages);
+		return ResponseEntity.ok().body(heulgitCommentService.findChildComments(heulgitId, parentId, pages));
 
+	}
 }
