@@ -1,15 +1,30 @@
+import { PageableType, SortType, UserType } from '@typedef/common.types';
+
 export type HeulGitPostType = {
-	id: number;
-	name: string;
-	user: {
-		id: string;
-		avater_url: string;
-		is_registered: boolean;
-	};
-	updated_date: string;
+	heulgitId: number;
+	githubId: string;
+	avatarUrl: string;
+	heulgitName: boolean;
+	updatedDate: string;
 	content: string;
-	likes: number;
-	comments: number;
+	star: number;
+	view: number;
+	language: string;
+	heulgitComments: [];
+	registered: boolean;
+	likedUsers: UserType[];
+};
+
+export type HeulgitPostResponseType = {
+	content: HeulGitPostType[];
+	pageable: PageableType;
+	size: number;
+	number: number;
+	sort: SortType;
+	numberOfElements: number;
+	first: boolean;
+	last: boolean;
+	empty: boolean;
 };
 
 export type HeulGitCommentType = {
