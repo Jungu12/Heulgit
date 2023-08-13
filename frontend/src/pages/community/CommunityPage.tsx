@@ -136,10 +136,13 @@ const CommunityPage = () => {
 	const [freeBoardFeedList, setfreeBoardFeedList] = useState<
 		FreeBoardPostType[]
 	>([]);
-
 	const [seletedCommunityTitle, setSeletedCommunityTitle] = useState('유레카');
 	const [seletedSort, setSeletedSort] = useState('전체 보기');
 	const [eurekaHasMore, setEurekaHasMore] = useState(true);
+
+	const infinityScrollDiv = document.querySelector(
+		'.infinite-scroll-component',
+	);
 
 	const onClickFilter = useCallback(() => {
 		setIsFilterOpen(true);
@@ -204,13 +207,18 @@ const CommunityPage = () => {
 				setfreeBoardFeedList(res);
 			});
 		}
-	}, [seletedCommunityTitle, seletedSort, page]);
+	}, [seletedCommunityTitle]);
 
 	useEffect(() => {
 		console.log('[현재 페이지]', page);
 	}, [page]);
 
 	useEffect(() => {
+		console.log('스크롤 요소 :', infinityScrollDiv);
+
+		if (infinityScrollDiv) {
+			infinityScrollDiv.scrollTop = 0;
+		}
 		setPage(1);
 		getEurekaFeedList(seletedSort, 1).then((res) => {
 			setFeedList(res);
@@ -239,6 +247,7 @@ const CommunityPage = () => {
 							}}
 						/>
 					</StyledFeedContainerMobile>
+					<div className="test"></div>
 					<StyledCreateButtonMobile
 						onClick={() =>
 							navigation(

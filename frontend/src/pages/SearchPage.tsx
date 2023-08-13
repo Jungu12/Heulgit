@@ -2,8 +2,7 @@ import Header from '@components/common/Header';
 import Navigation from '@components/common/Navigation';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import useDetectClose from '@hooks/useDetectClose';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 
 const StyledSearchContainer = styled.div`
@@ -57,51 +56,8 @@ const StyledClearIcon = styled.img`
 	right: 28px;
 `;
 
-const StyledDropDown = styled.ul`
-	display: flex;
-	flex-direction: column;
-	background: white;
-	border-radius: 8px;
-	position: absolute;
-	top: 61px;
-	left: calc(50% - 54px);
-	width: 120px;
-	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
-	opacity: 0;
-	visibility: hidden;
-	transform: translateY(-20px);
-	transition:
-		opacity 0.4s ease,
-		transform 0.4s ease,
-		visibility 0.4s;
-	color: black;
-	font-size: 16px;
-	font-weight: 700;
-	line-height: 26px;
-	letter-spacing: -0.24px;
-
-	&.active {
-		opacity: 1;
-		visibility: visible;
-		transform: translateY(0);
-	}
-
-	li {
-		padding: 10px;
-	}
-`;
-
-const StyledDropdownseparator = styled.div`
-	width: 100%;
-	height: 1px;
-	background-color: ${colors.greyScale.grey3};
-`;
-
 const SearchPage = () => {
-	const dropDownRef = useRef(null);
-	const [seletedSearchCategory, setSeletedSearchCategory] = useState('');
 	const [input, setInput] = useState('');
-	const [isOpen, setIsOpen] = useDetectClose(dropDownRef, false);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 
 	const HandelSearchInput = useCallback(
@@ -118,34 +74,9 @@ const SearchPage = () => {
 		}
 	}, []);
 
-	const onClickRepo = useCallback(() => {
-		setSeletedSearchCategory('레포지토리');
-		setIsOpen(false);
-	}, []);
-
-	const onClickBoard = useCallback(() => {
-		setSeletedSearchCategory('게시판');
-		setIsOpen(false);
-	}, []);
-
-	const onClickUser = useCallback(() => {
-		setSeletedSearchCategory('사용자');
-		setIsOpen(false);
-	}, []);
-
-	useEffect(() => {
-		setSeletedSearchCategory('레포지토리');
-		setInput('');
-	}, []);
-
 	return (
 		<StyledSearchContainer>
-			<Header title={seletedSearchCategory} type="home">
-				<img
-					src={isOpen ? images.arrowUpBlack : images.arrowDownBlack}
-					onClick={() => setIsOpen(!isOpen)}
-				/>
-			</Header>
+			<Header title={'통합검색'} type="home"></Header>
 			<SearchBarInputContainer>
 				<StyledSearchInput
 					placeholder="검색어를 입력해주세요."
@@ -162,13 +93,6 @@ const SearchPage = () => {
 					/>
 				)}
 			</SearchBarInputContainer>
-			<StyledDropDown className={isOpen ? 'active' : ''}>
-				<li onClick={onClickRepo}>레포지토리</li>
-				<StyledDropdownseparator />
-				<li onClick={onClickBoard}>게시물</li>
-				<StyledDropdownseparator />
-				<li onClick={onClickUser}>사용자</li>
-			</StyledDropDown>
 			<Navigation />
 		</StyledSearchContainer>
 	);
