@@ -1,46 +1,25 @@
 package morningrolecall.heulgit.heulgit.Service;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.RequiredArgsConstructor;
-import morningrolecall.heulgit.eureka.domain.Eureka;
-import morningrolecall.heulgit.eureka.domain.dto.EurekaDetailResponse;
 import morningrolecall.heulgit.heulgit.domain.Heulgit;
 // import morningrolecall.heulgit.heulgit.domain.HeulgitSpecification;
 import morningrolecall.heulgit.heulgit.domain.HeulgitComment;
-import morningrolecall.heulgit.heulgit.domain.HeulgitSpecification;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitDetailResponse;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitLikeUserResponse;
 import morningrolecall.heulgit.heulgit.repository.HeulgitCommentRepository;
@@ -270,7 +249,7 @@ public class HeulgitService {
 	// 		.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다.")).getLikedUsers();
 	// }
 	public Slice<HeulgitLikeUserResponse> findLikedUser(Long heulgitId,String githubId,int pages){
-		Slice<User> likedUsers = heulgitRepository.findLikedUsersByHeulgitId(heulgitId,PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		Slice<User> likedUsers = heulgitRepository.findLikedUsersByHeulgitId(heulgitId,PageRequest.of(pages - 1, SIZE));
 		return  new SliceImpl<>(toLikeUserResponse(likedUsers,githubId),likedUsers.getPageable(), likedUsers.hasNext());
 	}
 

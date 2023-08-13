@@ -20,7 +20,7 @@ public interface HeulgitCommentRepository extends JpaRepository<HeulgitComment, 
 
 	List<HeulgitComment> findHeulgitCommentsByHeulgitOrderByUpdatedDateDesc(Heulgit heulgit);
 
-	Page<HeulgitComment> findHeulgitCommentsByUserOrderByUpdatedDateDesc(User user, Pageable pageable);
+	Slice<HeulgitComment> findHeulgitCommentsByUserOrderByUpdatedDateDesc(User user, Pageable pageable);
 
 	@Query("SELECT hc, " +
 		"(SELECT COUNT(subHc) FROM HeulgitComment subHc WHERE subHc.parentComment = hc) " +

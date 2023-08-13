@@ -126,11 +126,12 @@ public class FreeboardController {
 		return ResponseEntity.ok().body(freeBoardService.findMyFreeBoards(userId, pages));
 	}
 
-	@GetMapping("/posts/likes/{freeBoardId}")
-	public ResponseEntity<?> freeBoardLikedUsers(@PathVariable Long freeBoardId) {
-		logger.debug("freeBoardLikedUsers(), freeBoardId = {}", freeBoardId);
+	@GetMapping("/posts/likes")
+	public ResponseEntity<?> freeBoardLikedUsers(@AuthenticationPrincipal String githubId,@RequestParam Long freeBoardId
+	,@RequestParam int pages) {
+		logger.debug("freeBoardLikedUsers(), who={}, freeBoardId = {}, pages={}", githubId,freeBoardId,pages);
 
-		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId));
+		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId,githubId,pages));
 	}
 
 	@GetMapping("/search/title")
