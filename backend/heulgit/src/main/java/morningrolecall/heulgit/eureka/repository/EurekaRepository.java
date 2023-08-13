@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import io.lettuce.core.dynamic.annotation.Param;
 import morningrolecall.heulgit.eureka.domain.Eureka;
+import morningrolecall.heulgit.user.domain.User;
 
 public interface EurekaRepository extends JpaRepository<Eureka, Long> {
 	Slice<Eureka> findSliceBy(Pageable pageable);
@@ -40,4 +41,10 @@ public interface EurekaRepository extends JpaRepository<Eureka, Long> {
 
 	@Query("SELECT e FROM Eureka e WHERE e.user.githubId = :id ORDER BY SIZE(e.eurekaComments) DESC, e.updatedDate DESC")
 	Page<Eureka> findByUserNameSortedByCommentsEurekas(@Param("id") String id, Pageable pageable);
+
+	// 사용자가 좋아요한 유레카 목록을 순서대로 가져옴
+	Slice<Eureka> findByLikedUsersContains(User user, Pageable pageable);
+	// 단일 게시물 좋아요한 사용자 목록
+	@Query("SELECT u FROM Eureka e JOIN e.likedUsers u WHERE e.eurekaId = :eurekaId")
+	Slice<User> findLikedUsersByEurekaId(Long eurekaId, Pageable pageable);
 }

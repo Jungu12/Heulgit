@@ -68,7 +68,7 @@ public class HeulgitController {
 	}
 
 	@GetMapping("/posts/{heulgitId}")
-	public ResponseEntity<?> eurekaDetail(@PathVariable Long heulgitId) {
+	public ResponseEntity<?> heulgitDetail(@PathVariable Long heulgitId) {
 		logger.debug("heulgitDetail(), heulgitId = {}", heulgitId);
 
 		return ResponseEntity.ok().body(heulgitService.findHeulgit(heulgitId));
