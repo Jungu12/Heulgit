@@ -1,11 +1,10 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { colors } from '@constants/colors';
+// import { colors } from '@constants/colors';
+// import EurekaFeedItemListMobile from '@pages/Eureka/EurekaFeedItemListMobile';
 // import { images } from '@constants/images';
-// import EurekaFeedItemList from '@components/community/EurekaFeedItemList';
 
 const StyledBox = styled.div`
-	background-color: ${colors.primary.primary};
 	margin-bottom: -70px;
 	width: 100%;
 `;
@@ -107,8 +106,7 @@ const StyledBox = styled.div`
 const MyEureka = () => {
 	return (
 		<StyledBox>
-			MyEureka
-			{/* <EurekaFeedItemList feedList={dummyPosts} /> */}
+			{/* <EurekaFeedItemListMobile feedList={dummyPosts} /> */}
 		</StyledBox>
 	);
 };

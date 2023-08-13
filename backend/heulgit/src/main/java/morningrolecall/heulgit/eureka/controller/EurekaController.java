@@ -52,7 +52,8 @@ public class EurekaController {
 		@RequestPart(value = "file", required = false) List<MultipartFile> multipartFiles, @RequestPart(value= "data") EurekaRequest eurekaRequest ) {
 		logger.debug("eurekaRegister(), who = {}, title = {}, content = {}, link = {}", githubId,
 			eurekaRequest.getTitle(),
-			eurekaRequest.getContent(),eurekaRequest.getLink());
+			eurekaRequest.getContent(),
+			eurekaRequest.getLink());
 		if (multipartFiles != null) {
 			// multipartFiles가 null이 아닐 때의 처리
 			eurekaService.addEureka(githubId, eurekaRequest, multipartFiles);

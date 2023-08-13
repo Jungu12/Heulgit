@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import CategoryT from '@components/profile/CategoryT';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,9 @@ import MyFreeboard from '@components/profile/MyFreeboard';
 import MyEureka from '@components/profile/MyEureka';
 import MyProfile from '@components/profile/MyProfile';
 import { colors } from '@constants/colors';
+import ReactModal from 'react-modal';
+import FollowingPage from '@pages/FollowingPage';
+import FollowerPage from '@pages/FollowerPage';
 
 const StyledBox = styled.div`
 	display: flex;
@@ -36,6 +39,7 @@ const StyledCate = styled.div`
 	width: 242px;
 	height: 100vh;
 	background-color: ${colors.primary.primary};
+	color: white;
 
 	position: fixed;
 	top: 0px;
@@ -83,8 +87,14 @@ const StyledUserInformation = styled.div`
 	.user-follower {
 		display: flex;
 		justify-content: center;
-		background-color: aquamarine;
 	}
+`;
+const StyledFollowing = styled.div`
+	background-color: aquamarine;
+	width: 120px;
+`;
+const StyledFollower = styled.div`
+	width: 120px;
 `;
 
 //팔로우, 깃속말 버튼
@@ -118,6 +128,49 @@ const StyledActivity = styled.div`
 	font-weight: bold;
 `;
 
+// 모달 디자인
+const customStyles = {
+	overlay: {
+		zIndex: '99',
+		backgroundColor: 'rgba(0, 0, 0, 0.3)',
+	},
+	content: {
+		width: '400px',
+		// height: '70vh',
+		height: '400px',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)',
+		background: 'rgba(255, 255, 255)',
+		backdropFilter: 'blur(10px)',
+		// zIndex: '99',
+		border: 'none',
+		borderRadius: '15px',
+		padding: '0',
+	},
+};
+
+const StyledModalItem = styled.div`
+	height: 100%;
+	overflow-y: auto;
+	scrollbar-width: none; /* 파이어폭스 */
+	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+	&::-webkit-scrollbar {
+		display: none;
+	}
+`;
+// 모달 내부 닫기 버튼 스타일
+const StyledCloseButton = styled.div`
+	border: none;
+	background-color: white;
+	font-size: 16px;
+	position: fixed;
+	z-index: 101;
+
+	padding: 10px;
+	margin: 10px;
+`;
+
 type ProfileProps = {
 	handleMenuClick: (menu: '프로필' | '유레카' | '자유') => void;
 	navigation: ReturnType<typeof useNavigate>;
@@ -129,6 +182,14 @@ const ProfilePageWeb = ({
 	navigation,
 	selectedMenu,
 }: ProfileProps) => {
+	const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
+	const [isFollowerModalOpen, setIsFollowerModalOpen] = useState(false);
+
+	const openFollowingModal = () => setIsFollowingModalOpen(true);
+	const closeFollowingModal = () => setIsFollowingModalOpen(false);
+	const openFollowerModal = () => setIsFollowerModalOpen(true);
+	const closeFollowerModal = () => setIsFollowerModalOpen(false);
+
 	return (
 		<StyledBox>
 			<StyledL>
@@ -141,12 +202,13 @@ const ProfilePageWeb = ({
 						<StyledUserInformation>
 							<div className="user-name">유저 이름</div>
 							<div className="user-follower">
-								<div onClick={() => navigation('/profiles/1/follow')}>
+								{/* 모달열기 */}
+								<StyledFollowing onClick={openFollowingModal}>
 									팔로잉
-								</div>
-								<div onClick={() => navigation('/profiles/1/follow')}>
+								</StyledFollowing>
+								<StyledFollower onClick={openFollowerModal}>
 									팔로워
-								</div>
+								</StyledFollower>
 							</div>
 							<div className="user-info">추가 정보</div>
 						</StyledUserInformation>
@@ -186,6 +248,33 @@ const ProfilePageWeb = ({
 					</StyledActivity>
 				</StyledCate>
 			</StyledR>
+
+			{/* 팔로잉 모달 */}
+			<ReactModal
+				isOpen={isFollowingModalOpen}
+				style={customStyles}
+				onRequestClose={closeFollowingModal}
+			>
+				<StyledModalItem>
+					<StyledCloseButton onClick={closeFollowingModal}>
+						닫기
+					</StyledCloseButton>
+					<FollowingPage />
+				</StyledModalItem>
+			</ReactModal>
+
+			<ReactModal
+				isOpen={isFollowerModalOpen}
+				style={customStyles}
+				onRequestClose={closeFollowerModal}
+			>
+				<StyledModalItem>
+					<StyledCloseButton onClick={closeFollowerModal}>
+						닫기
+					</StyledCloseButton>
+					<FollowerPage />
+				</StyledModalItem>
+			</ReactModal>
 		</StyledBox>
 	);
 };

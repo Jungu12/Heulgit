@@ -18,7 +18,7 @@ export type EurekaPostType = {
 
 // 유레카 게시물 댓글
 export type EurekaCommentType = {
-	id: number;
+	commentId: number;
 	user: UserType;
 	content: string;
 	updatedDate: string;
@@ -101,4 +101,12 @@ export type EurekaWriteType = {
 	title: string;
 	content: string;
 	link: string;
+};
+
+// 유레카 댓글 쓰기 타입
+export type EurekaCommentWriteType = {
+	content: string;
+	eurekaId: number;
+	mentionedFollowers: string[];
+	parentId: number;
 };

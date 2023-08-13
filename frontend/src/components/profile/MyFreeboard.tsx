@@ -1,8 +1,9 @@
 import React from 'react';
 import { styled } from 'styled-components';
 // import { images } from '@constants/images';
+// import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
+
 const StyledBox = styled.div`
-	background-color: lightblue;
 	margin-bottom: -70px;
 	width: 100%;
 `;
@@ -75,8 +76,7 @@ const StyledBox = styled.div`
 const MyFreeboard = () => {
 	return (
 		<StyledBox>
-			MyFreeboard
-			{/* <FreeBoardFeedItemList feedList={dummyPosts} /> */}
+			{/* <FreeBoardFeedItemListMobile feedList={dummyPosts} /> */}
 		</StyledBox>
 	);
 };

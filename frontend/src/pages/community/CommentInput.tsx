@@ -1,6 +1,6 @@
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import { colors } from '@constants/colors';
-import React, { useState } from 'react';
+import React from 'react';
 import { styled } from 'styled-components';
 
 // 댓글 컨테이너 모바일
@@ -97,30 +97,22 @@ const StyledRegisterButton = styled.button<{ $active: boolean }>`
 	font-size: 13px;
 `;
 
-const CommentInput = () => {
-	const [keyword, setKeyword] = useState('');
+type Props = {
+	input?: string;
+	onSubmitComment?: () => void;
+	handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setKeyword(e.target.value);
-	};
-
+const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 	const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
-			if (keyword.trim() !== '') {
-				console.log('등록할 댓글:', keyword);
-				setKeyword('');
+			if (input!.trim() !== '') {
+				if (onSubmitComment) onSubmitComment();
 			}
 		}
 	};
 
-	const handleClick = () => {
-		if (keyword.trim() !== '') {
-			console.log('등록할 댓글:', keyword);
-			setKeyword('');
-		}
-	};
-
-	const isKeywordValid = keyword.trim().length > 0;
+	const isKeywordValid = input!.trim().length > 0;
 
 	return (
 		<>
@@ -129,13 +121,13 @@ const CommentInput = () => {
 					<StyledProfileImg />
 					<StyledCommentInputContainer>
 						<StyledCommentInput
-							value={keyword}
-							onChange={handleChange}
+							value={input}
+							onChange={handleInputChange}
 							onKeyDown={handleEnter}
 						/>
 						<StyledRegisterButton
 							$active={isKeywordValid}
-							onClick={handleClick}
+							onClick={onSubmitComment}
 						>
 							등록
 						</StyledRegisterButton>
@@ -148,13 +140,13 @@ const CommentInput = () => {
 					<StyledProfileImg />
 					<StyledCommentInputContainer>
 						<StyledCommentInput
-							value={keyword}
-							onChange={handleChange}
+							value={input}
+							onChange={handleInputChange}
 							onKeyDown={handleEnter}
 						/>
 						<StyledRegisterButton
 							$active={isKeywordValid}
-							onClick={handleClick}
+							onClick={onSubmitComment}
 						>
 							등록
 						</StyledRegisterButton>
@@ -167,13 +159,13 @@ const CommentInput = () => {
 					<StyledProfileImg />
 					<StyledCommentInputContainer>
 						<StyledCommentInput
-							value={keyword}
-							onChange={handleChange}
+							value={input}
+							onChange={handleInputChange}
 							onKeyDown={handleEnter}
 						/>
 						<StyledRegisterButton
 							$active={isKeywordValid}
-							onClick={handleClick}
+							onClick={onSubmitComment}
 						>
 							등록
 						</StyledRegisterButton>

@@ -6,6 +6,8 @@ import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+// import { useSelector } from 'react-redux';
+// import { RootState } from '@store/index';
 
 // 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
@@ -35,6 +37,7 @@ const StyledProfileContainer = styled.div`
 const StyledProfileImage = styled.img`
 	width: 36px;
 	height: 36px;
+	border-radius: 50%;
 `;
 
 // 업데이트 시간 p 태그
@@ -78,22 +81,22 @@ const StyledContentContainer = styled.div`
 `;
 
 // 이미지 담는 컨테이너
-const StyledImgContainer = styled.div`
-	display: flex;
-	position: relative;
-	justify-content: start;
-	align-items: center;
+// const StyledImgContainer = styled.div`
+// 	display: flex;
+// 	position: relative;
+// 	justify-content: start;
+// 	align-items: center;
 
-	max-width: 100%;
-	/* height: 190px; */
+// 	max-width: 100%;
+// 	/* height: 190px; */
 
-	margin: 20px 12px 0 12px;
-`;
+// 	margin: 20px 12px 0 12px;
+// `;
 
 // 이미지
-const StyledImg = styled.img`
-	max-width: 100%;
-`;
+// const StyledImg = styled.img`
+// 	max-width: 100%;
+// `;
 
 // 버튼 담는 컨테이너
 const StyledButtonContainer = styled.div`
@@ -123,9 +126,7 @@ type Props = {
 
 const FreeBoardFeedItem = ({ feed }: Props) => {
 	const navigation = useNavigate();
-
-	// 이미지 있는 경우에만 컨테이너 보여주기
-	const imageSrc = feed.images.length > 0 ? feed.images[0].file_uri : '';
+	// const githubId = useSelector((state: RootState) => state.user.user?.githubId);
 
 	// 좋아요 이미지 변환
 	const [liked, setLiked] = useState(false);
@@ -142,36 +143,36 @@ const FreeBoardFeedItem = ({ feed }: Props) => {
 
 	// 좋아요 누른 유저 목록 페이지로 이동
 	const onClickLike = useCallback(() => {
-		navigation(`${feed.id}/like`);
+		navigation(`${1}/like`);
 	}, []);
 
 	// 유레카 피드 상세보기 페이지로 이동
 	const onClickFeedItem = useCallback(() => {
-		navigation(`${feed.id}`);
+		navigation(`${feed.freeBoardId}`);
 	}, []);
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${feed.user.id}`);
+		navigation(`/profiles/${1}`);
 	}, []);
 
 	return (
 		<StyledFeedItemContainer>
 			<StyledTopLine>
 				<StyledProfileContainer onClick={onClickUserProfile}>
-					<StyledProfileImage src={feed.user.avater_url} alt="user_profile" />
-					<p>{feed.user.id}</p>
+					<StyledProfileImage src={feed.user.avatarUrl} alt="user_profile" />
+					<p>{feed.user.githubId}</p>
 				</StyledProfileContainer>
-				<StyledUpdateTime>{feed.updated_date}</StyledUpdateTime>
+				<StyledUpdateTime>{feed.updatedDate}</StyledUpdateTime>
 			</StyledTopLine>
 			<StyledFeedContentContainer onClick={onClickFeedItem}>
 				<StyledTitleContainer>{feed.title}</StyledTitleContainer>
 				<StyledContentContainer>{feed.content}</StyledContentContainer>
-				{imageSrc && (
+				{/* {imageSrc && (
 					<StyledImgContainer>
 						<StyledImg src={imageSrc} />
 					</StyledImgContainer>
-				)}
+				)} */}
 			</StyledFeedContentContainer>
 			<StyledButtonContainer>
 				<img
@@ -187,8 +188,8 @@ const FreeBoardFeedItem = ({ feed }: Props) => {
 				<img src={images.share} alt="share_button" />
 			</StyledButtonContainer>
 			<StyledSubDataContainer>
-				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
-				<div onClick={onClickComment}>{`댓글 ${feed.comments}개`}</div>
+				<div onClick={onClickLike}>{`좋아요 ${feed.likedUsers}개 · `}</div>
+				<div onClick={onClickComment}>{`댓글 ${feed.freeBoardComments}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);

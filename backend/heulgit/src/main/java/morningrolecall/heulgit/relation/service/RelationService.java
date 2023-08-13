@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.RelationException;
 import morningrolecall.heulgit.relation.domain.Relation;
-import morningrolecall.heulgit.relation.domain.dto.RelationUserInfo;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.user.domain.User;
+import morningrolecall.heulgit.user.domain.dto.UserDetail;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
@@ -53,7 +53,7 @@ public class RelationService {
 		relationRepository.save(relation);
 	}
 
-	public List<RelationUserInfo> getFollowers(String userId) {
+	public List<UserDetail> getFollowers(String userId) {
 		List<Relation> relations = relationRepository.findByToId(userId);
 
 		if (relations.isEmpty()) {
@@ -62,19 +62,11 @@ public class RelationService {
 
 		//나를 팔로우 하는 유저 목록
 		List<String> followers = relations.stream().map(Relation::getFromId).collect(Collectors.toList());
-		List<RelationUserInfo> userInfos = new ArrayList<>();
-
-		for (String follower : followers) {
-			User user = userRepository.findUserByGithubId(follower).orElseThrow();
-			userInfos.add(RelationUserInfo.builder()
-				.id(user.getGithubId())
-				.avater_url(user.getAvatarUrl())
-				.build());
-		}
+		List<UserDetail> userInfos = getUserInfoById(followers);
 		return userInfos;
 	}
 
-	public List<RelationUserInfo> getFollowings(String userId) {
+	public List<UserDetail> getFollowings(String userId) {
 		List<Relation> relations = relationRepository.findByFromId(userId);
 
 		if (relations.isEmpty()) {
@@ -83,15 +75,34 @@ public class RelationService {
 
 		//내가 팔로우 하는 유저 목록
 		List<String> followings = relations.stream().map(Relation::getToId).collect(Collectors.toList());
-		List<RelationUserInfo> userInfos = new ArrayList<>();
+		List<UserDetail> userInfos = getUserInfoById(followings);
 
-		for (String following : followings) {
-			User user = userRepository.findUserByGithubId(following).orElseThrow();
-			userInfos.add(RelationUserInfo.builder()
+		return userInfos;
+	}
+
+	public List<UserDetail> getFollowingsByKeyword(String userId, String keyword) {
+		List<String> followings = relationRepository.findAllByIdContainingKeyword(userId, keyword);
+
+		if (followings.isEmpty()) {
+			return getFollowings(userId);
+		}
+
+		List<UserDetail> userInfos = getUserInfoById(followings);
+
+		return userInfos;
+	}
+
+	public List<UserDetail> getUserInfoById(List<String> userIds) {
+		List<UserDetail> userInfos = new ArrayList<>();
+
+		for (String userId : userIds) {
+			User user = userRepository.findUserByGithubId(userId).orElseThrow();
+			userInfos.add(UserDetail.builder()
 				.id(user.getGithubId())
 				.avater_url(user.getAvatarUrl())
 				.build());
 		}
+
 		return userInfos;
 	}
 }

@@ -57,7 +57,7 @@ public class EurekaCommentController {
 
 	@GetMapping("/{eurekaId}")
 	public ResponseEntity<?> commentList(@PathVariable Long eurekaId) {
-		logger.debug("commentList(), eurekaId = {}", eurekaId);
+
 
 		return ResponseEntity.ok().body(eurekaCommentService.findComments(eurekaId));
 	}

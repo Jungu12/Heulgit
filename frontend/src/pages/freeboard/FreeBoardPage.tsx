@@ -1,90 +1,47 @@
 // 커뮤니티 내 자유게시판 전체 페이지
 
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
-import { images } from '@constants/images';
-import React from 'react';
+// import { images } from '@constants/images';
+import React, { useEffect } from 'react';
 import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
-import FreeBoardFeedItemListTabletPC from './FreeBoardFeedItemListTabletPC';
+// import FreeBoardFeedItemListTabletPC from './FreeBoardFeedItemListTabletPC';
+// import { EurekaPostType } from '@typedef/community/eureka.types';
+import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+import { useOutletContext } from 'react-router-dom';
 
-// 더미 게시물
-const dummyPosts = [
-	{
-		id: 1,
-		title: 'hihi',
-		user: {
-			id: 'jungu12',
-			avater_url: images.dummy.dummy1,
-		},
-		content: 'eqweqwewq',
-		link: 'dfkldfsdfds',
-		updated_date: '2023-07-24',
-		views: 100,
-		likes: 10,
-		comments: 12,
-		images: [{ file_uri: '' }],
-	},
-	{
-		id: 2,
-		title: '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십',
-		user: {
-			id: 'jungu12',
-			avater_url: images.dummy.dummy1,
-		},
-		content:
-			'일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십',
-		link: 'dfkldfsdfds',
-		updated_date: '2023-07-24',
-		views: 100,
-		likes: 10,
-		comments: 12,
-		images: [{ file_uri: images.dummy.dummy3 }],
-	},
-	{
-		id: 4,
-		title: 'hihi',
-		user: {
-			id: 'jungu12',
-			avater_url: images.dummy.dummy1,
-		},
-		content: 'eqweqwewq',
-		link: 'dfkldfsdfds',
-		updated_date: '2023-07-24',
-		views: 100,
-		likes: 10,
-		comments: 12,
-		images: [{ file_uri: '' }],
-	},
-	{
-		id: 3,
-		title: 'hihi',
-		user: {
-			id: 'jungu12',
-			avater_url: images.dummy.dummy1,
-		},
-		content: 'asdasdasdasdasd',
-		link: 'dfkldfsdfds',
-		updated_date: '2023-07-24',
-		views: 100,
-		likes: 10,
-		comments: 12,
-		images: [{ file_uri: images.dummy.dummy1 }],
-	},
-];
+type OutletProps = {
+	freeBoardFeedList: FreeBoardPostType[];
+	freeBoardHasMore: boolean;
+	freeboardNextPageLoad: () => Promise<void>;
+};
 
 const FreeBoardPage = () => {
+	const { freeBoardFeedList, freeBoardHasMore, freeboardNextPageLoad } =
+		useOutletContext<OutletProps>();
+
+	useEffect(() => {
+		console.log(freeBoardFeedList);
+	}, []);
+
+	if (!freeBoardFeedList.length) {
+		return <div>loading...</div>;
+	}
+
 	return (
 		<>
 			<Mobile>
-				<FreeBoardFeedItemListMobile feedList={dummyPosts} />
+				<FreeBoardFeedItemListMobile
+					feedList={freeBoardFeedList}
+					freeBoardHasMore={freeBoardHasMore}
+					freeboardNextPageLoad={freeboardNextPageLoad}
+				/>
 			</Mobile>
 
 			<Tablet>
-				<FreeBoardFeedItemListTabletPC feedList={dummyPosts} />
+				{/* <FreeBoardFeedItemListTabletPC feedList={feedList} /> */}
 			</Tablet>
 
-			<PC>
-				<FreeBoardFeedItemListTabletPC feedList={dummyPosts} />
-			</PC>
+			<PC>{/* <FreeBoardFeedItemListTabletPC feedList={feedList} /> */}</PC>
 		</>
 	);
 };

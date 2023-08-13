@@ -5,6 +5,8 @@ import BigHeader from '@components/profile/BigHeader';
 import Category from '@components/profile/Category';
 import CategoryT from '@components/profile/CategoryT';
 import { colors } from '@constants/colors';
+// import EurekaFeedItemListMobile from '@pages/Eureka/EurekaFeedItemListMobile';
+// import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
 // import { images } from '@constants/images';
 
 //더미데이터
@@ -71,7 +73,6 @@ import { colors } from '@constants/colors';
 // 		images: [{ file_uri: images.dummy.dummy1 }],
 // 	},
 // ];
-
 // const dummyEurekaPosts = [
 // 	{
 // 		id: 1,
@@ -172,6 +173,13 @@ const StyledBox = styled.div`
 		display: flex;
 		justify-content: center;
 	}
+
+	overflow-y: auto;
+	scrollbar-width: none; /* 파이어폭스 */
+	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+	&::-webkit-scrollbar {
+		display: none;
+	}
 `;
 
 const StyledSideL = styled.div`
@@ -184,7 +192,7 @@ const StyledSideL = styled.div`
 	}
 	@media (min-width: 768px) {
 		width: 124px;
-		background-color: ${colors.primary.primaryLighten};
+		background-color: ${colors.primary.primary};
 	}
 	@media (min-width: 1200px) {
 		width: 242px;
@@ -195,13 +203,14 @@ const StyledSideR = styled.div`
 	height: 100vh;
 	right: 0;
 	position: fixed;
+	padding: 20px;
 
 	@media (max-width: 767px) {
 		display: none;
 	}
 	@media (min-width: 768px) {
 		width: 124px;
-		background-color: ${colors.primary.primaryLighten};
+		background-color: ${colors.primary.primary};
 	}
 	@media (min-width: 1200px) {
 		width: 242px;
@@ -216,20 +225,21 @@ const StyledContent = styled.div`
 
 const StyledCate = styled.div`
 	width: 100vw;
+
 	@media (min-width: 768px) {
 		display: none;
 	}
+	position: fixed;
+	top: 55px;
+	background-color: white; /* Add a background color for better visibility */
+	z-index: 1;
+	margin: 0;
 `;
 const StyledHeader = styled.div`
 	width: 100%;
-	height: 60px;
+	height: 95px;
 	background-color: white;
 `;
-
-const deleteKeysFromSession = (keys: string[]) => {
-	console.log('Deleting keys:', keys);
-	keys.forEach((key) => sessionStorage.removeItem(key));
-};
 
 const MyLikePostPage = () => {
 	const [selectedPost, setSelectedPost] = useState('');
@@ -246,15 +256,6 @@ const MyLikePostPage = () => {
 			setSelectedPost(categoryItem);
 		} else {
 			setSelectedPost('유레카');
-		}
-	}, []);
-
-	// 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
-	useEffect(() => {
-		const keysToDelete = ['selectedPost'];
-
-		if (window.location.pathname === '/profiles/1/like-post') {
-			deleteKeysFromSession(keysToDelete);
 		}
 	}, []);
 
@@ -294,19 +295,19 @@ const MyLikePostPage = () => {
 						menuRouter2={() => handleMenuClick('자유')}
 						selectedMenu={selectedPost}
 					/>
+				</StyledCate>
+				<p>
 					{selectedPost === '유레카' && (
 						<div>
-							좋아요 한 유레카
-							{/* <EurekaFeedItemList feedList={dummyEurekaPosts} /> */}
+							{/* <EurekaFeedItemListMobile feedList={dummyEurekaPosts} /> */}
 						</div>
 					)}
 					{selectedPost === '자유' && (
 						<div>
-							좋아요 한 자유
-							{/* <FreeBoardFeedItemList feedList={dummyFreePosts} /> */}
+							{/* <FreeBoardFeedItemListMobile feedList={dummyFreePosts} /> */}
 						</div>
 					)}
-				</StyledCate>{' '}
+				</p>
 			</StyledContent>
 
 			<StyledSideR>
