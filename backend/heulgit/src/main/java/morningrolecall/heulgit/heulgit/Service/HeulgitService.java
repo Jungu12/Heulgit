@@ -42,8 +42,10 @@ import morningrolecall.heulgit.heulgit.domain.Heulgit;
 import morningrolecall.heulgit.heulgit.domain.HeulgitComment;
 import morningrolecall.heulgit.heulgit.domain.HeulgitSpecification;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitDetailResponse;
+import morningrolecall.heulgit.heulgit.domain.dto.HeulgitLikeUserResponse;
 import morningrolecall.heulgit.heulgit.repository.HeulgitCommentRepository;
 import morningrolecall.heulgit.heulgit.repository.HeulgitRepository;
+import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
@@ -58,7 +60,7 @@ public class HeulgitService {
 	private final HeulgitCommentRepository heulgitCommentRepository;
 	private final UserRepository userRepository;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-
+	private final RelationRepository relationRepository;
 
 
 	/**
@@ -263,10 +265,15 @@ public class HeulgitService {
 	/**
 	 * 단일 게시물의 좋아요 사용자 목록 반환
 	 * */
-	public Set<User> findLikedUsers(Long heulgitId) {
-		return heulgitRepository.findHeulgitByHeulgitId(heulgitId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다.")).getLikedUsers();
+	// public Set<User> findLikedUsers(Long heulgitId) {
+	// 	return heulgitRepository.findHeulgitByHeulgitId(heulgitId)
+	// 		.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다.")).getLikedUsers();
+	// }
+	public Slice<HeulgitLikeUserResponse> findLikedUser(Long heulgitId,String githubId,int pages){
+		Slice<User> likedUsers = heulgitRepository.findLikedUsersByHeulgitId(heulgitId,PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
+		return  new SliceImpl<>(toLikeUserResponse(likedUsers,githubId),likedUsers.getPageable(), likedUsers.hasNext());
 	}
+
 
 	/**
 	 * 내가 좋아요한 레포 목록 반환*/
@@ -307,6 +314,21 @@ public class HeulgitService {
 		}).collect(Collectors.toList());
 
 	}
+
+	/**
+	 * Slice<User>를 List<HeulgitLikeUserResponse>로 변환
+	 */
+	private List<HeulgitLikeUserResponse> toLikeUserResponse(Slice<User> likedUsers,String githubId){
+		return likedUsers.getContent().stream().map(likedUser ->{
+			boolean isFollow = relationRepository.existsByFromIdAndToId(githubId,likedUser.getGithubId());
+
+			return HeulgitLikeUserResponse.builder()
+				.user(likedUser)
+				.follow(isFollow)
+				.build();
+		}).collect(Collectors.toList());
+	}
+
 	// public void fetchAndSaveTopRepositories() {
 	// 	int itemsPerPage = 100;
 	// 	int totalItemsToFetch = 10;
