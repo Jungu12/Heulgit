@@ -121,6 +121,12 @@ public class HeulgitController {
 		return ResponseEntity.ok().body(heulgitService.findMyLikeHeulgits(githubId,1));
 
 	}
+	@GetMapping("/posts/likes")
+	public ResponseEntity<?> heulgitLikedUsers(@AuthenticationPrincipal String githubId,@RequestParam Long heulgitId,@RequestParam int pages){
+		logger.debug("heulgitLikedUsers() who ={},heulgitId={} pages={}",githubId,heulgitId,pages);
+		return ResponseEntity.ok().body(heulgitService.findLikedUser(heulgitId, githubId, pages));
+
+	}
 
 
 

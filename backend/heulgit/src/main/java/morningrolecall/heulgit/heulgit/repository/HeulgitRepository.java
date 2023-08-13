@@ -79,5 +79,7 @@ public interface HeulgitRepository extends JpaRepository<Heulgit, Long>, JpaSpec
 
 	//사용자가 좋아요한 흘깃 목록을 흘깃 순서대로 가져옴...
 	Slice<Heulgit> findByLikedUsersContains(User user, Pageable pageable);
-
+	// 단일 게시물 좋아요한 사용자 목록
+	@Query("SELECT u FROM Heulgit h JOIN h.likedUsers u WHERE h.heulgitId = :heulgitId")
+	Slice<User> findLikedUsersByHeulgitId(Long heulgitId, Pageable pageable);
 }
