@@ -21,6 +21,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import morningrolecall.heulgit.auth.service.AuthService;
 import morningrolecall.heulgit.auth.util.CookieManager;
+import morningrolecall.heulgit.eureka.service.EurekaService;
+import morningrolecall.heulgit.freeboard.service.FreeBoardService;
+import morningrolecall.heulgit.heulgit.Service.HeulgitService;
 import morningrolecall.heulgit.user.domain.dto.UserCommitTypeRequest;
 import morningrolecall.heulgit.user.service.UserService;
 
@@ -32,6 +35,9 @@ public class UserController {
 
 	private final UserService userService;
 	private final AuthService authService;
+	private final FreeBoardService freeBoardService;
+	private final EurekaService eurekaService;
+	private final HeulgitService heulgitService;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
@@ -133,14 +139,53 @@ public class UserController {
 		return ResponseEntity.ok().body(userService.getRankingInfo(githubId, type));
 	}
 
-	@GetMapping("/activities/my-likes")
-	public ResponseEntity<?> myLikesPostsList(@AuthenticationPrincipal String githubId) {
-		logger.debug("myLikesPostsList(), githubId = {}");
+	/**
+	 * 사용자는 좋아요 누른 자유 게시판 게시물을 볼 수 있다.
+	 * @param githubId
+	 * @param pages
+	 * @return
+	 */
+	@GetMapping("/activities/freeboard/my-likes")
+	public ResponseEntity<?> freeboardMyLikesList(@AuthenticationPrincipal String githubId,
+		@RequestParam("pages") int pages) {
+		logger.debug("freebaordMyLikesList(), githubId = {}, pages = {}", githubId, pages);
 
-		return null;
-		// return userService.findMyLikesPosts(githubId);
+		return ResponseEntity.ok().body(freeBoardService.findMyLikeFreeBoards(githubId, pages));
 	}
 
+	/**
+	 * 사용자는 좋아요 누른 흘깃 게시물을 볼 수 있다.
+	 * @param githubId
+	 * @param pages
+	 * @return
+	 */
+	@GetMapping("/activities/heulgit/my-likes")
+	public ResponseEntity<?> heulgitMyLikesList(@AuthenticationPrincipal String githubId,
+		@RequestParam("pages") int pages) {
+		logger.debug("heulgitMyLikesList(), githubId = {}, pages = {}", githubId, pages);
+
+		return ResponseEntity.ok().body(heulgitService.findMyLikeHeulgits(githubId, pages));
+	}
+
+	/**
+	 * 사용자는 좋아요 누른 유레카 게시물을 볼 수 있다.
+	 * @param githubId
+	 * @param pages
+	 * @return
+	 */
+	@GetMapping("/activities/eureka/my-likes")
+	public ResponseEntity<?> eurekaMyLikesList(@AuthenticationPrincipal String githubId,
+		@RequestParam("pages") int pages) {
+		logger.debug("eurekaMyLikesList(), githubId = {}, pages = {}", githubId, pages);
+
+		return ResponseEntity.ok().body(eurekaService.findMyLikeEurekas(githubId, pages));
+	}
+
+	/**
+	 * 사용자는 작성한 댓글을 볼 수 있다.
+	 * @param githubId
+	 * @return
+	 */
 	@GetMapping("/activities/my-comments")
 	public ResponseEntity<?> myCommentsList(@AuthenticationPrincipal String githubId) {
 		logger.debug("myCommentsList(), githubId = {}");
@@ -158,8 +203,9 @@ public class UserController {
 	@GetMapping("/search")
 	public ResponseEntity<?> followingsList(@AuthenticationPrincipal String githubId,
 		@RequestParam("keyword") String keyword) {
-		logger.debug("followingList(), githubId = {}");
+		logger.debug("followingList(), githubId = {}", githubId);
 
 		return ResponseEntity.ok().body(userService.findFollowingsByKeyword(githubId, keyword));
 	}
+
 }
