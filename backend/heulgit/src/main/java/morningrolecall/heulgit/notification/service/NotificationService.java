@@ -164,24 +164,30 @@ public class NotificationService {
 	 * @param notificationLikeRequest
 	 * */
 	public void addLikeNotification(NotificationLikeRequest notificationLikeRequest) {
+		try{
+			logger.debug("addLikeNotification(), notificationLikeRequest = {}, ", notificationLikeRequest);
+			//게시글 작성자가 없으면 끝
+			User receiver = userRepository.findUserByGithubId(notificationLikeRequest.getWriterId())
+				.orElseThrow(() -> new NoResultException());
 
-		logger.debug("addLikeNotification(), notificationLikeRequest = {}, ", notificationLikeRequest);
-		//게시글 작성자가 없으면 끝
-		User receiver = userRepository.findUserByGithubId(notificationLikeRequest.getWriterId())
-			.orElseThrow(() -> new NoResultException());
+			User sender = userRepository.findUserByGithubId(notificationLikeRequest.getSenderId())
+				.orElseThrow(() -> new NoResultException());
 
-		User sender = userRepository.findUserByGithubId(notificationLikeRequest.getSenderId())
-			.orElseThrow(() -> new NoResultException());
+			Notification notification = Notification.builder()
+				.sender(sender).receiver(receiver)
+				.createdDate(LocalDateTime.now())
+				.hasRead(false)
+				.type(NotificationType.LIKE)
+				.relatedLink(notificationLikeRequest.getRelatedLink())
+				.build();
+			notificationRepository.saveAndFlush(notification);
+			send(notificationMapper.toLikeResponse(notification));
+		} catch(NoResultException e){
+			logger.debug("사용자가 우리서비스 사용자가 아님");
 
-		Notification notification = Notification.builder()
-			.sender(sender).receiver(receiver)
-			.createdDate(LocalDateTime.now())
-			.hasRead(false)
-			.type(NotificationType.LIKE)
-			.relatedLink(notificationLikeRequest.getRelatedLink())
-			.build();
-		notificationRepository.saveAndFlush(notification);
-		send(notificationMapper.toLikeResponse(notification));
+		}
+
+		
 	}
 
 	/**
@@ -224,20 +230,27 @@ public class NotificationService {
 			}
 
 		}
-		// 게시글 작성자가 우리 서비스 사용자일 때 알림 전송
-		User receiver = userRepository.findUserByGithubId(notificationCommentRequest.getWriterId())
-			.orElseThrow(() -> new NoResultException());
-		Notification notification = Notification.builder()
-			.sender(sender)
-			.receiver(receiver)
-			.createdDate(LocalDateTime.now())
-			.hasRead(false)
-			.type(NotificationType.COMMENT)
-			.content(notificationCommentRequest.getContent())
-			.relatedLink(notificationCommentRequest.getRelatedLink())
-			.build();
-		notificationRepository.saveAndFlush(notification);
-		send(notificationMapper.toCommentResponse(notification));
+		try{
+			// 게시글 작성자가 우리 서비스 사용자일 때 알림 전송
+			User receiver = userRepository.findUserByGithubId(notificationCommentRequest.getWriterId())
+				.orElseThrow(() -> new NoResultException());
+			Notification notification = Notification.builder()
+				.sender(sender)
+				.receiver(receiver)
+				.createdDate(LocalDateTime.now())
+				.hasRead(false)
+				.type(NotificationType.COMMENT)
+				.content(notificationCommentRequest.getContent())
+				.relatedLink(notificationCommentRequest.getRelatedLink())
+				.build();
+			notificationRepository.saveAndFlush(notification);
+			send(notificationMapper.toCommentResponse(notification));
+
+		} catch (NoResultException e) {
+			logger.debug("작성자가 서비스 사용자가 아님");
+
+		}
+
 	}
 
 	/**
@@ -256,8 +269,6 @@ public class NotificationService {
 			if (notification.getType() == NotificationType.COMMENT) {
 				notificationResponses.add(notificationMapper.toCommentResponse(notification));
 			} else if (notification.getType() == NotificationType.FOLLOW) {
-				/*TODO: senderId를 가지고
-				   팔로우 여부를 확인하여 실제 값 넣기 */
 				notificationResponses.add(notificationMapper.toFollowResponse(notification, relationRepository.existsByFromIdAndToId(receiver.getGithubId(),notification.getSender().getGithubId())));
 			} else if (notification.getType() == NotificationType.LIKE) {
 				notificationResponses.add(notificationMapper.toLikeResponse(notification));

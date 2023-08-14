@@ -24,6 +24,9 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaRequest;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.eureka.service.EurekaService;
+import morningrolecall.heulgit.notification.domain.NotificationType;
+import morningrolecall.heulgit.notification.domain.dto.NotificationLikeRequest;
+import morningrolecall.heulgit.notification.service.NotificationService;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class EurekaController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final EurekaService eurekaService;
+	private final NotificationService notificationService;
 
 	@GetMapping("/posts")
 	public ResponseEntity<?> eurekaList(@RequestParam String sort, @RequestParam int pages) {
@@ -104,6 +108,10 @@ public class EurekaController {
 		logger.debug("eurekaLike(), who = {}, eurekaId = {}", userId, eurekaId);
 
 		eurekaService.likeEureka(userId, eurekaId);
+		String writerId = eurekaService.findEureka(eurekaId).getUser().getGithubId();
+		NotificationLikeRequest notificationLikeRequest = new NotificationLikeRequest(userId,writerId,
+			"/eureka/posts/"+eurekaId, NotificationType.LIKE);
+		notificationService.addLikeNotification(notificationLikeRequest);
 
 		return ResponseEntity.ok().build();
 	}

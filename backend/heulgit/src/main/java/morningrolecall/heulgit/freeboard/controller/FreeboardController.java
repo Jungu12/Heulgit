@@ -26,6 +26,10 @@ import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardRequest;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardUpdateRequest;
 import morningrolecall.heulgit.freeboard.service.FreeBoardService;
+import morningrolecall.heulgit.notification.domain.NotificationType;
+import morningrolecall.heulgit.notification.domain.dto.NotificationFollowRequest;
+import morningrolecall.heulgit.notification.domain.dto.NotificationLikeRequest;
+import morningrolecall.heulgit.notification.service.NotificationService;
 
 @RestController
 @RequestMapping("/api/freeboard")
@@ -33,6 +37,7 @@ import morningrolecall.heulgit.freeboard.service.FreeBoardService;
 public class FreeboardController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final FreeBoardService freeBoardService;
+	private final NotificationService notificationService;
 
 	@GetMapping("/posts")
 	public ResponseEntity<?> freeBoardList(@RequestParam String sort, @RequestParam int pages) {
@@ -106,6 +111,12 @@ public class FreeboardController {
 		logger.debug("freeBoardLike(), who = {}, freeBoardId = {}", userId, freeBoardId);
 
 		freeBoardService.likeFreeBoard(userId, freeBoardId);
+		String writerId = freeBoardService.findFreeBoard(freeBoardId).getUser().getGithubId();
+
+		NotificationLikeRequest notificationLikeRequest = new NotificationLikeRequest(userId,writerId,
+			"/freeboard/posts/"+freeBoardId, NotificationType.LIKE);
+		notificationService.addLikeNotification(notificationLikeRequest);
+
 
 		return ResponseEntity.ok().build();
 	}
