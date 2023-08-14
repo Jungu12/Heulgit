@@ -145,7 +145,7 @@ type Props = {
 
 const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 	const navigation = useNavigate();
-	// const githubId = useSelector((state: RootState) => state.user.user?.githubId);
+	const githubId = useSelector((state: RootState) => state.user.user?.githubId);
 
 	const [liked, setLiked] = useState(false);
 	const [likeNum, setLikeNum] = useState(feed.likedUsers.length);

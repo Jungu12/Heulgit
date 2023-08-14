@@ -3,9 +3,8 @@
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import React, { useEffect } from 'react';
 import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
-import { useOutletContext } from 'react-router';
-import { FreeBoardPostType } from '@typedef/community/freeboard.types';
 import { useOutletContext } from 'react-router-dom';
+import { FreeBoardPostType } from '@typedef/community/freeboard.types';
 
 type OutletProps = {
 	freeBoardFeedList: FreeBoardPostType[];

@@ -11,7 +11,7 @@ import CommunityFilterPC from '@pages/community/CommunityFilterPC';
 import CommunitySideBarContent from '@pages/community/CommunitySideBarContent';
 import Sidebar from '@components/common/Sidebar';
 import TabletNavigation from '@components/common/TabletNavigation';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
@@ -220,15 +220,15 @@ const FreePostViewPage = () => {
 		setIsFilterOpen(false);
 	}, []);
 
-	// // 메뉴버튼 여는 함수
-	// const onClickMenu = useCallback(() => {
-	// 	setIsMenuOpen(true);
-	// }, []);
+	// 메뉴버튼 여는 함수
+	const onClickMenu = useCallback(() => {
+		setIsMenuOpen(true);
+	}, []);
 
-	// // 메뉴버튼 닫는 함수
-	// const onClickMenuClose = useCallback(() => {
-	// 	setIsMenuOpen(false);
-	// }, []);
+	// 메뉴버튼 닫는 함수
+	const onClickMenuClose = useCallback(() => {
+		setIsMenuOpen(false);
+	}, []);
 
 	// 수정 함수
 	const onClickEdit = useCallback(() => {
