@@ -188,10 +188,10 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/activities/my-comments")
-	public ResponseEntity<?> myCommentsList(@AuthenticationPrincipal String githubId) {
-		logger.debug("myCommentsList(), githubId = {}");
+	public ResponseEntity<?> myCommentsList(@AuthenticationPrincipal String githubId, @RequestParam int pages) {
+		logger.debug("myCommentsList(), githubId = {}, pages = {}", githubId, pages);
 
-		return null;
+		return ResponseEntity.ok().body(userService.findMyLikesComments(githubId, pages));
 	}
 
 	/**
