@@ -33,7 +33,7 @@ const ChatPage = () => {
 	// 채팅방 연결 함수
 	const connectHandler = useCallback(() => {
 		client.current = Stomp.over(() => {
-			const sock = new SockJS('https://i9d211.p.ssafy.io/gm', {
+			const sock = new SockJS('https://i9d211.p.ssafy.io/api/gm', {
 				headers: { Authorization: `Bearer ${accessToken}` },
 			});
 			return sock;
