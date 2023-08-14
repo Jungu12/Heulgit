@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,8 +37,6 @@ import morningrolecall.heulgit.auth.repository.AuthRepository;
 import morningrolecall.heulgit.exception.AuthException;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.UserException;
-import morningrolecall.heulgit.freeboard.service.FreeBoardService;
-import morningrolecall.heulgit.heulgit.Service.HeulgitService;
 import morningrolecall.heulgit.heulgit.domain.Heulgit;
 import morningrolecall.heulgit.heulgit.repository.HeulgitRepository;
 import morningrolecall.heulgit.relation.domain.Relation;
@@ -43,27 +44,32 @@ import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.relation.service.RelationService;
 import morningrolecall.heulgit.user.domain.CommitAnalyze;
 import morningrolecall.heulgit.user.domain.User;
+import morningrolecall.heulgit.user.domain.dto.UserCommentResponse;
 import morningrolecall.heulgit.user.domain.dto.UserCommitInfoResponse;
 import morningrolecall.heulgit.user.domain.dto.UserCommitTypeRequest;
 import morningrolecall.heulgit.user.domain.dto.UserDetail;
-import morningrolecall.heulgit.user.domain.dto.UserPostResponse;
 import morningrolecall.heulgit.user.domain.dto.UserRankingResponse;
 import morningrolecall.heulgit.user.domain.dto.UserRepositoryResponse;
 import morningrolecall.heulgit.user.repository.CommitAnalyzeRepository;
+import morningrolecall.heulgit.user.repository.UserCommentRepository;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-	private final FreeBoardService freeBoardService;
 	private final RelationService relationService;
 	private final UserRepository userRepository;
 	private final AuthRepository authRepository;
 	private final CommitAnalyzeRepository commitAnalyzeRepository;
 	private final RelationRepository relationRepository;
+	private final UserCommentRepository userCommentRepository;
 	private final RestTemplate restTemplate;
+<<<<<<<HEAD
+	private final int SIZE = 20;
+=======
 	private final HeulgitRepository heulgitRepository;
+>>>>>>>cb58f2072fa67c30d4871d64a19c09fc11b1334c
 	@Value("${github.user.repo-url}")
 	private String userInfoUrl;
 	@Value("${github.user.repo.commit-url}")
@@ -296,18 +302,18 @@ public class UserService {
 		}
 	}
 
-	public List<UserPostResponse> findMyLikesPosts(String githubId) {
-		List<UserPostResponse> myListsPosts = new ArrayList<>();
-		// myListsPosts.addAll(freeBoardService.)
-		// return
-		return null;
-	}
-
 	public List<UserDetail> findFollowingsByKeyword(String githubId, String keyword) {
 		return relationService.getFollowingsByKeyword(githubId, keyword);
 	}
 
-	public void fetchAndSaveUserRespositories(String githubId){
+	public Slice<UserCommentResponse> findMyLikesComments(String githubId, int page) {
+		Slice<UserCommentResponse> myLikesComments = userCommentRepository.fetchCommentsByUser(githubId,
+			PageRequest.of(page - 1, SIZE, Sort.by("updatedDate").descending()));
+
+		return myLikesComments;
+	}
+
+	public void fetchAndSaveUserRespositories(String githubId) {
 		List<Heulgit> heulgitList = new ArrayList<>();
 
 		HttpHeaders headers = new HttpHeaders();
@@ -355,8 +361,9 @@ public class UserService {
 		}
 		// 이건 전체 저장.
 		heulgitRepository.saveAll(heulgitList);
-		for(Heulgit heulgit:heulgitList){
-			Optional<Heulgit> existingHeulgit = heulgitRepository.findByGithubIdAndHeulgitName(heulgit.getGithubId(), heulgit.getHeulgitName());
+		for (Heulgit heulgit : heulgitList) {
+			Optional<Heulgit> existingHeulgit = heulgitRepository.findByGithubIdAndHeulgitName(heulgit.getGithubId(),
+				heulgit.getHeulgitName());
 			if (existingHeulgit.isPresent()) {
 				Heulgit storedHeulgit = existingHeulgit.get();
 				// DB에 저장된 정보의 업데이트 날짜와 현재 가져온 정보의 업데이트 날짜를 비교하여 최신화 여부 판단
@@ -383,6 +390,7 @@ public class UserService {
 		}
 
 	}
+
 	public String fetchReadmeContent(String owner, String repoName) {
 		String url = "https://api.github.com/repos/" + owner + "/" + repoName + "/readme";
 
@@ -390,9 +398,9 @@ public class UserService {
 		headers.set("Authorization", "Bearer " + githubApiToken);
 		headers.set("X-GitHub-Api-Version", "2022-11-28");
 
-
 		try {
-			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers),
+				String.class);
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode rootNode = objectMapper.readTree(response.getBody());
@@ -404,10 +412,6 @@ public class UserService {
 			e.printStackTrace();
 		}
 
-
 		return null;
 	}
-
-
-
 }
