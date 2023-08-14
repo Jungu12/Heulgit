@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
-import MyCommentList from '@components/myActivity/MyCommentList';
 
 const StyledBox = styled.div`
 	height: 100vh;
