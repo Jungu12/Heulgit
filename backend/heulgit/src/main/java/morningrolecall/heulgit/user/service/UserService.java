@@ -65,11 +65,10 @@ public class UserService {
 	private final RelationRepository relationRepository;
 	private final UserCommentRepository userCommentRepository;
 	private final RestTemplate restTemplate;
-<<<<<<<HEAD
 	private final int SIZE = 20;
-=======
+
 	private final HeulgitRepository heulgitRepository;
->>>>>>>cb58f2072fa67c30d4871d64a19c09fc11b1334c
+
 	@Value("${github.user.repo-url}")
 	private String userInfoUrl;
 	@Value("${github.user.repo.commit-url}")

@@ -330,24 +330,24 @@ public class EurekaService {
 	 * 1. 정렬 조건 확인
 	 * 2. 정렬 후 페이지네이션 반환
 	 * */
-	public Slice<EurekaDetailResponse> searchTitleEurekas(String keyword, String sort, int pages) {
-		if (sort.equals("likes")) {
-			Slice<Eureka> eurekas = eurekaRepository.findContainsTitleSortedByLikesEurekas(keyword,
-				PageRequest.of(pages - 1, SIZE));
-			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
-		}
-
-		if (sort.equals("comments")) {
-			Slice<Eureka> eurekas = eurekaRepository.findContainsTitleSortedByCommentsEurekas(keyword,
-				PageRequest.of(pages - 1, SIZE));
-			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
-		}
-
-		if (sort.equals("views")) {
-			Slice<Eureka> eurekas = eurekaRepository.findSliceByTitleContains(keyword,
-				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
-			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
-		}
+	public Slice<EurekaDetailResponse> searchTitleEurekas(String keyword,  int pages) {
+		// if (sort.equals("likes")) {
+		// 	Slice<Eureka> eurekas = eurekaRepository.findContainsTitleSortedByLikesEurekas(keyword,
+		// 		PageRequest.of(pages - 1, SIZE));
+		// 	return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
+		// }
+		//
+		// if (sort.equals("comments")) {
+		// 	Slice<Eureka> eurekas = eurekaRepository.findContainsTitleSortedByCommentsEurekas(keyword,
+		// 		PageRequest.of(pages - 1, SIZE));
+		// 	return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
+		// }
+		//
+		// if (sort.equals("views")) {
+		// 	Slice<Eureka> eurekas = eurekaRepository.findSliceByTitleContains(keyword,
+		// 		PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+		// 	return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
+		// }
 
 		// 최신 순
 		Slice<Eureka> eurekas = eurekaRepository.findSliceByTitleContains(keyword,
@@ -360,24 +360,24 @@ public class EurekaService {
 	 * 1. 정렬 조건 확인
 	 * 2. 정렬 후 페이지네이션 반환
 	 * */
-	public Slice<EurekaDetailResponse> searchUserEurekas(String keyword, String sort, int pages) {
-		if (sort.equals("likes")) {
-			Slice<Eureka> eurekas = eurekaRepository.findByUserNameSortedByLikesEurekas(keyword,
-				PageRequest.of(pages - 1, SIZE));
-			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
-		}
-
-		if (sort.equals("comments")) {
-			Slice<Eureka> eurekas = eurekaRepository.findByUserNameSortedByCommentsEurekas(keyword,
-				PageRequest.of(pages - 1, SIZE));
-			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
-		}
-
-		if (sort.equals("views")) {
-			Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubId(keyword,
-				PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
-			return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
-		}
+	public Slice<EurekaDetailResponse> searchUserEurekas(String keyword, int pages) {
+		// if (sort.equals("likes")) {
+		// 	Slice<Eureka> eurekas = eurekaRepository.findByUserNameSortedByLikesEurekas(keyword,
+		// 		PageRequest.of(pages - 1, SIZE));
+		// 	return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
+		// }
+		//
+		// if (sort.equals("comments")) {
+		// 	Slice<Eureka> eurekas = eurekaRepository.findByUserNameSortedByCommentsEurekas(keyword,
+		// 		PageRequest.of(pages - 1, SIZE));
+		// 	return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
+		// }
+		//
+		// if (sort.equals("views")) {
+		// 	Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubId(keyword,
+		// 		PageRequest.of(pages - 1, SIZE, Sort.by("view").descending().and(Sort.by("updatedDate").descending())));
+		// 	return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
+		// }
 
 		// 최신 순
 		Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubId(keyword,
