@@ -31,7 +31,7 @@ import morningrolecall.heulgit.user.repository.UserRepository;
 @RequiredArgsConstructor
 public class HeulgitService {
 
-	private final int SIZE = 20;
+	private final int SIZE = 10;
 	private final String GITHUB_API_URL = "https://api.github.com/search/repositories";
 	private final RestTemplate restTemplate;
 	private final HeulgitRepository heulgitRepository;
