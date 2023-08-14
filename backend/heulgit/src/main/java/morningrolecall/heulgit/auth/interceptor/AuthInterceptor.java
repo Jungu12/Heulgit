@@ -24,25 +24,20 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
 		Exception {
-		try {
-			logger.debug("interceptor 호출==============");
-			String refreshToken = jwtProvider.resolveToken(request).getValue();
-			logger.debug("============interceptor 호출 후 token = {}", refreshToken);
+		logger.debug("interceptor 호출==============");
+		String refreshToken = jwtProvider.resolveToken(request);
+		logger.debug("============interceptor 호출 후 token = {}", refreshToken);
 
-			if (refreshToken.equals("")) {
-				logger.debug("토큰 없음");
-				return false;
-			}
-
-			if (!jwtRedisManager.isJwtExists(jwtProvider.getUserId(refreshToken))) {
-				logger.debug("redis에 토큰 없음 cookie안 토큰 = {}", jwtProvider.getUserId(refreshToken));
-				return false;
-			}
-
-			return true;
-		} catch (Exception e) {
-			logger.error("Interceptor 예외 발생: {}", e.getMessage());
+		if (refreshToken.equals("")) {
+			logger.debug("토큰 없음");
 			return false;
 		}
+
+		if (!jwtRedisManager.isJwtExists(jwtProvider.getUserId(refreshToken))) {
+			logger.debug("redis에 토큰 없음 cookie안 토큰 = {}", jwtProvider.getUserId(refreshToken));
+			return false;
+		}
+
+		return true;
 	}
 }
