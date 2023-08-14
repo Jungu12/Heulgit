@@ -138,18 +138,14 @@ const MyLikePostPage = () => {
 						selectedMenu={selectedPost}
 					/>
 				</StyledCate>
-				<p>
+				<div>
 					{selectedPost === '유레카' && (
 						<div>
 							<LikeEureka />
 						</div>
 					)}
-					{selectedPost === '자유' && (
-						<div>
-							<LikeFreeboard />
-						</div>
-					)}
-				</p>
+					{selectedPost === '자유' && <div>{/* <LikeFreeboard /> */}</div>}
+				</div>
 			</StyledContent>
 
 			<StyledSideR>

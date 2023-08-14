@@ -24,6 +24,9 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaRequest;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.eureka.service.EurekaService;
+import morningrolecall.heulgit.notification.domain.NotificationType;
+import morningrolecall.heulgit.notification.domain.dto.NotificationLikeRequest;
+import morningrolecall.heulgit.notification.service.NotificationService;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class EurekaController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final EurekaService eurekaService;
+	private final NotificationService notificationService;
 
 	@GetMapping("/posts")
 	public ResponseEntity<?> eurekaList(@RequestParam String sort, @RequestParam int pages) {
@@ -52,7 +56,8 @@ public class EurekaController {
 		@RequestPart(value = "file", required = false) List<MultipartFile> multipartFiles, @RequestPart(value= "data") EurekaRequest eurekaRequest ) {
 		logger.debug("eurekaRegister(), who = {}, title = {}, content = {}, link = {}", githubId,
 			eurekaRequest.getTitle(),
-			eurekaRequest.getContent(),eurekaRequest.getLink());
+			eurekaRequest.getContent(),
+			eurekaRequest.getLink());
 		if (multipartFiles != null) {
 			// multipartFiles가 null이 아닐 때의 처리
 			eurekaService.addEureka(githubId, eurekaRequest, multipartFiles);
@@ -103,6 +108,10 @@ public class EurekaController {
 		logger.debug("eurekaLike(), who = {}, eurekaId = {}", userId, eurekaId);
 
 		eurekaService.likeEureka(userId, eurekaId);
+		String writerId = eurekaService.findEureka(eurekaId).getUser().getGithubId();
+		NotificationLikeRequest notificationLikeRequest = new NotificationLikeRequest(userId,writerId,
+			"/eureka/posts/"+eurekaId, NotificationType.LIKE);
+		notificationService.addLikeNotification(notificationLikeRequest);
 
 		return ResponseEntity.ok().build();
 	}
@@ -133,17 +142,16 @@ public class EurekaController {
 	}
 
 	@GetMapping("/myposts")
-	public ResponseEntity<?> eurekaMyPosts(@AuthenticationPrincipal String userId, @RequestParam String sort,
-		@RequestParam int pages) {
-		logger.debug("eurekaMyPosts(), who = {}, sort = {}, pages = {}", userId, sort, pages);
+	public ResponseEntity<?> eurekaMyPosts(@AuthenticationPrincipal String userId, @RequestParam int pages) {
+		logger.debug("eurekaMyPosts(), who = {}, sort = {}, pages = {}", userId,  pages);
 
-		return ResponseEntity.ok().body(eurekaService.searchUserEurekas(userId, sort, pages));
+		return ResponseEntity.ok().body(eurekaService.findMyEurekas(userId,  pages));
 	}
 
-	@GetMapping("/posts/likes/{eurekaId}")
-	public ResponseEntity<?> eurekaLikedUsers(@PathVariable Long eurekaId) {
-		logger.debug("eurekaLikedUsers(), eurekaId = {}", eurekaId);
+	@GetMapping("/posts/likes")
+	public ResponseEntity<?> eurekaLikedUsers(@AuthenticationPrincipal String githubId,@RequestParam Long eurekaId, int pages) {
+		logger.debug("eurekaLikedUsers() who ={},eurekaId={} pages={}",githubId,eurekaId,pages);
 
-		return ResponseEntity.ok().body(eurekaService.findLikedUsers(eurekaId));
+		return ResponseEntity.ok().body(eurekaService.findLikedUser(eurekaId,githubId,pages));
 	}
 }

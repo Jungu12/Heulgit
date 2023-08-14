@@ -29,7 +29,7 @@ const FreePostCommentList = ({ comments }: Props) => {
 		<StyledCommentListContainer>
 			{comments.map((comment) => (
 				<>
-					<FreePostComment comment={comment} key={comment.id} />
+					<FreePostComment comment={comment} key={comment.commentId} />
 					<Separation />
 				</>
 			))}

@@ -15,6 +15,14 @@ const StyledTitle = styled.h1`
 	margin-bottom: 4px;
 `;
 
+const StyledInputContainer = styled.div`
+	height: 48px;
+	width: 100%;
+	display: flex;
+	position: relative;
+	margin: -12px 0;
+`;
+
 // const StyledContentContainer = styled.div`
 // 	background-color: white;
 // 	/* z-index: 100; */
@@ -26,9 +34,19 @@ type Props = {
 	open: boolean;
 	children: React.ReactNode;
 	onDismiss?: () => void;
+	onHandleComment: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onClickSubbmit: () => Promise<void>;
+	input: string;
 };
 
-const CBottomSheet = ({ open, onDismiss, children }: Props) => {
+const CBottomSheet = ({
+	open,
+	onDismiss,
+	children,
+	onHandleComment,
+	onClickSubbmit,
+	input,
+}: Props) => {
 	return (
 		<StyledBottomSheetContainer>
 			<BottomSheet
@@ -46,7 +64,15 @@ const CBottomSheet = ({ open, onDismiss, children }: Props) => {
 					maxHeight * 0.6,
 				]}
 				header={<StyledTitle>댓글</StyledTitle>}
-				footer={<CommentInput />}
+				footer={
+					<StyledInputContainer>
+						<CommentInput
+							input={input}
+							onHandleComment={onHandleComment}
+							onClickSubbmit={onClickSubbmit}
+						/>
+					</StyledInputContainer>
+				}
 			>
 				{children}
 			</BottomSheet>

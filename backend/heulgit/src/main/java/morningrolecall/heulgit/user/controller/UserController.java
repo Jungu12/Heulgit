@@ -21,7 +21,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import morningrolecall.heulgit.auth.service.AuthService;
 import morningrolecall.heulgit.auth.util.CookieManager;
-import morningrolecall.heulgit.user.domain.dto.CommitType;
+import morningrolecall.heulgit.eureka.service.EurekaService;
+import morningrolecall.heulgit.freeboard.service.FreeBoardService;
+import morningrolecall.heulgit.heulgit.Service.HeulgitService;
+import morningrolecall.heulgit.user.domain.dto.UserCommitTypeRequest;
 import morningrolecall.heulgit.user.service.UserService;
 
 @RestController
@@ -32,7 +35,11 @@ public class UserController {
 
 	private final UserService userService;
 	private final AuthService authService;
+	private final FreeBoardService freeBoardService;
+	private final EurekaService eurekaService;
+	private final HeulgitService heulgitService;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 
 	/**
 	 * 사용자를 logout시킨다.
@@ -92,21 +99,39 @@ public class UserController {
 	}
 
 	/**
+	 * 유저의 커밋 타입을 조회한다.
+	 * @param githubId
+	 * @return
+	 */
+	@GetMapping("/commit-type")
+	public ResponseEntity<?> commitTypeList(@AuthenticationPrincipal String githubId) {
+		logger.debug("commitTypeList(), githubId = {}", githubId);
+
+		return ResponseEntity.ok().body(userService.getMyCommitType(githubId));
+	}
+
+	/**
 	 * 사용자는 커밋 분석에 사용할 매핑 정보를 커스텀할 수 있다.
 	 * @param githubId
-	 * @param commitTypes
+	 * @param userCommitTypeRespons
 	 * @return
 	 */
 	@PostMapping("/commit-custom")
 	public ResponseEntity<?> commitTypeModify(@AuthenticationPrincipal String githubId,
-		@RequestBody List<CommitType> commitTypes) {
+		@RequestBody List<UserCommitTypeRequest> userCommitTypeRespons) {
 		logger.debug("commitTypeModify(), githubId = {}", githubId);
 
-		userService.modifyCommitType(githubId, commitTypes);
+		userService.modifyCommitType(githubId, userCommitTypeRespons);
 
 		return ResponseEntity.ok().build();
 	}
 
+	/**
+	 * 사용자는 사용자가 팔로우한 사람들의 랭킹을 볼 수 있다.
+	 * @param githubId
+	 * @param type
+	 * @return
+	 */
 	@GetMapping("/ranking")
 	public ResponseEntity<?> rankingDetail(@AuthenticationPrincipal String githubId,
 		@RequestParam("type") String type) {
@@ -114,4 +139,74 @@ public class UserController {
 
 		return ResponseEntity.ok().body(userService.getRankingInfo(githubId, type));
 	}
+
+	/**
+	 * 사용자는 좋아요 누른 자유 게시판 게시물을 볼 수 있다.
+	 * @param githubId
+	 * @param pages
+	 * @return
+	 */
+	@GetMapping("/activities/freeboard/my-likes")
+	public ResponseEntity<?> freeboardMyLikesList(@AuthenticationPrincipal String githubId,
+		@RequestParam("pages") int pages) {
+		logger.debug("freebaordMyLikesList(), githubId = {}, pages = {}", githubId, pages);
+
+		return ResponseEntity.ok().body(freeBoardService.findMyLikeFreeBoards(githubId, pages));
+	}
+
+	/**
+	 * 사용자는 좋아요 누른 흘깃 게시물을 볼 수 있다.
+	 * @param githubId
+	 * @param pages
+	 * @return
+	 */
+	@GetMapping("/activities/heulgit/my-likes")
+	public ResponseEntity<?> heulgitMyLikesList(@AuthenticationPrincipal String githubId,
+		@RequestParam("pages") int pages) {
+		logger.debug("heulgitMyLikesList(), githubId = {}, pages = {}", githubId, pages);
+
+		return ResponseEntity.ok().body(heulgitService.findMyLikeHeulgits(githubId, pages));
+	}
+
+	/**
+	 * 사용자는 좋아요 누른 유레카 게시물을 볼 수 있다.
+	 * @param githubId
+	 * @param pages
+	 * @return
+	 */
+	@GetMapping("/activities/eureka/my-likes")
+	public ResponseEntity<?> eurekaMyLikesList(@AuthenticationPrincipal String githubId,
+		@RequestParam("pages") int pages) {
+		logger.debug("eurekaMyLikesList(), githubId = {}, pages = {}", githubId, pages);
+
+		return ResponseEntity.ok().body(eurekaService.findMyLikeEurekas(githubId, pages));
+	}
+
+	/**
+	 * 사용자는 작성한 댓글을 볼 수 있다.
+	 * @param githubId
+	 * @return
+	 */
+	@GetMapping("/activities/my-comments")
+	public ResponseEntity<?> myCommentsList(@AuthenticationPrincipal String githubId) {
+		logger.debug("myCommentsList(), githubId = {}");
+
+		return null;
+	}
+
+	/**
+	 * 사용자 멘션시 사용할 유저 검색 API
+	 * 키워드를 포함한 userId들을 조회한다.
+	 * @param githubId
+	 * @param keyword
+	 * @return
+	 */
+	@GetMapping("/search")
+	public ResponseEntity<?> followingsList(@AuthenticationPrincipal String githubId,
+		@RequestParam("keyword") String keyword) {
+		logger.debug("followingList(), githubId = {}", githubId);
+
+		return ResponseEntity.ok().body(userService.findFollowingsByKeyword(githubId, keyword));
+	}
+
 }

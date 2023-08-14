@@ -24,7 +24,7 @@ const PostViewComment = ({ eurekaComments }: EurekaProps) => {
 	return (
 		<StyledCommentListContainer>
 			{eurekaComments.map((comment) => (
-				<div key={comment.id}>
+				<div key={comment.commentId}>
 					{/* <Comment comment={comment} /> */}
 					<Separation />
 				</div>

@@ -5,7 +5,10 @@ import { images } from '@constants/images';
 import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+import {
+	FreeBoardPostType,
+	FreeBoardImageType,
+} from '@typedef/community/freeboard.types';
 
 // 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
@@ -149,6 +152,7 @@ const StyledUnderline = styled.div`
 
 type Props = {
 	feed: FreeBoardPostType;
+	img: FreeBoardImageType;
 };
 
 const FreePostViewFeedMobile = ({ feed }: Props) => {
@@ -159,9 +163,6 @@ const FreePostViewFeedMobile = ({ feed }: Props) => {
 		setLiked((prevLiked) => !prevLiked);
 	};
 
-	// 이미지 있는 경우에만 컨테이너 보여주기
-	const imageSrc = feed.images.length > 0 ? feed.images[0].file_uri : '';
-
 	const onClickComment = useCallback(() => {
 		console.log('댓글 클릭');
 	}, []);
@@ -171,7 +172,7 @@ const FreePostViewFeedMobile = ({ feed }: Props) => {
 	}, []);
 
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${feed.user.id}`);
+		navigation(`/profiles/${feed.user.githubId}`);
 	}, []);
 
 	return (
@@ -179,11 +180,11 @@ const FreePostViewFeedMobile = ({ feed }: Props) => {
 			<StyledTitleContainer>{feed.title}</StyledTitleContainer>
 			<StyledTopLine>
 				<StyledProfileContainer onClick={onClickUserProfile}>
-					<StyledProfileImage src={feed.user.avater_url} alt="user_profile" />
+					<StyledProfileImage src={feed.user.avatarUrl} alt="user_profile" />
 					<StyledP>
-						<StyledUserId>{feed.user.id}</StyledUserId>
+						<StyledUserId>{feed.user.githubId}</StyledUserId>
 						<StyledUpdateTime>
-							{feed.updated_date} · 조회 수 {feed.views}회
+							{feed.updatedDate} · 조회 수 {feed.view}회
 						</StyledUpdateTime>
 					</StyledP>
 				</StyledProfileContainer>
@@ -191,11 +192,11 @@ const FreePostViewFeedMobile = ({ feed }: Props) => {
 			<StyledContentContainer>
 				<StyledContent>{feed.content}</StyledContent>
 			</StyledContentContainer>
-			{imageSrc && (
+			{/* {imageSrc && (
 				<StyledImgContainer>
 					<StyledImg src={imageSrc} />
 				</StyledImgContainer>
-			)}
+			)} */}
 			<StyledButtonContainer>
 				<img
 					src={
@@ -209,8 +210,8 @@ const FreePostViewFeedMobile = ({ feed }: Props) => {
 				<img src={images.share} alt="share_button" />
 			</StyledButtonContainer>
 			<StyledSubDataContainer>
-				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
-				<div onClick={onClickComment}>{`댓글 ${feed.comments}개`}</div>
+				<div onClick={onClickLike}>{`좋아요 ${feed.likedUsers}개 · `}</div>
+				<div onClick={onClickComment}>{`댓글 ${feed.freeBoardComments}개`}</div>
 			</StyledSubDataContainer>
 			<StyledUnderline />
 		</StyledFeedItemContainer>
