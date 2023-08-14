@@ -3,7 +3,6 @@ package morningrolecall.heulgit.freeboard.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
@@ -204,7 +203,6 @@ public class FreeBoardService {
 
 	}
 
-
 	/**
 	 * FreeBoardImages를 List에 담아 반환
 	 * 1. 이미지 파일 정보를 FreeBoardImage로 변환
@@ -290,19 +288,21 @@ public class FreeBoardService {
 		return freeBoardRepository.findFreeBoardByFreeBoardId(eurekaId)
 			.orElseThrow(() -> new FreeBoardException(ExceptionCode.POST_NOT_FOUND)).getLikedUsers();
 	}*/
-	public Slice<FreeBoardLikeUserResponse> findLikedUsers(Long freeBoardId,String githubId, int pages){
-		Slice<User> likedUser = freeBoardRepository.findLikedUsersByFreeBoardId(freeBoardId,PageRequest.of(pages - 1, SIZE));
-		return new SliceImpl<>(toLikeUserResponse(likedUser,githubId),likedUser.getPageable(),likedUser.hasNext());
+	public Slice<FreeBoardLikeUserResponse> findLikedUsers(Long freeBoardId, String githubId, int pages) {
+		Slice<User> likedUser = freeBoardRepository.findLikedUsersByFreeBoardId(freeBoardId,
+			PageRequest.of(pages - 1, SIZE));
+		return new SliceImpl<>(toLikeUserResponse(likedUser, githubId), likedUser.getPageable(), likedUser.hasNext());
 	}
+
 	/** 사용자가 좋아요한 게시물 목록 반환
 	 * */
 	public Slice<FreeBoardDetailResponse> findMyLikeFreeBoards(String githubId,
-		int pages){
+		int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
 			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
 		Slice<FreeBoard> freeBoards = freeBoardRepository.findByLikedUsersContains(user,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
-		return new SliceImpl<>(toResponse(freeBoards),freeBoards.getPageable(),freeBoards.hasNext());
+		return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
 	}
 
 	/**
@@ -366,7 +366,6 @@ public class FreeBoardService {
 
 	}
 
-
 	/**
 	 * Slice<FreeBoard>를 List<FreeboardDetailResponse>로 변환
 	 * */
@@ -383,12 +382,13 @@ public class FreeBoardService {
 			.freeBoardComments(freeBoard.getFreeBoardComments())
 			.build()).collect(Collectors.toList());
 	}
+
 	/**
-	* Slice<User>를 List<FreeBoardLikeUserResponse>로 변환
+	 * Slice<User>를 List<FreeBoardLikeUserResponse>로 변환
 	 * */
-	private List<FreeBoardLikeUserResponse> toLikeUserResponse(Slice<User> likedUsers, String githubId){
-		return likedUsers.getContent().stream().map(likedUser ->{
-			boolean isFollow = relationRepository.existsByFromIdAndToId(githubId,likedUser.getGithubId());
+	private List<FreeBoardLikeUserResponse> toLikeUserResponse(Slice<User> likedUsers, String githubId) {
+		return likedUsers.getContent().stream().map(likedUser -> {
+			boolean isFollow = relationRepository.existsByFromIdAndToId(githubId, likedUser.getGithubId());
 
 			return FreeBoardLikeUserResponse.builder()
 				.user(likedUser)
@@ -396,6 +396,4 @@ public class FreeBoardService {
 				.build();
 		}).collect(Collectors.toList());
 	}
-
-
 }
