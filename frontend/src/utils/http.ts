@@ -72,7 +72,7 @@ authAxios.interceptors.request.use(
 
 					// 액세스 토큰을 리덕스 스토어에 저장
 					store.dispatch(setToken(newAccessToken));
-					setUserData();
+					setUserData().then((res) => console.log(res));
 				}
 			} catch (error) {
 				console.error('액세스 토큰 재발급 실패:', error);
