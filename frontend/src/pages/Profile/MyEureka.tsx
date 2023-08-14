@@ -1,4 +1,3 @@
-import EurekaFeedItemListMobile from '@pages/Eureka/EurekaFeedItemListMobile';
 import { UserType } from '@typedef/common.types';
 import { UserPostType } from '@typedef/profile/user.types';
 import { authHttp } from '@utils/http';
