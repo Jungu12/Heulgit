@@ -3,13 +3,14 @@ import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
 import FreePostComment from './FreePostComment';
+import FreeBoardComment from './FreeBoardComment';
 
 const StyledCommentListContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 
 	width: 100%;
-	margin-bottom: 50px;
+	margin-bottom: 60px;
 `;
 
 // 분리 선
@@ -21,17 +22,24 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	comments: FreeBoardCommentType[];
+	commentList: FreeBoardCommentType[];
+	onClickCommentMenuOpen: (id: number) => void;
 };
 
-const FreePostCommentList = ({ comments }: Props) => {
+const FreePostCommentList = ({
+	commentList,
+	onClickCommentMenuOpen,
+}: Props) => {
 	return (
 		<StyledCommentListContainer>
-			{comments.map((comment) => (
-				<>
-					<FreePostComment comment={comment} key={comment.commentId} />
+			{commentList.map((comment) => (
+				<div key={comment.commentId}>
+					<FreePostComment
+						comment={comment}
+						onClickCommentMenuOpen={onClickCommentMenuOpen}
+					/>
 					<Separation />
-				</>
+				</div>
 			))}
 		</StyledCommentListContainer>
 	);

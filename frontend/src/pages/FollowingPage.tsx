@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '@components/common/Header';
 import FollowUser from '@components/profile/FollowUser';
+import { authHttp } from '@utils/http';
+import { UserFollowingType } from '@typedef/profile/user.types';
 
 const StyledBox = styled.div`
 	/* height: 100vh; */
@@ -25,6 +27,18 @@ const StyledUserList = styled.div`
 `;
 
 const FollowingPage = () => {
+	// 팔로잉 목록
+	useEffect(() => {
+		authHttp
+			.get<UserFollowingType[]>('freeboard/myposts?pages=1')
+			.then((response) => {
+				console.log('팔로잉 로드 성공.', response);
+			})
+			.catch((error) => {
+				console.error('팔로잉 로드 실패.', error);
+			});
+	}, []);
+
 	return (
 		<StyledBox>
 			<StyledHeader>

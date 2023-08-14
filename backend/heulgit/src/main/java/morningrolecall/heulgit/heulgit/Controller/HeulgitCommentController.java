@@ -46,7 +46,7 @@ public class HeulgitCommentController {
 		heulgitCommentService.addComment(githubId, heulgitCommentDto);
 		String writerId = heulgitService.findHeulgit(heulgitCommentDto.getHeulgitId()).getGithubId();
 		NotificationCommentRequest notificationCommentRequest = new NotificationCommentRequest(githubId,
-			writerId,"/heulgit/posts" + heulgitCommentDto.getHeulgitId(),heulgitCommentDto.getContent());
+			writerId,"/heulgit/posts/" + heulgitCommentDto.getHeulgitId(),heulgitCommentDto.getContent());
 		notificationService.addCommentNotification(notificationCommentRequest);
 
 		return ResponseEntity.ok().build();
@@ -77,8 +77,8 @@ public class HeulgitCommentController {
 
 	}
 	@GetMapping("/parent-comments")
-	public ResponseEntity<?> parentCommmentList(@RequestParam Long heulgitId ,@RequestParam int pages){
-		logger.debug("parentCommmentList(), pages={}",pages);
+	public ResponseEntity<?> parentCommentList(@RequestParam Long heulgitId ,@RequestParam int pages){
+		logger.debug("parentCommentList(), heulgitId={} ,pages={}",heulgitId,pages);
 		return ResponseEntity.ok().body(heulgitCommentService.findParentComments(heulgitId,pages));
 	}
 	@GetMapping("/child-comments")

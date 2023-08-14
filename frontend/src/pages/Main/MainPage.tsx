@@ -204,20 +204,19 @@ const MainPage = () => {
 		loadCommentList,
 	]);
 
-	const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
-		useInfiniteQuery(
-			['infiniteHeulgitFeed'],
-			({ pageParam = 1 }) => loadFeedList(pageParam),
-			{
-				getNextPageParam: (lastPage, allPages) => {
-					console.log('[allPage]', allPages);
+	const { data, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery(
+		['infiniteHeulgitFeed'],
+		({ pageParam = 1 }) => loadFeedList(pageParam),
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				console.log('[allPage]', allPages);
 
-					if (lastPage.length < 20) return;
-					return allPages.length + 1;
-				},
-				staleTime: 600000,
+				if (lastPage.length < 20) return;
+				return allPages.length + 1;
 			},
-		);
+			staleTime: 600000,
+		},
+	);
 
 	useEffect(() => {
 		// endDate가 변경된 경우 달력 닫기
@@ -243,13 +242,13 @@ const MainPage = () => {
 		}
 	}, [selelctedComment]);
 
-	if (isLoading) {
-		return <div>loading...</div>;
-	}
+	// if (isLoading) {
+	// 	return <div>loading...</div>;
+	// }
 
-	if (isError) {
-		return <div>error...</div>;
-	}
+	// if (isError) {
+	// 	return <div>error...</div>;
+	// }
 	return (
 		<>
 			<Mobile>
@@ -284,7 +283,7 @@ const MainPage = () => {
 					isLanguageOpen={isLanguageOpen}
 					isCommentOpen={isCommentOpen}
 					selelctedComment={selelctedComment}
-					feedList={data.pages}
+					feedList={data?.pages}
 					hasMore={hasNextPage ? true : false}
 					commentInput={commentInput}
 					commentList={commentList}
