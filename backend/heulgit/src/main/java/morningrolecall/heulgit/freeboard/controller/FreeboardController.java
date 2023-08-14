@@ -26,6 +26,10 @@ import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardRequest;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardUpdateRequest;
 import morningrolecall.heulgit.freeboard.service.FreeBoardService;
+import morningrolecall.heulgit.notification.domain.NotificationType;
+import morningrolecall.heulgit.notification.domain.dto.NotificationFollowRequest;
+import morningrolecall.heulgit.notification.domain.dto.NotificationLikeRequest;
+import morningrolecall.heulgit.notification.service.NotificationService;
 
 @RestController
 @RequestMapping("/api/freeboard")
@@ -33,6 +37,7 @@ import morningrolecall.heulgit.freeboard.service.FreeBoardService;
 public class FreeboardController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final FreeBoardService freeBoardService;
+	private final NotificationService notificationService;
 
 	@GetMapping("/posts")
 	public ResponseEntity<?> freeBoardList(@RequestParam String sort, @RequestParam int pages) {
@@ -106,6 +111,12 @@ public class FreeboardController {
 		logger.debug("freeBoardLike(), who = {}, freeBoardId = {}", userId, freeBoardId);
 
 		freeBoardService.likeFreeBoard(userId, freeBoardId);
+		String writerId = freeBoardService.findFreeBoard(freeBoardId).getUser().getGithubId();
+
+		NotificationLikeRequest notificationLikeRequest = new NotificationLikeRequest(userId,writerId,
+			"/freeboard/posts/"+freeBoardId, NotificationType.LIKE);
+		notificationService.addLikeNotification(notificationLikeRequest);
+
 
 		return ResponseEntity.ok().build();
 	}
@@ -126,26 +137,27 @@ public class FreeboardController {
 		return ResponseEntity.ok().body(freeBoardService.findMyFreeBoards(userId, pages));
 	}
 
-	@GetMapping("/posts/likes/{freeBoardId}")
-	public ResponseEntity<?> freeBoardLikedUsers(@PathVariable Long freeBoardId) {
-		logger.debug("freeBoardLikedUsers(), freeBoardId = {}", freeBoardId);
+	@GetMapping("/posts/likes")
+	public ResponseEntity<?> freeBoardLikedUsers(@AuthenticationPrincipal String githubId,@RequestParam Long freeBoardId
+	,@RequestParam int pages) {
+		logger.debug("freeBoardLikedUsers(), who={}, freeBoardId = {}, pages={}", githubId,freeBoardId,pages);
 
-		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId));
+		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId,githubId,pages));
 	}
 
-	@GetMapping("/search/title")
-	public ResponseEntity<?> freeBoardSearchByTitle(@RequestParam String keyword,
-		@RequestParam String sort, @RequestParam int pages) {
-		logger.debug("freeBoardSearchByTitle(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	// @GetMapping("/search/title")
+	// public ResponseEntity<?> freeBoardSearchByTitle(@RequestParam String keyword,
+	// 	@RequestParam String sort, @RequestParam int pages) {
+	// 	logger.debug("freeBoardSearchByTitle(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	//
+	// 	return ResponseEntity.ok().body(freeBoardService.searchTitleFreeBoards(keyword, sort, pages));
+	// }
 
-		return ResponseEntity.ok().body(freeBoardService.searchTitleFreeBoards(keyword, sort, pages));
-	}
-
-	@GetMapping("/search/user")
-	public ResponseEntity<?> freeBoardSearchByUser(@RequestParam String keyword,
-		@RequestParam String sort, @RequestParam int pages) {
-		logger.debug("freeBoardSearchByUser(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
-
-		return ResponseEntity.ok().body(freeBoardService.searchUserFreeBoards(keyword, sort, pages));
-	}
+	// @GetMapping("/search/user")
+	// public ResponseEntity<?> freeBoardSearchByUser(@RequestParam String keyword,
+	// 	@RequestParam String sort, @RequestParam int pages) {
+	// 	logger.debug("freeBoardSearchByUser(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	//
+	// 	return ResponseEntity.ok().body(freeBoardService.searchUserFreeBoards(keyword, sort, pages));
+	// }
 }

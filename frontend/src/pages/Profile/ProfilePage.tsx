@@ -35,7 +35,7 @@ const ProfilePage = () => {
 
 	const onClickGM = useCallback(() => {
 		authHttp.get<ChatRoomType>(`gm/room/access/${userId}`).then((res) => {
-			navigation(`/gm/${res.roomId}`);
+			navigation(`/gm/${res.roomId}`, { state: { room: res } });
 		});
 	}, []);
 
@@ -52,15 +52,6 @@ const ProfilePage = () => {
 			setSelectedMenu('프로필');
 		}
 	}, []);
-
-	// // 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
-	// useEffect(() => {
-	// 	const keysToDelete = ['selectedMenu', 'selectedFollow'];
-
-	// 	if (window.location.pathname === '/profiles/1') {
-	// 		deleteKeysFromSession(keysToDelete);
-	// 	}
-	// }, []);
 
 	return (
 		<StyledProfile>

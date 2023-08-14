@@ -10,4 +10,5 @@ public class HeulgitCommentDto {
 	private Long parentId;
 	private String content;
 	private Set<String> mentionedFollowers;
+
 }

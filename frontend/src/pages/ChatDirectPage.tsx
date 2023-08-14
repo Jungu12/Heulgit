@@ -200,6 +200,8 @@ const ChatDirectPage = () => {
 	// }, [state]);
 
 	useEffect(() => {
+		console.log('채팅방 입장 : ', state);
+
 		connectHandler(state.room.roomId);
 
 		return () => {
@@ -217,7 +219,9 @@ const ChatDirectPage = () => {
 	}, [message]);
 
 	useEffect(() => {
-		loadChatRoomLog(state.room.roomId);
+		if (state.room) {
+			loadChatRoomLog(state.room.roomId);
+		}
 	}, [state.room.roomId]);
 
 	return (

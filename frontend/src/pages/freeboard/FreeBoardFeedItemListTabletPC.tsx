@@ -32,7 +32,7 @@ const FreeBoardFeedItemListTabletPC = ({ feedList }: Props) => {
 		<StyledFeedListSection>
 			{feedList.map((feed, index) => (
 				<div key={index}>
-					<FreeBoardFeedItem feed={feed} />
+					{/* <FreeBoardFeedItem feed={feed} /> */}
 					<Separation />
 				</div>
 			))}

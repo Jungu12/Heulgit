@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import CategoryT from '@components/profile/CategoryT';
 import { useNavigate } from 'react-router-dom';
-import MyFreeboard from '@components/profile/MyFreeboard';
-import MyEureka from '@components/profile/MyEureka';
-import MyProfile from '@components/profile/MyProfile';
 import { colors } from '@constants/colors';
 import ReactModal from 'react-modal';
 import FollowingPage from '@pages/FollowingPage';
@@ -226,9 +223,9 @@ const ProfilePageWeb = ({
 				</StyledUserProfileBox>
 
 				<StyledProfileLow>
-					{selectedMenu === '프로필' && <MyProfile />}
-					{selectedMenu === '유레카' && <MyEureka />}
-					{selectedMenu === '자유' && <MyFreeboard />}
+					{/* {selectedMenu === '프로필' && <MyProfile />} */}
+					{/* {selectedMenu === '유레카' && <MyEureka />} */}
+					{/* {selectedMenu === '자유' && <MyFreeboard />} */}
 				</StyledProfileLow>
 			</StyledProfilePage>
 			<StyledR>

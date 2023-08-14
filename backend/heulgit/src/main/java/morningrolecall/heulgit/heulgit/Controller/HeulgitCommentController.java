@@ -1,5 +1,7 @@
 package morningrolecall.heulgit.heulgit.Controller;
 
+import javax.persistence.NoResultException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import morningrolecall.heulgit.heulgit.domain.dto.HeulgitCommentDto;
 import morningrolecall.heulgit.notification.domain.Notification;
 import morningrolecall.heulgit.notification.domain.dto.NotificationCommentRequest;
 import morningrolecall.heulgit.notification.service.NotificationService;
+import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @RestController
@@ -42,7 +46,7 @@ public class HeulgitCommentController {
 		heulgitCommentService.addComment(githubId, heulgitCommentDto);
 		String writerId = heulgitService.findHeulgit(heulgitCommentDto.getHeulgitId()).getGithubId();
 		NotificationCommentRequest notificationCommentRequest = new NotificationCommentRequest(githubId,
-			writerId,"/heulgit/posts" + heulgitCommentDto.getHeulgitId(),heulgitCommentDto.getContent());
+			writerId,"/heulgit/posts/" + heulgitCommentDto.getHeulgitId(),heulgitCommentDto.getContent());
 		notificationService.addCommentNotification(notificationCommentRequest);
 
 		return ResponseEntity.ok().build();
@@ -54,16 +58,33 @@ public class HeulgitCommentController {
 		@PathVariable long commentId) {
 		logger.debug("commentRemove(), who = {}, commentId = {}", githubId, commentId);
 
-		heulgitCommentService.removeComment("LEEILHO", commentId);
+		heulgitCommentService.removeComment(githubId, commentId);
 		return ResponseEntity.ok().build();
 
 	}
 
 	@GetMapping("/{heulgitId}")
-	public ResponseEntity<?> commentList(@PathVariable Long heulgitId) {
+	public ResponseEntity<?> commentList(@PathVariable Long heulgitId,int pages) {
 		logger.debug("commentList(), eurekaId = {}", heulgitId);
 
 		return ResponseEntity.ok().body(heulgitCommentService.findComments(heulgitId));
 	}
 
+	@GetMapping("/my-comments")
+	public ResponseEntity<?> myCommentList(@AuthenticationPrincipal String githubId, int pages){
+		logger.debug("myCommentList(),who={}, pages={}",githubId,pages);
+		return ResponseEntity.ok().body(heulgitCommentService.findMyComments(githubId,1));
+
+	}
+	@GetMapping("/parent-comments")
+	public ResponseEntity<?> parentCommentList(@RequestParam Long heulgitId ,@RequestParam int pages){
+		logger.debug("parentCommentList(), heulgitId={} ,pages={}",heulgitId,pages);
+		return ResponseEntity.ok().body(heulgitCommentService.findParentComments(heulgitId,pages));
+	}
+	@GetMapping("/child-comments")
+	public ResponseEntity<?> childCommentList(@RequestParam Long heulgitId, @RequestParam Long parentId, int pages){
+		logger.debug("childCommentList(),heulgitId={},parentId={}, pages={}",heulgitId,parentId,pages);
+		return ResponseEntity.ok().body(heulgitCommentService.findChildComments(heulgitId, parentId, pages));
+
+	}
 }

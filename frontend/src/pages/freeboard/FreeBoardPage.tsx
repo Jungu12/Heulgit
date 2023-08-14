@@ -1,12 +1,9 @@
 // 커뮤니티 내 자유게시판 전체 페이지
 
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
-import { images } from '@constants/images';
 import React, { useEffect } from 'react';
 import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
-import FreeBoardFeedItemListTabletPC from './FreeBoardFeedItemListTabletPC';
-import { EurekaPostType } from '@typedef/community/eureka.types';
-import { useOutletContext } from 'react-router';
+import { useOutletContext } from 'react-router-dom';
 import { FreeBoardPostType } from '@typedef/community/freeboard.types';
 
 type OutletProps = {

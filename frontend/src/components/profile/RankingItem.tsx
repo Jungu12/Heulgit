@@ -14,9 +14,10 @@ type RankingProps = {
 };
 
 const RankingItem = ({ rank }: RankingProps) => {
+	console.log(rank);
 	return (
 		<StyledRankingItem>
-			<div>{rank.github_id}</div>
+			<div>{rank.githubId}</div>
 			<div>{rank.count} 개</div>
 		</StyledRankingItem>
 	);
