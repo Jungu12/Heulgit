@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,32 +33,33 @@ import morningrolecall.heulgit.auth.repository.AuthRepository;
 import morningrolecall.heulgit.exception.AuthException;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.UserException;
-import morningrolecall.heulgit.freeboard.service.FreeBoardService;
 import morningrolecall.heulgit.relation.domain.Relation;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.relation.service.RelationService;
 import morningrolecall.heulgit.user.domain.CommitAnalyze;
 import morningrolecall.heulgit.user.domain.User;
+import morningrolecall.heulgit.user.domain.dto.UserCommentResponse;
 import morningrolecall.heulgit.user.domain.dto.UserCommitInfoResponse;
 import morningrolecall.heulgit.user.domain.dto.UserCommitTypeRequest;
 import morningrolecall.heulgit.user.domain.dto.UserDetail;
-import morningrolecall.heulgit.user.domain.dto.UserPostResponse;
 import morningrolecall.heulgit.user.domain.dto.UserRankingResponse;
 import morningrolecall.heulgit.user.domain.dto.UserRepositoryResponse;
 import morningrolecall.heulgit.user.repository.CommitAnalyzeRepository;
+import morningrolecall.heulgit.user.repository.UserCommentRepository;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-	private final FreeBoardService freeBoardService;
 	private final RelationService relationService;
 	private final UserRepository userRepository;
 	private final AuthRepository authRepository;
 	private final CommitAnalyzeRepository commitAnalyzeRepository;
 	private final RelationRepository relationRepository;
+	private final UserCommentRepository userCommentRepository;
 	private final RestTemplate restTemplate;
+	private final int SIZE = 20;
 	@Value("${github.user.repo-url}")
 	private String userInfoUrl;
 	@Value("${github.user.repo.commit-url}")
@@ -288,14 +292,14 @@ public class UserService {
 		}
 	}
 
-	public List<UserPostResponse> findMyLikesPosts(String githubId) {
-		List<UserPostResponse> myListsPosts = new ArrayList<>();
-		// myListsPosts.addAll(freeBoardService.)
-		// return
-		return null;
-	}
-
 	public List<UserDetail> findFollowingsByKeyword(String githubId, String keyword) {
 		return relationService.getFollowingsByKeyword(githubId, keyword);
+	}
+
+	public Slice<UserCommentResponse> findMyLikesComments(String githubId, int page) {
+		Slice<UserCommentResponse> myLikesComments = userCommentRepository.fetchCommentsByUser(githubId,
+			PageRequest.of(page - 1, SIZE, Sort.by("updatedDate").descending()));
+
+		return myLikesComments;
 	}
 }
