@@ -110,7 +110,7 @@ const ChatDirectPage = () => {
 			console.log('연결 시작', headers);
 
 			client.current = Stomp.over(() => {
-				const sock = new SockJS('http://192.168.100.64:8080/gm');
+				const sock = new SockJS('https://i9d211.p.ssafy.io/gm');
 				return sock;
 			});
 
