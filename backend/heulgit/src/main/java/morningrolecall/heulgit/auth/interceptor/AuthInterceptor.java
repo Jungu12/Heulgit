@@ -23,6 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
 		Exception {
 		String refreshToken = jwtProvider.resolveToken(request);
+		System.out.println("refresh = " + refreshToken);
 		if (refreshToken == null) {
 			return false;
 		}
@@ -30,7 +31,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		if (!jwtRedisManager.isJwtExists(jwtProvider.getUserId(refreshToken))) {
 			return false;
 		}
-		
+
 		return true;
 	}
 }
