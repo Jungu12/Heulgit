@@ -62,11 +62,6 @@ const StyledContent = styled.p`
 // `;
 
 // 몇 분 전
-const StyledTime = styled.div`
-	display: flex;
-	width: 50px;
-	font-size: 13px;
-`;
 
 // 옵션 선택 이미지 디브
 const StyledOptionContainer = styled.div`

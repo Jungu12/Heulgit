@@ -102,7 +102,7 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 		(state: RootState) => state.user.user?.avatarUrl,
 	);
 
-	const isKeywordValid = input!.trim().length > 0;
+	// const isKeywordValid = input!.trim().length > 0;
 
 	return (
 		<>
