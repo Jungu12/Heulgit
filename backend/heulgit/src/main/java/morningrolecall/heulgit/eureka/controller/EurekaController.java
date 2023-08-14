@@ -125,21 +125,21 @@ public class EurekaController {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/search/title")
-	public ResponseEntity<?> eurekaTitleSearch(@RequestParam String keyword,
-		@RequestParam String sort, @RequestParam int pages) {
-		logger.debug("eurekaSearch(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	// @GetMapping("/search/title")
+	// public ResponseEntity<?> eurekaTitleSearch(@RequestParam String keyword,
+	// 	@RequestParam String sort, @RequestParam int pages) {
+	// 	logger.debug("eurekaSearch(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	//
+	// 	return ResponseEntity.ok().body(eurekaService.searchTitleEurekas(keyword, sort, pages));
+	// }
 
-		return ResponseEntity.ok().body(eurekaService.searchTitleEurekas(keyword, sort, pages));
-	}
-
-	@GetMapping("/search/user")
-	public ResponseEntity<?> eurekaUserSearch(@RequestParam String keyword,
-		@RequestParam String sort, @RequestParam int pages) {
-		logger.debug("eurekaSearch(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
-
-		return ResponseEntity.ok().body(eurekaService.searchUserEurekas(keyword, sort, pages));
-	}
+	// @GetMapping("/search/user")
+	// public ResponseEntity<?> eurekaUserSearch(@RequestParam String keyword,
+	// 	@RequestParam String sort, @RequestParam int pages) {
+	// 	logger.debug("eurekaSearch(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	//
+	// 	return ResponseEntity.ok().body(eurekaService.searchUserEurekas(keyword, sort, pages));
+	// }
 
 	@GetMapping("/myposts")
 	public ResponseEntity<?> eurekaMyPosts(@AuthenticationPrincipal String userId, @RequestParam int pages) {
