@@ -87,6 +87,7 @@ public class JwtProvider {
 		for (Cookie cookie : cookies) {
 			logger.debug("cookie name = {}", cookie.getName());
 			if (cookie.getName().equals("refreshToken")) {
+				logger.debug("cookie name = {}, value = {}", cookie.getName(), cookie.getValue());
 				return cookie.getValue();
 			}
 		}
