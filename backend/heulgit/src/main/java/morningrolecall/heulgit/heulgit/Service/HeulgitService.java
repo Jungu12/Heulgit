@@ -18,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.heulgit.domain.Heulgit;
-// import morningrolecall.heulgit.heulgit.domain.HeulgitSpecification;
 import morningrolecall.heulgit.heulgit.domain.HeulgitComment;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitDetailResponse;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitLikeUserResponse;

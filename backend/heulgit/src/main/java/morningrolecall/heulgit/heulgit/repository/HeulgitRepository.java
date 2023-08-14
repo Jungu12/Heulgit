@@ -82,4 +82,6 @@ public interface HeulgitRepository extends JpaRepository<Heulgit, Long>, JpaSpec
 	// 단일 게시물 좋아요한 사용자 목록
 	@Query("SELECT u FROM Heulgit h JOIN h.likedUsers u WHERE h.heulgitId = :heulgitId")
 	Slice<User> findLikedUsersByHeulgitId(Long heulgitId, Pageable pageable);
+
+	Optional<Heulgit> findByGithubIdAndHeulgitName(String githubId, String heulgitName);
 }
