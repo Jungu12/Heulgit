@@ -83,6 +83,7 @@ public class JwtProvider {
 	// 요청 헤더에서 JWT 추출
 	public String resolveToken(HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
+
 		logger.debug("cookie size = {}", cookies.length);
 		for (Cookie cookie : cookies) {
 			logger.debug("cookie name = {}", cookie.getName());
@@ -91,7 +92,7 @@ public class JwtProvider {
 				return cookie.getValue();
 			}
 		}
-
+		
 		return null;
 	}
 
