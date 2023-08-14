@@ -29,7 +29,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			String refreshToken = jwtProvider.resolveToken(request);
 			logger.debug("============interceptor 호출 후 token = {}", refreshToken);
 
-			if (refreshToken == null) {
+			if (refreshToken.equals("")) {
 				logger.debug("토큰 없음");
 				return false;
 			}
@@ -42,8 +42,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return true;
 		} catch (Exception e) {
 			logger.error("Interceptor 예외 발생: {}", e.getMessage());
-			// 예외 처리 방식에 따라 처리
-			// 예를 들어, 예외를 던지거나 특정 응답을 보낼 수 있습니다.
 			return false;
 		}
 	}

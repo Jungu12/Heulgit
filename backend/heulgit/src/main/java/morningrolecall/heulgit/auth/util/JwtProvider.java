@@ -92,8 +92,8 @@ public class JwtProvider {
 				return cookie.getValue();
 			}
 		}
-		
-		return null;
+
+		return "";
 	}
 
 	// 유효 기간을 받아, 만료 날짜를 반환
