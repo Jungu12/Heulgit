@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import lombok.AllArgsConstructor;
@@ -47,16 +46,16 @@ public class WebConfig implements WebMvcConfigurer {
 			.host("http://localhost:8080");
 	}
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authInterceptor)
-			.addPathPatterns("/**") // 모든 경로에 대해 인터셉터 적용
-			.excludePathPatterns("/api/oauth/**", // oauth 관련 경로 제외
-				"/v3/api-docs/**",
-				"/swagger-ui/**",
-				"/favicon.ico",
-				"/swagger-resources/**");
-	}
+	// @Override
+	// public void addInterceptors(InterceptorRegistry registry) {
+	// 	registry.addInterceptor(authInterceptor)
+	// 		.addPathPatterns("/**") // 모든 경로에 대해 인터셉터 적용
+	// 		.excludePathPatterns("/api/oauth/**", // oauth 관련 경로 제외
+	// 			"/v3/api-docs/**",
+	// 			"/swagger-ui/**",
+	// 			"/favicon.ico",
+	// 			"/swagger-resources/**");
+	// }
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
