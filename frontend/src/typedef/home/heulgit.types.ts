@@ -4,7 +4,7 @@ export type HeulGitPostType = {
 	heulgitId: number;
 	githubId: string;
 	avatarUrl: string;
-	heulgitName: boolean;
+	heulgitName: string;
 	updatedDate: string;
 	content: string;
 	star: number;
@@ -28,19 +28,22 @@ export type HeulgitPostResponseType = {
 };
 
 export type HeulGitCommentType = {
-	id: number;
-	user: {
-		id: string;
-		avater_url: string;
-	};
+	commentId: number;
+	user: UserType;
 	content: string;
-	updated_date: string;
-	parent_id: number;
-	order: number;
+	updatedDate: string;
+	parentComment: null | number;
 };
 
 export type ProgrammingLanguageType = {
 	id: number;
 	name: string;
 	img: string;
+};
+
+export type HeulgitCommentWriteType = {
+	content: string;
+	heulgitId: number;
+	mentioedFollowers: [];
+	parentId: null | number;
 };

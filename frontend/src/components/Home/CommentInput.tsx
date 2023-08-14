@@ -10,6 +10,8 @@ const CommentInputContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	height: 56px;
+	padding: 0 12px;
 `;
 
 const StyledProfile = styled.img`
