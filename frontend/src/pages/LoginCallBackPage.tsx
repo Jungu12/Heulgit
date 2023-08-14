@@ -1,5 +1,5 @@
 import { setToken } from '@store/auth';
-import { authHttp, http } from '@utils/http';
+import { http } from '@utils/http';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +7,7 @@ import { styled } from 'styled-components';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Lottie from 'lottie-react';
 import loadingCat from '../loading.json';
-import { UserType } from '@typedef/common.types';
-import { setUser } from '@store/user';
+import { setUserData } from '@utils/api/Login/loginApi';
 
 const StyledCallBackContainer = styled.div`
 	display: flex;
@@ -34,16 +33,6 @@ const LoginCallBackPage = () => {
 	// 		.then((res) => console.log(res))
 	// 		.catch((err) => console.log(err));
 	// }, []);
-	const setUserData = useCallback(async () => {
-		authHttp
-			.get<UserType>('users')
-			.then((res) => {
-				dispatch(setUser(res));
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	}, []);
 
 	const getToken = useCallback(
 		async (code: string) => {

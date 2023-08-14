@@ -10,10 +10,6 @@ export const decodeUnicode = (str: string) => {
 			.join('');
 
 		const result = decodeURIComponent(decodedUnicode);
-		// result = result.replace('api', 'app');
-		// result = result.replace('branch=master', 'branch=main');
-
-		console.log('[변환된 코드]', result);
 
 		return result;
 	} catch (error) {
