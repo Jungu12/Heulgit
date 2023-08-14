@@ -229,6 +229,13 @@ const StyledClose = styled.img`
 	transform: translate(-50%, -50%);
 `;
 
+const LoadingConatiner = styled.div`
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+`;
+
 type Props = {
 	onClickHeulGit: () => void;
 	onClickStarSort: () => void;
@@ -407,7 +414,7 @@ const MainPageMobile = ({
 					hasMore={hasMore}
 				/>
 			) : (
-				<div>loading...</div>
+				<LoadingConatiner>loading...</LoadingConatiner>
 			)}
 			<CBottomSheet
 				open={isCommentOpen}
