@@ -27,7 +27,7 @@ export const gitLogin = async (code: string) => {
  */
 export const setUserData = async () => {
 	try {
-		const userResponse = await authHttp.get<UserType>('user');
+		const userResponse = await authHttp.get<UserType>('users');
 		console.log(userResponse);
 		setUser(userResponse);
 	} catch (error) {
