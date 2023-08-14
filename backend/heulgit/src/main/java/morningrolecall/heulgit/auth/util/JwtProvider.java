@@ -82,18 +82,22 @@ public class JwtProvider {
 
 	// 요청 헤더에서 JWT 추출
 	public Cookie resolveToken(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
+		try {
+			Cookie[] cookies = request.getCookies();
 
-		logger.debug("cookie size = {}", cookies.length);
-		for (Cookie cookie : cookies) {
-			logger.debug("cookie name = {}", cookie.getName());
-			if (cookie.getName().equals("refreshToken")) {
-				logger.debug("cookie name = {}, value = {}", cookie.getName(), cookie.getValue());
-				return cookie;
+			logger.debug("cookie size = {}", cookies.length);
+			for (Cookie cookie : cookies) {
+				logger.debug("cookie name = {}", cookie.getName());
+				if (cookie.getName().equals("refreshToken")) {
+					logger.debug("cookie name = {}, value = {}", cookie.getName(), cookie.getValue());
+					return cookie;
+				}
 			}
+		} catch (Exception e) {
+			logger.debug("Exception = {}", e);
+			return null;
 		}
-
-		return "";
+		return null;
 	}
 
 	// 유효 기간을 받아, 만료 날짜를 반환
