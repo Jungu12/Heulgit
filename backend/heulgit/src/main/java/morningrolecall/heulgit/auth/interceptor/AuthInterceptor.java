@@ -26,7 +26,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		Exception {
 		try {
 			logger.debug("interceptor 호출==============");
-			String refreshToken = jwtProvider.resolveToken(request);
+			String refreshToken = jwtProvider.resolveToken(request).getValue();
 			logger.debug("============interceptor 호출 후 token = {}", refreshToken);
 
 			if (refreshToken.equals("")) {
