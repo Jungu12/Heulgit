@@ -6,7 +6,10 @@ import CBottomSheet from '@components/common/CBottomSheet';
 import Navigation from '@components/common/Navigation';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import { HeulGitPostType } from '@typedef/home/heulgit.types';
+import {
+	HeulGitCommentType,
+	HeulGitPostType,
+} from '@typedef/home/heulgit.types';
 import { getYearAndMonth } from '@utils/date';
 import React from 'react';
 import ReactModal from 'react-modal';
@@ -182,7 +185,7 @@ const StyledDropDown = styled.ul`
 	position: absolute;
 	top: 123px;
 	left: 24px;
-	width: 100px;
+	width: 120px;
 	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 	opacity: 0;
 	visibility: hidden;
@@ -245,9 +248,12 @@ type Props = {
 	onClickLanguage: (language: string) => void;
 	onClickNotification: () => void;
 	onClickGitMessage: () => void;
+	loadNextFeedList: () => void;
 	handleClickCalendar: () => void;
 	setIsCommentOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	setIsViewOptionOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	onHandleComment: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onClickSubbmit: () => Promise<void>;
 	isViewOptionOpen: boolean;
 	dropDownRef: React.MutableRefObject<null>;
 	calendarRef: React.RefObject<HTMLButtonElement>;
@@ -259,7 +265,10 @@ type Props = {
 	isLanguageOpen: boolean;
 	isCommentOpen: boolean;
 	selelctedComment: number;
-	feedList: HeulGitPostType[];
+	feedList: HeulGitPostType[][];
+	hasMore: boolean;
+	commentInput: string;
+	commentList: HeulGitCommentType[];
 };
 
 const MainPageMobile = ({
@@ -276,6 +285,9 @@ const MainPageMobile = ({
 	onClickLanguage,
 	onClickNotification,
 	onClickGitMessage,
+	onClickSubbmit,
+	onHandleComment,
+	loadNextFeedList,
 	setIsViewOptionOpen,
 	setIsCommentOpen,
 	handleClickCalendar,
@@ -291,6 +303,9 @@ const MainPageMobile = ({
 	endDate,
 	selelctedComment,
 	feedList,
+	hasMore,
+	commentInput,
+	commentList,
 }: Props) => {
 	return (
 		<StyledMainContainer>
@@ -379,25 +394,27 @@ const MainPageMobile = ({
 			)}
 			<StyledDropDown className={isViewOptionOpen ? 'active' : ''}>
 				<li onClick={onClickHeulGit}>흘깃</li>
-				<li onClick={onClickStarSort}>스타 많은순</li>
-				<li onClick={onClickLikeSort}>좋아요 많은순</li>
+				<li onClick={onClickStarSort}>스타 많은 순</li>
+				<li onClick={onClickLikeSort}>좋아요 많은 순</li>
 			</StyledDropDown>
 			{/* 피드가 담길 곳 */}
-			<FeedItemList feedList={feedList} onClickComment={onClickComment} />
+			<FeedItemList
+				feedList={feedList}
+				onClickComment={onClickComment}
+				loadNextFeedList={loadNextFeedList}
+				hasMore={hasMore}
+			/>
 			<CBottomSheet
 				open={isCommentOpen}
 				onDismiss={() => setIsCommentOpen(false)}
-				onHandleComment={function (
-					e: React.ChangeEvent<HTMLInputElement>,
-				): void {
-					console.log(e.target.value);
-				}}
-				input={''}
-				onClickSubbmit={function (): Promise<void> {
-					throw new Error('Function not implemented.');
-				}}
+				onHandleComment={onHandleComment}
+				input={commentInput}
+				onClickSubbmit={onClickSubbmit}
 			>
-				<CommentListBottomSheet postId={selelctedComment} />
+				<CommentListBottomSheet
+					postId={selelctedComment}
+					commentList={commentList}
+				/>
 			</CBottomSheet>
 			<Navigation />
 		</StyledMainContainer>

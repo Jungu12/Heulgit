@@ -6,7 +6,7 @@ import raw from 'rehype-raw';
 import gfm from 'remark-gfm';
 import { CopyBlock, dracula } from 'react-code-blocks';
 import { styled } from 'styled-components';
-import { getImgTag } from '@utils/markdown';
+import { getImgTag, sliceTextToParagraph } from '@utils/markdown';
 import ImageSlider from './ImageSlider';
 
 const StyledMarkDownContainer = styled.div`
@@ -148,7 +148,7 @@ type Props = {
 };
 
 const MarkdownSummaryRenderer = ({ text, onClick }: Props) => {
-	const summary = text.slice(0, 300);
+	const summary = sliceTextToParagraph(text, 300);
 	const [imageList, setImageList] = useState<string[]>([]);
 
 	useEffect(() => {

@@ -3,34 +3,34 @@ import styled from 'styled-components';
 import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
-import { images } from '@constants/images';
-import MyCommentList from '@components/profile/MyCommentList';
+// import { images } from '@constants/images';
+// import MyCommentList from '@components/profile/MyCommentList';
 
 // 더미 댓글
-const dummyComment = [
-	{
-		id: 123,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '@jungu12 이거 참고해',
-		updated_date: '36분 전',
-		parent_id: 12,
-		order: 1,
-	},
-	{
-		id: 123,
-		user: {
-			id: 'jungu121212',
-			avater_url: images.dummy.dummy1,
-		},
-		content: '@jungu12 싫엉',
-		updated_date: '38분 전',
-		parent_id: 12,
-		order: 1,
-	},
-];
+// const dummyComment = [
+// 	{
+// 		id: 123,
+// 		user: {
+// 			id: 'jungu121212',
+// 			avater_url: images.dummy.dummy1,
+// 		},
+// 		content: '@jungu12 이거 참고해',
+// 		updated_date: '36분 전',
+// 		parent_id: 12,
+// 		order: 1,
+// 	},
+// 	{
+// 		id: 123,
+// 		user: {
+// 			id: 'jungu121212',
+// 			avater_url: images.dummy.dummy1,
+// 		},
+// 		content: '@jungu12 싫엉',
+// 		updated_date: '38분 전',
+// 		parent_id: 12,
+// 		order: 1,
+// 	},
+// ];
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -125,7 +125,7 @@ const MyCommentPage = () => {
 					)}
 				</StyledHeader>
 				<StyledMyComment>
-					<MyCommentList comments={dummyComment} />
+					{/* <MyCommentList comments={FeedComment} /> */}
 				</StyledMyComment>
 			</StyledContent>
 

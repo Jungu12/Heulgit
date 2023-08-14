@@ -56,13 +56,13 @@ type Props = {
 const MyComment = ({ comment }: Props) => {
 	return (
 		<StyledComment>
-			<StyledProfile src={comment.user.avater_url} alt="profile" />
+			<StyledProfile src={comment.user.avatarUrl} alt="profile" />
 			<StyledContentBox>
-				<StyledUserName>{comment.user.id}</StyledUserName>
+				<StyledUserName>{comment.user.githubId}</StyledUserName>
 				<StyledContent>{comment.content}</StyledContent>
 			</StyledContentBox>
 			<StyledOptionContainer>
-				{comment.updated_date}
+				{comment.updatedDate}
 				<img src={images.menu} alt="option" />
 			</StyledOptionContainer>
 		</StyledComment>
