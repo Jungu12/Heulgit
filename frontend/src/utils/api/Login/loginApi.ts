@@ -1,3 +1,4 @@
+import store from '@store/store';
 import { setUser } from '@store/user';
 import { AuthType, UserType } from '@typedef/common.types';
 import { authHttp, http } from '@utils/http';
@@ -29,7 +30,7 @@ export const setUserData = async () => {
 	try {
 		const userResponse = await authHttp.get<UserType>('users');
 		console.log(userResponse);
-		setUser(userResponse);
+		store.dispatch(setUser(userResponse));
 	} catch (error) {
 		console.error(error);
 	}
