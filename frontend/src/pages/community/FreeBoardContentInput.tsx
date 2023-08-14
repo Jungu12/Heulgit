@@ -1,5 +1,4 @@
 import { colors } from '@constants/colors';
-import { EurekaWriteType } from '@typedef/community/eureka.types';
 import { FreeBoardWriteType } from '@typedef/community/freeboard.types';
 import React, { ChangeEvent } from 'react';
 import { styled } from 'styled-components';
@@ -42,28 +41,17 @@ const StyledContentInput = styled.textarea.attrs({
 	flex: 1;
 `;
 
-type FreeBoardContentInput = {
+type Props = {
 	postInput?: FreeBoardWriteType;
 	onChange: (value: string) => void;
 	onChangeLink?: (value: string) => void;
 	showURLInput?: boolean; // URL 입력 부분을 보여줄지 여부를 props로 받음
 };
 
-const FreeBoardContentInput = ({
-	onChange,
-	onChangeLink,
-	postInput,
-}: FreeBoardContentInput) => {
+const FreeBoardContentInput = ({ onChange, postInput }: Props) => {
 	const contentChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		const inputValue = e.target.value;
 		onChange(inputValue);
-	};
-
-	const urlChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-		const inputValue = e.target.value;
-		if (onChangeLink) {
-			onChangeLink(inputValue);
-		}
 	};
 
 	return (
