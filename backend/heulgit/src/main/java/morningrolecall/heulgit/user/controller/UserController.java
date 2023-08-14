@@ -34,6 +34,7 @@ public class UserController {
 	private final AuthService authService;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
+
 	/**
 	 * 사용자를 logout시킨다.
 	 * Redis에 저장된 토큰을 삭제하고, 쿠키에 실린 토큰을 지운다.

@@ -378,7 +378,7 @@ public class FreeBoardService {
 			.content(freeBoard.getContent())
 			.updatedDate(freeBoard.getUpdatedDate())
 			.view(freeBoard.getView())
-			.freeBoardImages(new ArrayList<>())
+			.freeBoardImages(freeBoard.getFreeBoardImages())
 			.likedUsers(freeBoard.getLikedUsers())
 			.freeBoardComments(freeBoard.getFreeBoardComments())
 			.build()).collect(Collectors.toList());
