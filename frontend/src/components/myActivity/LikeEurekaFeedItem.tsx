@@ -1,32 +1,28 @@
-// 자유게시판 단일 피드
+// 유레카 단일 피드
 
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+import { EurekaPostType } from '@typedef/community/eureka.types';
+import { getTimeAgo } from '@utils/date';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
-import ImageSlider from '@components/Home/ImageSlider';
 import { authHttp } from '@utils/http';
-import { getTimeAgo } from '@utils/date';
 
-// 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-top: 16px;
 `;
 
-// 탑라인
 const StyledTopLine = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 `;
 
-// 프로필 담는 컨테이너
 const StyledProfileContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -36,14 +32,12 @@ const StyledProfileContainer = styled.div`
 	margin-left: 12px;
 `;
 
-// 프로필 이미지
 const StyledProfileImage = styled.img`
 	width: 36px;
 	height: 36px;
 	border-radius: 50%;
 `;
 
-// 업데이트 시간 p 태그
 const StyledUpdateTime = styled.p`
 	color: ${colors.greyScale.grey4};
 	font-size: 12px;
@@ -101,10 +95,9 @@ const StyledContentContainer = styled.div`
 // 	max-width: 100%;
 // `;
 
-// 버튼 담는 컨테이너
 const StyledButtonContainer = styled.div`
 	display: flex;
-	margin: 24px 12px 0 12px;
+	margin: 24px 12px 0px 12px;
 	gap: 16px;
 
 	img {
@@ -114,7 +107,6 @@ const StyledButtonContainer = styled.div`
 	}
 `;
 
-// 좋아요, 댓글 수 담는 컨테이너
 const StyledSubDataContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -122,53 +114,47 @@ const StyledSubDataContainer = styled.div`
 	font-size: 12px;
 	font-weight: 400;
 	margin: 8px 12px 0 12px;
+
 	div {
 		cursor: pointer;
 	}
 `;
 
-const StyledImageSliderContainer = styled.div`
-	margin: 24px 0px 12px 0px;
-	padding: 0 12px;
-
-	img {
-		display: flex;
-		max-width: 100%;
-		margin: 0 auto;
-	}
-`;
-
 type Props = {
-	feed: FreeBoardPostType;
-	onClickComment: (id: number) => void;
+	feed: EurekaPostType;
 };
 
-const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
+const EurekaFeedItem = ({ feed }: Props) => {
 	const navigation = useNavigate();
 	const githubId = useSelector((state: RootState) => state.user.user?.githubId);
 
+	// 좋아요 이미지 변환
 	const [liked, setLiked] = useState(false);
 	const [likeNum, setLikeNum] = useState(feed.likedUsers.length);
-	const imgUrl = feed.freeBoardImages;
 
 	// 좋아요 클릭시 변환 이벤트
 	const handleLikeClick = () => {
 		if (liked) {
 			authHttp
-				.get(`freeboard/posts/unlike/${feed.freeBoardId}?userId=${githubId}`)
+				.get(`eureka/posts/unlike/${feed.eurekaId}?userId=${githubId}`)
 				.then(() => {
 					setLiked((prev) => !prev);
 					setLikeNum((prev) => prev - 1);
 				});
 		} else {
 			authHttp
-				.get(`freeboard/posts/like/${feed.freeBoardId}?userId=${githubId}`)
+				.get(`eureka/posts/like/${feed.eurekaId}?userId=${githubId}`)
 				.then(() => {
 					setLiked((prev) => !prev);
 					setLikeNum((prev) => prev + 1);
 				});
 		}
 	};
+
+	// 댓글 모달 나오게 할 거
+	const onClickComment = useCallback(() => {
+		console.log('댓글 클릭');
+	}, []);
 
 	// 좋아요 누른 유저 목록 페이지로 이동
 	const onClickLike = useCallback(() => {
@@ -177,7 +163,7 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 
 	// 유레카 피드 상세보기 페이지로 이동
 	const onClickFeedItem = useCallback(() => {
-		navigation(`${feed.freeBoardId}`);
+		navigation(`${feed.eurekaId}`);
 	}, []);
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
@@ -186,17 +172,12 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 	}, []);
 
 	useEffect(() => {
-		console.log(feed);
-	}, [feed]);
-
-	useEffect(() => {
 		const found = feed.likedUsers.find((user) => user.githubId === githubId);
 		if (found) {
 			setLiked(true);
 		} else {
 			setLiked(false);
 		}
-		setLikeNum(feed.likedUsers.length);
 	}, [feed]);
 
 	return (
@@ -207,21 +188,18 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 					<StyledProfileImage src={feed.user.avatarUrl} alt="user_profile" />
 					<p>{feed.user.githubId}</p>
 				</StyledProfileContainer>
-				{/* 시간 수정하기 */}
 				<StyledUpdateTime>{getTimeAgo(feed.updatedDate)}</StyledUpdateTime>
 			</StyledTopLine>
 			{/* 피드 */}
 			<StyledFeedContentContainer onClick={onClickFeedItem}>
 				<StyledTitleContainer>{feed.title}</StyledTitleContainer>
 				<StyledContentContainer>{feed.content}</StyledContentContainer>
-
-				{imgUrl && (
-					<StyledImageSliderContainer>
-						<ImageSlider images={imgUrl.map((url) => url.fileUri)} />
-					</StyledImageSliderContainer>
-				)}
+				{/* {imageSrc && (
+					<StyledImgContainer>
+						<StyledImg src={imageSrc} />
+					</StyledImgContainer>
+				)} */}
 			</StyledFeedContentContainer>
-
 			{/* 버튼 */}
 			<StyledButtonContainer>
 				<img
@@ -239,11 +217,11 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 			<StyledSubDataContainer>
 				<div onClick={onClickLike}>{`좋아요 ${likeNum}개 · `}</div>
 				<div
-					onClick={() => onClickComment(feed.freeBoardId)}
-				>{`댓글 ${feed.freeBoardComments.length}개`}</div>
+					onClick={onClickComment}
+				>{`댓글 ${feed.eurekaComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);
 };
 
-export default FreeBoardFeedItem;
+export default EurekaFeedItem;

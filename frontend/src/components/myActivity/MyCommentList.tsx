@@ -25,7 +25,7 @@ const MyCommentList = ({ comments }: Props) => {
 		<StyledCommentListContainer>
 			{comments.map((comment) => (
 				<>
-					<MyComment comment={comment} key={comment.id} />
+					<MyComment comment={comment} key={comment.commentId} />
 					<Separation />
 				</>
 			))}

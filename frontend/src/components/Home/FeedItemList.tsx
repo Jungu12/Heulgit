@@ -3,6 +3,10 @@ import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import FeedItem from './FeedItem';
+import InfiniteScroll from 'react-infinite-scroll-component';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Lottie from 'lottie-react';
+import loading from '../../list_loading.json';
 
 const StyledFeedListSection = styled.section`
 	/* height: calc(100vh - 194px); */
@@ -23,24 +27,59 @@ const Separation = styled.div`
 	margin-top: 12px;
 `;
 
+const LoadingContainer = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+`;
+
 type Props = {
-	feedList: HeulGitPostType[];
+	feedList: HeulGitPostType[][];
 	onClickComment?: (id: number) => void;
+	loadNextFeedList: () => void;
+	hasMore: boolean;
 };
 
-const FeedItemList = ({ feedList, onClickComment }: Props) => {
+const FeedItemList = ({
+	feedList,
+	hasMore,
+	onClickComment,
+	loadNextFeedList,
+}: Props) => {
 	return (
 		<StyledFeedListSection>
-			{feedList.map((feed, index) => (
-				<div key={index}>
-					<FeedItem
-						feed={feed}
-						type="summary"
-						onClickComment={onClickComment}
-					/>
-					<Separation />
-				</div>
-			))}
+			<InfiniteScroll
+				dataLength={feedList.length}
+				next={loadNextFeedList}
+				hasMore={hasMore}
+				style={{
+					overflowX: 'hidden',
+				}}
+				loader={
+					<LoadingContainer>
+						<Lottie
+							animationData={loading}
+							loop={true}
+							style={{ width: '160px', height: '160px' }}
+						/>
+					</LoadingContainer>
+				}
+				height={`calc(100vh - 193px)`}
+			>
+				{feedList.map((page) =>
+					page.map((feed, index) => (
+						<div key={index}>
+							<FeedItem
+								feed={feed}
+								type="summary"
+								onClickComment={onClickComment}
+							/>
+							<Separation />
+						</div>
+					)),
+				)}
+			</InfiniteScroll>
 		</StyledFeedListSection>
 	);
 };

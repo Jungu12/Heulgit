@@ -34,12 +34,6 @@ const StyledContent = styled.p`
 	margin-bottom: 10px;
 `;
 
-const StyledReply = styled.p`
-	color: ${colors.greyScale.grey4};
-	font-size: 14px;
-	font-weight: 600;
-`;
-
 const StyledOptionContainer = styled.div`
 	display: flex;
 	margin-left: auto;
@@ -57,28 +51,22 @@ const StyledOptionContainer = styled.div`
 
 type Props = {
 	comment: HeulGitCommentType;
-	onClickCommentMenuOpen: (commentId: number) => void;
 };
 
-const Comment = ({ comment, onClickCommentMenuOpen }: Props) => {
+const MyComment = ({ comment }: Props) => {
 	return (
 		<StyledComment>
 			<StyledProfile src={comment.user.avatarUrl} alt="profile" />
 			<StyledContentBox>
 				<StyledUserName>{comment.user.githubId}</StyledUserName>
 				<StyledContent>{comment.content}</StyledContent>
-				<StyledReply>답글 달기</StyledReply>
 			</StyledContentBox>
 			<StyledOptionContainer>
 				{comment.updatedDate}
-				<img
-					src={images.menu}
-					alt="option"
-					onClick={() => onClickCommentMenuOpen(comment.commentId)}
-				/>
+				<img src={images.menu} alt="option" />
 			</StyledOptionContainer>
 		</StyledComment>
 	);
 };
 
-export default Comment;
+export default MyComment;
