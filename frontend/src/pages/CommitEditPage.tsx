@@ -17,7 +17,6 @@ const basicData = [
 	{ type: 'refactor', description: '코드 리팩토링' },
 	{ type: 'test', description: '테스트 코드 작성' },
 	{
-		id: 7,
 		type: 'chore',
 		description: '필드 스크립트, 패키지 매니저 등 설정 파일 수정 ',
 	},
@@ -289,7 +288,7 @@ const CommitEditPage = () => {
 	// 커밋 메시지 불러오기
 	useEffect(() => {
 		authHttp
-			.get<UserCommitCustomData[]>('/users/commit-type') // API 요청
+			.get<UserCommitCustomData[]>('users/commit-type') // API 요청
 			.then((response) => {
 				setCommitTags(response); // 받아온 데이터를 commitTags 상태에 설정
 				console.log('커밋 메시지를 불러왔습니다.', response);
