@@ -90,9 +90,11 @@ export const authHttp = {
 	get: async function get<Response = unknown>(
 		url: string,
 		header?: AxiosRequestConfig['headers'],
+		params?: object,
 	) {
 		const options: AxiosRequestConfig = {
 			headers: header,
+			params: params,
 		};
 		const res = await authAxios.get<Response>(url, options);
 		return res.data;

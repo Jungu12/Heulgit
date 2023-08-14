@@ -139,7 +139,6 @@ const EurekaFeedItemListMobile = ({
 				<CBottomSheet
 					open={isCommentOpen}
 					onDismiss={() => {
-						console.log('바텀 시트 클릭');
 						setIsCommentOpen(false);
 					}}
 					onHandleComment={onHandleComment}

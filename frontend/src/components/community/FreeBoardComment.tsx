@@ -1,6 +1,8 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import { HeulGitCommentType } from '@typedef/home/heulgit.types';
+import { EurekaCommentType } from '@typedef/community/eureka.types';
+import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
+import { getTimeAgo } from '@utils/date';
 import React from 'react';
 import { styled } from 'styled-components';
 
@@ -24,21 +26,20 @@ const StyledContentBox = styled.div`
 
 const StyledUserName = styled.p`
 	font-size: 14px;
-	font-weight: 500;
-	margin-bottom: 6px;
+	font-weight: 700;
+	margin-bottom: 10px;
 `;
 
 const StyledContent = styled.p`
 	font-size: 14px;
 	font-weight: 400;
-	margin-bottom: 10px;
 `;
 
-const StyledReply = styled.p`
-	color: ${colors.greyScale.grey4};
-	font-size: 14px;
-	font-weight: 600;
-`;
+// const StyledReply = styled.p`
+// 	color: ${colors.greyScale.grey4};
+// 	font-size: 14px;
+// 	font-weight: 600;
+// `;
 
 const StyledOptionContainer = styled.div`
 	display: flex;
@@ -56,29 +57,36 @@ const StyledOptionContainer = styled.div`
 `;
 
 type Props = {
-	comment: HeulGitCommentType;
-	onClickCommentMenuOpen: (commentId: number) => void;
+	comment: FreeBoardCommentType;
+	onClickDelete: (commentId: number) => void;
 };
 
-const Comment = ({ comment, onClickCommentMenuOpen }: Props) => {
+const FreeBoardComment = ({ comment, onClickDelete }: Props) => {
+	// const onClickCommentMenu = useCallback(
+	//   () => {
+
+	//   },
+	//   [],
+	// )
+
 	return (
 		<StyledComment>
 			<StyledProfile src={comment.user.avatarUrl} alt="profile" />
 			<StyledContentBox>
 				<StyledUserName>{comment.user.githubId}</StyledUserName>
 				<StyledContent>{comment.content}</StyledContent>
-				<StyledReply>답글 달기</StyledReply>
+				{/* <StyledReply>답글 달기</StyledReply> */}
 			</StyledContentBox>
 			<StyledOptionContainer>
-				{comment.updatedDate}
+				{getTimeAgo(comment.updatedDate)}
 				<img
-					src={images.menu}
+					src={images.closeBlack}
 					alt="option"
-					onClick={() => onClickCommentMenuOpen(comment.commentId)}
+					onClick={() => onClickDelete(comment.commentId)}
 				/>
 			</StyledOptionContainer>
 		</StyledComment>
 	);
 };
 
-export default Comment;
+export default FreeBoardComment;

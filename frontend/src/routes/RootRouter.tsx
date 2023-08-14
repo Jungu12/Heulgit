@@ -15,7 +15,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CreateEurekaPostPage from '@pages/CreateEurekaPostPage';
 import FreePostViewPage from '@pages/freeboard/FreePostViewPage';
-import CreateFreePostPage from '@pages/community/CreateFreePostPage';
+import CreateFreePostPage from '@pages/freeboard/CreateFreePostPage';
 import EurekaPostViewPage from '@pages/Eureka/EurekaPostViewPage';
 import LoginCallBackPage from '@pages/LoginCallBackPage';
 import EurekaPage from '@pages/Eureka/EurekaPage';
@@ -29,6 +29,7 @@ import Test from '@pages/Eureka/Test';
 import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
 import FollowingPage from '@pages/FollowingPage';
 import FollowerPage from '@pages/FollowerPage';
+import EditFreeBoardPostPage from '@pages/freeboard/EditFreeBoardPostPage';
 
 const RootRouter = () => {
 	return (
@@ -81,6 +82,10 @@ const RootRouter = () => {
 					<Route
 						path="/community/free/:id"
 						element={<FreePostViewPage />}
+					></Route>
+					<Route
+						path="/community/free/:id/edit"
+						element={<EditFreeBoardPostPage />}
 					></Route>
 					<Route
 						path="/community/free/:id/like"
