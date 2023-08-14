@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
-import FeedItemList from '@components/Home/FeedItemList';
+// import FeedItemList from '@components/Home/FeedItemList';
 import { authHttp } from '@utils/http';
 import { UserLikePostType } from '@typedef/profile/user.types';
 
@@ -89,7 +89,7 @@ const MyLikeRepoPage = () => {
 	// 좋아요 흘깃 불러오기
 	useEffect(() => {
 		authHttp
-			.get<UserLikePostType[]>('users/activities/heulgit/my-likes')
+			.get<UserLikePostType[]>('users/activities/heulgit/my-likes?pages=1')
 			.then((response) => {
 				console.log('좋아요 흘깃 성공.', response);
 			})

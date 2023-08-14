@@ -1,12 +1,11 @@
+import EurekaFeedItemListMobile from '@pages/Eureka/EurekaFeedItemListMobile';
 import { UserType } from '@typedef/common.types';
 import { UserPostType } from '@typedef/profile/user.types';
 import { authHttp } from '@utils/http';
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 // import { colors } from '@constants/colors';
-// import EurekaFeedItemListMobile from '@pages/Eureka/EurekaFeedItemListMobile';
-// import { images } from '@constants/images';
 
 const StyledBox = styled.div`
 	margin-bottom: -70px;
