@@ -1,15 +1,18 @@
 package morningrolecall.heulgit.user.service;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -23,6 +26,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,6 +37,8 @@ import morningrolecall.heulgit.auth.repository.AuthRepository;
 import morningrolecall.heulgit.exception.AuthException;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.UserException;
+import morningrolecall.heulgit.heulgit.domain.Heulgit;
+import morningrolecall.heulgit.heulgit.repository.HeulgitRepository;
 import morningrolecall.heulgit.relation.domain.Relation;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.relation.service.RelationService;
@@ -59,7 +65,11 @@ public class UserService {
 	private final RelationRepository relationRepository;
 	private final UserCommentRepository userCommentRepository;
 	private final RestTemplate restTemplate;
+<<<<<<<HEAD
 	private final int SIZE = 20;
+=======
+	private final HeulgitRepository heulgitRepository;
+>>>>>>>cb58f2072fa67c30d4871d64a19c09fc11b1334c
 	@Value("${github.user.repo-url}")
 	private String userInfoUrl;
 	@Value("${github.user.repo.commit-url}")
@@ -301,5 +311,107 @@ public class UserService {
 			PageRequest.of(page - 1, SIZE, Sort.by("updatedDate").descending()));
 
 		return myLikesComments;
+	}
+
+	public void fetchAndSaveUserRespositories(String githubId) {
+		List<Heulgit> heulgitList = new ArrayList<>();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		headers.set("Authorization", "Bearer " + githubApiToken);
+		headers.set("X-GitHub-Api-Version", "2022-11-28");
+
+		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+		// 해당 사용자의 모든 repo를 긁어 온다(공식 api)
+		ResponseEntity<String> response = restTemplate.exchange(
+			userInfoUrl + "/" + githubId + "/repos",
+			HttpMethod.GET,
+			requestEntity,
+			String.class
+		);
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode rootNode = objectMapper.readTree(response.getBody());
+			JsonNode itemsNode = rootNode.get("items");
+
+			if (itemsNode != null && itemsNode.isArray()) {
+				for (JsonNode itemNode : itemsNode) {
+					String owner = itemNode.get("owner").get("login").asText();
+					String repoName = itemNode.get("name").asText();
+					String readmeContent = fetchReadmeContent(owner, repoName);
+					ZonedDateTime updatedDate = ZonedDateTime.parse(itemNode.get("updated_at").asText());
+					Heulgit heulgit = Heulgit.builder()
+						.githubId(owner)
+						.heulgitName(repoName)
+						.content(readmeContent)
+						.star(itemNode.get("stargazers_count").asInt())
+						.updatedDate(updatedDate.toLocalDateTime())
+						.language(itemNode.get("language").asText())
+						.view(0)
+						.avatarUrl(itemNode.get("owner").get("avatar_url").asText())
+						.build();
+
+					heulgitList.add(heulgit);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// 이건 전체 저장.
+		heulgitRepository.saveAll(heulgitList);
+		for (Heulgit heulgit : heulgitList) {
+			Optional<Heulgit> existingHeulgit = heulgitRepository.findByGithubIdAndHeulgitName(heulgit.getGithubId(),
+				heulgit.getHeulgitName());
+			if (existingHeulgit.isPresent()) {
+				Heulgit storedHeulgit = existingHeulgit.get();
+				// DB에 저장된 정보의 업데이트 날짜와 현재 가져온 정보의 업데이트 날짜를 비교하여 최신화 여부 판단
+				if (storedHeulgit.getUpdatedDate().isBefore(heulgit.getUpdatedDate())) {
+					// 업데이트 날짜가 최신화 되었으면 기존 정보 업데이트
+					Heulgit updatedHeulgit = Heulgit.builder()
+						.githubId(storedHeulgit.getGithubId())
+						.heulgitName(storedHeulgit.getHeulgitName())
+						.content(heulgit.getContent())
+						.star(heulgit.getStar())
+						.updatedDate(heulgit.getUpdatedDate())
+						.language(heulgit.getLanguage())
+						.view(heulgit.getView())
+						.avatarUrl(storedHeulgit.getAvatarUrl())
+						.build();
+
+					// 나머지 필요한 정보도 업데이트하거나 추가 가능
+					heulgitRepository.save(updatedHeulgit);
+				}
+			} else {
+				// DB에 저장된 정보가 없으면 새로 저장
+				heulgitRepository.save(heulgit);
+			}
+		}
+
+	}
+
+	public String fetchReadmeContent(String owner, String repoName) {
+		String url = "https://api.github.com/repos/" + owner + "/" + repoName + "/readme";
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + githubApiToken);
+		headers.set("X-GitHub-Api-Version", "2022-11-28");
+
+		try {
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers),
+				String.class);
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode rootNode = objectMapper.readTree(response.getBody());
+			String content = rootNode.get("content").asText();
+			return content;
+		} catch (HttpClientErrorException.NotFound notFoundException) {
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

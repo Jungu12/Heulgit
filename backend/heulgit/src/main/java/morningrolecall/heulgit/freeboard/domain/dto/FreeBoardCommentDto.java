@@ -1,14 +1,13 @@
-package morningrolecall.heulgit.heulgit.domain.dto;
+package morningrolecall.heulgit.freeboard.domain.dto;
 
 import java.util.Set;
 
 import lombok.Getter;
 
 @Getter
-public class HeulgitCommentDto {
-	private Long heulgitId;
+public class FreeBoardCommentDto {
+	private Long freeBoardId;
 	private Long parentId;
 	private String content;
 	private Set<String> mentionedFollowers;
-
 }

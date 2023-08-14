@@ -21,6 +21,9 @@ import com.amazonaws.Response;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.heulgit.Service.HeulgitService;
+import morningrolecall.heulgit.notification.domain.NotificationType;
+import morningrolecall.heulgit.notification.domain.dto.NotificationLikeRequest;
+import morningrolecall.heulgit.notification.service.NotificationService;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class HeulgitController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final HeulgitService heulgitService;
+	private final NotificationService notificationService;
 
 
 	// @GetMapping("/test")
@@ -85,6 +89,11 @@ public class HeulgitController {
 		@PathVariable Long heulgitId) {
 		logger.debug("heulgitLike(), who = {}, heulgitId = {}",userId,heulgitId);
 		heulgitService.likeHeulgit(userId, heulgitId);
+		String writerId = heulgitService.findHeulgit(heulgitId).getGithubId();
+
+		NotificationLikeRequest notificationLikeRequest = new NotificationLikeRequest(userId,writerId,
+			"/heuglit/posts/" +heulgitId, NotificationType.LIKE);
+		notificationService.addLikeNotification(notificationLikeRequest);
 
 		return ResponseEntity.ok().build();
 
