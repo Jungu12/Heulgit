@@ -53,15 +53,6 @@ const ProfilePage = () => {
 		}
 	}, []);
 
-	// // 페이지 이동 시 세션 삭제 -> 다시 해당 페이지 이동 시 첫 화면 보이도록
-	// useEffect(() => {
-	// 	const keysToDelete = ['selectedMenu', 'selectedFollow'];
-
-	// 	if (window.location.pathname === '/profiles/1') {
-	// 		deleteKeysFromSession(keysToDelete);
-	// 	}
-	// }, []);
-
 	return (
 		<StyledProfile>
 			<Mobile>

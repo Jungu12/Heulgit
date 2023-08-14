@@ -10,10 +10,11 @@ import Axios, {
 const axios = Axios.create();
 const authAxios = Axios.create();
 axios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
+// axios.defaults.baseURL = 'http://i9d211.p.ssafy.io/api/';
 // axios.defaults.baseURL = 'http://192.168.100.64:8080/api/';
 axios.defaults.withCredentials = true;
 authAxios.defaults.baseURL = 'https://i9d211.p.ssafy.io/api/';
-// authAxios.defaults.baseURL = 'http://192.168.0.10:8080/api/';
+// authAxios.defaults.baseURL = 'http://192.168.100.64:8080/api/';
 authAxios.defaults.withCredentials = true;
 
 export const http = {

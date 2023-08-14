@@ -22,12 +22,7 @@ const CommitDescription = styled.div`
 	width: 100%;
 `;
 
-// interface StyledTagTitleProps {
-// 	titleWidth: number;
-// }
-
-// const StyledTagTitle = styled.div<StyledTagTitleProps>`
-const StyledTagTitle = styled.div`
+const StyledTagType = styled.div`
 	display: flex;
 	align-items: center;
 	border-radius: 15px;
@@ -37,9 +32,8 @@ const StyledTagTitle = styled.div`
 	font-size: 12px;
 	margin-right: auto;
 `;
-// width: ${(props) => props.titleWidth}px;
 
-const StyledDetail = styled.div`
+const StyledDescription = styled.div`
 	display: flex;
 	align-items: center;
 	color: ${colors.primary.primary};
@@ -62,22 +56,19 @@ const StyledDeleteButton = styled.button`
 `;
 
 type Props = {
-	title: string;
-	detail: string;
+	type: string;
+	description: string;
 	onClickDeleteButton?: () => void;
 };
 
-const CommitTag = ({ title, detail, onClickDeleteButton }: Props) => {
+const CommitTag = ({ type, description, onClickDeleteButton }: Props) => {
 	const navigation = useNavigate();
-
-	// const titleWidth = 24 + title.length * 5;
 
 	return (
 		<StyledCommitTag>
 			<CommitDescription>
-				{/* <StyledTagTitle titleWidth={titleWidth}>{title}</StyledTagTitle> */}
-				<StyledTagTitle>{title}</StyledTagTitle>
-				<StyledDetail>{detail}</StyledDetail>
+				<StyledTagType>{type}</StyledTagType>
+				<StyledDescription>{description}</StyledDescription>
 			</CommitDescription>
 			<StyledDeleteButton
 				onClick={

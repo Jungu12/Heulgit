@@ -3,34 +3,7 @@ import styled from 'styled-components';
 import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
-// import { images } from '@constants/images';
-// import MyCommentList from '@components/profile/MyCommentList';
-
-// 더미 댓글
-// const dummyComment = [
-// 	{
-// 		id: 123,
-// 		user: {
-// 			id: 'jungu121212',
-// 			avater_url: images.dummy.dummy1,
-// 		},
-// 		content: '@jungu12 이거 참고해',
-// 		updated_date: '36분 전',
-// 		parent_id: 12,
-// 		order: 1,
-// 	},
-// 	{
-// 		id: 123,
-// 		user: {
-// 			id: 'jungu121212',
-// 			avater_url: images.dummy.dummy1,
-// 		},
-// 		content: '@jungu12 싫엉',
-// 		updated_date: '38분 전',
-// 		parent_id: 12,
-// 		order: 1,
-// 	},
-// ];
+import MyCommentList from '@components/myActivity/MyCommentList';
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -95,9 +68,9 @@ const StyledHeader = styled.div`
 const StyledMyComment = styled.div``;
 
 const MyCommentPage = () => {
-	// 화면 사이즈별 타이틀 변환
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+	// 화면 사이즈별 타이틀 변환
 	useEffect(() => {
 		const handleResize = () => {
 			setWindowWidth(window.innerWidth);
@@ -109,6 +82,18 @@ const MyCommentPage = () => {
 			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
+
+	// // 댓글 불러오기
+	// useEffect(() => {
+	// 	authHttp
+	// 		.get<UserCommentType>('users/activities/my-comments')
+	// 		.then((response) => {
+	// 			console.log('내 댓글 성공.', response);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error('내 댓글 실패.', error);
+	// 		});
+	// }, []);
 
 	return (
 		<StyledBox>
@@ -125,7 +110,7 @@ const MyCommentPage = () => {
 					)}
 				</StyledHeader>
 				<StyledMyComment>
-					{/* <MyCommentList comments={FeedComment} /> */}
+					{/* <MyCommentList comments={dummyComment} /> */}
 				</StyledMyComment>
 			</StyledContent>
 
