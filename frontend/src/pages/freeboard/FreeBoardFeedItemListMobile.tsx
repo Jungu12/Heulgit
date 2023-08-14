@@ -1,11 +1,18 @@
 // 자유게시판 피드 리스트 모바일 버전
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
-import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+import {
+	FreeBoardCommentType,
+	FreeBoardCommentWriteType,
+	FreeBoardPostType,
+} from '@typedef/community/freeboard.types';
 import FreeBoardFeedItem from './FreeBoardFeedItem';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { authHttp } from '@utils/http';
+import CBottomSheet from '@components/common/CBottomSheet';
+import FreeBoardCommentList from '@components/community/FreeBoardCommentList';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -40,6 +47,74 @@ const FreeBoardFeedItemListMobile = ({
 }: Props) => {
 	const scrollContinaerRef = useRef<HTMLDivElement>(null);
 
+	const [isCommentOpen, setIsCommentOpen] = useState(false); // 댓글 바텀시트 열기
+	const [seletedComment, setSeletedComment] = useState(-1); // 댓글 선택
+	const [commentInput, setCommentInput] = useState(''); // 댓글 입력
+	const [commentList, setCommentList] = useState<FreeBoardCommentType[]>([]); // 댓글 리스트
+
+	// 댓글 모달 나오게 할 거
+	const onClickComment = useCallback(
+		(id: number) => {
+			console.log('댓글 클릭');
+			setSeletedComment(id);
+			setIsCommentOpen(true);
+		},
+		[setIsCommentOpen],
+	);
+
+	// 댓글 입력 함수
+	const onHandleComment = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setCommentInput(e.target.value);
+		},
+		[],
+	);
+
+	//
+	const loadCommentList = useCallback(async () => {
+		try {
+			const res = await authHttp.get<FreeBoardCommentType[]>(
+				`f-comments/${seletedComment}`,
+			);
+			setCommentList(res);
+		} catch (error) {
+			console.log(error);
+		}
+	}, [setCommentList, authHttp, seletedComment]);
+
+	const onClickSubbmit = useCallback(async () => {
+		if (commentInput.trim() === '') return;
+
+		try {
+			await authHttp.post<FreeBoardCommentWriteType>('f-comments/comments', {
+				content: commentInput,
+				freeBoardId: seletedComment,
+				mentioedFollowers: [],
+				parentId: null,
+			});
+			setCommentInput('');
+			loadCommentList();
+		} catch (err) {
+			console.error(err);
+		}
+	}, [
+		authHttp,
+		commentInput,
+		seletedComment,
+		setCommentInput,
+		loadCommentList,
+	]);
+
+	const onClickDelete = useCallback((commentId: number) => {
+		console.log('삭제될 댓글', commentId);
+	}, []);
+
+	useEffect(() => {
+		if (seletedComment >= 0) {
+			loadCommentList();
+		}
+	}, [seletedComment]);
+
 	return (
 		<StyledFeedListSection ref={scrollContinaerRef}>
 			<InfiniteScroll
@@ -51,11 +126,29 @@ const FreeBoardFeedItemListMobile = ({
 			>
 				{feedList.map((feed, index) => (
 					<div key={index}>
-						<FreeBoardFeedItem feed={feed} />
+						<FreeBoardFeedItem feed={feed} onClickComment={onClickComment} />
 						<Separation />
 					</div>
 				))}
 			</InfiniteScroll>
+			{
+				<CBottomSheet
+					open={isCommentOpen}
+					onDismiss={() => {
+						console.log('바텀 시트 클릭');
+						setIsCommentOpen(false);
+					}}
+					onHandleComment={onHandleComment}
+					onClickSubbmit={() => onClickSubbmit()}
+					input={commentInput}
+				>
+					<FreeBoardCommentList
+						commentList={commentList}
+						onClickDelete={onClickDelete}
+						// onClickCommentMenuOpen={onClickCommentMenuOpen}
+					/>
+				</CBottomSheet>
+			}
 		</StyledFeedListSection>
 	);
 };

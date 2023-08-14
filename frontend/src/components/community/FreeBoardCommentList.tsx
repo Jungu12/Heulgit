@@ -1,19 +1,14 @@
+import { colors } from '@constants/colors';
 import React from 'react';
 import { styled } from 'styled-components';
-import { colors } from '@constants/colors';
 import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
-import FreePostComment from './FreePostComment';
 import FreeBoardComment from './FreeBoardComment';
 
 const StyledCommentListContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-
-	width: 100%;
-	margin-bottom: 60px;
 `;
 
-// 분리 선
 const Separation = styled.div`
 	background-color: ${colors.greyScale.grey3};
 	width: 100%;
@@ -23,21 +18,15 @@ const Separation = styled.div`
 
 type Props = {
 	commentList: FreeBoardCommentType[];
-	onClickCommentMenuOpen: (id: number) => void;
+	onClickDelete: (commentId: number) => void;
 };
 
-const FreePostCommentList = ({
-	commentList,
-	onClickCommentMenuOpen,
-}: Props) => {
+const FreeBoardCommentList = ({ commentList, onClickDelete }: Props) => {
 	return (
 		<StyledCommentListContainer>
 			{commentList.map((comment) => (
 				<div key={comment.commentId}>
-					<FreePostComment
-						comment={comment}
-						onClickCommentMenuOpen={onClickCommentMenuOpen}
-					/>
+					<FreeBoardComment comment={comment} onClickDelete={onClickDelete} />
 					<Separation />
 				</div>
 			))}
@@ -45,4 +34,4 @@ const FreePostCommentList = ({
 	);
 };
 
-export default FreePostCommentList;
+export default FreeBoardCommentList;

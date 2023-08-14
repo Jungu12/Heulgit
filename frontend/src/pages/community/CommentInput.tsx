@@ -1,6 +1,9 @@
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import { colors } from '@constants/colors';
+import { images } from '@constants/images';
+import { RootState } from '@store/index';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
 // 댓글 컨테이너 모바일
@@ -46,16 +49,12 @@ const StyledProfileImg = styled.img`
 	margin: 0 12px;
 
 	border-radius: 50%;
-	background-color: #000000;
 `;
 
 const StyledCommentInputContainer = styled.div`
 	display: flex;
-	align-items: center;
 	position: relative;
-	width: 90%;
-
-	margin-right: 12px;
+	flex: 1;
 `;
 
 // 댓글 input창
@@ -63,38 +62,25 @@ const StyledCommentInput = styled.input.attrs({
 	maxLength: 50,
 	placeholder: '댓글은 50자까지 입력이 가능합니다.',
 })`
-	border: solid 1px ${colors.greyScale.grey3};
-	border-radius: 8px;
+	flex: 1;
+	outline: none;
+	margin-right: 12px;
 
-	padding: 0 40px 0 10px;
-	width: 100%;
-	height: 30px;
-
-	font-size: 13px;
-	font-weight: bold;
-	color: ${colors.primary.primatyDark};
-	white-space: nowrap;
-
-	&:focus {
-		outline: none;
-		border: solid 1px ${colors.primary.primatyDark};
-	}
+	font-size: 16px;
+	font-weight: 500;
 `;
 
 // 등록 버튼
-const StyledRegisterButton = styled.button<{ $active: boolean }>`
-	position: absolute;
-	right: 10px;
-	top: 50%;
-	transform: translateY(-50%);
-
+const StyledRegisterButton = styled.button`
 	border: none;
-	background-color: transparent;
-
-	color: ${({ $active }) =>
-		$active ? colors.primary.primary : colors.greyScale.grey4};
-	font-weight: bold;
-	font-size: 13px;
+	color: ${colors.primary.primary};
+	background-color: white;
+	margin: 0 12px;
+	cursor: pointer;
+	img {
+		width: 24px;
+		height: 24px;
+	}
 `;
 
 type Props = {
@@ -112,24 +98,25 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 		}
 	};
 
+	const userImage = useSelector(
+		(state: RootState) => state.user.user?.avatarUrl,
+	);
+
 	const isKeywordValid = input!.trim().length > 0;
 
 	return (
 		<>
 			<Mobile>
 				<StyledCommentComtainerMobile>
-					<StyledProfileImg />
+					<StyledProfileImg src={userImage} alt="profile" />
 					<StyledCommentInputContainer>
 						<StyledCommentInput
 							value={input}
 							onChange={handleInputChange}
 							onKeyDown={handleEnter}
 						/>
-						<StyledRegisterButton
-							$active={isKeywordValid}
-							onClick={onSubmitComment}
-						>
-							등록
+						<StyledRegisterButton>
+							<img src={images.send} alt="send" onClick={onSubmitComment} />
 						</StyledRegisterButton>
 					</StyledCommentInputContainer>
 				</StyledCommentComtainerMobile>
@@ -144,10 +131,7 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 							onChange={handleInputChange}
 							onKeyDown={handleEnter}
 						/>
-						<StyledRegisterButton
-							$active={isKeywordValid}
-							onClick={onSubmitComment}
-						>
+						<StyledRegisterButton onClick={onSubmitComment}>
 							등록
 						</StyledRegisterButton>
 					</StyledCommentInputContainer>
@@ -163,10 +147,7 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 							onChange={handleInputChange}
 							onKeyDown={handleEnter}
 						/>
-						<StyledRegisterButton
-							$active={isKeywordValid}
-							onClick={onSubmitComment}
-						>
+						<StyledRegisterButton onClick={onSubmitComment}>
 							등록
 						</StyledRegisterButton>
 					</StyledCommentInputContainer>
