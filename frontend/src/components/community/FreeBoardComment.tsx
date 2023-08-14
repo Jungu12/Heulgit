@@ -1,6 +1,5 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import { EurekaCommentType } from '@typedef/community/eureka.types';
 import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
 import { getTimeAgo } from '@utils/date';
 import React from 'react';

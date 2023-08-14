@@ -3,7 +3,6 @@ import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
 import FreePostComment from './FreePostComment';
-import FreeBoardComment from './FreeBoardComment';
 
 const StyledCommentListContainer = styled.div`
 	display: flex;
