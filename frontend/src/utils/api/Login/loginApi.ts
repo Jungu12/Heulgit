@@ -22,7 +22,7 @@ export const gitLogin = async (code: string) => {
 
 /**
  * 유저 정보 저장하기
- * @param code
+ * @param
  * @returns
  */
 export const setUserData = async () => {
