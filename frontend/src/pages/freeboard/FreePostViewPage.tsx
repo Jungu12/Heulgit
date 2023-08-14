@@ -2,23 +2,23 @@
 
 import Header from '@components/common/Header';
 import CommentInput from '@pages/community/CommentInput';
-import FreePostCommentList from '@components/community/FreePostCommentList';
+// import FreePostCommentList from '@components/community/FreePostCommentList';
 import { images } from '@constants/images';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
-import FreePostViewFeedMobile from '@pages/freeboard/FreePostViewFeedMobile';
-import FreePostViewFeedTabletPC from './FreePostViewFeedTabletPC';
+// import FreePostViewFeedMobile from '@pages/freeboard/FreePostViewFeedMobile';
+// import FreePostViewFeedTabletPC from './FreePostViewFeedTabletPC';
 import CommunityMenuBar from '@pages/community/CommunityMenuBarPC';
 import CommunityFilterPC from '@pages/community/CommunityFilterPC';
 import CommunitySideBarContent from '@pages/community/CommunitySideBarContent';
 import Sidebar from '@components/common/Sidebar';
 import TabletNavigation from '@components/common/TabletNavigation';
-import { useNavigate, useParams } from 'react-router';
-import { useSelector } from 'react-redux';
-import { EurekaPostResponseType } from '@typedef/community/eureka.types';
-import { RootState } from '@store/index';
-import { authHttp } from '@utils/http';
+// import { useSelector } from 'react-redux';
+// import { EurekaPostResponseType } from '@typedef/community/eureka.types';
+// import { RootState } from '@store/index';
+// import { authHttp } from '@utils/http';
+// import { useNavigate, useParams } from 'react-router';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -100,19 +100,19 @@ const CommunityContainerPC = styled.div`
 `;
 
 const FreePostViewPage = () => {
-	const navigation = useNavigate();
-	const { id } = useParams(); // 유저 id
+	// const navigation = useNavigate();
+	// const { id } = useParams(); // 유저 id
 	const [isFilterOpen, setIsFilterOpen] = useState(false); // 필터
-	const userId = useSelector((state: RootState) => state.user.user?.githubId); // 리덕스 문법..?
-	const [feed, setFeed] = useState<EurekaPostResponseType>(); // 불러온 피드 리스트
-	const [isMenuOpen, setIsMenuOpen] = useState(false); // 수정, 삭제, 닫기 메뉴 버튼
+	// const userId = useSelector((state: RootState) => state.user.user?.githubId); // 리덕스 문법..?
+	// const [feed, setFeed] = useState<EurekaPostResponseType>(); // 불러온 피드 리스트
+	// const [isMenuOpen, setIsMenuOpen] = useState(false); // 수정, 삭제, 닫기 메뉴 버튼
 
 	// 포스트 불러오기
-	const loadPost = useCallback(() => {
-		authHttp.get<EurekaPostResponseType>(`eureka/posts/${id}`).then((res) => {
-			setFeed(res);
-		});
-	}, []);
+	// const loadPost = useCallback(() => {
+	// 	authHttp.get<EurekaPostResponseType>(`eureka/posts/${id}`).then((res) => {
+	// 		setFeed(res);
+	// 	});
+	// }, []);
 
 	// 필터 여는 함수
 	const onClickFilter = useCallback(() => {
@@ -124,29 +124,29 @@ const FreePostViewPage = () => {
 		setIsFilterOpen(false);
 	}, []);
 
-	// 메뉴버튼 여는 함수
-	const onClickMenu = useCallback(() => {
-		setIsMenuOpen(true);
-	}, []);
+	// // 메뉴버튼 여는 함수
+	// const onClickMenu = useCallback(() => {
+	// 	setIsMenuOpen(true);
+	// }, []);
 
-	// 메뉴버튼 닫는 함수
-	const onClickMenuClose = useCallback(() => {
-		setIsMenuOpen(false);
-	}, []);
+	// // 메뉴버튼 닫는 함수
+	// const onClickMenuClose = useCallback(() => {
+	// 	setIsMenuOpen(false);
+	// }, []);
 
-	// 수정 함수
-	const onClickEdit = useCallback(() => {
-		navigation(`/community/eureka/${id}/edit`);
-	}, []);
+	// // 수정 함수
+	// const onClickEdit = useCallback(() => {
+	// 	navigation(`/community/eureka/${id}/edit`);
+	// }, []);
 
-	// 삭제 함수
-	const onClickDelete = useCallback(() => {
-		if (confirm('정말 삭제하시겠습니까?')) {
-			authHttp.delete(`eureka/posts/${id}`).then(() => {
-				navigation('/community/eureka');
-			});
-		}
-	}, []);
+	// // 삭제 함수
+	// const onClickDelete = useCallback(() => {
+	// 	if (confirm('정말 삭제하시겠습니까?')) {
+	// 		authHttp.delete(`eureka/posts/${id}`).then(() => {
+	// 			navigation('/community/eureka');
+	// 		});
+	// 	}
+	// }, []);
 
 	return (
 		<>

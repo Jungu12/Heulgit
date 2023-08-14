@@ -6,6 +6,7 @@ import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import MarkdownSummaryRenderer from './MarkdownSummaryRenderer';
 import MarkdownRenderer from './MarkdownRenderer';
+import { getTimeAgo } from '@utils/date';
 
 const StyledFeedItemContainer = styled.div`
 	display: flex;
@@ -80,20 +81,20 @@ type Props = {
 const FeedItemTablet = ({ feed, type, onClickComment }: Props) => {
 	const navigation = useNavigate();
 	const onClickLike = useCallback(() => {
-		navigation(`repo/${feed.id}/like`);
+		navigation(`repo/${feed.heulgitId}/like`);
 	}, []);
 
 	return (
 		<StyledFeedItemContainer>
 			<StyledTopLine>
 				<StyledProfileContainer>
-					<StyledProfileImage src={feed.user.avater_url} alt="user_profile" />
-					<p>{feed.user.id}</p>
-					{feed.user.is_registered && (
+					<StyledProfileImage src={feed.avatarUrl} alt="user_profile" />
+					<p>{feed.githubId}</p>
+					{feed.registered && (
 						<StyledUserMarker src={images.userMark} alt="user_marker" />
 					)}
 				</StyledProfileContainer>
-				<StyledUpdateTime>{feed.updated_date}</StyledUpdateTime>
+				<StyledUpdateTime>{getTimeAgo(feed.updatedDate)}</StyledUpdateTime>
 			</StyledTopLine>
 			<StyledContentContainer>
 				{type === 'full' ? (
@@ -101,7 +102,7 @@ const FeedItemTablet = ({ feed, type, onClickComment }: Props) => {
 				) : (
 					<MarkdownSummaryRenderer
 						text={feed.content}
-						onClick={() => navigation(`/repo/${feed.id}`)}
+						onClick={() => navigation(`/repo/${feed.heulgitId}`)}
 					/>
 				)}
 			</StyledContentContainer>
@@ -111,10 +112,12 @@ const FeedItemTablet = ({ feed, type, onClickComment }: Props) => {
 				<img src={images.share} alt="share_button" />
 			</StyledButtonContainer>
 			<StyledSubDataContainer>
-				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
 				<div
-					onClick={() => onClickComment && onClickComment(feed.id)}
-				>{`댓글 ${feed.comments}개`}</div>
+					onClick={onClickLike}
+				>{`좋아요 ${feed.likedUsers.length}개 · `}</div>
+				<div
+					onClick={() => onClickComment && onClickComment(feed.heulgitId)}
+				>{`댓글 ${feed.heulgitComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);

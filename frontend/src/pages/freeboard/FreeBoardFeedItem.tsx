@@ -6,8 +6,8 @@ import React, { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { FreeBoardPostType } from '@typedef/community/freeboard.types';
-import { useSelector } from 'react-redux';
-import { RootState } from '@store/index';
+// import { useSelector } from 'react-redux';
+// import { RootState } from '@store/index';
 
 // 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
@@ -126,7 +126,7 @@ type Props = {
 
 const FreeBoardFeedItem = ({ feed }: Props) => {
 	const navigation = useNavigate();
-	const githubId = useSelector((state: RootState) => state.user.user?.githubId);
+	// const githubId = useSelector((state: RootState) => state.user.user?.githubId);
 
 	// 좋아요 이미지 변환
 	const [liked, setLiked] = useState(false);
