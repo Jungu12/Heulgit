@@ -1,6 +1,8 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
+import { getTimeAgo } from '@utils/date';
+// import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
 import React from 'react';
 import { styled } from 'styled-components';
 
@@ -52,19 +54,14 @@ const StyledContent = styled.p`
 `;
 
 // 답글 달기 p 태그
-const StyledReply = styled.p`
-	color: ${colors.greyScale.grey4};
+// const StyledReply = styled.p`
+// 	color: ${colors.greyScale.grey4};
 
-	font-size: 14px;
-	font-weight: 600;
-`;
+// 	font-size: 14px;
+// 	font-weight: 600;
+// `;
 
 // 몇 분 전
-const StyledTime = styled.div`
-	display: flex;
-	width: 50px;
-	font-size: 13px;
-`;
 
 // 옵션 선택 이미지 디브
 const StyledOptionContainer = styled.div`
@@ -84,22 +81,27 @@ const StyledOptionContainer = styled.div`
 
 type Props = {
 	comment: FreeBoardCommentType;
+	onClickCommentMenuOpen: (id: number) => void;
 };
 
-const FreePostComment = ({ comment }: Props) => {
+const FreePostComment = ({ comment, onClickCommentMenuOpen }: Props) => {
 	return (
 		<StyledComment>
 			<StyledProfileContainer>
-				<StyledProfile src={comment.user.avater_url} alt="profile" />
+				<StyledProfile src={comment.user.avatarUrl} alt="profile" />
 				<StyledContentBox>
-					<StyledUserName>{comment.user.id}</StyledUserName>
+					<StyledUserName>{comment.user.githubId}</StyledUserName>
 					<StyledContent>{comment.content}</StyledContent>
-					<StyledReply>답글 달기</StyledReply>
+					{/* <StyledReply>답글 달기</StyledReply> */}
 				</StyledContentBox>
 			</StyledProfileContainer>
 			<StyledOptionContainer>
-				<StyledTime> {comment.updated_date}</StyledTime>
-				<img src={images.menu} alt="option" />
+				{getTimeAgo(comment.updatedDate)}
+				<img
+					src={images.menu}
+					alt="option"
+					onClick={() => onClickCommentMenuOpen(comment.commentId)}
+				/>
 			</StyledOptionContainer>
 		</StyledComment>
 	);

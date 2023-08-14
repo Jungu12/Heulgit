@@ -1,5 +1,5 @@
 import { colors } from '@constants/colors';
-import React, { useState } from 'react';
+import React from 'react';
 // import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
@@ -36,12 +36,18 @@ const StyledFilterButton = styled.button<{ $active: boolean }>`
 
 	background-color: ${({ $active }) =>
 		$active ? colors.primary.primary : 'white'};
+
+	cursor: pointer;
 `;
 
-const FilterCategory = () => {
+type Props = {
+	button: string;
+	setButton: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const FilterCategory = ({ button, setButton }: Props) => {
 	// const navigation = useNavigate();
 	const categories = ['전체 보기', '좋아요 많은 순', '댓글 많은 순', '조회 순'];
-	const [button, setButton] = useState('전체 보기');
 
 	return (
 		<StyledFilterContainer>

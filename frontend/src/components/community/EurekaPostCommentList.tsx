@@ -9,7 +9,7 @@ const StyledCommentListContainer = styled.div`
 	flex-direction: column;
 
 	width: 100%;
-	margin-bottom: 50px;
+	margin-bottom: 60px;
 `;
 
 // 분리 선
@@ -17,19 +17,24 @@ const Separation = styled.div`
 	background-color: ${colors.greyScale.grey3};
 	width: 100%;
 	height: 1px;
-	margin-top: 20px;
+	margin-top: 10px;
 `;
 
 type Props = {
 	comments: EurekaCommentType[];
+	onClickCommentMenuOpen: (id: number) => void;
 };
 
-const EurekaPostCommentList = ({ comments }: Props) => {
+const EurekaPostCommentList = ({ comments, onClickCommentMenuOpen }: Props) => {
 	return (
 		<StyledCommentListContainer>
 			{comments.map((comment) => (
 				<>
-					<EurekaPostComment comment={comment} key={comment.id} />
+					<EurekaPostComment
+						comment={comment}
+						key={comment.commentId}
+						onClickCommentMenuOpen={onClickCommentMenuOpen}
+					/>
 					<Separation />
 				</>
 			))}

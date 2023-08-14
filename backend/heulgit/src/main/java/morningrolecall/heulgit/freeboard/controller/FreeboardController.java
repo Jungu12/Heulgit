@@ -1,7 +1,11 @@
 package morningrolecall.heulgit.freeboard.controller;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,12 +16,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaRequest;
+import morningrolecall.heulgit.eureka.domain.dto.EurekaUpdateRequest;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardRequest;
 import morningrolecall.heulgit.freeboard.domain.dto.FreeBoardUpdateRequest;
 import morningrolecall.heulgit.freeboard.service.FreeBoardService;
+import morningrolecall.heulgit.notification.domain.NotificationType;
+import morningrolecall.heulgit.notification.domain.dto.NotificationFollowRequest;
+import morningrolecall.heulgit.notification.domain.dto.NotificationLikeRequest;
+import morningrolecall.heulgit.notification.service.NotificationService;
 
 @RestController
 @RequestMapping("/api/freeboard")
@@ -25,6 +37,7 @@ import morningrolecall.heulgit.freeboard.service.FreeBoardService;
 public class FreeboardController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final FreeBoardService freeBoardService;
+	private final NotificationService notificationService;
 
 	@GetMapping("/posts")
 	public ResponseEntity<?> freeBoardList(@RequestParam String sort, @RequestParam int pages) {
@@ -39,28 +52,41 @@ public class FreeboardController {
 		return ResponseEntity.ok().body(freeBoardService.findFreeBoard(freeboardId));
 	}
 
-	@PostMapping("/posts")
-	public ResponseEntity<?> freeBoardRegister(@AuthenticationPrincipal String githubId,
-		@RequestBody FreeBoardRequest freeBoardRequest) {
+	@PostMapping(value ="/posts",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> freeBoardRegister(@AuthenticationPrincipal String githubId
+		,@RequestPart(value = "file", required = false) List<MultipartFile> multipartFiles, @RequestPart(value= "data") FreeBoardRequest freeBoardRequest
+		 ) {
 		logger.debug("freeBoardRegister(), who = {}, title = {}, content = {}, imageId = {}", githubId,
 			freeBoardRequest.getTitle(),
-			freeBoardRequest.getContent(), freeBoardRequest.getFileUri().size());
+			freeBoardRequest.getContent());
+		if (multipartFiles != null) {
+			// multipartFiles가 null이 아닐 때의 처리
+			freeBoardService.addFreeBoard(githubId, freeBoardRequest, multipartFiles);
+		} else {
+			// multipartFiles가 null일 때의 처리
+			freeBoardService.addFreeBoard(githubId, freeBoardRequest, Collections.emptyList());
+		}
 
-		freeBoardService.addFreeBoard(githubId, freeBoardRequest);
+
 
 		return ResponseEntity.ok().build();
 	}
 
-	@PutMapping("/posts/update")
-	public ResponseEntity<?> freeBoardUpdate(@AuthenticationPrincipal String userId,
-		@RequestBody FreeBoardUpdateRequest freeBoardUpdateRequest) {
+	@PostMapping(value = "/posts/update/{freeBoardId}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> freeBoardUpdate(@AuthenticationPrincipal String userId, @PathVariable Long freeBoardId,
+		@RequestPart(value = "file", required = false) List<MultipartFile> multipartFiles, @RequestPart(value= "data") FreeBoardUpdateRequest freeBoardUpdateRequest) {
 		logger.debug("freeBoardUpdate(), who = {}, freeBoardId = {}, title = {}, content = {}, imageId = {}",
-			userId, freeBoardUpdateRequest.getFreeBoardId(),
+			userId, freeBoardId,
 			freeBoardUpdateRequest.getTitle(),
-			freeBoardUpdateRequest.getContent(), freeBoardUpdateRequest.getFileUri());
+			freeBoardUpdateRequest.getContent());
 
-		freeBoardService.updateFreeBoard(userId, freeBoardUpdateRequest);
-
+		if (multipartFiles != null) {
+			// multipartFiles가 null이 아닐 때의 처리
+			freeBoardService.updateFreeBoard(freeBoardId,userId, freeBoardUpdateRequest, multipartFiles);
+		} else {
+			// multipartFiles가 null일 때의 처리
+			freeBoardService.updateFreeBoard(freeBoardId,userId, freeBoardUpdateRequest, Collections.emptyList());
+		}
 		return ResponseEntity.ok().build();
 	}
 
@@ -85,6 +111,12 @@ public class FreeboardController {
 		logger.debug("freeBoardLike(), who = {}, freeBoardId = {}", userId, freeBoardId);
 
 		freeBoardService.likeFreeBoard(userId, freeBoardId);
+		String writerId = freeBoardService.findFreeBoard(freeBoardId).getUser().getGithubId();
+
+		NotificationLikeRequest notificationLikeRequest = new NotificationLikeRequest(userId,writerId,
+			"/freeboard/posts/"+freeBoardId, NotificationType.LIKE);
+		notificationService.addLikeNotification(notificationLikeRequest);
+
 
 		return ResponseEntity.ok().build();
 	}
@@ -105,26 +137,27 @@ public class FreeboardController {
 		return ResponseEntity.ok().body(freeBoardService.findMyFreeBoards(userId, pages));
 	}
 
-	@GetMapping("/posts/likes/{freeBoardId}")
-	public ResponseEntity<?> freeBoardLikedUsers(@PathVariable Long freeBoardId) {
-		logger.debug("freeBoardLikedUsers(), freeBoardId = {}", freeBoardId);
+	@GetMapping("/posts/likes")
+	public ResponseEntity<?> freeBoardLikedUsers(@AuthenticationPrincipal String githubId,@RequestParam Long freeBoardId
+	,@RequestParam int pages) {
+		logger.debug("freeBoardLikedUsers(), who={}, freeBoardId = {}, pages={}", githubId,freeBoardId,pages);
 
-		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId));
+		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId,githubId,pages));
 	}
 
-	@GetMapping("/search/title")
-	public ResponseEntity<?> freeBoardSearchByTitle(@RequestParam String keyword,
-		@RequestParam String sort, @RequestParam int pages) {
-		logger.debug("freeBoardSearchByTitle(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	// @GetMapping("/search/title")
+	// public ResponseEntity<?> freeBoardSearchByTitle(@RequestParam String keyword,
+	// 	@RequestParam String sort, @RequestParam int pages) {
+	// 	logger.debug("freeBoardSearchByTitle(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	//
+	// 	return ResponseEntity.ok().body(freeBoardService.searchTitleFreeBoards(keyword, sort, pages));
+	// }
 
-		return ResponseEntity.ok().body(freeBoardService.searchTitleFreeBoards(keyword, sort, pages));
-	}
-
-	@GetMapping("/search/user")
-	public ResponseEntity<?> freeBoardSearchByUser(@RequestParam String keyword,
-		@RequestParam String sort, @RequestParam int pages) {
-		logger.debug("freeBoardSearchByUser(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
-
-		return ResponseEntity.ok().body(freeBoardService.searchUserFreeBoards(keyword, sort, pages));
-	}
+	// @GetMapping("/search/user")
+	// public ResponseEntity<?> freeBoardSearchByUser(@RequestParam String keyword,
+	// 	@RequestParam String sort, @RequestParam int pages) {
+	// 	logger.debug("freeBoardSearchByUser(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
+	//
+	// 	return ResponseEntity.ok().body(freeBoardService.searchUserFreeBoards(keyword, sort, pages));
+	// }
 }

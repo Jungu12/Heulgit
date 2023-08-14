@@ -4,6 +4,7 @@ import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -68,11 +69,24 @@ public class JwtProvider {
 	}
 
 	// 요청 헤더에서 JWT 추출
+	// public String resolveToken(HttpServletRequest request) {
+	// 	String bearerToken = request.getHeader("Authorization");
+	// 	if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+	// 		return bearerToken.substring(7);
+	// 	}
+	// 	return null;
+	// }
+
+	// 요청 헤더에서 JWT 추출
 	public String resolveToken(HttpServletRequest request) {
-		String bearerToken = request.getHeader("Authorization");
-		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7);
+		Cookie[] cookies = request.getCookies();
+
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals("refreshToken")) {
+				return cookie.getValue();
+			}
 		}
+
 		return null;
 	}
 

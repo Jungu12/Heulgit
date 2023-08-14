@@ -23,7 +23,6 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -65,8 +64,12 @@ dependencies {
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+    // S3 사용을 위함
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+

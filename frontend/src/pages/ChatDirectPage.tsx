@@ -16,7 +16,9 @@ import { ChatRoomType, MessageType } from '@typedef/gm/gm.types';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import SockJS from 'sockjs-client';
-import { http } from '@utils/http';
+import { authHttp } from '@utils/http';
+import { RootState } from '@store/index';
+import { useSelector } from 'react-redux';
 
 const StyledChatDirectPageContainer = styled.div`
 	display: flex;
@@ -94,25 +96,46 @@ const ChatDirectPage = () => {
 	const [messageList, setMessageList] = useState<MessageType[]>([]);
 	const [message, setMessage] = useState<MessageType>();
 	const [inputMessage, setInputMessage] = useState('');
+	const accessToken = useSelector(
+		(reduxsState: RootState) => reduxsState.auth.token,
+	);
+
+	const headers = {
+		Authorization: `Bearer ${accessToken}`,
+	};
 
 	// 채팅방 연결 함수
-	const connectHandler = useCallback((roomId: string) => {
-		client.current = Stomp.over(() => {
-			const sock = new SockJS('http://192.168.100.64:8080/gm');
-			return sock;
-		});
+	const connectHandler = useCallback(
+		(roomId: string) => {
+			console.log('연결 시작', headers);
 
-		setMessageList([...state.room.chatMessages]);
-		client.current.connect({}, () => {
-			client.current!.subscribe(
-				`/sub/chat/room/${roomId}`,
-				(msg) => {
-					setMessage(JSON.parse(msg.body));
+			client.current = Stomp.over(() => {
+				const sock = new SockJS('http://192.168.100.64:8080/gm');
+				return sock;
+			});
+
+			client.current?.configure({
+				connectHeaders: {
+					Authorization: 'Bearer ' + (accessToken ? accessToken : ''),
 				},
-				{ Authorization: '', simpDestination: roomId },
-			);
-		});
-	}, []);
+			});
+
+			setMessageList([...state.room.chatMessages]);
+			client.current.connect(headers, () => {
+				client.current?.subscribe(
+					`/sub/chat/room/${roomId}`,
+					(msg) => {
+						setMessage(JSON.parse(msg.body));
+					},
+					{
+						Authorization: accessToken ? accessToken : '',
+						simpDestination: roomId,
+					},
+				);
+			});
+		},
+		[accessToken, state, client],
+	);
 
 	// 메세지 보내기 함수
 	const sendHandler = useCallback(() => {
@@ -127,10 +150,16 @@ const ChatDirectPage = () => {
 			updatedTime: new Date().toString(),
 		};
 
-		client.current?.send('/pub/chat/message', {}, JSON.stringify(newMessage));
+		client.current?.send(
+			'/pub/chat/message',
+			{
+				Authorization: accessToken,
+			},
+			JSON.stringify(newMessage),
+		);
 
 		setInputMessage('');
-	}, [inputMessage]);
+	}, [inputMessage, accessToken, client]);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInputMessage(e.target.value);
@@ -143,13 +172,11 @@ const ChatDirectPage = () => {
 	};
 
 	const loadChatRoomLog = useCallback((id: string) => {
-		http
-			.get<MessageType[]>(`http://192.168.100.64:8080/gm/chats/${id}`)
-			.then((res) => {
-				// console.log(res);
-				setMessageList([...res]);
-				// setChatRoomList(res);
-			});
+		authHttp.get<MessageType[]>(`gm/chats/${id}`).then((res) => {
+			// console.log(res);
+			setMessageList([...res]);
+			// setChatRoomList(res);
+		});
 	}, []);
 
 	useEffect(() => {
@@ -174,6 +201,10 @@ const ChatDirectPage = () => {
 
 	useEffect(() => {
 		connectHandler(state.room.roomId);
+
+		return () => {
+			console.log('채팅방 나감');
+		};
 	}, []);
 
 	useEffect(() => {

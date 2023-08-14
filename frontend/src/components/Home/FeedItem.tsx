@@ -1,11 +1,17 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { HeulGitPostType } from '@typedef/home/heulgit.types';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import MarkdownSummaryRenderer from './MarkdownSummaryRenderer';
 import MarkdownRenderer from './MarkdownRenderer';
+import { getTimeAgo } from '@utils/date';
+import { decodeUnicode } from '@utils/markdown';
+import { findLikeUser } from '@utils/heulgit';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/index';
+import { authHttp } from '@utils/http';
 
 const StyledFeedItemContainer = styled.div`
 	display: flex;
@@ -31,6 +37,7 @@ const StyledProfileContainer = styled.div`
 const StyledProfileImage = styled.img`
 	width: 36px;
 	height: 36px;
+	border-radius: 50%;
 `;
 
 const StyledUserMarker = styled.img`
@@ -74,49 +81,112 @@ const StyledSubDataContainer = styled.div`
 type Props = {
 	feed: HeulGitPostType;
 	type: 'summary' | 'full';
+	onClickComment?: (commentId: number) => void;
 };
 
-const FeedItem = ({ feed, type }: Props) => {
+const FeedItem = ({ feed, type, onClickComment }: Props) => {
+	const user = useSelector((state: RootState) => state.user.user);
 	const navigation = useNavigate();
-
-	const onClickComment = useCallback(() => {
-		console.log('댓글 클릭');
-	}, []);
+	const [like, setLike] = useState(false);
+	const [likeNum, setLikeNum] = useState(0);
+	// const [content, setContent] = useState('');
 
 	const onClickLike = useCallback(() => {
-		navigation(`repo/${feed.id}/like`);
-	}, []);
+		navigation(`repo/${feed.heulgitId}/like`);
+	}, [feed.heulgitId]);
+
+	const onClickLikeIcon = useCallback(() => {
+		authHttp.get(
+			`heulgit/posts/like/${feed.heulgitId}?userId=${user?.githubId}`,
+		);
+		setLike(true);
+		setLikeNum((prev) => prev + 1);
+	}, [feed.heulgitId, user]);
+
+	const onClickUnLikeIcon = useCallback(() => {
+		authHttp.get(
+			`heulgit/posts/unlike/${feed.heulgitId}?userId=${user?.githubId}`,
+		);
+		setLike(false);
+		setLikeNum((prev) => prev - 1);
+	}, [feed.heulgitId, user]);
+
+	useEffect(() => {
+		if (user && feed.likedUsers) {
+			setLike(findLikeUser(feed.likedUsers, user.githubId));
+			setLikeNum(feed.likedUsers.length);
+		}
+	}, [feed, user]);
 
 	return (
 		<StyledFeedItemContainer>
 			<StyledTopLine>
 				<StyledProfileContainer>
-					<StyledProfileImage src={feed.user.avater_url} alt="user_profile" />
-					<p>{feed.user.id}</p>
-					{feed.user.is_registered && (
+					<StyledProfileImage src={feed.avatarUrl} alt="user_profile" />
+					<p>{feed.githubId}</p>
+					{feed.registered && (
 						<StyledUserMarker src={images.userMark} alt="user_marker" />
 					)}
 				</StyledProfileContainer>
-				<StyledUpdateTime>{feed.updated_date}</StyledUpdateTime>
+				<StyledUpdateTime>{getTimeAgo(feed.updatedDate)}</StyledUpdateTime>
 			</StyledTopLine>
 			<StyledContentContainer>
 				{type === 'full' ? (
 					<MarkdownRenderer text={feed.content} />
 				) : (
 					<MarkdownSummaryRenderer
-						text={feed.content}
-						onClick={() => navigation(`/repo/${feed.id}`)}
+						text={decodeUnicode(feed.content)}
+						onClick={() => {
+							navigation(`/repo/${feed.heulgitId}`);
+						}}
 					/>
+				)}
+				{type === 'summary' ? (
+					<div
+						onClick={() => {
+							navigation(`/repo/${feed.heulgitId}`);
+						}}
+					>
+						...더보기
+					</div>
+				) : (
+					''
 				)}
 			</StyledContentContainer>
 			<StyledButtonContainer>
-				<img src={images.like} alt="like_button" />
-				<img src={images.chat} alt="comment_button" />
+				{like ? (
+					<img
+						src={images.community.likesActive}
+						alt="like_button"
+						onClick={onClickUnLikeIcon}
+					/>
+				) : (
+					<img
+						src={images.like}
+						alt="unlike_button"
+						onClick={onClickLikeIcon}
+					/>
+				)}
+				<img
+					src={images.chat}
+					alt="comment_button"
+					onClick={() => {
+						if (onClickComment) {
+							onClickComment(feed.heulgitId);
+						}
+					}}
+				/>
 				<img src={images.share} alt="share_button" />
 			</StyledButtonContainer>
 			<StyledSubDataContainer>
-				<div onClick={onClickLike}>{`좋아요 ${feed.likes}개 · `}</div>
-				<div onClick={onClickComment}>{`댓글 ${feed.comments}개`}</div>
+				<div onClick={onClickLike}>{`좋아요 ${likeNum}개 · `}</div>
+				<div
+					onClick={() => {
+						if (onClickComment) {
+							onClickComment(feed.heulgitId);
+						}
+					}}
+				>{`댓글 ${feed.heulgitComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);

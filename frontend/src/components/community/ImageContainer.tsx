@@ -8,8 +8,13 @@ const StyledImgContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 
+	background-color: #ffffff;
+
 	width: 100%;
-	height: 100%;
+	/* height: 100%; */
+
+	/* margin: 20px 0; */
+	padding: 0 20px 20px 20px;
 `;
 
 const StyledImg = styled.img`

@@ -6,9 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class EurekaUpdateRequest {
-	private Long eurekaId;
 	private String title;
 	private String content;
-	private List<String> fileUri;
 	private String link;
 }
