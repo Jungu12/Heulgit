@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import morningrolecall.heulgit.auth.repository.AuthRepository;
+import morningrolecall.heulgit.auth.util.JwtRedisManager;
 import morningrolecall.heulgit.exception.AuthException;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.UserException;
@@ -60,7 +60,7 @@ public class UserService {
 
 	private final RelationService relationService;
 	private final UserRepository userRepository;
-	private final AuthRepository authRepository;
+	private final JwtRedisManager jwtRedisManager;
 	private final CommitAnalyzeRepository commitAnalyzeRepository;
 	private final RelationRepository relationRepository;
 	private final UserCommentRepository userCommentRepository;
@@ -77,7 +77,7 @@ public class UserService {
 	private String githubApiToken;
 
 	public void logout(String userId) {
-		int deleteCount = authRepository.deleteJwt(userId);
+		int deleteCount = jwtRedisManager.deleteJwt(userId);
 
 		if (deleteCount == 0) {
 			throw new AuthException(ExceptionCode.TOKEN_DELETE_FAILED);
