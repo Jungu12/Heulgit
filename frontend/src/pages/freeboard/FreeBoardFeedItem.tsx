@@ -2,12 +2,15 @@
 
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { FreeBoardPostType } from '@typedef/community/freeboard.types';
-// import { useSelector } from 'react-redux';
-// import { RootState } from '@store/index';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/index';
+import ImageSlider from '@components/Home/ImageSlider';
+import { authHttp } from '@utils/http';
+import { getTimeAgo } from '@utils/date';
 
 // 피드 전체 컨테이너
 const StyledFeedItemContainer = styled.div`
@@ -107,6 +110,7 @@ const StyledButtonContainer = styled.div`
 	img {
 		height: 24px;
 		width: 24px;
+		cursor: pointer;
 	}
 `;
 
@@ -118,28 +122,53 @@ const StyledSubDataContainer = styled.div`
 	font-size: 12px;
 	font-weight: 400;
 	margin: 8px 12px 0 12px;
+	div {
+		cursor: pointer;
+	}
+`;
+
+const StyledImageSliderContainer = styled.div`
+	margin: 24px 0px 12px 0px;
+	padding: 0 12px;
+
+	img {
+		display: flex;
+		max-width: 100%;
+		margin: 0 auto;
+	}
 `;
 
 type Props = {
 	feed: FreeBoardPostType;
+	onClickComment: (id: number) => void;
 };
 
-const FreeBoardFeedItem = ({ feed }: Props) => {
+const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 	const navigation = useNavigate();
 	// const githubId = useSelector((state: RootState) => state.user.user?.githubId);
 
-	// 좋아요 이미지 변환
 	const [liked, setLiked] = useState(false);
+	const [likeNum, setLikeNum] = useState(feed.likedUsers.length);
+	const imgUrl = feed.freeBoardImages;
 
 	// 좋아요 클릭시 변환 이벤트
 	const handleLikeClick = () => {
-		setLiked((prevLiked) => !prevLiked);
+		if (liked) {
+			authHttp
+				.get(`freeboard/posts/unlike/${feed.freeBoardId}?userId=${githubId}`)
+				.then(() => {
+					setLiked((prev) => !prev);
+					setLikeNum((prev) => prev - 1);
+				});
+		} else {
+			authHttp
+				.get(`freeboard/posts/like/${feed.freeBoardId}?userId=${githubId}`)
+				.then(() => {
+					setLiked((prev) => !prev);
+					setLikeNum((prev) => prev + 1);
+				});
+		}
 	};
-
-	// 댓글 모달 나오게 할 거
-	const onClickComment = useCallback(() => {
-		console.log('댓글 클릭');
-	}, []);
 
 	// 좋아요 누른 유저 목록 페이지로 이동
 	const onClickLike = useCallback(() => {
@@ -156,24 +185,44 @@ const FreeBoardFeedItem = ({ feed }: Props) => {
 		navigation(`/profiles/${1}`);
 	}, []);
 
+	useEffect(() => {
+		console.log(feed);
+	}, [feed]);
+
+	useEffect(() => {
+		const found = feed.likedUsers.find((user) => user.githubId === githubId);
+		if (found) {
+			setLiked(true);
+		} else {
+			setLiked(false);
+		}
+		setLikeNum(feed.likedUsers.length);
+	}, [feed]);
+
 	return (
 		<StyledFeedItemContainer>
 			<StyledTopLine>
+				{/* 프로필 */}
 				<StyledProfileContainer onClick={onClickUserProfile}>
 					<StyledProfileImage src={feed.user.avatarUrl} alt="user_profile" />
 					<p>{feed.user.githubId}</p>
 				</StyledProfileContainer>
-				<StyledUpdateTime>{feed.updatedDate}</StyledUpdateTime>
+				{/* 시간 수정하기 */}
+				<StyledUpdateTime>{getTimeAgo(feed.updatedDate)}</StyledUpdateTime>
 			</StyledTopLine>
+			{/* 피드 */}
 			<StyledFeedContentContainer onClick={onClickFeedItem}>
 				<StyledTitleContainer>{feed.title}</StyledTitleContainer>
 				<StyledContentContainer>{feed.content}</StyledContentContainer>
-				{/* {imageSrc && (
-					<StyledImgContainer>
-						<StyledImg src={imageSrc} />
-					</StyledImgContainer>
-				)} */}
+
+				{imgUrl && (
+					<StyledImageSliderContainer>
+						<ImageSlider images={imgUrl.map((url) => url.fileUri)} />
+					</StyledImageSliderContainer>
+				)}
 			</StyledFeedContentContainer>
+
+			{/* 버튼 */}
 			<StyledButtonContainer>
 				<img
 					src={
@@ -185,11 +234,13 @@ const FreeBoardFeedItem = ({ feed }: Props) => {
 					onClick={handleLikeClick} // 좋아요 아이콘 클릭 이벤트 처리
 				/>
 				<img src={images.chat} alt="comment_button" />
-				<img src={images.share} alt="share_button" />
 			</StyledButtonContainer>
+			{/* 좋아요 및 댓글 */}
 			<StyledSubDataContainer>
-				<div onClick={onClickLike}>{`좋아요 ${feed.likedUsers}개 · `}</div>
-				<div onClick={onClickComment}>{`댓글 ${feed.freeBoardComments}개`}</div>
+				<div onClick={onClickLike}>{`좋아요 ${likeNum}개 · `}</div>
+				<div
+					onClick={() => onClickComment(feed.freeBoardId)}
+				>{`댓글 ${feed.freeBoardComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);
