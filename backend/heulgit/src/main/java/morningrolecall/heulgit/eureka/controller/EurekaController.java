@@ -134,17 +134,16 @@ public class EurekaController {
 	}
 
 	@GetMapping("/myposts")
-	public ResponseEntity<?> eurekaMyPosts(@AuthenticationPrincipal String userId, @RequestParam String sort,
-		@RequestParam int pages) {
-		logger.debug("eurekaMyPosts(), who = {}, sort = {}, pages = {}", userId, sort, pages);
+	public ResponseEntity<?> eurekaMyPosts(@AuthenticationPrincipal String userId, @RequestParam int pages) {
+		logger.debug("eurekaMyPosts(), who = {}, sort = {}, pages = {}", userId,  pages);
 
-		return ResponseEntity.ok().body(eurekaService.searchUserEurekas(userId, sort, pages));
+		return ResponseEntity.ok().body(eurekaService.findMyEurekas(userId,  pages));
 	}
 
-	@GetMapping("/posts/likes/{eurekaId}")
-	public ResponseEntity<?> eurekaLikedUsers(@PathVariable Long eurekaId) {
-		logger.debug("eurekaLikedUsers(), eurekaId = {}", eurekaId);
+	@GetMapping("/posts/likes")
+	public ResponseEntity<?> eurekaLikedUsers(@AuthenticationPrincipal String githubId,@RequestParam Long eurekaId, int pages) {
+		logger.debug("eurekaLikedUsers() who ={},eurekaId={} pages={}",githubId,eurekaId,pages);
 
-		return ResponseEntity.ok().body(eurekaService.findLikedUsers(eurekaId));
+		return ResponseEntity.ok().body(eurekaService.findLikedUser(eurekaId,githubId,pages));
 	}
 }
