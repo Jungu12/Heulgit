@@ -64,6 +64,8 @@ authAxios.interceptors.request.use(
 				const refreshResponse = await http.get<AuthType>('oauth/refresh-token');
 				const newAccessToken = refreshResponse.accessToken;
 
+				console.log('새로운 accessToken 발급 :', newAccessToken);
+
 				if (newAccessToken) {
 					config.headers = config.headers || {};
 					(

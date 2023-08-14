@@ -26,10 +26,11 @@ export const gitLogin = async (code: string) => {
  * @returns
  */
 export const setUserData = async () => {
-	const response = await authHttp.get<UserType>('user').then((res) => {
-		console.log(res);
-		setUser(res);
-	});
-
-	return response;
+	try {
+		const userResponse = await authHttp.get<UserType>('user');
+		console.log(userResponse);
+		setUser(userResponse);
+	} catch (error) {
+		console.error(error);
+	}
 };
