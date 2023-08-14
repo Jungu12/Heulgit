@@ -57,7 +57,6 @@ authAxios.interceptors.request.use(
 			(
 				config.headers as AxiosRequestHeaders
 			).Authorization = `Bearer ${accessToken}`;
-			setUserData().then((res) => console.log(res));
 		}
 		// 없는 경우 리프레시 토큰으로 액세스 토큰 재발급
 		else {
@@ -75,7 +74,8 @@ authAxios.interceptors.request.use(
 
 					// 액세스 토큰을 리덕스 스토어에 저장
 					store.dispatch(setToken(newAccessToken));
-					setUserData().then((res) => console.log(res));
+
+					await setUserData();
 				}
 			} catch (error) {
 				console.error('액세스 토큰 재발급 실패:', error);
