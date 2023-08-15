@@ -2,6 +2,8 @@ package morningrolecall.heulgit.gm.util;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class RedisInOutManager {
 
 	private final RedisTemplate<String, String> redisTemplate;
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	// 사용자를 특정 topic에 구독자로 등록
 	public void addUserToTopic(String topic, String userId) {
@@ -26,6 +29,7 @@ public class RedisInOutManager {
 	// 사용자를 특정 topic의 구독자에서 제거
 	public void removeUserFromTopic(String topic, String userId) {
 		redisTemplate.opsForHash().delete(topic, userId);
+		logger.debug("UserExist = {}", isUserSubscribedToTopic(topic, userId));
 	}
 
 	// 특정 topic의 모든 구독자 조회
