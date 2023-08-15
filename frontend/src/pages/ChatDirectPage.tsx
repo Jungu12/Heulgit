@@ -19,6 +19,7 @@ import SockJS from 'sockjs-client';
 import { authHttp } from '@utils/http';
 import { RootState } from '@store/index';
 import { useSelector } from 'react-redux';
+import { findParter } from '@utils/gm';
 
 const StyledChatDirectPageContainer = styled.div`
 	display: flex;
@@ -81,6 +82,7 @@ const StyledButton = styled.button`
 	background-color: ${colors.primary.primary};
 	color: white;
 	border-radius: 8px;
+	cursor: pointer;
 `;
 
 type RouteState = {
@@ -90,6 +92,7 @@ type RouteState = {
 };
 
 const ChatDirectPage = () => {
+	const user = useSelector((state: RootState) => state.user.user);
 	const { state } = useLocation() as RouteState;
 	const client = useRef<CompatClient>();
 	const messageEndRef = useRef<HTMLDivElement | null>(null);
@@ -226,33 +229,42 @@ const ChatDirectPage = () => {
 
 	return (
 		<StyledChatDirectPageContainer>
-			<StyledHeader>
-				<Header title={'userName'} />
-			</StyledHeader>
-			<StyledMessage>
-				{messageList.map((msg, index) => (
-					<ChatBox
-						key={index}
-						message={msg.message}
-						$isUser={msg.sender === 'ksg2388'}
-					/>
-				))}
-				<div ref={messageEndRef}></div>
-			</StyledMessage>
-			<StyledFooter>
-				<StyledInputWrap>
-					<StyledInputDiv $isEmpty={inputMessage === ''}>
-						<StyledInput
-							type="text"
-							value={inputMessage}
-							onChange={handleInputChange}
-							onKeyDown={handleKeyPress}
+			{user && (
+				<>
+					<StyledHeader>
+						<Header
+							title={findParter(
+								user?.githubId,
+								state.room.user1,
+								state.room.user2,
+							)}
 						/>
-						<button>사진</button>
-					</StyledInputDiv>
-				</StyledInputWrap>
-				<StyledButton onClick={sendHandler}>전송</StyledButton>
-			</StyledFooter>
+					</StyledHeader>
+					<StyledMessage>
+						{messageList.map((msg, index) => (
+							<ChatBox
+								key={index}
+								message={msg.message}
+								$isUser={msg.sender === user?.githubId}
+							/>
+						))}
+						<div ref={messageEndRef}></div>
+					</StyledMessage>
+					<StyledFooter>
+						<StyledInputWrap>
+							<StyledInputDiv $isEmpty={inputMessage === ''}>
+								<StyledInput
+									type="text"
+									value={inputMessage}
+									onChange={handleInputChange}
+									onKeyDown={handleKeyPress}
+								/>
+							</StyledInputDiv>
+						</StyledInputWrap>
+						<StyledButton onClick={sendHandler}>전송</StyledButton>
+					</StyledFooter>
+				</>
+			)}
 		</StyledChatDirectPageContainer>
 	);
 };
