@@ -114,7 +114,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 						renderSuggestion={(suggestion) => (
 							<StyledMentionContainer>
 								<StyledMentionImage
-									src={followingList[(suggestion.id as number) - 1].avater_url}
+									src={followingList[suggestion.id as number].avater_url}
 									alt=""
 								/>
 								<span>{suggestion.display}</span>
