@@ -80,7 +80,7 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/{githubId}")
-	public ResponseEntity<?> userDetail(@RequestParam String githubId) {
+	public ResponseEntity<?> userDetail(@PathVariable String githubId) {
 		logger.debug("userDetail(), githubId = {}", githubId);
 
 		return ResponseEntity.ok().body(userService.findUser(githubId));
