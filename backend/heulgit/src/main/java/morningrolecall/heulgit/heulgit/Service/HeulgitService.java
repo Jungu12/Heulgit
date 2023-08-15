@@ -105,8 +105,8 @@ public class HeulgitService {
 
 		}
 
-		// return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
-		return feedList(githubId,pages);
+		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
+
 
 	}
 

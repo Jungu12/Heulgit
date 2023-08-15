@@ -19,6 +19,7 @@ import SockJS from 'sockjs-client';
 import { authHttp } from '@utils/http';
 import { RootState } from '@store/index';
 import { useSelector } from 'react-redux';
+import { findParter } from '@utils/gm';
 
 const StyledChatDirectPageContainer = styled.div`
 	display: flex;
@@ -81,6 +82,7 @@ const StyledButton = styled.button`
 	background-color: ${colors.primary.primary};
 	color: white;
 	border-radius: 8px;
+	cursor: pointer;
 `;
 
 type RouteState = {
@@ -90,6 +92,7 @@ type RouteState = {
 };
 
 const ChatDirectPage = () => {
+	const user = useSelector((state: RootState) => state.user.user);
 	const { state } = useLocation() as RouteState;
 	const client = useRef<CompatClient>();
 	const messageEndRef = useRef<HTMLDivElement | null>(null);
@@ -144,7 +147,7 @@ const ChatDirectPage = () => {
 
 		const newMessage = {
 			roomId: state.room.roomId,
-			sender: 'ksg2388',
+			sender: user?.githubId,
 			message: inputMessage,
 			read: true,
 			updatedTime: new Date().toString(),
@@ -179,6 +182,20 @@ const ChatDirectPage = () => {
 		});
 	}, []);
 
+	const exitChatRoom = useCallback(async () => {
+		if (user) {
+			authHttp
+				.delete(
+					`gm/room/out/${findParter(
+						user.githubId,
+						state.room.user1,
+						state.room.user2,
+					)}`,
+				)
+				.then(() => console.log('채팅방 나가짐'));
+		}
+	}, []);
+
 	useEffect(() => {
 		console.log('[메세지 리스트]', messageList);
 
@@ -191,27 +208,17 @@ const ChatDirectPage = () => {
 		}
 	}, [messageList]);
 
-	// useEffect(() => {
-	// 	console.log(inputMessage);
-	// }, [inputMessage]);
-
-	// useEffect(() => {
-	// 	console.log('[message]', state.room.chatMessages);
-	// }, [state]);
-
 	useEffect(() => {
 		console.log('채팅방 입장 : ', state);
 
 		connectHandler(state.room.roomId);
 
 		return () => {
-			console.log('채팅방 나감');
+			exitChatRoom();
 		};
 	}, []);
 
 	useEffect(() => {
-		console.log('[message 변경 됨?]', message);
-
 		if (message) {
 			setMessageList((prev) => [...prev, message]);
 		}
@@ -226,33 +233,42 @@ const ChatDirectPage = () => {
 
 	return (
 		<StyledChatDirectPageContainer>
-			<StyledHeader>
-				<Header title={'userName'} />
-			</StyledHeader>
-			<StyledMessage>
-				{messageList.map((msg, index) => (
-					<ChatBox
-						key={index}
-						message={msg.message}
-						$isUser={msg.sender === 'ksg2388'}
-					/>
-				))}
-				<div ref={messageEndRef}></div>
-			</StyledMessage>
-			<StyledFooter>
-				<StyledInputWrap>
-					<StyledInputDiv $isEmpty={inputMessage === ''}>
-						<StyledInput
-							type="text"
-							value={inputMessage}
-							onChange={handleInputChange}
-							onKeyDown={handleKeyPress}
+			{user && (
+				<>
+					<StyledHeader>
+						<Header
+							title={findParter(
+								user?.githubId,
+								state.room.user1,
+								state.room.user2,
+							)}
 						/>
-						<button>사진</button>
-					</StyledInputDiv>
-				</StyledInputWrap>
-				<StyledButton onClick={sendHandler}>전송</StyledButton>
-			</StyledFooter>
+					</StyledHeader>
+					<StyledMessage>
+						{messageList.map((msg, index) => (
+							<ChatBox
+								key={index}
+								message={msg.message}
+								$isUser={msg.sender === user.githubId}
+							/>
+						))}
+						<div ref={messageEndRef}></div>
+					</StyledMessage>
+					<StyledFooter>
+						<StyledInputWrap>
+							<StyledInputDiv $isEmpty={inputMessage === ''}>
+								<StyledInput
+									type="text"
+									value={inputMessage}
+									onChange={handleInputChange}
+									onKeyDown={handleKeyPress}
+								/>
+							</StyledInputDiv>
+						</StyledInputWrap>
+						<StyledButton onClick={sendHandler}>전송</StyledButton>
+					</StyledFooter>
+				</>
+			)}
 		</StyledChatDirectPageContainer>
 	);
 };

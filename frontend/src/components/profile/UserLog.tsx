@@ -1,3 +1,4 @@
+import { getTimeAgo } from '@utils/date';
 import React from 'react';
 import { styled } from 'styled-components';
 
@@ -19,23 +20,32 @@ const StyledLog = styled.div`
 	margin-left: 11px;
 `;
 
+const StyledUnReadNum = styled.div`
+	border-radius: 50%;
+	background-color: red;
+	color: white;
+	font-size: 12px;
+	font-weight: 700;
+	padding: 4px;
+`;
+
 type Props = {
 	userLName: string;
 	userLog: string;
 	logDate: string;
+	unReadNum: number;
 };
 
-const UserLog = ({ userLName, userLog, logDate }: Props) => {
+const UserLog = ({ userLName, userLog, logDate, unReadNum }: Props) => {
 	return (
 		<StyledUserLog>
 			<StyledUserImage src="" alt="User" />
 			<StyledLog>
 				<div>{userLName}</div>
-				<div>
-					{userLog}
-					{logDate}
-				</div>
+				<div>{getTimeAgo(logDate)}</div>
 			</StyledLog>
+			{userLog}
+			<StyledUnReadNum>{unReadNum}</StyledUnReadNum>
 		</StyledUserLog>
 	);
 };
