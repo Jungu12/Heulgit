@@ -100,6 +100,9 @@ public class ChatRoomService {
 		}
 
 		ChatRoom curChatRoom = chatRoomRepository.getChatRoom(message.getRoomId());
+		for (ChatMessage chatMessage : curChatRoom.getChatMessages()) {
+			logger.debug("메세지 = {}, 메세지 읽음 상태 = {}", chatMessage.getMessage(), chatMessage.isRead());
+		}
 		chatRoomRepository.updateChatRoom(curChatRoom, message);
 	}
 
