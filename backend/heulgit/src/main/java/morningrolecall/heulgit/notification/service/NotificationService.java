@@ -234,17 +234,21 @@ public class NotificationService {
 			// 게시글 작성자가 우리 서비스 사용자일 때 알림 전송
 			User receiver = userRepository.findUserByGithubId(notificationCommentRequest.getWriterId())
 				.orElseThrow(() -> new NoResultException());
-			Notification notification = Notification.builder()
-				.sender(sender)
-				.receiver(receiver)
-				.createdDate(LocalDateTime.now())
-				.hasRead(false)
-				.type(NotificationType.COMMENT)
-				.content(notificationCommentRequest.getContent())
-				.relatedLink(notificationCommentRequest.getRelatedLink())
-				.build();
-			notificationRepository.saveAndFlush(notification);
-			send(notificationMapper.toCommentResponse(notification));
+			//댓글작성자가 게시글 작성자가 아닐 경우에 알림 전송
+			if(!receiver.getGithubId().equals(sender.getGithubId())){
+				Notification notification = Notification.builder()
+					.sender(sender)
+					.receiver(receiver)
+					.createdDate(LocalDateTime.now())
+					.hasRead(false)
+					.type(NotificationType.COMMENT)
+					.content(notificationCommentRequest.getContent())
+					.relatedLink(notificationCommentRequest.getRelatedLink())
+					.build();
+				notificationRepository.saveAndFlush(notification);
+				send(notificationMapper.toCommentResponse(notification));
+
+			}
 
 		} catch (NoResultException e) {
 			logger.debug("작성자가 서비스 사용자가 아님");
