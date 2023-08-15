@@ -28,6 +28,7 @@ public class MessageController {
 		} catch (Exception e) {
 			logger.error("메세지 발행 실패", e);
 		} finally {
+			logger.debug("finally");
 			chatRoomService.saveMessage(message);
 		}
 	}
