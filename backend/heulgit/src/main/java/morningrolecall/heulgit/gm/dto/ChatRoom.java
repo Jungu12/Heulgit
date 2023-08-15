@@ -47,7 +47,8 @@ public class ChatRoom implements Serializable {
 				if (curChatMessage.isRead()) {
 					return;
 				}
-				chatMessages.get(i).updateRead();
+
+				curChatMessage.updateRead();
 			}
 		}
 	}

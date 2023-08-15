@@ -49,10 +49,21 @@ public class ChatRoomService {
 
 		userJoinedChatRoom(roomId, userInfo[0]);
 		userJoinedChatRoom(roomId, userInfo[1]);
+		logger.debug("enterChatRoom()에서 redis에 토픽 저장");
 
 		//모든 메세지 읽음 처리
 		ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
-		chatRoom.markAllMessagesAsRead(githubId);
+		String[] users = chatRoom.getRoomId().split(":");
+		for (String user : users) {
+			if (user.equals(githubId)) {
+				continue;
+			}
+
+			logger.debug("enterChatRoom()에서 메세지 읽음 시도");
+			chatRoom.markAllMessagesAsRead(githubId);
+			logger.debug("enterChatRoom()에서 메세지 읽음 처리 마침");
+		}
+
 	}
 
 	// roomId로 해당 채팅방의 Topic을 반환한다.
@@ -89,6 +100,9 @@ public class ChatRoomService {
 		}
 
 		ChatRoom curChatRoom = chatRoomRepository.getChatRoom(message.getRoomId());
+		for (ChatMessage chatMessage : curChatRoom.getChatMessages()) {
+			logger.debug("메세지 = {}, 메세지 읽음 상태 = {}", chatMessage.getMessage(), chatMessage.isRead());
+		}
 		chatRoomRepository.updateChatRoom(curChatRoom, message);
 	}
 

@@ -84,11 +84,11 @@ public class JwtProvider {
 	public String resolveToken(HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
 
-		logger.debug("cookie size = {}", cookies.length);
+		// logger.debug("cookie size = {}", cookies.length);
 		for (Cookie cookie : cookies) {
-			logger.debug("cookie name = {}", cookie.getName());
+			// logger.debug("cookie name = {}", cookie.getName());
 			if (cookie.getName().equals("refreshToken")) {
-				logger.debug("cookie name = {}, value = {}", cookie.getName(), cookie.getValue());
+				// logger.debug("cookie name = {}, value = {}", cookie.getName(), cookie.getValue());
 				return cookie.getValue();
 			}
 		}
