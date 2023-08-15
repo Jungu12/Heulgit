@@ -22,7 +22,7 @@ public class MessageController {
 	@MessageMapping("/chat/message")
 	public void message(ChatMessage message) {
 		try {
-			chatRoomService.enterChatRoom(message.getRoomId());
+			chatRoomService.enterChatRoom(message.getRoomId(), message.getSender());
 			// Websocket에 발행된 메시지를 redis로 발행한다(publish)
 			redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
 		} catch (Exception e) {
