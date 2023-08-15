@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
+import { authHttp } from '@utils/http';
+import { UserCommentType } from '@typedef/profile/user.types';
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -82,17 +84,17 @@ const MyCommentPage = () => {
 		};
 	}, []);
 
-	// // 댓글 불러오기
-	// useEffect(() => {
-	// 	authHttp
-	// 		.get<UserCommentType>('users/activities/my-comments')
-	// 		.then((response) => {
-	// 			console.log('내 댓글 성공.', response);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error('내 댓글 실패.', error);
-	// 		});
-	// }, []);
+	// 댓글 불러오기
+	useEffect(() => {
+		authHttp
+			.get<UserCommentType>('users/activities/my-comments')
+			.then((response) => {
+				console.log('내 댓글 성공.', response);
+			})
+			.catch((error) => {
+				console.error('내 댓글 실패.', error);
+			});
+	}, []);
 
 	return (
 		<StyledBox>

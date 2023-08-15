@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Category from '@components/profile/Category';
 import Navigation from '@components/common/Navigation';
@@ -9,6 +9,8 @@ import MyProfile from './MyProfile';
 import { images } from '@constants/images';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
+import { authHttp } from '@utils/http';
+import { UserType } from '@typedef/common.types';
 // import { UserType } from '@typedef/common.types';
 
 const StyledProfilePage = styled.div``;
@@ -125,25 +127,40 @@ const ProfilePageMobile = ({
 	const { userId } = useParams();
 	const user = useSelector((state: RootState) => state.user.user);
 	const [view, setView] = useState(false);
+	const [loadedUser, setLoadedUser] = useState<UserType>();
+
+	useEffect(() => {
+		// 내 깃허브 아이디가 아닐 때, API 호출
+		// if (userId !== user?.githubId) {
+		authHttp
+			.get<UserType>(`users/${userId}`)
+			.then((data) => {
+				setLoadedUser(data);
+			})
+			.catch((error) => {
+				console.error('유저 정보 실패:', error);
+			});
+		// }
+	}, []);
 
 	return (
 		<StyledProfilePage>
 			<StyledProfileHigh>
 				<StyledUserProfile>
-					<StyledUserImage src={user?.avatarUrl} alt="user_profile" />
+					<StyledUserImage src={loadedUser?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
-						<div className="user-name">{user?.githubId}</div>
+						<div className="user-name">{loadedUser?.githubId}</div>
 						<div className="user-follow">
 							<StyledFollowing
 								onClick={() =>
-									navigation(`/profiles/${user?.githubId}/following`)
+									navigation(`/profiles/${loadedUser?.githubId}/following`)
 								}
 							>
 								{`팔로잉 20`}
 							</StyledFollowing>
 							<StyledFollower
 								onClick={() =>
-									navigation(`/profiles/${user?.githubId}/follower`)
+									navigation(`/profiles/${loadedUser?.githubId}/follower`)
 								}
 							>
 								{`팔로워 20`}
@@ -187,7 +204,7 @@ const ProfilePageMobile = ({
 							</div>
 							<div>
 								<StyledActivityButtonItem
-									onClick={() => navigation(`/profiles/${user?.githubId}`)}
+									onClick={() => navigation(`/profiles/${userId}`)}
 								>
 									<img src={images.profile.followIcon} alt="팔로우" />
 								</StyledActivityButtonItem>
@@ -209,38 +226,40 @@ const ProfilePageMobile = ({
 					)}
 				</StyledActivityButton>
 			</StyledProfileHigh>
-			<SboxTop>
-				<CateDiv>
-					<Category
-						menu1={'프로필'}
-						icon11={images.profile.profileActive}
-						icon12={images.profile.profileInactive}
-						menuRouter1={() => handleMenuClick('프로필')}
-						menu2={'유레카'}
-						icon21={images.profile.eurekaActive}
-						icon22={images.profile.eurekaInactive}
-						menuRouter2={() => handleMenuClick('유레카')}
-						menu3={'자유'}
-						icon31={images.profile.freeActive}
-						icon32={images.profile.freeInactive}
-						menuRouter3={() => handleMenuClick('자유')}
-						selectedMenu={selectedMenu}
-					/>
-				</CateDiv>
-				<Sdiv>
-					<StyledProfileLow>
-						{selectedMenu === '프로필' && user !== null && (
-							<MyProfile user={user} />
-						)}
-						{selectedMenu === '유레카' && user !== null && (
-							<MyEureka user={user} />
-						)}
-						{selectedMenu === '자유' && user !== null && (
-							<MyFreeboard user={user} />
-						)}
-					</StyledProfileLow>
-				</Sdiv>
-			</SboxTop>
+			{loadedUser && (
+				<SboxTop>
+					<CateDiv>
+						<Category
+							menu1={'프로필'}
+							icon11={images.profile.profileActive}
+							icon12={images.profile.profileInactive}
+							menuRouter1={() => handleMenuClick('프로필')}
+							menu2={'유레카'}
+							icon21={images.profile.eurekaActive}
+							icon22={images.profile.eurekaInactive}
+							menuRouter2={() => handleMenuClick('유레카')}
+							menu3={'자유'}
+							icon31={images.profile.freeActive}
+							icon32={images.profile.freeInactive}
+							menuRouter3={() => handleMenuClick('자유')}
+							selectedMenu={selectedMenu}
+						/>
+					</CateDiv>
+					<Sdiv>
+						<StyledProfileLow>
+							{selectedMenu === '프로필' && user !== null && (
+								<MyProfile user={loadedUser} />
+							)}
+							{selectedMenu === '유레카' && user !== null && (
+								<MyEureka user={loadedUser} />
+							)}
+							{selectedMenu === '자유' && user !== null && (
+								<MyFreeboard user={loadedUser} />
+							)}
+						</StyledProfileLow>
+					</Sdiv>
+				</SboxTop>
+			)}
 
 			<StyledFooter>
 				<Navigation />

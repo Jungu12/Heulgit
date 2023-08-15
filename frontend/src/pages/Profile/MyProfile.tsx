@@ -106,11 +106,11 @@ const MyProfile = ({ user }: MyProfileProps) => {
 		authHttp
 			.get<UserCommitType[]>(`users/commit-analyze/${user.githubId}`)
 			.then((response) => {
-				// console.log('커밋 분석 정보를 불러왔습니다.', response);
+				console.log('커밋 분석 성공.', response);
 				setCommitGraphData(response);
 			})
 			.catch((error) => {
-				console.error('커밋 분석 정보를 불러오지 못했습니다.', error);
+				console.error('커밋 분석 실패.', error);
 			});
 	}, []);
 
