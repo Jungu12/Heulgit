@@ -79,7 +79,7 @@ public class ChatRoomService {
 			logger.debug("채팅방에 상대방 접속 여부 확인, message.getRoomId = {}, user = {}", message.getRoomId(), user);
 
 			//현재 채팅방에 접속해 있는지 확인
-			if (!isUserSubscribedToChatRoom(message.getRoomId(), user)) {
+			if (isUserSubscribedToChatRoom(message.getRoomId(), user)) {
 				logger.debug("채팅방에 상대방 접속 여부 확인, message.getRoomId = {}, user = {}", message.getRoomId(), user);
 				continue;
 			}
