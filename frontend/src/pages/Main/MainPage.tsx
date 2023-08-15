@@ -51,7 +51,10 @@ const MainPage = () => {
 							? `sort=${getSortType(selelctedOption)}&`
 							: '') +
 						(endDate && startDate
-							? `start-year=${startDate.getFullYear()}&start-month=${startDate.getMonth()}&end-year=${endDate.getFullYear()}&end-month=${endDate.getMonth()}&`
+							? `start-year=${startDate.getFullYear()}&start-month=
+							${startDate.getMonth() + 1}
+									&end-year=${endDate.getFullYear()}&end-month=
+								${endDate.getMonth() + 1}&`
 							: '')
 					}
 					pages=${cur}`,
