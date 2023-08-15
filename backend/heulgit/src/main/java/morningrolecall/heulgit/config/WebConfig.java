@@ -6,7 +6,10 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import lombok.AllArgsConstructor;
+import morningrolecall.heulgit.auth.interceptor.AuthInterceptor;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -19,7 +22,10 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
-public class WebConfig {
+@AllArgsConstructor
+public class WebConfig implements WebMvcConfigurer {
+
+	private final AuthInterceptor authInterceptor;
 
 	@Bean
 	public RestTemplate restTemplate() {
@@ -39,6 +45,17 @@ public class WebConfig {
 			.build()
 			.host("http://localhost:8080");
 	}
+
+	// @Override
+	// public void addInterceptors(InterceptorRegistry registry) {
+	// 	registry.addInterceptor(authInterceptor)
+	// 		.addPathPatterns("/**") // 모든 경로에 대해 인터셉터 적용
+	// 		.excludePathPatterns("/api/oauth/**", // oauth 관련 경로 제외
+	// 			"/v3/api-docs/**",
+	// 			"/swagger-ui/**",
+	// 			"/favicon.ico",
+	// 			"/swagger-resources/**");
+	// }
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()

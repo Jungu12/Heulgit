@@ -1,5 +1,7 @@
-import { AuthType } from '@typedef/common.types';
-import { http } from '@utils/http';
+import store from '@store/store';
+import { setUser } from '@store/user';
+import { AuthType, UserType } from '@typedef/common.types';
+import { authHttp, http } from '@utils/http';
 
 /**
  * 로그인 시 토큰 저장하기
@@ -16,5 +18,20 @@ export const gitLogin = async (code: string) => {
 	} catch (error) {
 		console.error(error);
 		throw error;
+	}
+};
+
+/**
+ * 유저 정보 저장하기
+ * @param
+ * @returns
+ */
+export const setUserData = async () => {
+	try {
+		const userResponse = await authHttp.get<UserType>('users');
+		console.log(userResponse);
+		store.dispatch(setUser(userResponse));
+	} catch (error) {
+		console.error(error);
 	}
 };

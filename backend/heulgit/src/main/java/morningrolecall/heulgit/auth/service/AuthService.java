@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import morningrolecall.heulgit.auth.dto.OAuthToken;
 import morningrolecall.heulgit.auth.dto.TokenInfoResponse;
 import morningrolecall.heulgit.auth.util.JwtProvider;
+import morningrolecall.heulgit.auth.util.JwtRedisManager;
 import morningrolecall.heulgit.exception.AuthException;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.user.domain.User;
@@ -35,13 +36,16 @@ public class AuthService {
 
 	private final UserRepository userRepository;
 
+	private final JwtRedisManager jwtRedisManager;
+
 	private final JwtProvider jwtProvider;
 
 	public AuthService(RestTemplate restTemplate,
 		@Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
 		@Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret,
 		@Value("${github.accesstoken-url}") String accessTokenUrl,
-		@Value("${github.userinfo-url}") String userInfoUrl, UserRepository userRepository, JwtProvider jwtProvider) {
+		@Value("${github.userinfo-url}") String userInfoUrl, UserRepository userRepository, JwtProvider jwtProvider,
+		JwtRedisManager jwtRedisManager) {
 		this.restTemplate = restTemplate;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
@@ -49,6 +53,7 @@ public class AuthService {
 		this.userInfoUrl = userInfoUrl;
 		this.userRepository = userRepository;
 		this.jwtProvider = jwtProvider;
+		this.jwtRedisManager = jwtRedisManager;
 	}
 
 	/**
@@ -80,10 +85,12 @@ public class AuthService {
 			userRepository.save(user);
 		}
 
-		//JWT생성하고, Redis에 Token 저장하는 로직 추가 필요
+		//JWT 생성 하고, Redis 저장소에 Token 저장하는 로직 추가 필요 (확인 필요!)
+		OAuthToken oAuthToken = new OAuthToken(jwtProvider.generateAccessToken(githubId),
+			jwtProvider.generateRefreshToken(githubId));
+		jwtRedisManager.storeJwt(githubId, oAuthToken.getRefreshToken());
 
-		// JWT 생성!(수정 예정)
-		return new OAuthToken(jwtProvider.generateAccessToken(githubId), jwtProvider.generateRefreshToken(githubId));
+		return oAuthToken;
 	}
 
 	/**

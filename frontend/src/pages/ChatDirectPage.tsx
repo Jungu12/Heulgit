@@ -110,7 +110,7 @@ const ChatDirectPage = () => {
 			console.log('연결 시작', headers);
 
 			client.current = Stomp.over(() => {
-				const sock = new SockJS('http://192.168.100.64:8080/gm');
+				const sock = new SockJS('https://i9d211.p.ssafy.io/api/gm');
 				return sock;
 			});
 
@@ -200,6 +200,8 @@ const ChatDirectPage = () => {
 	// }, [state]);
 
 	useEffect(() => {
+		console.log('채팅방 입장 : ', state);
+
 		connectHandler(state.room.roomId);
 
 		return () => {
@@ -217,7 +219,9 @@ const ChatDirectPage = () => {
 	}, [message]);
 
 	useEffect(() => {
-		loadChatRoomLog(state.room.roomId);
+		if (state.room) {
+			loadChatRoomLog(state.room.roomId);
+		}
 	}, [state.room.roomId]);
 
 	return (

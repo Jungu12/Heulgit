@@ -177,7 +177,7 @@ const EurekaFeedItem = ({ feed, onClickComment }: Props) => {
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${1}`);
+		navigation(`/profiles/${feed.user.githubId}`);
 	}, []);
 
 	useEffect(() => {
