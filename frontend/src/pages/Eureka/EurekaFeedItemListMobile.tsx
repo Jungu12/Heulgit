@@ -12,6 +12,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import CBottomSheet from '@components/common/CBottomSheet';
 import EurekaCommentList from '@components/community/EurekaCommentList';
 import { authHttp } from '@utils/http';
+import { OnChangeHandlerFunc } from 'react-mentions';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -59,9 +60,10 @@ const EurekaFeedItemListMobile = ({
 		[setIsCommentOpen],
 	);
 
-	const onHandleComment = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
-			setCommentInput(e.target.value);
+	const onHandleComment: OnChangeHandlerFunc = useCallback(
+		(event, newValue, newPlainTextValue, mentions) => {
+			setCommentInput(newPlainTextValue);
+			console.log(mentions);
 		},
 		[],
 	);

@@ -1,7 +1,11 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { RootState } from '@store/index';
-import React from 'react';
+import { UserType } from '@typedef/common.types';
+import { authHttp } from '@utils/http';
+import React, { useCallback, useEffect, useState } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Mention, MentionsInput, OnChangeHandlerFunc } from 'react-mentions';
 import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
@@ -27,7 +31,7 @@ const StyledInputContainer = styled.div`
 	flex: 1;
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled(MentionsInput)`
 	font-size: 16px;
 	font-weight: 500;
 	flex: 1;
@@ -48,26 +52,52 @@ const StyledSubmitButton = styled.button`
 
 type Props = {
 	input: string;
-	onHandleComment: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onHandleComment: OnChangeHandlerFunc;
 	onClickSubbmit: () => Promise<void>;
 };
 
 const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
-	const userImage = useSelector(
-		(state: RootState) => state.user.user?.avatarUrl,
-	);
+	const user = useSelector((state: RootState) => state.user.user);
+	const [followingList, setFollowingList] = useState<UserType[]>([]);
+
+	const getFollersData = useCallback(() => {
+		authHttp
+			.get<UserType[]>(`relations/followings?userId=${user?.githubId}`)
+			.then((res) => {
+				console.log(res);
+				setFollowingList(res);
+			});
+	}, [authHttp]);
+
+	useEffect(() => {
+		getFollersData();
+	}, []);
 
 	return (
 		<CommentInputContainer>
-			<StyledProfile src={userImage} alt="profile" />
+			<StyledProfile src={user?.avatarUrl} alt="profile" />
 			<StyledInputContainer>
 				<StyledInput
-					type="text"
 					placeholder="댓글을 입력해주세요."
 					maxLength={50}
 					value={input}
 					onChange={onHandleComment}
-				/>
+				>
+					<Mention
+						trigger="@"
+						data={followingList.map((v) => ({
+							id: v.githubId,
+							display: v.githubId,
+						}))}
+					/>
+				</StyledInput>
+				{/* <StyledInput
+					placeholder="댓글을 입력해주세요."
+					maxLength={50}
+					value={input}
+					onChange={(e) => onHandleComment(e)}
+					// onChange={onHandleComment}
+				></StyledInput> */}
 				<StyledSubmitButton>
 					<img src={images.send} alt="send" onClick={onClickSubbmit} />
 				</StyledSubmitButton>

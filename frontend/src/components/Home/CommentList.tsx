@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 import Comment from './Comment';
 import { colors } from '@constants/colors';
 import CommentInput from './CommentInput';
+import { OnChangeHandlerFunc } from 'react-mentions';
 
 const StyledCommentListContainer = styled.div`
 	display: flex;
@@ -20,7 +21,7 @@ const Separation = styled.div`
 type Props = {
 	comments: HeulGitCommentType[];
 	onClickSubbmit: () => Promise<void>;
-	handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	handleInputChange: OnChangeHandlerFunc;
 	onClickCommentMenuOpen: (commentId: number) => void;
 	input: string;
 };

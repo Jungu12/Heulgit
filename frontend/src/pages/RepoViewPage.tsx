@@ -9,6 +9,7 @@ import {
 } from '@typedef/home/heulgit.types';
 import { authHttp } from '@utils/http';
 import React, { useState, useCallback, useEffect } from 'react';
+import { OnChangeHandlerFunc } from 'react-mentions';
 import ReactModal from 'react-modal';
 import { useNavigate, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -116,9 +117,13 @@ const RepoViewPage = () => {
 		return newCommentList;
 	}, [authHttp, page, repoId]);
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setCommentInput(e.target.value);
-	};
+	const handleInputChange: OnChangeHandlerFunc = useCallback(
+		(event, newValue, newPlainTextValue, mentions) => {
+			setCommentInput(newPlainTextValue);
+			console.log(mentions);
+		},
+		[],
+	);
 
 	const onClickCommentMenuClose = useCallback(
 		() => setIsCommentMenuOpen(false),

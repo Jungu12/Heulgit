@@ -13,6 +13,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { authHttp } from '@utils/http';
 import CBottomSheet from '@components/common/CBottomSheet';
 import FreeBoardCommentList from '@components/community/FreeBoardCommentList';
+import { OnChangeHandlerFunc } from 'react-mentions';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -63,9 +64,10 @@ const FreeBoardFeedItemListMobile = ({
 	);
 
 	// 댓글 입력 함수
-	const onHandleComment = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
-			setCommentInput(e.target.value);
+	const onHandleComment: OnChangeHandlerFunc = useCallback(
+		(event, newValue, newPlainTextValue, mentions) => {
+			setCommentInput(newPlainTextValue);
+			console.log(mentions);
 		},
 		[],
 	);

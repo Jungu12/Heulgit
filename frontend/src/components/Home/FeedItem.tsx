@@ -78,6 +78,13 @@ const StyledSubDataContainer = styled.div`
 	margin: 8px 12px 0 12px;
 `;
 
+const StyledMoreDataText = styled.div`
+	font-size: 14px;
+	font-weight: 500;
+	margin: 6px 0 0 auto;
+	color: ${colors.greyScale.grey4};
+`;
+
 type Props = {
 	feed: HeulGitPostType;
 	type: 'summary' | 'full';
@@ -134,21 +141,16 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 				{type === 'full' ? (
 					<MarkdownRenderer text={feed.content} />
 				) : (
-					<MarkdownSummaryRenderer
-						text={decodeUnicode(feed.content)}
-						onClick={() => {
-							navigation(`/repo/${feed.heulgitId}`);
-						}}
-					/>
+					<MarkdownSummaryRenderer text={decodeUnicode(feed.content)} />
 				)}
 				{type === 'summary' ? (
-					<div
+					<StyledMoreDataText
 						onClick={() => {
 							navigation(`/repo/${feed.heulgitId}`);
 						}}
 					>
 						...더보기
-					</div>
+					</StyledMoreDataText>
 				) : (
 					''
 				)}

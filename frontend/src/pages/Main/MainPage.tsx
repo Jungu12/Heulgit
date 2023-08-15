@@ -14,8 +14,8 @@ import {
 	HeulgitCommentWriteType,
 	HeulgitPostResponseType,
 } from '@typedef/home/heulgit.types';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { OnChangeHandlerFunc } from 'react-mentions';
 
 const MainPage = () => {
 	const dropDownRef = useRef(null);
@@ -115,12 +115,34 @@ const MainPage = () => {
 		setIsCommentOpen(true);
 	}, []);
 
-	const onHandleComment = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
-			setCommentInput(e.target.value);
+	// const onHandleComment = useCallback(
+	// 	(
+	// 		event: React.ChangeEvent<HTMLInputElement>,
+	// 		newValue: string,
+	// 		newPlainTextValue: string,
+	// 	) => {
+	// 		setCommentInput(newPlainTextValue);
+	// 	},
+	// 	[],
+	// );
+
+	const onHandleComment: OnChangeHandlerFunc = useCallback(
+		(event, newValue, newPlainTextValue, mentions) => {
+			setCommentInput(newPlainTextValue);
+			console.log(mentions);
 		},
 		[],
 	);
+
+	// const handleMentionsInputChange: OnChangeHandlerFunc = (
+	//   event: ChangeEvent<HTMLInputElement>,
+	//   newValue: string,
+	//   newPlainTextValue: string,
+	//   mentions: MentionData[],
+	// ) => {
+	//   setCommentInput(newPlainTextValue);
+	//   // 여기서 필요한 추가적인 처리를 수행할 수 있습니다.
+	// };
 
 	const onClickOutsideCalendar = useCallback(
 		(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -245,13 +267,6 @@ const MainPage = () => {
 		}
 	}, [selelctedComment]);
 
-	// if (isLoading) {
-	// 	return <div>loading...</div>;
-	// }
-
-	// if (isError) {
-	// 	return <div>error...</div>;
-	// }
 	return (
 		<>
 			<Mobile>

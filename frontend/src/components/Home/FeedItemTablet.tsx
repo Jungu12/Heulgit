@@ -100,10 +100,7 @@ const FeedItemTablet = ({ feed, type, onClickComment }: Props) => {
 				{type === 'full' ? (
 					<MarkdownRenderer text={feed.content} />
 				) : (
-					<MarkdownSummaryRenderer
-						text={feed.content}
-						onClick={() => navigation(`/repo/${feed.heulgitId}`)}
-					/>
+					<MarkdownSummaryRenderer text={feed.content} />
 				)}
 			</StyledContentContainer>
 			<StyledButtonContainer>

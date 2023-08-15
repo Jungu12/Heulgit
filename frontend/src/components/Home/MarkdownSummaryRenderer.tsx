@@ -144,10 +144,9 @@ const StyledTableContainer = styled.div`
 
 type Props = {
 	text: string;
-	onClick: () => void;
 };
 
-const MarkdownSummaryRenderer = ({ text, onClick }: Props) => {
+const MarkdownSummaryRenderer = ({ text }: Props) => {
 	const summary = sliceTextToParagraph(text, 300);
 	const [imageList, setImageList] = useState<string[]>([]);
 
@@ -156,7 +155,7 @@ const MarkdownSummaryRenderer = ({ text, onClick }: Props) => {
 	}, [text]);
 
 	return (
-		<StyledMarkDownContainer onClick={onClick}>
+		<StyledMarkDownContainer>
 			<ReactMarkdown
 				remarkPlugins={[gfm, remarkEmoji]}
 				rehypePlugins={[raw]}

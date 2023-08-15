@@ -12,6 +12,7 @@ import {
 } from '@typedef/home/heulgit.types';
 import { getYearAndMonth } from '@utils/date';
 import React from 'react';
+import { OnChangeHandlerFunc } from 'react-mentions';
 import ReactModal from 'react-modal';
 import { css, styled } from 'styled-components';
 
@@ -259,7 +260,7 @@ type Props = {
 	handleClickCalendar: () => void;
 	setIsCommentOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	setIsViewOptionOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	onHandleComment: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onHandleComment: OnChangeHandlerFunc;
 	onClickSubbmit: () => Promise<void>;
 	isViewOptionOpen: boolean;
 	dropDownRef: React.MutableRefObject<null>;
