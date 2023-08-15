@@ -1,6 +1,9 @@
 package morningrolecall.heulgit.heulgit.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,7 @@ import morningrolecall.heulgit.heulgit.domain.dto.HeulgitDetailResponse;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitLikeUserResponse;
 import morningrolecall.heulgit.heulgit.repository.HeulgitCommentRepository;
 import morningrolecall.heulgit.heulgit.repository.HeulgitRepository;
+import morningrolecall.heulgit.relation.domain.Relation;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
@@ -41,6 +45,7 @@ public class HeulgitService {
 	private final RelationRepository relationRepository;
 
 
+
 	/**
 	 * 흘깃 정렬 조회
 	 * 1.language: 언어 선택 => 없으면 모든 언어
@@ -50,7 +55,7 @@ public class HeulgitService {
 	 * 5.들을 정렬하여 페이지네이션 반환
 	 */
 
-	public Slice<HeulgitDetailResponse> searchHeulgits(String sort, String language,
+	public Slice<HeulgitDetailResponse> searchHeulgits(String githubId, String sort, String language,
 		LocalDateTime startDate, LocalDateTime endDate,
 		int pages) {
 		Slice<Heulgit> heulgits;
@@ -100,8 +105,8 @@ public class HeulgitService {
 
 		}
 
-		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
-
+		// return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
+		return feedList(githubId,pages);
 
 	}
 
@@ -263,6 +268,54 @@ public class HeulgitService {
 		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
 	}
 
+	/** 피드 추천 테스트*/
+	public Slice<HeulgitDetailResponse> feedList(String githubId,int pages){
+		List<Heulgit> heulgits = new ArrayList<>();
+		List<Heulgit> randoms = heulgitRepository.findAll();
+		Collections.shuffle(randoms);
+
+		List<Heulgit> followHuelgit = new ArrayList<>();
+		List<Relation> relations = relationRepository.findByFromId(githubId);
+		for(Relation relation: relations){
+			List<Heulgit> relationHeulgits = heulgitRepository.findHeulgitsByGithubId(relation.getToId());
+			if(relationHeulgits.size()==0){
+				continue;
+			}
+			followHuelgit.addAll(relationHeulgits);
+		}
+		Collections.shuffle(followHuelgit);
+		int followIdx=0;
+		int randomIdx=0;
+		for(int i=0;i<1000;i++){
+			if(i%5==0){
+				if(followIdx <followHuelgit.size()){
+					heulgits.add(followHuelgit.get(followIdx++));
+				} else{
+					heulgits.add(randoms.get(randomIdx++));
+				}
+			} else{
+				heulgits.add(randoms.get(randomIdx++));
+
+			}
+
+		}
+
+		int pageSize = 10; // 페이지당 아이템 수
+		int currentPage = 0; // 현재 페이지 (0부터 시작)
+
+		int startItem = currentPage * pageSize; // 시작 아이템 인덱스
+		int toIndex = Math.min(startItem + pageSize, heulgits.size()); // 종료 아이템 인덱스
+
+		List<Heulgit> paginatedHeulgits = heulgits.subList(startItem, toIndex); // 현재 페이지에 해당하는 데이터 추출
+
+		boolean hasNextPage = heulgits.size() > startItem + pageSize; // 다음 페이지 여부 확인
+
+		Slice<Heulgit> heulgitSlice = new SliceImpl<>(paginatedHeulgits, Pageable.ofSize(pageSize), hasNextPage);
+		return new SliceImpl<>(toResponse(heulgitSlice),heulgitSlice.getPageable(),heulgitSlice.hasNext());
+
+	}
+
+
 
 
 
@@ -306,6 +359,7 @@ public class HeulgitService {
 				.build();
 		}).collect(Collectors.toList());
 	}
+
 
 	// public void fetchAndSaveTopRepositories() {
 	// 	int itemsPerPage = 100;
