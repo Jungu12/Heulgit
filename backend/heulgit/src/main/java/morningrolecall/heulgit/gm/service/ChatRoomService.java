@@ -36,7 +36,7 @@ public class ChatRoomService {
 	}
 
 	// 채팅방 입장 : redis에 topic을 만들고 pub/sub 통신을 하기 위해 리스너를 설정한다.
-	public void enterChatRoom(String roomId) {
+	public void enterChatRoom(String roomId, String githubId) {
 		String[] userInfo = roomId.split(":");
 		ChannelTopic topic = topics.get(roomId);
 
@@ -52,7 +52,7 @@ public class ChatRoomService {
 
 		//모든 메세지 읽음 처리
 		ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
-		chatRoom.markAllMessagesAsRead();
+		chatRoom.markAllMessagesAsRead(githubId);
 	}
 
 	// roomId로 해당 채팅방의 Topic을 반환한다.

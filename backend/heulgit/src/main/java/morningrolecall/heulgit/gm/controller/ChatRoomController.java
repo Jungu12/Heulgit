@@ -49,11 +49,11 @@ public class ChatRoomController {
 	//채팅 로그 가져오기
 	@GetMapping("/chats/{roomId}")
 	@ResponseBody
-	public ResponseEntity<?> messageList(@PathVariable String roomId) {
+	public ResponseEntity<?> messageList(@AuthenticationPrincipal String githubId, @PathVariable String roomId) {
 		logger.debug("messageList(), roomId = {}", roomId);
 
 		//입장한 채팅방의 topic을 생성한다.
-		chatRoomService.enterChatRoom(roomId);
+		chatRoomService.enterChatRoom(roomId, githubId);
 
 		// Redis에서 해당 채팅방의 채팅 로그를 가져와서 반환한다.
 		return ResponseEntity.ok().body(chatRoomService.findMessage(roomId));
