@@ -147,7 +147,7 @@ const ChatDirectPage = () => {
 
 		const newMessage = {
 			roomId: state.room.roomId,
-			sender: 'ksg2388',
+			sender: user?.githubId,
 			message: inputMessage,
 			read: true,
 			updatedTime: new Date().toString(),
@@ -245,7 +245,7 @@ const ChatDirectPage = () => {
 							<ChatBox
 								key={index}
 								message={msg.message}
-								$isUser={msg.sender === user?.githubId}
+								$isUser={msg.sender === user.githubId}
 							/>
 						))}
 						<div ref={messageEndRef}></div>
