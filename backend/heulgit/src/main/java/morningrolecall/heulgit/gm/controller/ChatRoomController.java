@@ -73,7 +73,7 @@ public class ChatRoomController {
 	@DeleteMapping("/room/out/{user2}")
 	@ResponseBody
 	public ResponseEntity<?> chatRoomEnterDetail(@AuthenticationPrincipal String user1, @PathVariable String user2) {
-		logger.debug("chatRoomDetail(), user1 = {}, user2 = {}", user1, user2);
+		logger.debug("chatRoomEnterDetail(), user1 = {}, user2 = {}", user1, user2);
 
 		chatRoomService.userLeftChatRoom(user1, user2);
 
