@@ -252,7 +252,6 @@ const MainPage = () => {
 
 	useEffect(() => {
 		console.log(endDate, startDate);
-
 		refetch();
 	}, [selelctedOption, selectedLanguage, endDate]);
 

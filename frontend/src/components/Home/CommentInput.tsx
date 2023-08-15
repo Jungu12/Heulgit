@@ -1,7 +1,6 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { RootState } from '@store/index';
-import { UserType } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
 import React, { useCallback, useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -50,19 +49,38 @@ const StyledSubmitButton = styled.button`
 	}
 `;
 
+const StyledMentionContainer = styled.div`
+	display: flex;
+
+	span {
+		font-size: 16px;
+		font-weight: 500;
+	}
+`;
+
+const StyledMentionImage = styled.img`
+	height: 24px;
+	width: 24px;
+`;
+
 type Props = {
 	input: string;
 	onHandleComment: OnChangeHandlerFunc;
 	onClickSubbmit: () => Promise<void>;
 };
 
+type UserSimpleType = {
+	avater_url: string;
+	id: string;
+};
+
 const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 	const user = useSelector((state: RootState) => state.user.user);
-	const [followingList, setFollowingList] = useState<UserType[]>([]);
+	const [followingList, setFollowingList] = useState<UserSimpleType[]>([]);
 
 	const getFollersData = useCallback(() => {
 		authHttp
-			.get<UserType[]>(`relations/followings?userId=${user?.githubId}`)
+			.get<UserSimpleType[]>(`relations/followings?userId=${user?.githubId}`)
 			.then((res) => {
 				console.log(res);
 				setFollowingList(res);
@@ -72,6 +90,10 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 	useEffect(() => {
 		getFollersData();
 	}, []);
+
+	useEffect(() => {
+		console.log('[내 팔로우 목록]', followingList);
+	}, [followingList]);
 
 	return (
 		<CommentInputContainer>
@@ -85,10 +107,19 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 				>
 					<Mention
 						trigger="@"
-						data={followingList.map((v) => ({
-							id: v.githubId,
-							display: v.githubId,
+						data={followingList.map((v, index) => ({
+							id: index,
+							display: v.id,
 						}))}
+						renderSuggestion={(suggestion) => (
+							<StyledMentionContainer>
+								<StyledMentionImage
+									src={followingList[(suggestion.id as number) - 1].avater_url}
+									alt=""
+								/>
+								<span>{suggestion.display}</span>
+							</StyledMentionContainer>
+						)}
 					/>
 				</StyledInput>
 				{/* <StyledInput
