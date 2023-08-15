@@ -185,7 +185,7 @@ const ChatDirectPage = () => {
 	const exitChatRoom = useCallback(async () => {
 		if (user) {
 			authHttp
-				.get(
+				.delete(
 					`gm/room/out/${findParter(
 						user.githubId,
 						state.room.user1,
