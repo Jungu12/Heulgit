@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class ChatRoomService {
 	private final RedisSubscriber redisSubscriber;
 	private final RedisInOutManager redisSubscriberManager;
 	private Map<String, ChannelTopic> topics;
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@PostConstruct
 	private void init() {
@@ -73,6 +76,7 @@ public class ChatRoomService {
 
 			//현재 채팅방에 접속해 있는지 확인
 			if (!isUserSubscribedToChatRoom(message.getRoomId(), user)) {
+				logger.debug("채팅방에 상대방 접속 여부 확인, message.getRoomId = {}, user = {}", message.getRoomId(), user);
 				continue;
 			}
 
