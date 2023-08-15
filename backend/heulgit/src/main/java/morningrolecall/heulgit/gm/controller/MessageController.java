@@ -22,12 +22,14 @@ public class MessageController {
 	@MessageMapping("/chat/message")
 	public void message(ChatMessage message) {
 		try {
-			chatRoomService.enterChatRoom(message.getRoomId());
+			chatRoomService.enterChatRoom(message.getRoomId(), message.getSender());
+			logger.debug("read = {}", message.isRead());
 			// Websocket에 발행된 메시지를 redis로 발행한다(publish)
 			redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
 		} catch (Exception e) {
 			logger.error("메세지 발행 실패", e);
 		} finally {
+			logger.debug("finally");
 			chatRoomService.saveMessage(message);
 		}
 	}

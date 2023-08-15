@@ -49,11 +49,11 @@ public class ChatRoomController {
 	//채팅 로그 가져오기
 	@GetMapping("/chats/{roomId}")
 	@ResponseBody
-	public ResponseEntity<?> messageList(@PathVariable String roomId) {
+	public ResponseEntity<?> messageList(@AuthenticationPrincipal String githubId, @PathVariable String roomId) {
 		logger.debug("messageList(), roomId = {}", roomId);
 
 		//입장한 채팅방의 topic을 생성한다.
-		chatRoomService.enterChatRoom(roomId);
+		chatRoomService.enterChatRoom(roomId, githubId);
 
 		// Redis에서 해당 채팅방의 채팅 로그를 가져와서 반환한다.
 		return ResponseEntity.ok().body(chatRoomService.findMessage(roomId));
@@ -72,8 +72,8 @@ public class ChatRoomController {
 	// 유저가 채팅방을 떠나 유저의 토픽을 삭제
 	@DeleteMapping("/room/out/{user2}")
 	@ResponseBody
-	public ResponseEntity<?> chatRoomEnterDetail(@AuthenticationPrincipal String user1, @PathVariable String user2) {
-		logger.debug("chatRoomEnterDetail(), user1 = {}, user2 = {}", user1, user2);
+	public ResponseEntity<?> topicDelete(@AuthenticationPrincipal String user1, @PathVariable String user2) {
+		logger.debug("topicDelete(), user1 = {}, user2 = {}", user1, user2);
 
 		chatRoomService.userLeftChatRoom(user1, user2);
 

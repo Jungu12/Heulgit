@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class ChatRoomService {
 	private final RedisSubscriber redisSubscriber;
 	private final RedisInOutManager redisSubscriberManager;
 	private Map<String, ChannelTopic> topics;
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@PostConstruct
 	private void init() {
@@ -33,7 +36,7 @@ public class ChatRoomService {
 	}
 
 	// 채팅방 입장 : redis에 topic을 만들고 pub/sub 통신을 하기 위해 리스너를 설정한다.
-	public void enterChatRoom(String roomId) {
+	public void enterChatRoom(String roomId, String githubId) {
 		String[] userInfo = roomId.split(":");
 		ChannelTopic topic = topics.get(roomId);
 
@@ -49,7 +52,7 @@ public class ChatRoomService {
 
 		//모든 메세지 읽음 처리
 		ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
-		chatRoom.markAllMessagesAsRead();
+		chatRoom.markAllMessagesAsRead(githubId);
 	}
 
 	// roomId로 해당 채팅방의 Topic을 반환한다.
@@ -64,15 +67,20 @@ public class ChatRoomService {
 
 	// 메세지를 읽음 처리와 동시에 저장한다.
 	public void saveMessage(ChatMessage message) {
+		logger.debug("roomId = {}", message.getRoomId());
 		String[] users = message.getRoomId().split(":");
 		for (String user : users) {
 			//메세지 송신자 확인
+			logger.debug("user = {}, sender = {}", user, message.getSender());
 			if (user.equals(message.getSender())) {
 				continue;
 			}
 
+			logger.debug("채팅방에 상대방 접속 여부 확인, message.getRoomId = {}, user = {}", message.getRoomId(), user);
+
 			//현재 채팅방에 접속해 있는지 확인
-			if (!isUserSubscribedToChatRoom(message.getRoomId(), user)) {
+			if (isUserSubscribedToChatRoom(message.getRoomId(), user)) {
+				logger.debug("채팅방에 상대방 접속 여부 확인, message.getRoomId = {}, user = {}", message.getRoomId(), user);
 				continue;
 			}
 
