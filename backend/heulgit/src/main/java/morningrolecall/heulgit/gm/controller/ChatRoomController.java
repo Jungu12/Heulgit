@@ -72,8 +72,8 @@ public class ChatRoomController {
 	// 유저가 채팅방을 떠나 유저의 토픽을 삭제
 	@DeleteMapping("/room/out/{user2}")
 	@ResponseBody
-	public ResponseEntity<?> chatRoomEnterDetail(@AuthenticationPrincipal String user1, @PathVariable String user2) {
-		logger.debug("chatRoomEnterDetail(), user1 = {}, user2 = {}", user1, user2);
+	public ResponseEntity<?> topicDelete(@AuthenticationPrincipal String user1, @PathVariable String user2) {
+		logger.debug("topicDelete(), user1 = {}, user2 = {}", user1, user2);
 
 		chatRoomService.userLeftChatRoom(user1, user2);
 
