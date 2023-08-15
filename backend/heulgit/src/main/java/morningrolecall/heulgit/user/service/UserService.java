@@ -329,37 +329,40 @@ public class UserService {
 			requestEntity,
 			String.class
 		);
+		System.out.print("정보 불러오기 실행!!!");
 
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode rootNode = objectMapper.readTree(response.getBody());
-			JsonNode itemsNode = rootNode.get("items");
-
-			if (itemsNode != null && itemsNode.isArray()) {
-				for (JsonNode itemNode : itemsNode) {
-					String owner = itemNode.get("owner").get("login").asText();
-					String repoName = itemNode.get("name").asText();
+			if (rootNode.isArray()) {
+				for (JsonNode repositoryNode : rootNode) {
+					String owner = repositoryNode.get("owner").get("login").asText();
+					String repoName = repositoryNode.get("name").asText();
 					String readmeContent = fetchReadmeContent(owner, repoName);
-					ZonedDateTime updatedDate = ZonedDateTime.parse(itemNode.get("updated_at").asText());
+					ZonedDateTime updatedDate = ZonedDateTime.parse(repositoryNode.get("updated_at").asText());
+
 					Heulgit heulgit = Heulgit.builder()
 						.githubId(owner)
 						.heulgitName(repoName)
 						.content(readmeContent)
-						.star(itemNode.get("stargazers_count").asInt())
+						.star(repositoryNode.get("stargazers_count").asInt())
 						.updatedDate(updatedDate.toLocalDateTime())
-						.language(itemNode.get("language").asText())
+						.language(repositoryNode.get("language").asText())
 						.view(0)
-						.avatarUrl(itemNode.get("owner").get("avatar_url").asText())
+						.avatarUrl(repositoryNode.get("owner").get("avatar_url").asText())
 						.build();
 
 					heulgitList.add(heulgit);
 				}
+
+
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// 이건 전체 저장.
-		heulgitRepository.saveAll(heulgitList);
+		// heulgitRepository.saveAll(heulgitList);
 		for (Heulgit heulgit : heulgitList) {
 			Optional<Heulgit> existingHeulgit = heulgitRepository.findByGithubIdAndHeulgitName(heulgit.getGithubId(),
 				heulgit.getHeulgitName());
@@ -413,4 +416,5 @@ public class UserService {
 
 		return null;
 	}
+
 }
