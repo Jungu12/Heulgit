@@ -23,6 +23,7 @@ public class MessageController {
 	public void message(ChatMessage message) {
 		try {
 			chatRoomService.enterChatRoom(message.getRoomId(), message.getSender());
+			logger.debug("read = {}", message.isRead());
 			// Websocket에 발행된 메시지를 redis로 발행한다(publish)
 			redisPublisher.publish(chatRoomService.getTopic(message.getRoomId()), message);
 		} catch (Exception e) {
