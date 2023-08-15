@@ -182,6 +182,20 @@ const ChatDirectPage = () => {
 		});
 	}, []);
 
+	const exitChatRoom = useCallback(async () => {
+		if (user) {
+			authHttp
+				.get(
+					`room/out/${findParter(
+						user.githubId,
+						state.room.user1,
+						state.room.user2,
+					)}`,
+				)
+				.then(() => console.log('채팅방 나가짐'));
+		}
+	}, []);
+
 	useEffect(() => {
 		console.log('[메세지 리스트]', messageList);
 
@@ -194,27 +208,17 @@ const ChatDirectPage = () => {
 		}
 	}, [messageList]);
 
-	// useEffect(() => {
-	// 	console.log(inputMessage);
-	// }, [inputMessage]);
-
-	// useEffect(() => {
-	// 	console.log('[message]', state.room.chatMessages);
-	// }, [state]);
-
 	useEffect(() => {
 		console.log('채팅방 입장 : ', state);
 
 		connectHandler(state.room.roomId);
 
 		return () => {
-			console.log('채팅방 나감');
+			exitChatRoom();
 		};
 	}, []);
 
 	useEffect(() => {
-		console.log('[message 변경 됨?]', message);
-
 		if (message) {
 			setMessageList((prev) => [...prev, message]);
 		}
