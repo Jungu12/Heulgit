@@ -67,6 +67,7 @@ public class ChatRoomService {
 
 	// 메세지를 읽음 처리와 동시에 저장한다.
 	public void saveMessage(ChatMessage message) {
+		logger.debug("roomId = {}", message.getRoomId());
 		String[] users = message.getRoomId().split(":");
 		for (String user : users) {
 			//메세지 송신자 확인
