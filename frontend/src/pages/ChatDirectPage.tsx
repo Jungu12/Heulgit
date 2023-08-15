@@ -149,7 +149,7 @@ const ChatDirectPage = () => {
 			roomId: state.room.roomId,
 			sender: user?.githubId,
 			message: inputMessage,
-			read: true,
+			read: false,
 			updatedTime: new Date().toString(),
 		};
 
