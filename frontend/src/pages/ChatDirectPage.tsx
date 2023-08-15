@@ -186,7 +186,7 @@ const ChatDirectPage = () => {
 		if (user) {
 			authHttp
 				.get(
-					`room/out/${findParter(
+					`gm/room/out/${findParter(
 						user.githubId,
 						state.room.user1,
 						state.room.user2,
