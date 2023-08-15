@@ -137,7 +137,7 @@ public class HeulgitController {
 		return ResponseEntity.ok().body(heulgitService.findLikedUser(heulgitId, githubId, pages));
 
 	}
-	@GetMapping("/feedlist")
+	@GetMapping("/posts/feedlist")
 	public ResponseEntity testHeulgit(@RequestParam int pages){
 		return ResponseEntity.ok().body(heulgitService.feedList("LEEILHO",pages));
 	}
