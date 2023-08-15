@@ -70,9 +70,12 @@ public class ChatRoomService {
 		String[] users = message.getRoomId().split(":");
 		for (String user : users) {
 			//메세지 송신자 확인
+			logger.debug("user = {}, sender = {}", user, message.getSender());
 			if (user.equals(message.getSender())) {
 				continue;
 			}
+
+			logger.debug("채팅방에 상대방 접속 여부 확인, message.getRoomId = {}, user = {}", message.getRoomId(), user);
 
 			//현재 채팅방에 접속해 있는지 확인
 			if (!isUserSubscribedToChatRoom(message.getRoomId(), user)) {
