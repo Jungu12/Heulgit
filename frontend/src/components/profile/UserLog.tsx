@@ -21,12 +21,23 @@ const StyledLog = styled.div`
 `;
 
 const StyledUnReadNum = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	border-radius: 50%;
 	background-color: red;
 	color: white;
 	font-size: 12px;
-	font-weight: 700;
+	font-weight: 500;
 	padding: 4px;
+	height: 24px;
+	width: 24px;
+`;
+
+const StyledInfoContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	right: auto;
 `;
 
 type Props = {
@@ -42,10 +53,13 @@ const UserLog = ({ userLName, userLog, logDate, unReadNum }: Props) => {
 			<StyledUserImage src="" alt="User" />
 			<StyledLog>
 				<div>{userLName}</div>
-				<div>{getTimeAgo(logDate)}</div>
+				<div> {userLog}</div>
 			</StyledLog>
-			{userLog}
-			<StyledUnReadNum>{unReadNum}</StyledUnReadNum>
+
+			<StyledInfoContainer>
+				<div>{getTimeAgo(logDate)}</div>
+				<StyledUnReadNum>{unReadNum}</StyledUnReadNum>
+			</StyledInfoContainer>
 		</StyledUserLog>
 	);
 };
