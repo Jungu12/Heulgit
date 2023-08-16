@@ -105,14 +105,20 @@ const NotificationPage = () => {
 						<StyledNotiDiv>
 							<StyleNoti>이번 주</StyleNoti>
 						</StyledNotiDiv>
-						<NotiFollow notificationList={recentNotifications} />
+						<NotiFollow
+							notificationList={recentNotifications}
+							loadNotification={loadNotification}
+						/>
 					</StyledWeekNotiContainer>
 					{pastNotifications.length && (
 						<StyledWeekNotiContainer>
 							<StyledNotiDiv>
 								<StyleNoti>이전 알림</StyleNoti>
 							</StyledNotiDiv>
-							<NotiFollow notificationList={pastNotifications} />
+							<NotiFollow
+								notificationList={pastNotifications}
+								loadNotification={loadNotification}
+							/>
 						</StyledWeekNotiContainer>
 					)}
 				</>
