@@ -40,6 +40,7 @@ const StyledInfoContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-left: 4px;
+	justify-content: space-between;
 `;
 
 const StyeldChatDataContainer = styled.div`
