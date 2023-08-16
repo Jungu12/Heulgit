@@ -174,13 +174,12 @@ const ProfilePageMobile = ({
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
-		setIsFollowing(!isFollowing);
-
 		if (!isFollowing) {
 			// 팔로우
 			authHttp
 				.post(`relations/follow?to=${userId}`)
 				.then(() => {
+					setIsFollowing(!isFollowing);
 					console.log('팔로우 성공', isFollowing);
 				})
 				.catch((error) => {
@@ -191,6 +190,7 @@ const ProfilePageMobile = ({
 			authHttp
 				.delete(`relations/unfollow?to=${userId}`)
 				.then(() => {
+					setIsFollowing(!isFollowing);
 					console.log('언팔로우 성공', isFollowing);
 				})
 				.catch((error) => {
