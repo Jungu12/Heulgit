@@ -66,7 +66,6 @@ public class UserService {
 	private final UserCommentRepository userCommentRepository;
 	private final RestTemplate restTemplate;
 	private final int SIZE = 20;
-
 	private final HeulgitRepository heulgitRepository;
 
 	@Value("${github.user.repo-url}")
@@ -88,6 +87,10 @@ public class UserService {
 		User user = userRepository.findUserByGithubId(githubId)
 			.orElseThrow(() -> new UserException(ExceptionCode.USER_NOT_FOUND));
 		return user;
+	}
+	public List<User> findContainUser(String githubId) {
+
+		return userRepository.findByGithubIdContaining(githubId);
 	}
 
 	public List<UserCommitInfoResponse> findCommitInfo(String githubId) {
@@ -200,7 +203,7 @@ public class UserService {
 			// 유저의 한달 내 repo 긁어오기 (github API)
 			List<UserRepositoryResponse> repos = getRepoInfo(following);
 			// 유저의 한달 내 repo 안의 커밋 긁어오기 (github API)
-			List<String> commitMessages = getCommitMessageInfo(githubId, repos);
+			List<String> commitMessages = getCommitMessageInfo(following, repos);
 
 			int count = 0;
 
@@ -214,7 +217,7 @@ public class UserService {
 				}
 			}
 
-			userRankingResponses.add(new UserRankingResponse(githubId, count));
+			userRankingResponses.add(new UserRankingResponse(following, count));
 		}
 		Collections.sort(userRankingResponses, ((o1, o2) -> o2.getCount() - o1.getCount()));
 
@@ -354,8 +357,6 @@ public class UserService {
 
 					heulgitList.add(heulgit);
 				}
-
-
 
 			}
 		} catch (IOException e) {

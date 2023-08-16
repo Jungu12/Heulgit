@@ -93,7 +93,7 @@ public class SearchController {
 	@GetMapping("/user")
 	public ResponseEntity<?> searchUser(@RequestParam String keyword ){
 		logger.debug("search");
-		return  ResponseEntity.ok().body(userService.findUser(keyword));
+		return  ResponseEntity.ok().body(userService.findContainUser(keyword));
 	}
 
 
