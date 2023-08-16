@@ -21,7 +21,7 @@ const StyledSliderContainer = styled.div`
 `;
 
 const StyledImage = styled.img`
-	width: 100% !important;
+	width: 75% !important;
 	height: 100% !important;
 	margin: auto;
 	object-fit: contain;

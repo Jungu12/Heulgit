@@ -233,7 +233,11 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 					alt="likesActive"
 					onClick={handleLikeClick} // 좋아요 아이콘 클릭 이벤트 처리
 				/>
-				<img src={images.chat} alt="comment_button" />
+				<img
+					src={images.chat}
+					alt="comment_button"
+					onClick={() => onClickComment(feed.freeBoardId)}
+				/>
 			</StyledButtonContainer>
 			{/* 좋아요 및 댓글 */}
 			<StyledSubDataContainer>
