@@ -4,7 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 export default createGlobalStyle`
 @font-face {
     font-family: 'RixYeoljeongdo_Regular';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/RixYeoljeongdo_Regular.woff') format('woff');
+    src: url('./fonts/RixYeoljeongdo_Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }

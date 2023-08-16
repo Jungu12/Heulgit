@@ -170,7 +170,10 @@ const ChatDirectPage = () => {
 
 	const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
-			sendHandler();
+			if (e.nativeEvent.isComposing === false) {
+				e.preventDefault();
+				sendHandler();
+			}
 		}
 	};
 
