@@ -128,7 +128,6 @@ const MyLikeRepoPage = () => {
 							next={heulgitFetchNextPage}
 							hasMore={heulgitHasNextPage ? true : false}
 							loader={<div>loading...</div>}
-							height={`calc(100vh - 114px)`}
 							style={{
 								overflowY: 'scroll',
 								overflowX: 'hidden',
