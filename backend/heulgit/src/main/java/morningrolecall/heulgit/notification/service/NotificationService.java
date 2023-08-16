@@ -148,16 +148,18 @@ public class NotificationService {
 
 		User sender = userRepository.findUserByGithubId(notificationFollowRequest.getSenderId())
 			.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
+		if(!receiver.getGithubId().equals(sender.getGithubId())){
+			Notification notification = Notification.builder()
+				.sender(sender)
+				.receiver(receiver)
+				.createdDate(LocalDateTime.now())
+				.hasRead(false)
+				.type(NotificationType.FOLLOW)
+				.build();
+			notificationRepository.saveAndFlush(notification);
+			send(notificationMapper.toFollowResponse(notification, false));
 
-		Notification notification = Notification.builder()
-			.sender(sender)
-			.receiver(receiver)
-			.createdDate(LocalDateTime.now())
-			.hasRead(false)
-			.type(NotificationType.FOLLOW)
-			.build();
-		notificationRepository.saveAndFlush(notification);
-		send(notificationMapper.toFollowResponse(notification, false));
+		}
 
 	}
 
@@ -168,22 +170,23 @@ public class NotificationService {
 	public void addLikeNotification(NotificationLikeRequest notificationLikeRequest) {
 		try{
 			logger.debug("addLikeNotification(), notificationLikeRequest = {}, ", notificationLikeRequest);
-			//게시글 작성자가 없으면 끝
 			User receiver = userRepository.findUserByGithubId(notificationLikeRequest.getWriterId())
 				.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
 
 			User sender = userRepository.findUserByGithubId(notificationLikeRequest.getSenderId())
 				.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
+			if(!receiver.getGithubId().equals(sender.getGithubId())){
+				Notification notification = Notification.builder()
+					.sender(sender).receiver(receiver)
+					.createdDate(LocalDateTime.now())
+					.hasRead(false)
+					.type(NotificationType.LIKE)
+					.relatedLink(notificationLikeRequest.getRelatedLink())
+					.build();
+				notificationRepository.saveAndFlush(notification);
+				send(notificationMapper.toLikeResponse(notification));
+			}
 
-			Notification notification = Notification.builder()
-				.sender(sender).receiver(receiver)
-				.createdDate(LocalDateTime.now())
-				.hasRead(false)
-				.type(NotificationType.LIKE)
-				.relatedLink(notificationLikeRequest.getRelatedLink())
-				.build();
-			notificationRepository.saveAndFlush(notification);
-			send(notificationMapper.toLikeResponse(notification));
 		} catch(NotificationException e){
 			logger.debug("사용자가 우리서비스 사용자가 아님");
 
