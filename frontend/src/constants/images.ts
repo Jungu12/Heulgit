@@ -66,6 +66,7 @@ export const images = {
 	filter: '/assets/images/ic-filter.png',
 	noUser: '/assets/images/ic-no-user.png',
 	send: '/assets/images/ic-send.png',
+	noImage: '/assets/images/no-image.png',
 	dummy: {
 		dummy1: '/assets/images/dummy1.png',
 		dummy2: '/assets/images/dummy2.png',

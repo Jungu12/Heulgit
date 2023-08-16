@@ -171,7 +171,7 @@ const CommunityPage = () => {
 		const nextPage = page + 1;
 		setPage(nextPage);
 		getEurekaFeedList(seletedSort, nextPage).then((res) => {
-			if (res.length === 0) {
+			if (res.length < 20) {
 				setEurekaHasMore(false);
 			}
 

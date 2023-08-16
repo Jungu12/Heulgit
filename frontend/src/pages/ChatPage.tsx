@@ -24,6 +24,15 @@ const StyledChatList = styled.div`
 	padding: 15px;
 `;
 
+const StyledNoImage = styled.div`
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	font-weight: 700;
+`;
+
 const ChatPage = () => {
 	const user = useSelector((state: RootState) => state.user.user);
 	const [chatRoomList, setChatRoomList] = useState<ChatRoomType[]>([]);
@@ -104,12 +113,6 @@ const ChatPage = () => {
 		navigation(room.roomId, { state: { room: room } });
 	}, []);
 
-	// 테스트용
-	const onClickTestButton = useCallback(() => {
-		console.log('준구 리스트');
-		loadChatRoomList('jungu12');
-	}, []);
-
 	useEffect(() => {
 		loadChatRoomList('ksg2388');
 
@@ -140,13 +143,10 @@ const ChatPage = () => {
 			{user && (
 				<>
 					<StyledHeader>
-						<Header
-							title={'깃속말'}
-							children={<button onClick={onClickTestButton}>test</button>}
-						/>
+						<Header title={'깃속말'} />
 					</StyledHeader>
 					<StyledChatList>
-						{chatRoomList.length &&
+						{chatRoomList.length ? (
 							chatRoomList.map((room) => (
 								<div onClick={() => onClickChatRoom(room)}>
 									<UserLog
@@ -159,7 +159,10 @@ const ChatPage = () => {
 										)}
 									/>
 								</div>
-							))}
+							))
+						) : (
+							<StyledNoImage>채팅 목록이 없습니다.</StyledNoImage>
+						)}
 					</StyledChatList>
 				</>
 			)}
