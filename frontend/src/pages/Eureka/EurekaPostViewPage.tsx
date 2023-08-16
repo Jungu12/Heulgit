@@ -199,9 +199,10 @@ const EurekaPostViewPage = () => {
 	console.log('userId', feed?.user.githubId);
 
 	const onClickUserProfile = useCallback(() => {
-		console.log('userId', feed?.user.githubId);
-		navigation(`/profiles/${feed?.user.githubId}`);
-	}, []);
+		if (feed) {
+			navigation(`/profiles/${feed.user.githubId}`);
+		}
+	}, [feed]);
 
 	const loadPost = useCallback(() => {
 		authHttp.get<EurekaPostResponseType>(`eureka/posts/${id}`).then((res) => {
