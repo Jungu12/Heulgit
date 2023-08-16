@@ -62,11 +62,11 @@ public class NotificationService {
 		emitter.onTimeout(()-> emitterRepository.deleteById(emitterId));
 		//오류
 		emitter.onError((e)-> emitterRepository.deleteById(emitterId));
-
+		logger.debug("더미데이터 전송");
 		//503에러를 방지하기 위한 더미 이벤트 전송
 		String eventId = githubId + "_" + System.currentTimeMillis();
 		sendNotification(emitter, eventId, emitterId, "EventStream Created. [gitHubId=" +githubId + "]");
-
+		logger.debug("");
 		// 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
 		if(hasLostData(lastEventId)) {
 			sendLostData(lastEventId,githubId,emitterId,emitter);
@@ -84,6 +84,7 @@ public class NotificationService {
 				.id(eventId)
 				.name("sse")
 				.data(data, MediaType.APPLICATION_JSON));
+			logger.debug("전송..?");
 		} catch (IOException e){
 			emitterRepository.deleteById(emitterId);
 			emitter.completeWithError(e);
@@ -124,6 +125,7 @@ public class NotificationService {
 	//알림 전송
 	private void sendToClient(SseEmitter emitter, String id, Object data) {
 		try{
+			logger.debug("sentToClient 전송 되니?");
 			emitter.send(SseEmitter.event()
 				.id(id)
 				.name("sse")
