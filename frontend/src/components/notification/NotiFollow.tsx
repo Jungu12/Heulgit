@@ -264,7 +264,7 @@ const NotiFollow = ({ notificationList }: Props) => {
 									onClick={() => {
 										const notiType = noti.relatedLink.split('/posts/');
 										const boardType = notiType[0].slice(1);
-										const postId = notiType[1];
+										const postId = notiType[1].trim();
 										console.log('postId:', postId);
 
 										if (boardType === 'heulgit') {
