@@ -35,6 +35,7 @@ const FollowingPage = () => {
 		authHttp
 			.get<UserFollowingType[]>(`relations/followings/${loadedUserId}`)
 			.then((response) => {
+				console.log(loadedUserId);
 				console.log('팔로잉 로드 성공.', response);
 			})
 			.catch((error) => {
