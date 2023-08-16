@@ -16,6 +16,15 @@ const Separation = styled.div`
 	margin-top: 20px;
 `;
 
+const StyledCommentEmpty = styled.div`
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	font-weight: 700;
+`;
+
 type Props = {
 	postId: number;
 	commentList: HeulGitCommentType[];
@@ -43,7 +52,7 @@ const CommentListBottomSheet = ({ postId, commentList }: Props) => {
 					</>
 				))
 			) : (
-				<></>
+				<StyledCommentEmpty>아직 댓글이 없습니다.</StyledCommentEmpty>
 			)}
 		</StyledCommentListContainer>
 	);
