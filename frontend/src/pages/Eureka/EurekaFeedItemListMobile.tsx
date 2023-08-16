@@ -107,9 +107,17 @@ const EurekaFeedItemListMobile = ({
 		loadCommentList,
 	]);
 
-	const onClickDelete = useCallback((commentId: number) => {
-		console.log('삭제될 댓글', commentId);
-	}, []);
+	const onClickDelete = useCallback(
+		(commentId: number) => {
+			if (confirm('정말 삭제하시겠습니까?')) {
+				authHttp.delete(`e-comments/${commentId}`).then(() => {
+					loadCommentList();
+					console.log('삭제 성공');
+				});
+			}
+		},
+		[authHttp, loadCommentList],
+	);
 
 	// const onClickCommentMenuOpen = useCallback(() => {
 	// 	setIsCommentMenuOpen(true);
