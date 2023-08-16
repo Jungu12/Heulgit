@@ -55,6 +55,8 @@ const StyledInput = styled(MentionsInput)`
 	outline: none;
 	margin-right: 12px;
 	outline: none;
+	white-space: pre-wrap;
+	padding-top: 6px;
 `;
 
 const StyledSubmitButton = styled.button`
@@ -139,7 +141,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 					<Mention
 						trigger="@"
 						markup="@__display__ "
-						displayTransform={(username) => `@${username} `}
+						displayTransform={(username, id) => `@${id} tt`}
 						data={followingList.map((v, index) => ({
 							id: index,
 							display: v.id,
