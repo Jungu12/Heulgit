@@ -1,6 +1,7 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { EurekaCommentType } from '@typedef/community/eureka.types';
+import { getTimeAgo } from '@utils/date';
 import React from 'react';
 import { styled } from 'styled-components';
 
@@ -43,7 +44,7 @@ const StyledContentBox = styled.div`
 // 댓글 내용 p 태그
 const StyledContent = styled.p`
 	font-size: 14px;
-	font-weight: 400;
+	font-weight: 500;
 
 	margin-bottom: 10px;
 	margin-right: 10px;
@@ -52,17 +53,16 @@ const StyledContent = styled.p`
 `;
 
 // 답글 달기 p 태그
-const StyledReply = styled.p`
-	color: ${colors.greyScale.grey4};
+// const StyledReply = styled.p`
+// 	color: ${colors.greyScale.grey4};
 
-	font-size: 14px;
-	font-weight: 600;
-`;
+// 	font-size: 14px;
+// 	font-weight: 600;
+// `;
 
 // 몇 분 전
 const StyledTime = styled.div`
 	display: flex;
-	width: 50px;
 	font-size: 13px;
 `;
 
@@ -84,22 +84,27 @@ const StyledOptionContainer = styled.div`
 
 type Props = {
 	comment: EurekaCommentType;
+	onClickCommentMenuOpen: (id: number) => void;
 };
 
-const EurekaPostComment = ({ comment }: Props) => {
+const EurekaPostComment = ({ comment, onClickCommentMenuOpen }: Props) => {
 	return (
 		<StyledComment>
 			<StyledProfileContainer>
-				<StyledProfile src={comment.user.avater_url} alt="profile" />
+				<StyledProfile src={comment.user.avatarUrl} alt="profile" />
 				<StyledContentBox>
-					<StyledUserName>{comment.user.id}</StyledUserName>
+					<StyledUserName>{comment.user.githubId}</StyledUserName>
 					<StyledContent>{comment.content}</StyledContent>
-					<StyledReply>답글 달기</StyledReply>
+					{/* <StyledReply>답글 달기</StyledReply> */}
 				</StyledContentBox>
 			</StyledProfileContainer>
 			<StyledOptionContainer>
-				<StyledTime> {comment.updated_date}</StyledTime>
-				<img src={images.menu} alt="option" />
+				<StyledTime> {getTimeAgo(comment.updatedDate)}</StyledTime>
+				<img
+					src={images.menu}
+					alt="option"
+					onClick={() => onClickCommentMenuOpen(comment.commentId)}
+				/>
 			</StyledOptionContainer>
 		</StyledComment>
 	);

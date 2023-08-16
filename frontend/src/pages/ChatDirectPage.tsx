@@ -16,7 +16,10 @@ import { ChatRoomType, MessageType } from '@typedef/gm/gm.types';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import SockJS from 'sockjs-client';
-import { http } from '@utils/http';
+import { authHttp } from '@utils/http';
+import { RootState } from '@store/index';
+import { useSelector } from 'react-redux';
+import { findParter } from '@utils/gm';
 
 const StyledChatDirectPageContainer = styled.div`
 	display: flex;
@@ -79,6 +82,7 @@ const StyledButton = styled.button`
 	background-color: ${colors.primary.primary};
 	color: white;
 	border-radius: 8px;
+	cursor: pointer;
 `;
 
 type RouteState = {
@@ -88,31 +92,53 @@ type RouteState = {
 };
 
 const ChatDirectPage = () => {
+	const user = useSelector((state: RootState) => state.user.user);
 	const { state } = useLocation() as RouteState;
 	const client = useRef<CompatClient>();
 	const messageEndRef = useRef<HTMLDivElement | null>(null);
 	const [messageList, setMessageList] = useState<MessageType[]>([]);
 	const [message, setMessage] = useState<MessageType>();
 	const [inputMessage, setInputMessage] = useState('');
+	const accessToken = useSelector(
+		(reduxsState: RootState) => reduxsState.auth.token,
+	);
+
+	const headers = {
+		Authorization: `Bearer ${accessToken}`,
+	};
 
 	// 채팅방 연결 함수
-	const connectHandler = useCallback((roomId: string) => {
-		client.current = Stomp.over(() => {
-			const sock = new SockJS('http://192.168.100.64:8080/gm');
-			return sock;
-		});
+	const connectHandler = useCallback(
+		(roomId: string) => {
+			console.log('연결 시작', headers);
 
-		setMessageList([...state.room.chatMessages]);
-		client.current.connect({}, () => {
-			client.current!.subscribe(
-				`/sub/chat/room/${roomId}`,
-				(msg) => {
-					setMessage(JSON.parse(msg.body));
+			client.current = Stomp.over(() => {
+				const sock = new SockJS('https://i9d211.p.ssafy.io/api/gm');
+				return sock;
+			});
+
+			client.current?.configure({
+				connectHeaders: {
+					Authorization: 'Bearer ' + (accessToken ? accessToken : ''),
 				},
-				{ Authorization: '', simpDestination: roomId },
-			);
-		});
-	}, []);
+			});
+
+			setMessageList([...state.room.chatMessages]);
+			client.current.connect(headers, () => {
+				client.current?.subscribe(
+					`/sub/chat/room/${roomId}`,
+					(msg) => {
+						setMessage(JSON.parse(msg.body));
+					},
+					{
+						Authorization: accessToken ? accessToken : '',
+						simpDestination: roomId,
+					},
+				);
+			});
+		},
+		[accessToken, state, client],
+	);
 
 	// 메세지 보내기 함수
 	const sendHandler = useCallback(() => {
@@ -121,16 +147,22 @@ const ChatDirectPage = () => {
 
 		const newMessage = {
 			roomId: state.room.roomId,
-			sender: 'ksg2388',
+			sender: user?.githubId,
 			message: inputMessage,
-			read: true,
+			read: false,
 			updatedTime: new Date().toString(),
 		};
 
-		client.current?.send('/pub/chat/message', {}, JSON.stringify(newMessage));
+		client.current?.send(
+			'/pub/chat/message',
+			{
+				Authorization: accessToken,
+			},
+			JSON.stringify(newMessage),
+		);
 
 		setInputMessage('');
-	}, [inputMessage]);
+	}, [inputMessage, accessToken, client]);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInputMessage(e.target.value);
@@ -138,18 +170,33 @@ const ChatDirectPage = () => {
 
 	const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
-			sendHandler();
+			if (e.nativeEvent.isComposing === false) {
+				e.preventDefault();
+				sendHandler();
+			}
 		}
 	};
 
 	const loadChatRoomLog = useCallback((id: string) => {
-		http
-			.get<MessageType[]>(`http://192.168.100.64:8080/gm/chats/${id}`)
-			.then((res) => {
-				// console.log(res);
-				setMessageList([...res]);
-				// setChatRoomList(res);
-			});
+		authHttp.get<MessageType[]>(`gm/chats/${id}`).then((res) => {
+			// console.log(res);
+			setMessageList([...res]);
+			// setChatRoomList(res);
+		});
+	}, []);
+
+	const exitChatRoom = useCallback(async () => {
+		if (user) {
+			authHttp
+				.delete(
+					`gm/room/out/${findParter(
+						user.githubId,
+						state.room.user1,
+						state.room.user2,
+					)}`,
+				)
+				.then(() => console.log('채팅방 나가짐'));
+		}
 	}, []);
 
 	useEffect(() => {
@@ -164,21 +211,17 @@ const ChatDirectPage = () => {
 		}
 	}, [messageList]);
 
-	// useEffect(() => {
-	// 	console.log(inputMessage);
-	// }, [inputMessage]);
-
-	// useEffect(() => {
-	// 	console.log('[message]', state.room.chatMessages);
-	// }, [state]);
-
 	useEffect(() => {
+		console.log('채팅방 입장 : ', state);
+
 		connectHandler(state.room.roomId);
+
+		return () => {
+			exitChatRoom();
+		};
 	}, []);
 
 	useEffect(() => {
-		console.log('[message 변경 됨?]', message);
-
 		if (message) {
 			setMessageList((prev) => [...prev, message]);
 		}
@@ -186,38 +229,49 @@ const ChatDirectPage = () => {
 	}, [message]);
 
 	useEffect(() => {
-		loadChatRoomLog(state.room.roomId);
+		if (state.room) {
+			loadChatRoomLog(state.room.roomId);
+		}
 	}, [state.room.roomId]);
 
 	return (
 		<StyledChatDirectPageContainer>
-			<StyledHeader>
-				<Header title={'userName'} />
-			</StyledHeader>
-			<StyledMessage>
-				{messageList.map((msg, index) => (
-					<ChatBox
-						key={index}
-						message={msg.message}
-						$isUser={msg.sender === 'ksg2388'}
-					/>
-				))}
-				<div ref={messageEndRef}></div>
-			</StyledMessage>
-			<StyledFooter>
-				<StyledInputWrap>
-					<StyledInputDiv $isEmpty={inputMessage === ''}>
-						<StyledInput
-							type="text"
-							value={inputMessage}
-							onChange={handleInputChange}
-							onKeyDown={handleKeyPress}
+			{user && (
+				<>
+					<StyledHeader>
+						<Header
+							title={findParter(
+								user?.githubId,
+								state.room.user1,
+								state.room.user2,
+							)}
 						/>
-						<button>사진</button>
-					</StyledInputDiv>
-				</StyledInputWrap>
-				<StyledButton onClick={sendHandler}>전송</StyledButton>
-			</StyledFooter>
+					</StyledHeader>
+					<StyledMessage>
+						{messageList.map((msg, index) => (
+							<ChatBox
+								key={index}
+								message={msg.message}
+								$isUser={msg.sender === user.githubId}
+							/>
+						))}
+						<div ref={messageEndRef}></div>
+					</StyledMessage>
+					<StyledFooter>
+						<StyledInputWrap>
+							<StyledInputDiv $isEmpty={inputMessage === ''}>
+								<StyledInput
+									type="text"
+									value={inputMessage}
+									onChange={handleInputChange}
+									onKeyDown={handleKeyPress}
+								/>
+							</StyledInputDiv>
+						</StyledInputWrap>
+						<StyledButton onClick={sendHandler}>전송</StyledButton>
+					</StyledFooter>
+				</>
+			)}
 		</StyledChatDirectPageContainer>
 	);
 };

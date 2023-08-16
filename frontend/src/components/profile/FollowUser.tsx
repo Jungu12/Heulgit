@@ -1,5 +1,7 @@
 import { colors } from '@constants/colors';
+import { UserFollowingType } from '@typedef/profile/user.types';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 type StyledFollowButtonProps = {
@@ -37,18 +39,25 @@ const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 	cursor: pointer;
 `;
 
-const FollowUser: React.FC = () => {
+type FollowUserProps = {
+	userData: UserFollowingType; // 유저 데이터를 전달받는 prop 추가
+};
+
+const FollowUser = ({ userData }: FollowUserProps) => {
+	const navigation = useNavigate();
+
 	const [isFollowing, setIsFollowing] = useState(false);
 
 	const handleFollowButtonClick = () => {
+		// 팔로우 버튼 클릭 시 팔로우 상태를 업데이트
 		setIsFollowing((prevState) => !prevState);
 	};
 
 	return (
 		<StyledFollowUser>
-			<StyledUser>
-				<StyledUserImage src="path_to_user_image.jpg" alt="User" />
-				<StyledUserName>username</StyledUserName>
+			<StyledUser onClick={() => navigation(`/profiles/${userData.id}`)}>
+				<StyledUserImage src={userData.avater_url} alt="User" />{' '}
+				<StyledUserName>{userData.id}</StyledUserName>
 			</StyledUser>
 			<StyledFollowButton
 				$following={isFollowing}

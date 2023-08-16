@@ -25,12 +25,12 @@ import morningrolecall.heulgit.auth.dto.AccessTokenResponse;
 import morningrolecall.heulgit.auth.dto.CodeDto;
 import morningrolecall.heulgit.auth.dto.OAuthToken;
 import morningrolecall.heulgit.auth.service.AuthService;
-import morningrolecall.heulgit.auth.util.CookieProvider;
+import morningrolecall.heulgit.auth.util.CookieManager;
 
 @Api(tags = "OAuth")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/oauth")
+@RequestMapping("/api/oauth")
 public class AuthController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final AuthService authService;
@@ -55,7 +55,7 @@ public class AuthController {
 
 		OAuthToken oAuthToken = authService.createTokens(codeDto.getCode());
 
-		response.addHeader("Set-Cookie", CookieProvider.createCookie(oAuthToken.getRefreshToken()).toString());
+		response.addHeader("Set-Cookie", CookieManager.createCookie(oAuthToken.getRefreshToken()).toString());
 
 		return ResponseEntity.ok().body(new AccessTokenResponse(oAuthToken.getAccessToken()));
 	}
@@ -80,7 +80,7 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-		response.addHeader("Set-Cookie", CookieProvider.createCookie(oAuthToken.getRefreshToken()).toString());
+		response.addHeader("Set-Cookie", CookieManager.createCookie(oAuthToken.getRefreshToken()).toString());
 
 		return ResponseEntity.ok().body(new AccessTokenResponse(oAuthToken.getAccessToken()));
 	}

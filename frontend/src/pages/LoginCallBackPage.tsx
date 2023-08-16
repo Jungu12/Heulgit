@@ -7,6 +7,7 @@ import { styled } from 'styled-components';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Lottie from 'lottie-react';
 import loadingCat from '../loading.json';
+import { setUserData } from '@utils/api/Login/loginApi';
 
 const StyledCallBackContainer = styled.div`
 	display: flex;
@@ -24,15 +25,14 @@ const StyledCallBackContainer = styled.div`
 
 const LoginCallBackPage = () => {
 	const navigation = useNavigate();
-
 	const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
 
-	const getUserId = useCallback(() => {
-		http
-			.get('oauth/me')
-			.then((res) => console.log(res))
-			.catch((err) => console.log(err));
-	}, []);
+	// const getUserId = useCallback(() => {
+	// 	http
+	// 		.get('oauth/me')
+	// 		.then((res) => console.log(res))
+	// 		.catch((err) => console.log(err));
+	// }, []);
 
 	const getToken = useCallback(
 		async (code: string) => {
@@ -46,18 +46,19 @@ const LoginCallBackPage = () => {
 				.then((response) => {
 					const { accessToken } = response;
 					console.log(response);
-					// 로그인 성공 시 토큰과 아이콘 저장하고 홈화면으로 보내기
+					// 로그인 성공 시 토큰과 아이콘 저장 및 로컬 스토리지에 로그인 정보 저장하고 홈화면으로 보내기
 					dispatch(setToken(accessToken));
-					navigation('/');
+					window.localStorage.setItem('login', 'true');
 				})
 				.then(() => {
-					getUserId();
+					// navigation('/', { replace: true });
+					setUserData().then(() => navigation('/', { replace: true }));
 				})
 				.catch((error) => {
 					console.log(error);
 					// 로그인 실패 시 에러메시지 띄우고 다시 로그인 화면으로
 					alert('로그인에 실패했습니다.');
-					navigation('/login');
+					navigation('/login', { replace: true });
 				});
 		},
 		[navigation, dispatch],

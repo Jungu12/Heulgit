@@ -1,10 +1,17 @@
 import { createGlobalStyle } from 'styled-components';
 
+const isWindows = window.navigator.platform.includes('Win');
+
+// 맥과 윈도우에 따라 다른 폰트 경로 설정
+const fontPath = isWindows
+	? '/assets/fonts/RixYeoljeongdo_Regular_Windows.woff' // 윈도우 폰트 경로
+	: '/assets/fonts/RixYeoljeongdo_Regular_Mac.woff'; // 맥 폰트 경로
+
 // 외부에서 import 할거니까 모듈 내보내자~!
 export default createGlobalStyle`
 @font-face {
     font-family: 'RixYeoljeongdo_Regular';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/RixYeoljeongdo_Regular.woff') format('woff');
+    src: url('${fontPath}') format('woff');
     font-weight: normal;
     font-style: normal;
 }
@@ -54,9 +61,26 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+img {
+	-webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+	user-select: none;
+}
 
 /* 바텀시트 css */
 .comment-bottom-sheet > div {
 	z-index: 100;
+}
+
+/* 멘션 css */
+[data-rsbs-footer] {
+  overflow: visible;
 }
 `;

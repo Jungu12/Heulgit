@@ -30,7 +30,7 @@ const StyledUserName = styled.p`
 
 const StyledContent = styled.p`
 	font-size: 14px;
-	font-weight: 400;
+	font-weight: 500;
 	margin-bottom: 10px;
 `;
 
@@ -57,20 +57,25 @@ const StyledOptionContainer = styled.div`
 
 type Props = {
 	comment: HeulGitCommentType;
+	onClickCommentMenuOpen: (commentId: number) => void;
 };
 
-const Comment = ({ comment }: Props) => {
+const Comment = ({ comment, onClickCommentMenuOpen }: Props) => {
 	return (
 		<StyledComment>
-			<StyledProfile src={comment.user.avater_url} alt="profile" />
+			<StyledProfile src={comment.user.avatarUrl} alt="profile" />
 			<StyledContentBox>
-				<StyledUserName>{comment.user.id}</StyledUserName>
+				<StyledUserName>{comment.user.githubId}</StyledUserName>
 				<StyledContent>{comment.content}</StyledContent>
 				<StyledReply>답글 달기</StyledReply>
 			</StyledContentBox>
 			<StyledOptionContainer>
-				{comment.updated_date}
-				<img src={images.menu} alt="option" />
+				{comment.updatedDate}
+				<img
+					src={images.menu}
+					alt="option"
+					onClick={() => onClickCommentMenuOpen(comment.commentId)}
+				/>
 			</StyledOptionContainer>
 		</StyledComment>
 	);

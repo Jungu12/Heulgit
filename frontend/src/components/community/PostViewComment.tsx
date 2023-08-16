@@ -2,7 +2,7 @@ import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import { EurekaCommentType } from '@typedef/community/eureka.types';
-import Comment from '@components/Home/Comment';
+// import Comment from '@components/Home/Comment';
 
 const StyledCommentListContainer = styled.div`
 	display: flex;
@@ -20,16 +20,12 @@ type EurekaProps = {
 	eurekaComments: EurekaCommentType[];
 };
 
-// type FreeProps = {
-// 	freeComments: FreeBoardCommentType[];
-// };
-
 const PostViewComment = ({ eurekaComments }: EurekaProps) => {
 	return (
 		<StyledCommentListContainer>
 			{eurekaComments.map((comment) => (
-				<div key={comment.id}>
-					<Comment comment={comment} />
+				<div key={comment.commentId}>
+					{/* <Comment comment={comment} /> */}
 					<Separation />
 				</div>
 			))}

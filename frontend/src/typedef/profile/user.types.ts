@@ -1,21 +1,36 @@
+// 팔로우 상태 확인
+export type FollowType = {
+	follow: boolean;
+};
+
+// 팔로잉/팔로워
+export type UserFollowingType = {
+	id: string;
+	avater_url: string;
+};
+
 // 사용자 커밋 분석
 export type UserCommitType = {
-	commitInfos: [
-		{
-			type: string;
-			count: number;
-		},
-	];
+	type: string;
+	count: number;
 };
 
 // POST 사용자 커밋 맵 커스텀
 export type UserCommitCustomType = {
-	map: [{ algo: string }, { cs: string }];
+	type: string;
+	description: string;
+};
+
+// POST 사용자 커밋 맵 커스텀 받아오기
+export type UserCommitCustomData = {
+	githubId: string;
+	type: string;
+	description: string;
 };
 
 // 랭킹
 export type UserRankingType = {
-	github_id: string;
+	githubId: string;
 	count: number;
 };
 
@@ -50,3 +65,47 @@ export type UserCommentType = {
 		},
 	];
 };
+
+// 작성한 유레카/자유
+export type UserPostType = {
+	avatar_url: string;
+	posts: [
+		{
+			id: number;
+			title: string;
+			content: string;
+			link: string;
+			updated_date: string;
+			views: number;
+			likes: number;
+			comments: number;
+			images: [
+				{
+					file_uri: string;
+				},
+			];
+		},
+	];
+};
+
+// // 작성한 자유게시판
+// export type UserFreeboardType = {
+// 	avatar_url: 'dfdsfsdfds';
+// 	posts: [
+// 		{
+// 			id: 1;
+// 			title: 'hihi';
+// 			content: 'eqweqwewq';
+// 			link: 'dfkldfsdfds';
+// 			updated_date: '2023-07-24';
+// 			views: 100;
+// 			likes: 10;
+// 			comments: 12;
+// 			images: [
+// 				{
+// 					file_uri: 'adfldskfjsdlk';
+// 				},
+// 			];
+// 		},
+// 	];
+// };
