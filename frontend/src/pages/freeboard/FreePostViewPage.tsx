@@ -151,8 +151,8 @@ const StyledUnderline = styled.div`
 
 const FreePostViewPage = () => {
 	const navigation = useNavigate();
-	const { id } = useParams(); // 유저 id
-	const userId = useSelector((state: RootState) => state.user.user?.githubId); // 리덕스 문법..?
+	const { id } = useParams();
+	const userId = useSelector((state: RootState) => state.user.user?.githubId);
 	const [feed, setFeed] = useState<FreeBoardPostResponseType>(); // 불러온 피드 리스트
 	const [isMenuOpen, setIsMenuOpen] = useState(false); // 수정, 삭제, 닫기 메뉴 버튼
 
@@ -165,6 +165,10 @@ const FreePostViewPage = () => {
 	const [input, setInput] = useState('');
 	const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
 	const [seletedComment, setseletedComment] = useState(-1);
+
+	useEffect(() => {
+		console.log(id);
+	}, []);
 
 	// 좋아요 클릭시 변환 이벤트
 	const handleLikeClick = () => {
@@ -190,10 +194,10 @@ const FreePostViewPage = () => {
 	// 좋아요 누른 사람 목록 보기
 	const onClickLike = useCallback(() => {
 		navigation('like', { state: { user: feed?.likedUsers } });
-	}, [navigation]);
+	}, [navigation, feed?.likedUsers]);
 
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${1}`);
+		navigation(`/profiles/${userId}`);
 	}, []);
 
 	// 포스트 불러오기
