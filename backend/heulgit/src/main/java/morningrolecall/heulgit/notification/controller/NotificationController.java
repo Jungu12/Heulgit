@@ -28,11 +28,11 @@ public class NotificationController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final NotificationService notificationService;
 
-	@PostMapping("/followtest")
-	public ResponseEntity<?> followRegister(@RequestBody NotificationFollowRequest notificationFollowRequest){
-		notificationService.addFollowNotification(notificationFollowRequest);
-		return ResponseEntity.ok().build();
-	}
+	// @PostMapping("/followtest")
+	// public ResponseEntity<?> followRegister(@RequestBody NotificationFollowRequest notificationFollowRequest){
+	// 	notificationService.addFollowNotification(notificationFollowRequest);
+	// 	return ResponseEntity.ok().build();
+	// }
 	@GetMapping(value ="/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public SseEmitter connect(@AuthenticationPrincipal String githubId, @RequestHeader(value = "Last-Event-ID",required = false,
 		defaultValue = "") String lastEventId){
@@ -40,17 +40,17 @@ public class NotificationController {
 		return notificationService.connect(githubId,lastEventId);
 	}
 
-	@PostMapping("/liketest")
-	public ResponseEntity<?> likeRegister(@RequestBody NotificationLikeRequest notificationLikeRequest){
-		notificationService.addLikeNotification(notificationLikeRequest);
-		return ResponseEntity.ok().build();
-	}
-
-	@PostMapping("/commenttest")
-	public ResponseEntity<?> commentRegister(@RequestBody NotificationCommentRequest notificationCommentRequest){
-		notificationService.addCommentNotification(notificationCommentRequest);
-		return ResponseEntity.ok().build();
-	}
+	// @PostMapping("/liketest")
+	// public ResponseEntity<?> likeRegister(@RequestBody NotificationLikeRequest notificationLikeRequest){
+	// 	notificationService.addLikeNotification(notificationLikeRequest);
+	// 	return ResponseEntity.ok().build();
+	// }
+	//
+	// @PostMapping("/commenttest")
+	// public ResponseEntity<?> commentRegister(@RequestBody NotificationCommentRequest notificationCommentRequest){
+	// 	notificationService.addCommentNotification(notificationCommentRequest);
+	// 	return ResponseEntity.ok().build();
+	// }
 
 
 	@GetMapping("")
@@ -61,8 +61,8 @@ public class NotificationController {
 	}
 
 	@GetMapping("/isread/{notificationId}")
-	public ResponseEntity<?> changeReadState(@PathVariable Long notificationId){
-		notificationService.changeNotificationState(notificationId);
+	public ResponseEntity<?> changeReadState(@AuthenticationPrincipal String githubId ,@PathVariable Long notificationId){
+		notificationService.changeNotificationState(notificationId,githubId);
 		logger.debug("changeReadState(), notificaiton={}", notificationId  );
 		return ResponseEntity.ok().build();
 	}
