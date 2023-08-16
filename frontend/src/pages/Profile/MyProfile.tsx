@@ -82,10 +82,11 @@ const StyledTitleButton = styled.div`
 `;
 
 type MyProfileProps = {
+	loadedUser: UserType;
 	user: UserType;
 };
 
-const MyProfile = ({ user }: MyProfileProps) => {
+const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 	const navigation = useNavigate();
 	const tags = ['feat', 'fix', 'algo', 'style', 'docs', 'study', 'chore'];
 
@@ -102,9 +103,10 @@ const MyProfile = ({ user }: MyProfileProps) => {
 		setCurrentTagIndex((currentTagIndex + 1) % tags.length);
 	};
 
+	// 커밋 그래프
 	useEffect(() => {
 		authHttp
-			.get<UserCommitType[]>(`users/commit-analyze/${user.githubId}`)
+			.get<UserCommitType[]>(`users/commit-analyze/${loadedUser.githubId}`)
 			.then((response) => {
 				console.log('커밋 분석 성공.', response);
 				setCommitGraphData(response);
@@ -134,11 +136,17 @@ const MyProfile = ({ user }: MyProfileProps) => {
 	return (
 		<StyledBox>
 			<StyledCommitBox>
-				<StyledActivityButton
-					onClick={() => navigation(`/profiles/${user?.githubId}/commit-edit`)}
-				>
-					<img src={images.profile.settingIcon} alt="설정" />
-				</StyledActivityButton>
+				{loadedUser?.githubId !== user?.githubId ? (
+					<StyledActivityButton
+						onClick={() =>
+							navigation(`/profiles/${loadedUser?.githubId}/commit-edit`)
+						}
+					>
+						<img src={images.profile.settingIcon} alt="설정" />
+					</StyledActivityButton>
+				) : (
+					<div></div>
+				)}
 				{commitGraphData !== undefined ? (
 					<StyledCommitList>
 						<StyledCommitItem>
@@ -159,7 +167,7 @@ const MyProfile = ({ user }: MyProfileProps) => {
 			<StyledRankBox>
 				<StyledTitle>
 					<StyledTitleItem>
-						<img src={images.profile.rankingIcon} alt="팔로우" />
+						<img src={images.profile.rankingIcon} alt="랭킹" />
 						<div className="ranking-title">열심히 하시잖아</div>
 						<div className="ranking-tag">{tags[currentTagIndex]}</div>
 					</StyledTitleItem>
