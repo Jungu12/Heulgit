@@ -53,7 +53,7 @@ public class RelationService {
 		relationRepository.save(relation);
 	}
 
-	public List<RelationUserInfo> getFollowers(String userId) {
+	public List<RelationUserInfo> getFollowers(String myId, String userId) {
 		List<Relation> relations = relationRepository.findByToId(userId);
 
 		if (relations.isEmpty()) {
@@ -65,15 +65,17 @@ public class RelationService {
 
 		for (String follower : followers) {
 			User user = userRepository.findUserByGithubId(follower).orElseThrow();
+			boolean follow = relationRepository.existsByFromIdAndToId(myId, user.getGithubId());
 			userInfos.add(RelationUserInfo.builder()
 				.id(user.getGithubId())
 				.avater_url(user.getAvatarUrl())
+				.follow(follow)
 				.build());
 		}
 		return userInfos;
 	}
 
-	public List<RelationUserInfo> getFollowings(String userId) {
+	public List<RelationUserInfo> getFollowings(String myId, String userId) {
 		List<Relation> relations = relationRepository.findByFromId(userId);
 
 		if (relations.isEmpty()) {
@@ -86,9 +88,11 @@ public class RelationService {
 
 		for (String following : followings) {
 			User user = userRepository.findUserByGithubId(following).orElseThrow();
+			boolean follow = relationRepository.existsByFromIdAndToId(myId, user.getGithubId());
 			userInfos.add(RelationUserInfo.builder()
 				.id(user.getGithubId())
 				.avater_url(user.getAvatarUrl())
+				.follow(follow)
 				.build());
 		}
 		return userInfos;

@@ -8,4 +8,5 @@ import lombok.Getter;
 public class RelationUserInfo {
 	private String id;
 	private String avater_url;
+	private boolean follow;
 }

@@ -33,7 +33,7 @@ public class RelationController {
 	@GetMapping("/state")
 	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from, @RequestParam String to) {
 		logger.debug("followStateCheck(), from = {}, to = {}", from, to);
-		
+
 		return ResponseEntity.ok().body(relationService.checkFollowState(from, to));
 	}
 
@@ -64,23 +64,25 @@ public class RelationController {
 
 	/**
 	 * 사용자는 자신을 팔로우하는 다른 유저들을 확인할 수 있다.
+	 * @param githubId : 내 Github ID
 	 * @param userId : 사용자가 팔로우하려는 다른 유저 Github ID
 	 */
 	@GetMapping("/followers/{userId}")
-	public ResponseEntity<?> getFollowers(@PathVariable String userId) {
+	public ResponseEntity<?> getFollowers(@AuthenticationPrincipal String githubId, @PathVariable String userId) {
 		logger.debug("getFollowers(), userId = {}");
 
-		return ResponseEntity.ok().body(relationService.getFollowers(userId));
+		return ResponseEntity.ok().body(relationService.getFollowers(githubId, userId));
 	}
 
 	/**
 	 * 사용자는 자신이 팔로우하는 다른 유저들을 확인할 수 있다.
+	 * @param githubId : 내 GithubID
 	 * @param userId : 사용자가 팔로잉 중인 다른 유저 Github ID
 	 */
 	@GetMapping("/followings/{userId}")
-	public ResponseEntity<?> getFollowings(@PathVariable String userId) {
+	public ResponseEntity<?> getFollowings(@AuthenticationPrincipal String githubId, @PathVariable String userId) {
 		logger.debug("getFollowings(), userId = {}");
 
-		return ResponseEntity.ok().body(relationService.getFollowings(userId));
+		return ResponseEntity.ok().body(relationService.getFollowings(githubId, userId));
 	}
 }
