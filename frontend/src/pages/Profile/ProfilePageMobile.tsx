@@ -24,7 +24,7 @@ const StyledProfileHigh = styled.div`
 const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: end;
 	height: 150px;
 `;
 const StyledUserImage = styled.img`
@@ -128,19 +128,46 @@ const ProfilePageMobile = ({
 	const user = useSelector((state: RootState) => state.user.user);
 	const [view, setView] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
+	const [isFollowing, setIsFollowing] = useState(false);
 
+	// 유저 팔로우/언팔로우
+	const handleFollowClick = () => {
+		if (!isFollowing) {
+			// 팔로우
+			authHttp
+				.post(`relations/follow/${userId}`)
+				.then(() => {
+					setIsFollowing(true);
+					console.log('팔로우 성공');
+				})
+				.catch((error) => {
+					console.error('팔로우 실패:', error);
+				});
+		} else {
+			// 언팔로우
+			authHttp
+				.delete(`relations/unfollow/${userId}`)
+				.then(() => {
+					setIsFollowing(false);
+					console.log('언팔로우 성공');
+				})
+				.catch((error) => {
+					console.error('언팔로우 실패', error);
+				});
+		}
+	};
+
+	// 유저 정보 불러오기
 	useEffect(() => {
-		// 내 깃허브 아이디가 아닐 때, API 호출
-		// if (userId !== user?.githubId) {
 		authHttp
 			.get<UserType>(`users/${userId}`)
 			.then((data) => {
+				console.log('유저 정보 성공:', data);
 				setLoadedUser(data);
 			})
 			.catch((error) => {
 				console.error('유저 정보 실패:', error);
 			});
-		// }
 	}, []);
 
 	return (
@@ -156,14 +183,14 @@ const ProfilePageMobile = ({
 									navigation(`/profiles/${loadedUser?.githubId}/following`)
 								}
 							>
-								{`팔로잉 20`}
+								<div>팔로잉</div>
 							</StyledFollowing>
 							<StyledFollower
 								onClick={() =>
 									navigation(`/profiles/${loadedUser?.githubId}/follower`)
 								}
 							>
-								{`팔로워 20`}
+								<div>팔로워</div>
 							</StyledFollower>
 						</div>
 						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
@@ -182,11 +209,15 @@ const ProfilePageMobile = ({
 							</p>
 							{view && (
 								<>
-									{user?.name !== 'null' && <p>{user?.name}</p>}
-									{user?.company !== 'null' && <p>{user?.company}</p>}
-									{user?.location !== 'null' && <p>{user?.location}</p>}
-									{user?.blog !== 'null' && <p>{user?.blog}</p>}
-									{user?.bio !== 'null' && <p>{user?.bio}</p>}
+									{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
+									{loadedUser?.company !== 'null' && (
+										<p>{loadedUser?.company}</p>
+									)}
+									{loadedUser?.location !== 'null' && (
+										<p>{loadedUser?.location}</p>
+									)}
+									{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
+									{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
 								</>
 							)}
 						</div>
@@ -203,10 +234,15 @@ const ProfilePageMobile = ({
 								</StyledActivityButtonItem>
 							</div>
 							<div>
-								<StyledActivityButtonItem
-									onClick={() => navigation(`/profiles/${userId}`)}
-								>
-									<img src={images.profile.followIcon} alt="팔로우" />
+								<StyledActivityButtonItem onClick={handleFollowClick}>
+									<img
+										src={
+											isFollowing
+												? images.profile.followingIcon
+												: images.profile.followIcon
+										}
+										alt={isFollowing ? '팔로잉' : '팔로우'}
+									/>
 								</StyledActivityButtonItem>
 								<StyledActivityButtonItem onClick={onClickGM}>
 									<img src={images.gitMessage} alt="채팅" />
@@ -248,7 +284,7 @@ const ProfilePageMobile = ({
 					<Sdiv>
 						<StyledProfileLow>
 							{selectedMenu === '프로필' && user !== null && (
-								<MyProfile user={loadedUser} />
+								<MyProfile loadedUser={loadedUser} user={user} />
 							)}
 							{selectedMenu === '유레카' && user !== null && (
 								<MyEureka user={loadedUser} />

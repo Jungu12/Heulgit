@@ -8,6 +8,22 @@ import { Mention, MentionsInput, OnChangeHandlerFunc } from 'react-mentions';
 import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
+const MentionInputStyle = {
+	suggestions: {
+		bottom: '50px',
+		top: 'auto',
+		list: {
+			display: 'flex',
+			flexDirection: 'column',
+			gap: '6px',
+			background: 'white',
+			border: '1px solid rgba(0, 0, 0, 0.15)',
+			maxHeight: '75vh',
+			overflow: 'scroll',
+		},
+	},
+};
+
 const CommentInputContainer = styled.div`
 	width: 100%;
 	display: flex;
@@ -36,6 +52,7 @@ const StyledInput = styled(MentionsInput)`
 	flex: 1;
 	outline: none;
 	margin-right: 12px;
+	outline: none;
 `;
 
 const StyledSubmitButton = styled.button`
@@ -51,16 +68,27 @@ const StyledSubmitButton = styled.button`
 
 const StyledMentionContainer = styled.div`
 	display: flex;
+	align-items: center;
+	display: flex;
+	align-items: center;
+	padding: 5px 15px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+
+	&:focus {
+		background-color: #cee4e5;
+	}
 
 	span {
-		font-size: 16px;
-		font-weight: 500;
+		font-size: 14px;
+		font-weight: 700;
 	}
 `;
 
 const StyledMentionImage = styled.img`
-	height: 24px;
-	width: 24px;
+	height: 32px;
+	width: 32px;
+	margin-right: 12px;
+	border-radius: 50%;
 `;
 
 type Props = {
@@ -80,7 +108,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 
 	const getFollersData = useCallback(() => {
 		authHttp
-			.get<UserSimpleType[]>(`relations/followings?userId=${user?.githubId}`)
+			.get<UserSimpleType[]>(`relations/followings/${user?.githubId}`)
 			.then((res) => {
 				console.log(res);
 				setFollowingList(res);
@@ -104,9 +132,12 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 					maxLength={50}
 					value={input}
 					onChange={onHandleComment}
+					style={MentionInputStyle}
 				>
 					<Mention
 						trigger="@"
+						markup="@__id__"
+						displayTransform={(username) => `@${username}`}
 						data={followingList.map((v, index) => ({
 							id: index,
 							display: v.id,

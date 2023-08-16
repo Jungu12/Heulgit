@@ -55,7 +55,7 @@ table {
 	border-spacing: 0;
 }
 img {
-	 -webkit-user-select: none;
+	-webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -o-user-select: none;
@@ -70,5 +70,10 @@ img {
 /* 바텀시트 css */
 .comment-bottom-sheet > div {
 	z-index: 100;
+}
+
+/* 멘션 css */
+[data-rsbs-footer] {
+  overflow: visible;
 }
 `;
