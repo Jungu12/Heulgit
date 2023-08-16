@@ -5,12 +5,8 @@ export type FollowType = {
 
 // 팔로잉/팔로워
 export type UserFollowingType = {
-	followings: [
-		{
-			id: string;
-			avater_url: string;
-		},
-	];
+	id: string;
+	avater_url: string;
 };
 
 // 사용자 커밋 분석
