@@ -133,6 +133,7 @@ const StyledProfileImage = styled.img`
 	width: 44px;
 	height: 44px;
 	margin: 8px 15px;
+	border-radius: 50%;
 `;
 
 const StyledNotificationTextBox = styled.div`
@@ -145,16 +146,19 @@ const StyledNotificationTextBox = styled.div`
 const StyledSenderName = styled.span`
 	font-weight: 700;
 	color: black;
+	cursor: pointer;
 `;
 
 const StyledNotificationDate = styled.span`
 	font-weight: 400;
 	color: ${colors.greyScale.grey4};
+	margin-left: 4px;
 `;
 
 const StyledNoficationContent = styled.span`
 	font-weight: 500;
 	color: black;
+	cursor: pointer;
 `;
 
 const StyledFollowButton = styled.button<StyledFollowButtonProps>`
@@ -164,6 +168,7 @@ const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 	font-weight: 500;
 	font-size: 14px;
 	border-radius: 8px;
+	cursor: pointer;
 	background-color: ${(props) =>
 		props.$following ? colors.primary.primary : colors.greyScale.grey3};
 	color: ${(props) => (props.$following ? 'white' : 'black')};
