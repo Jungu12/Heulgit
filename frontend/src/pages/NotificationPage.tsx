@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { UnionNotificationType } from '@typedef/notification/notification.types';
 import { isWithinOneMonth } from '@utils/date';
 import { authHttp } from '@utils/http';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 // 알림 전체 컨테이너
@@ -56,6 +56,9 @@ const StyledEmptyNotification = styled.div`
 `;
 
 const NotificationPage = () => {
+	const [notifications, setNotifications] = useState<UnionNotificationType[]>(
+		[],
+	);
 	const [recentNotifications, setRecentNotifications] = useState<
 		UnionNotificationType[]
 	>([]);
@@ -63,13 +66,23 @@ const NotificationPage = () => {
 		UnionNotificationType[]
 	>([]);
 
-	const { data, refetch } = useQuery(['/notifications'], () =>
+	const loadNotification = useCallback(() => {
+		authHttp
+			.get<UnionNotificationType[]>('notifications')
+			.then((res) => setNotifications(res));
+	}, []);
+
+	const { data } = useQuery(['/notifications'], () =>
 		authHttp.get('notifications').then((res) => res as UnionNotificationType[]),
 	);
 
 	useEffect(() => {
+		loadNotification();
+	}, []);
+
+	useEffect(() => {
 		if (data) {
-			for (const noti of data) {
+			for (const noti of notifications) {
 				if (isWithinOneMonth(noti.createdDate)) {
 					setRecentNotifications((prev) => [...prev, noti]);
 					continue;
@@ -77,7 +90,7 @@ const NotificationPage = () => {
 				setPastNotifications((prev) => [...prev, noti]);
 			}
 		}
-	}, [data]);
+	}, [notifications]);
 
 	console.log(data);
 
@@ -92,20 +105,14 @@ const NotificationPage = () => {
 						<StyledNotiDiv>
 							<StyleNoti>이번 주</StyleNoti>
 						</StyledNotiDiv>
-						<NotiFollow
-							notificationList={recentNotifications}
-							refetch={refetch}
-						/>
+						<NotiFollow notificationList={recentNotifications} />
 					</StyledWeekNotiContainer>
 					{pastNotifications.length && (
 						<StyledWeekNotiContainer>
 							<StyledNotiDiv>
 								<StyleNoti>이전 알림</StyleNoti>
 							</StyledNotiDiv>
-							<NotiFollow
-								notificationList={pastNotifications}
-								refetch={refetch}
-							/>
+							<NotiFollow notificationList={pastNotifications} />
 						</StyledWeekNotiContainer>
 					)}
 				</>
