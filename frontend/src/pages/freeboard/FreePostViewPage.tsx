@@ -100,11 +100,6 @@ const StyledFilterButton = styled.button`
 // 테블릿 끝
 
 // 상세페이지 PC버전
-const StyledFreeBoardPostViewPC = styled.div`
-	display: flex;
-
-	justify-content: space-between;
-`;
 
 // 커뮤니티 PC 버전
 // const CommunityContainerPC = styled.div`
