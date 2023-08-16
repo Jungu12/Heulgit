@@ -378,7 +378,7 @@ public class EurekaService {
 		// }
 
 		// 최신 순
-		Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubId(keyword,
+		Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubIdContaining(keyword,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return new SliceImpl<>(toResponse(eurekas), eurekas.getPageable(), eurekas.hasNext());
 	}
