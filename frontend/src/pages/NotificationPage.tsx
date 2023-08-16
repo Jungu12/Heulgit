@@ -72,27 +72,23 @@ const NotificationPage = () => {
 			.then((res) => setNotifications(res));
 	}, []);
 
-	const { data } = useQuery(['/notifications'], () =>
-		authHttp.get('notifications').then((res) => res as UnionNotificationType[]),
-	);
+	// const { data } = useQuery(['/notifications'], () =>
+	// 	authHttp.get('notifications').then((res) => res as UnionNotificationType[]),
+	// );
 
 	useEffect(() => {
 		loadNotification();
 	}, []);
 
 	useEffect(() => {
-		if (data) {
-			for (const noti of notifications) {
-				if (isWithinOneMonth(noti.createdDate)) {
-					setRecentNotifications((prev) => [...prev, noti]);
-					continue;
-				}
-				setPastNotifications((prev) => [...prev, noti]);
+		for (const noti of notifications) {
+			if (isWithinOneMonth(noti.createdDate)) {
+				setRecentNotifications((prev) => [...prev, noti]);
+				continue;
 			}
+			setPastNotifications((prev) => [...prev, noti]);
 		}
 	}, [notifications]);
-
-	console.log(data);
 
 	return (
 		<StyledNotificationContainer>
