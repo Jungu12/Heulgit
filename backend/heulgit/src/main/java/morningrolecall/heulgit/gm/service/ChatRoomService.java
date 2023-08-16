@@ -119,6 +119,10 @@ public class ChatRoomService {
 		return ChatMessages;
 	}
 
+	public List<ChatRoom> findChatRoomList(String githubId) {
+		return chatRoomRepository.findMyChatRooms(githubId);
+	}
+
 	// 사용자가 특정 topic(채팅방)에 들어왔을 때 구독자로 등록한다.
 	public void userJoinedChatRoom(String topic, String userId) {
 		redisSubscriberManager.addUserToTopic(topic, userId);

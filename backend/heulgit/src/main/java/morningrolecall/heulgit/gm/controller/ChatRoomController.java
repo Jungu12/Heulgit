@@ -31,7 +31,7 @@ public class ChatRoomController {
 	public ResponseEntity<?> chatRoomList(@AuthenticationPrincipal String githubId) {
 		logger.debug("chatRoomList(), githubId = {}", githubId);
 
-		return ResponseEntity.ok().body(chatRoomRepository.findMyChatRooms(githubId));
+		return ResponseEntity.ok().body(chatRoomService.findChatRoomList(githubId));
 	}
 
 	// 채팅방 생성
