@@ -216,7 +216,7 @@ public class NotificationService {
 					.receiver(reciever)
 					.createdDate(LocalDateTime.now())
 					.hasRead(false)
-					.type(NotificationType.COMMENT)
+					.type(NotificationType.MENTION)
 					.content(notificationCommentRequest.getContent())
 					.relatedLink(notificationCommentRequest.getRelatedLink())
 					.build();
