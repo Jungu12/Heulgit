@@ -159,7 +159,6 @@ const StyledNoficationContent = styled.span`
 	font-weight: 500;
 	color: black;
 	cursor: pointer;
-	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 `;
@@ -220,12 +219,12 @@ const NotiFollow = ({ notificationList }: Props) => {
 										console.log(postId);
 
 										if (boardType === 'heulgit') {
-											navigation(`/repo/${postId}}`);
+											navigation(`/repo/${Number(postId)}}`);
 										}
 										if (boardType === 'freeboard') {
-											navigation(`/community/free/${postId}}`);
+											navigation(`/community/free/${Number(postId)}}`);
 										} else {
-											navigation(`/community/${boardType}/${postId}}`);
+											navigation(`/community/${boardType}/${Number(postId)}}`);
 										}
 									}}
 								>{`님이 게시물에 좋아요를 했습니다.`}</StyledNoficationContent>
@@ -282,14 +281,13 @@ const NotiFollow = ({ notificationList }: Props) => {
 										const boardType = notiType[0].slice(1);
 										const postId = notiType[1].trim();
 										console.log(postId);
-
 										if (boardType === 'heulgit') {
-											navigation(`/repo/${postId}}`);
+											navigation(`/repo/${Number(postId)}}`);
 										}
 										if (boardType === 'freeboard') {
-											navigation(`/community/free/${postId}}`);
+											navigation(`/community/free/${Number(postId)}}`);
 										} else {
-											navigation(`/community/${boardType}/${postId}}`);
+											navigation(`/community/${boardType}/${Number(postId)}}`);
 										}
 									}}
 								>{`님이 게시물에 댓글을 남겼습니다: ${noti.content}`}</StyledNoficationContent>
@@ -320,12 +318,12 @@ const NotiFollow = ({ notificationList }: Props) => {
 										console.log(postId);
 
 										if (boardType === 'heulgit') {
-											navigation(`/repo/${postId}}`);
+											navigation(`/repo/${Number(postId)}}`);
 										}
 										if (boardType === 'freeboard') {
-											navigation(`/community/free/${postId}}`);
+											navigation(`/community/free/${Number(postId)}}`);
 										} else {
-											navigation(`/community/${boardType}/${postId}}`);
+											navigation(`/community/${boardType}/${Number(postId)}}`);
 										}
 									}}
 								>{`님이 당신을 언급했습니다: ${noti.content}`}</StyledNoficationContent>
