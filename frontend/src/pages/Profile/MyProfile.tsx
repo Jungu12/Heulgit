@@ -173,24 +173,28 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 			</StyledCommitBox>
 
 			{/* 랭킹 */}
-			<StyledRankBox>
-				<StyledTitle>
-					<StyledTitleItem>
-						<img src={images.profile.rankingIcon} alt="랭킹" />
-						<div className="ranking-title">열심히 하시잖아</div>
-						<div className="ranking-tag">{tags[currentTagIndex]}</div>
-					</StyledTitleItem>
-					<StyledTitleButton>
-						<button onClick={handlePrevTag}> ◀ </button>
-						<button onClick={handleNextTag}> ▶ </button>
-					</StyledTitleButton>
-				</StyledTitle>
-				{commitGraphData !== undefined ? (
-					<RankingGraph rankingList={commitRankingData} />
-				) : (
-					<p>Loading...</p>
-				)}
-			</StyledRankBox>
+			{loadedUser?.githubId === user?.githubId ? (
+				<StyledRankBox>
+					<StyledTitle>
+						<StyledTitleItem>
+							<img src={images.profile.rankingIcon} alt="랭킹" />
+							<div className="ranking-title">열심히 하시잖아</div>
+							<div className="ranking-tag">{tags[currentTagIndex]}</div>
+						</StyledTitleItem>
+						<StyledTitleButton>
+							<button onClick={handlePrevTag}> ◀ </button>
+							<button onClick={handleNextTag}> ▶ </button>
+						</StyledTitleButton>
+					</StyledTitle>
+					{commitGraphData !== undefined ? (
+						<RankingGraph rankingList={commitRankingData} />
+					) : (
+						<p>Loading...</p>
+					)}
+				</StyledRankBox>
+			) : (
+				<></>
+			)}
 		</StyledBox>
 	);
 };

@@ -128,6 +128,7 @@ const ProfilePageMobile = ({
 	const { userId } = useParams();
 	const user = useSelector((state: RootState) => state.user.user);
 	const [view, setView] = useState(false);
+	const [userInfo, setUserInfo] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
 	const [isFollowing, setIsFollowing] = useState(false);
 
@@ -138,6 +139,17 @@ const ProfilePageMobile = ({
 			.then((response) => {
 				console.log('유저 정보 성공:', response);
 				setLoadedUser(response);
+
+				// 추가 정보가 있을 경우에만 view를 true로 설정
+				if (
+					response.name !== 'null' ||
+					response.bio !== 'null' ||
+					response.company !== 'null' ||
+					response.location !== 'null' ||
+					response.blog !== 'null'
+				) {
+					setUserInfo(true);
+				}
 			})
 			.catch((error) => {
 				console.error('유저 정보 실패:', error);
@@ -209,34 +221,37 @@ const ProfilePageMobile = ({
 								<div>팔로워</div>
 							</StyledFollower>
 						</div>
+						{/* 유저 정보 */}
 						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
-						<div className="user-info">
-							<div
-								onClick={() => {
-									setView(!view);
-								}}
-							>
-								추가정보{' '}
-								{view ? (
-									<img src={images.arrowUpBlack} alt="up" />
-								) : (
-									<img src={images.arrowDownBlack} alt="down" />
+						{userInfo && (
+							<div className="user-info">
+								<div
+									onClick={() => {
+										setView(!view);
+									}}
+								>
+									추가정보{' '}
+									{view ? (
+										<img src={images.arrowUpBlack} alt="up" />
+									) : (
+										<img src={images.arrowDownBlack} alt="down" />
+									)}
+								</div>
+								{view && (
+									<div>
+										{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
+										{loadedUser?.company !== 'null' && (
+											<p>{loadedUser?.company}</p>
+										)}
+										{loadedUser?.location !== 'null' && (
+											<p>{loadedUser?.location}</p>
+										)}
+										{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
+										{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
+									</div>
 								)}
 							</div>
-							{view && (
-								<div>
-									{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
-									{loadedUser?.company !== 'null' && (
-										<p>{loadedUser?.company}</p>
-									)}
-									{loadedUser?.location !== 'null' && (
-										<p>{loadedUser?.location}</p>
-									)}
-									{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
-									{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
-								</div>
-							)}
-						</div>
+						)}
 					</StyledUserInformation>
 				</StyledUserProfile>
 
