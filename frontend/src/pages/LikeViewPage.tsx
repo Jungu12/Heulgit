@@ -164,7 +164,7 @@ const LikeViewPage: React.FC = () => {
 			.catch((error) => {
 				console.error('제발 보게 해주세요./....,,', error);
 			});
-	}, []);
+	}, [id]);
 
 	return (
 		<StyledLikeViewPageContainer>
