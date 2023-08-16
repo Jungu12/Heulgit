@@ -263,10 +263,15 @@ const ProfilePageMobile = ({
 							</div>
 							<div>
 								<StyledActivityButtonItem onClick={handleFollowClick}>
-									{isFollowing ? (
-										<img src={images.profile.followingIcon} alt="팔로잉" />
-									) : (
-										<img src={images.profile.followIcon} alt="팔로우" />
+									{isFollowing !== undefined && (
+										<img
+											src={
+												isFollowing
+													? images.profile.followingIcon
+													: images.profile.followIcon
+											}
+											alt={isFollowing ? '팔로잉' : '팔로우'}
+										/>
 									)}
 								</StyledActivityButtonItem>
 								<StyledActivityButtonItem onClick={onClickGM}>
