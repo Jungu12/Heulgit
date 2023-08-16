@@ -198,9 +198,7 @@ const FreePostViewPage = () => {
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
 	const onClickUserProfile = useCallback(() => {
-		if (feed?.user.githubId === userId) {
-			navigation(`/profiles/${userId}`);
-		}
+		navigation(`/profiles/${feed?.user.githubId}`);
 	}, []);
 
 	// 포스트 불러오기
