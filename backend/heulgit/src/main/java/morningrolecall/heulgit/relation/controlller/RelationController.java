@@ -35,8 +35,7 @@ public class RelationController {
 	 * @param to : follow 여부를 확인하고 싶은 user
 	 */
 	@GetMapping("/state")
-	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from1, @RequestParam String to) {
-		String from = "user1";
+	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from, @RequestParam String to) {
 		logger.debug("followStateCheck(), from = {}, to = {}", from, to);
 
 		return ResponseEntity.ok().body(relationService.checkFollowState(from, to));
@@ -60,13 +59,12 @@ public class RelationController {
 	 * @param userId : 사용자가 팔로우하려는 다른 유저 Github ID
 	 */
 	@PostMapping("/follow")
-	public ResponseEntity<?> addFollow(@AuthenticationPrincipal String from1, @RequestParam String to) {
-		String from = "user1";
+	public ResponseEntity<?> addFollow(@AuthenticationPrincipal String from, @RequestParam String to) {
 		logger.debug("addFollow(), from = {}, to = {}", from, to);
-		relationService.addFollow(from, to);
-		NotificationFollowRequest notificationFollowRequest = new NotificationFollowRequest(from1, to, NotificationType.FOLLOW);
-		notificationService.addFollowNotification(notificationFollowRequest);
 
+		relationService.addFollow(from, to);
+		NotificationFollowRequest notificationFollowRequest = new NotificationFollowRequest(from, to, NotificationType.FOLLOW);
+		notificationService.addFollowNotification(notificationFollowRequest);
 
 		return ResponseEntity.ok().build();
 	}
