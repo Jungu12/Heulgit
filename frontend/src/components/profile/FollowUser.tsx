@@ -1,7 +1,9 @@
 import { colors } from '@constants/colors';
+import { RootState } from '@store/index';
 import { UserFollowingType } from '@typedef/profile/user.types';
 import { authHttp } from '@utils/http';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -45,6 +47,7 @@ type FollowUserProps = {
 };
 
 const FollowUser = ({ userData }: FollowUserProps) => {
+	const user = useSelector((state: RootState) => state.user.user);
 	const navigation = useNavigate();
 
 	const [isFollowing, setIsFollowing] = useState(userData.follow);
@@ -81,12 +84,16 @@ const FollowUser = ({ userData }: FollowUserProps) => {
 				<StyledUserImage src={userData.avater_url} alt="User" />{' '}
 				<StyledUserName>{userData.id}</StyledUserName>
 			</StyledUser>
-			<StyledFollowButton
-				$following={isFollowing}
-				onClick={handleFollowButtonClick}
-			>
-				{isFollowing ? '팔로잉' : '팔로우'}
-			</StyledFollowButton>
+			{userData.id !== user?.githubId ? (
+				<StyledFollowButton
+					$following={isFollowing}
+					onClick={handleFollowButtonClick}
+				>
+					{isFollowing ? '팔로잉' : '팔로우'}
+				</StyledFollowButton>
+			) : (
+				<div />
+			)}
 		</StyledFollowUser>
 	);
 };
