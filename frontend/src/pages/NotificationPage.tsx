@@ -63,7 +63,7 @@ const NotificationPage = () => {
 		UnionNotificationType[]
 	>([]);
 
-	const { data } = useQuery(['/notifications'], () =>
+	const { data, refetch } = useQuery(['/notifications'], () =>
 		authHttp.get('notifications').then((res) => res as UnionNotificationType[]),
 	);
 
@@ -92,14 +92,20 @@ const NotificationPage = () => {
 						<StyledNotiDiv>
 							<StyleNoti>이번 주</StyleNoti>
 						</StyledNotiDiv>
-						<NotiFollow notificationList={recentNotifications} />
+						<NotiFollow
+							notificationList={recentNotifications}
+							refetch={refetch}
+						/>
 					</StyledWeekNotiContainer>
 					{pastNotifications.length && (
 						<StyledWeekNotiContainer>
 							<StyledNotiDiv>
 								<StyleNoti>이전 알림</StyleNoti>
 							</StyledNotiDiv>
-							<NotiFollow notificationList={pastNotifications} />
+							<NotiFollow
+								notificationList={pastNotifications}
+								refetch={refetch}
+							/>
 						</StyledWeekNotiContainer>
 					)}
 				</>

@@ -1,4 +1,9 @@
 import { colors } from '@constants/colors';
+import {
+	QueryObserverResult,
+	RefetchOptions,
+	RefetchQueryFilters,
+} from '@tanstack/react-query';
 import { UnionNotificationType } from '@typedef/notification/notification.types';
 import { getTimeAgo } from '@utils/date';
 import { authHttp } from '@utils/http';
@@ -179,9 +184,12 @@ const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 
 type Props = {
 	notificationList: UnionNotificationType[];
+	refetch: <TPageData>(
+		options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
+	) => Promise<QueryObserverResult<UnionNotificationType[], unknown>>;
 };
 
-const NotiFollow = ({ notificationList }: Props) => {
+const NotiFollow = ({ notificationList, refetch }: Props) => {
 	const navigation = useNavigate();
 
 	const onClickFollowButton = useCallback(
@@ -192,6 +200,7 @@ const NotiFollow = ({ notificationList }: Props) => {
 			if (!isFollow) {
 				authHttp.post(`relations/follow?to=${sender}`);
 			}
+			refetch();
 		},
 		[],
 	);
@@ -219,12 +228,12 @@ const NotiFollow = ({ notificationList }: Props) => {
 										console.log(postId);
 
 										if (boardType === 'heulgit') {
-											navigation(`/repo/${Number(postId)}}`);
+											navigation(`/repo/${Number(postId)}`);
 										}
 										if (boardType === 'freeboard') {
-											navigation(`/community/free/${Number(postId)}}`);
+											navigation(`/community/free/${Number(postId)}`);
 										} else {
-											navigation(`/community/${boardType}/${Number(postId)}}`);
+											navigation(`/community/${boardType}/${Number(postId)}`);
 										}
 									}}
 								>{`님이 게시물에 좋아요를 했습니다.`}</StyledNoficationContent>
@@ -247,7 +256,9 @@ const NotiFollow = ({ notificationList }: Props) => {
 								>
 									{noti.sender.githubId}
 								</StyledSenderName>
-								<StyledNoficationContent>{`님이 당신을 팔로우했습니다.`}</StyledNoficationContent>
+								<StyledNoficationContent
+									style={{ cursor: 'default' }}
+								>{`님이 당신을 팔로우했습니다.`}</StyledNoficationContent>
 								<StyledNotificationDate>
 									{getTimeAgo(noti.createdDate)}
 								</StyledNotificationDate>
@@ -282,12 +293,12 @@ const NotiFollow = ({ notificationList }: Props) => {
 										const postId = notiType[1].trim();
 										console.log(postId);
 										if (boardType === 'heulgit') {
-											navigation(`/repo/${Number(postId)}}`);
+											navigation(`/repo/${Number(postId)}`);
 										}
 										if (boardType === 'freeboard') {
-											navigation(`/community/free/${Number(postId)}}`);
+											navigation(`/community/free/${Number(postId)}`);
 										} else {
-											navigation(`/community/${boardType}/${Number(postId)}}`);
+											navigation(`/community/${boardType}/${Number(postId)}`);
 										}
 									}}
 								>{`님이 게시물에 댓글을 남겼습니다: ${noti.content}`}</StyledNoficationContent>
@@ -318,12 +329,12 @@ const NotiFollow = ({ notificationList }: Props) => {
 										console.log(postId);
 
 										if (boardType === 'heulgit') {
-											navigation(`/repo/${Number(postId)}}`);
+											navigation(`/repo/${Number(postId)}`);
 										}
 										if (boardType === 'freeboard') {
-											navigation(`/community/free/${Number(postId)}}`);
+											navigation(`/community/free/${Number(postId)}`);
 										} else {
-											navigation(`/community/${boardType}/${Number(postId)}}`);
+											navigation(`/community/${boardType}/${Number(postId)}`);
 										}
 									}}
 								>{`님이 당신을 언급했습니다: ${noti.content}`}</StyledNoficationContent>
