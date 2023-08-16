@@ -1,8 +1,10 @@
 import Header from '@components/common/Header';
 import NotiFollow from '@components/notification/NotiFollow';
 import { useQuery } from '@tanstack/react-query';
+import { UnionNotificationType } from '@typedef/notification/notification.types';
+import { isWithinOneMonth } from '@utils/date';
 import { authHttp } from '@utils/http';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 // 알림 전체 컨테이너
@@ -41,16 +43,32 @@ const StyledNotiDiv = styled.div`
 const StyleNoti = styled.div`
 	display: flex;
 	justify-content: start;
-
 	margin-left: 18px;
 `;
 
 const NotificationPage = () => {
-	const { data } = useQuery(['/notifications'], () => {
-		authHttp
-			.get('notifications')
-			.then((res) => console.log('[알림 테스트]', res));
-	});
+	const [recentNotifications, setRecentNotifications] = useState<
+		UnionNotificationType[]
+	>([]);
+	const [pastNotifications, setPastNotifications] = useState<
+		UnionNotificationType[]
+	>([]);
+
+	const { data } = useQuery(['/notifications'], () =>
+		authHttp.get('notifications').then((res) => res as UnionNotificationType[]),
+	);
+
+	useEffect(() => {
+		if (data) {
+			for (const noti of data) {
+				if (isWithinOneMonth(noti.createdDate)) {
+					setRecentNotifications((prev) => [...prev, noti]);
+					continue;
+				}
+				setPastNotifications((prev) => [...prev, noti]);
+			}
+		}
+	}, [data]);
 
 	console.log(data);
 
@@ -61,13 +79,13 @@ const NotificationPage = () => {
 				<StyledNotiDiv>
 					<StyleNoti>이번 주</StyleNoti>
 				</StyledNotiDiv>
-				<NotiFollow />
+				<NotiFollow notificationList={recentNotifications} />
 			</StyledWeekNotiContainer>
 			<StyledWeekNotiContainer>
 				<StyledNotiDiv>
 					<StyleNoti>이전 알림</StyleNoti>
 				</StyledNotiDiv>
-				<NotiFollow />
+				<NotiFollow notificationList={pastNotifications} />
 			</StyledWeekNotiContainer>
 		</StyledNotificationContainer>
 	);
