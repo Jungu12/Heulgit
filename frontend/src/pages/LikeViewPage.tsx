@@ -1,8 +1,9 @@
 import Header from '@components/common/Header';
 import { colors } from '@constants/colors';
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { styled } from 'styled-components';
+import { useLocation } from 'react-router-dom';
+import { UserType } from '@typedef/common.types';
 
 // 좋아요 한 사람 페이지 전체 컨테이너
 const StyledLikeViewPageContainer = styled.div`
@@ -133,10 +134,15 @@ const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 	color: ${(props) => (props.$following ? 'black' : 'white')};
 `;
 
+type NavigateProps = {
+	state: {
+		user: UserType[];
+	};
+};
+
 const LikeViewPage: React.FC = () => {
 	const [isFollowing, setIsFollowing] = useState(false);
-	const location = useLocation();
-	console.log(location.state.user);
+	const { state } = useLocation() as NavigateProps; // useLocation() 훅 사용
 
 	const handleFollowButtonClick = () => {
 		setIsFollowing((prevState) => !prevState);
@@ -147,23 +153,25 @@ const LikeViewPage: React.FC = () => {
 			<Header title="좋아요"></Header>
 			<StyledLikeUserContainer>
 				<StyledLikeUserP>좋아하는 사람</StyledLikeUserP>
-				<StyledLikeUsersCount>22명</StyledLikeUsersCount>
+				<StyledLikeUsersCount>{state.user.length}</StyledLikeUsersCount>
 			</StyledLikeUserContainer>
 			<StyledUserContainer>
-				<StyledLikeUser>
-					<StyledUserProfileContainer>
-						<StyledProfileImg />
-						<StyledUserName>Pposil</StyledUserName>
-					</StyledUserProfileContainer>
-					<StyledFollowButtonContainer>
-						<StyledFollowButton
-							$following={isFollowing}
-							onClick={handleFollowButtonClick}
-						>
-							{isFollowing ? '팔로잉' : '팔로우'}
-						</StyledFollowButton>
-					</StyledFollowButtonContainer>
-				</StyledLikeUser>
+				{state.user.map((user, index) => (
+					<StyledLikeUser key={index}>
+						<StyledUserProfileContainer>
+							<StyledProfileImg src={user.avatarUrl} alt="Profile" />
+							<StyledUserName>{user.githubId}</StyledUserName>
+						</StyledUserProfileContainer>
+						<StyledFollowButtonContainer>
+							<StyledFollowButton
+								$following={isFollowing}
+								onClick={handleFollowButtonClick}
+							>
+								{isFollowing ? '팔로잉' : '팔로우'}
+							</StyledFollowButton>
+						</StyledFollowButtonContainer>
+					</StyledLikeUser>
+				))}
 			</StyledUserContainer>
 		</StyledLikeViewPageContainer>
 	);
