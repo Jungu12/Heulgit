@@ -140,13 +140,13 @@ const StyledUserContainer = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-`;
 
-const StyledUserAvatar = styled.img`
-	width: 48px;
-	height: 48px;
-	margin-right: 16px;
-	border-radius: 50%;
+	img {
+		width: 48px;
+		height: 48px;
+		margin-right: 16px;
+		border-radius: 50%;
+	}
 `;
 
 const StyledUserID = styled.img`
@@ -285,16 +285,20 @@ const SearchResultPage = () => {
 					사용자
 				</StyledCategoryItem>
 			</StyledCategory>
-			<StyledFilter
-				ref={dropDownRef}
-				onClick={() => setIsViewOptionOpen(!isViewOptionOpen)}
-			>
-				<StyledFilterText>{seletedFilter}</StyledFilterText>
-				<img
-					src={isViewOptionOpen ? images.arrowUpBlack : images.arrowDownBlack}
-					alt="filter"
-				/>
-			</StyledFilter>
+			{seletedCategory === '사용자' ? (
+				''
+			) : (
+				<StyledFilter
+					ref={dropDownRef}
+					onClick={() => setIsViewOptionOpen(!isViewOptionOpen)}
+				>
+					<StyledFilterText>{seletedFilter}</StyledFilterText>
+					<img
+						src={isViewOptionOpen ? images.arrowUpBlack : images.arrowDownBlack}
+						alt="filter"
+					/>
+				</StyledFilter>
+			)}
 			<StyledDropDown className={isViewOptionOpen ? 'active' : ''}>
 				<li onClick={() => onClickFilter('타이틀')}>타이틀</li>
 				<li onClick={() => onClickFilter('작성자')}>작성자</li>
@@ -359,7 +363,7 @@ const SearchResultPage = () => {
 					<StyledUserContainer>
 						{userList.map((user) => (
 							<div key={user.githubId}>
-								<StyledUserAvatar src={user.avatarUrl} alt="avatar" />
+								<img src={user.avatarUrl} alt="" />
 								<StyledUserID>{user.githubId}</StyledUserID>
 							</div>
 						))}
