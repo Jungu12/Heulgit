@@ -4,14 +4,14 @@ const isWindows = window.navigator.platform.includes('Win');
 
 // 맥과 윈도우에 따라 다른 폰트 경로 설정
 const fontPath = isWindows
-	? './fonts/RixYeoljeongdo_Regular_Windows.woff' // 윈도우 폰트 경로
-	: './fonts/RixYeoljeongdo_Regular_Mac.woff'; // 맥 폰트 경로
+	? './fonts/MaplestoryBold.woff2' // 윈도우 폰트 경로
+	: './fonts/MaplestoryOTFBold.woff2'; // 맥 폰트 경로
 
 // 외부에서 import 할거니까 모듈 내보내자~!
 export default createGlobalStyle`
 @font-face {
     font-family: 'RixYeoljeongdo_Regular';
-    src: url('${fontPath}') format('woff');
+    src: url('${fontPath}') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
