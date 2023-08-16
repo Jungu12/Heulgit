@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.HeulgitException;
 import morningrolecall.heulgit.heulgit.domain.Heulgit;
 import morningrolecall.heulgit.heulgit.domain.HeulgitComment;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitDetailResponse;
@@ -64,42 +66,31 @@ public class HeulgitService {
 		if ("likes".equals(sort)) {
 			if (language != null && startDate != null && endDate != null) {
 				heulgits = heulgitRepository.findSortedByLikesSearchByLanguageAndDateHeulgits(language, startDate, endDate, pageable);
-				System.out.println("좋아요순, 언어, 날짜");
 			} else if (language != null) {
 				heulgits = heulgitRepository.findSortedByLikesSearchByLanguageHeulgits(language, pageable);
-				System.out.println("좋아요순, 언어");
 			} else if (startDate != null && endDate != null){
-				System.out.println("좋아요순, 날짜");
 				heulgits = heulgitRepository.findSortedByLikesSearchByDate(startDate,endDate,pageable);
 			}  else {
-				System.out.println("좋아요순");
 				heulgits = heulgitRepository.findSortedByLikesHeulgits(pageable);
 			}
 		} else if ("stars".equals(sort)) {
 			if (language != null && startDate != null && endDate != null) {
 				heulgits = heulgitRepository.findSortedByStarsSearchByLanguageAndDateHeulgits(language, startDate, endDate, pageable);
-				System.out.println("스타 많은 순 ,언어, 날짜");
 
 			} else if (language != null) {
 				heulgits = heulgitRepository.findSortedByStarsSearchByLanguageHeulgits(language, pageable);
-				System.out.println("스타 많은 순, 언어");
 			} else if( startDate != null && endDate != null) {
-				System.out.println("스타 많은 순, 날짜");
 				heulgits = heulgitRepository.findSortedByStarsSearchByDateHeulgits(startDate,endDate,pageable);
 			} else {
 				heulgits = heulgitRepository.findSortedByStarsHeulgits(pageable);
-				System.out.println("스타 많은 순");
 			}
 		} else if (language != null && startDate != null && endDate != null) {
 			heulgits = heulgitRepository.findSearchByLanguageAndDateHeulgits(language, startDate, endDate, pageable);
-			System.out.println("언어, 날짜");
 
 		} else if (language != null) {
 			heulgits = heulgitRepository.findSearchByLanguageHeulgits(language, pageable);
-			System.out.println("언어");
 		} else if (startDate != null && endDate != null) {
 			heulgits = heulgitRepository.findSearchByDateHeulgits(startDate, endDate, pageable);
-			System.out.println("날짜");
 		} else {
 			heulgits = heulgitRepository.findRandomHeulgits(pageable);
 
@@ -120,7 +111,7 @@ public class HeulgitService {
 	 */
 	public HeulgitDetailResponse findHeulgit(Long heulgitId){
 		Heulgit heulgit = heulgitRepository.findHeulgitAndHeulgitCommentsByHeulgitId(heulgitId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new HeulgitException(ExceptionCode.POST_NOT_FOUND));
 
 		heulgit.increaseView();
 
@@ -163,14 +154,13 @@ public class HeulgitService {
 	 */
 	public void likeHeulgit(String githubId, Long heulgitId) {
 		Heulgit heulgit = heulgitRepository.findHeulgitByHeulgitId(heulgitId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new HeulgitException(ExceptionCode.POST_NOT_FOUND));
 
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(()-> new NoResultException("해당 사용자를 찾을 수 없습니다."));
+			.orElseThrow(()-> new HeulgitException(ExceptionCode.USER_NOT_FOUND));
 
 		if(heulgit.getLikedUsers().contains(user)){
-			System.out.println("이미 좋아요를 눌렀음");
-			return;
+			throw new HeulgitException(ExceptionCode.LIKE_ALREADY_EXIST);
 		}
 		heulgit.addLikeUser(user);
 
@@ -187,14 +177,13 @@ public class HeulgitService {
 	 * */
 	public void unlikeHeulgit(String githubId, Long heulgitId){
 		Heulgit heulgit = heulgitRepository.findHeulgitByHeulgitId(heulgitId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new HeulgitException(ExceptionCode.POST_NOT_FOUND));
 
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(()-> new NoResultException("해당 사용자를 찾을 수 없습니다."));
+			.orElseThrow(()-> new HeulgitException(ExceptionCode.USER_NOT_FOUND));
 
 		if(!heulgit.getLikedUsers().contains(user)){
-			System.out.println("좋아요를 누르지 않았음");
-			return;
+			new HeulgitException(ExceptionCode.LIKE_NOT_EXIST);
 		}
 
 		heulgit.removeLikeUser(user);
@@ -238,7 +227,7 @@ public class HeulgitService {
 	 * */
 	public Slice<HeulgitDetailResponse> findMyHeulgits(String githubId, int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new HeulgitException(ExceptionCode.POST_NOT_FOUND));
 
 		Slice<Heulgit> heulgits = heulgitRepository.findSliceByGithubId(githubId,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
@@ -262,7 +251,7 @@ public class HeulgitService {
 	 * 내가 좋아요한 레포 목록 반환*/
 	public Slice<HeulgitDetailResponse> findMyLikeHeulgits(String githubId, int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new HeulgitException(ExceptionCode.USER_NOT_FOUND));
 		Slice<Heulgit> heulgits = heulgitRepository.findByLikedUsersContains(user,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return new SliceImpl<>(toResponse(heulgits), heulgits.getPageable(), heulgits.hasNext());
