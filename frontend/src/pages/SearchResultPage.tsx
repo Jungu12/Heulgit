@@ -147,8 +147,9 @@ const StyledUserItem = styled.div`
 	display: flex;
 	flex: 1;
 	align-items: center;
-	border-bottom: 1px solid ${colors.greyScale.grey3};
 	height: 80px;
+	width: 100%;
+	padding: 12px 16px;
 
 	img {
 		width: 48px;
@@ -372,7 +373,10 @@ const SearchResultPage = () => {
 				{seletedCategory === '사용자' && userList && (
 					<StyledUserContainer>
 						{userList.map((user) => (
-							<StyledUserItem key={user.githubId}>
+							<StyledUserItem
+								key={user.githubId}
+								onClick={() => navigation(`/profiles/${user.githubId}`)}
+							>
 								<img src={user.avatarUrl} alt="" />
 								<StyledUserID>{user.githubId}</StyledUserID>
 							</StyledUserItem>
