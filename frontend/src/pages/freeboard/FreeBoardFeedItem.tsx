@@ -165,8 +165,14 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${1}`);
-	}, []);
+		if (feed.user.githubId === githubId) {
+			// 작성자인 경우 작성자 페이지로 이동
+			navigation(`/profiles/${githubId}`);
+		} else {
+			// 작성자가 아닌 경우 해당 유저의 프로필 페이지로 이동
+			navigation(`/profiles/${feed.user.githubId}`);
+		}
+	}, [feed.user.githubId, githubId]);
 
 	useEffect(() => {
 		console.log(feed);
