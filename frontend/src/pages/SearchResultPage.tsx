@@ -134,18 +134,28 @@ const StyledContentList = styled.section`
 	flex: 1;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	flex-direction: column;
 `;
 
 const StyledUserContainer = styled.div`
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
 	align-items: center;
+`;
+
+const StyledUserItem = styled.div`
+	display: flex;
+	flex: 1;
+	align-items: center;
+	border-bottom: 1px solid ${colors.greyScale.grey3};
+	height: 80px;
 
 	img {
 		width: 48px;
 		height: 48px;
 		margin-right: 16px;
 		border-radius: 50%;
+		margin-right: 12px;
 	}
 `;
 
@@ -362,10 +372,10 @@ const SearchResultPage = () => {
 				{seletedCategory === '사용자' && userList && (
 					<StyledUserContainer>
 						{userList.map((user) => (
-							<div key={user.githubId}>
+							<StyledUserItem key={user.githubId}>
 								<img src={user.avatarUrl} alt="" />
 								<StyledUserID>{user.githubId}</StyledUserID>
-							</div>
+							</StyledUserItem>
 						))}
 					</StyledUserContainer>
 				)}
