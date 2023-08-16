@@ -37,6 +37,7 @@ public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long> {
 
 	Slice<FreeBoard> findSliceByUser_GithubId(String id, Pageable pageable);
 	List<FreeBoard> findByUser_GithubId(String id);
+	Slice<FreeBoard> findSliceByUser_GithubIdContaining(String id, Pageable pageable);
 
 	@Query("SELECT f FROM FreeBoard f WHERE f.user.githubId = :id ORDER BY SIZE(f.likedUsers) DESC, f.updatedDate DESC")
 	Page<FreeBoard> findByUserNameSortedByLikesFreeBoards(@Param("id") String id, Pageable pageable);

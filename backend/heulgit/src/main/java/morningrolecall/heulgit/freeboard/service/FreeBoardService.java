@@ -360,7 +360,7 @@ public class FreeBoardService {
 		// }
 
 		// 최신 순
-		Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByUser_GithubId(keyword,
+		Slice<FreeBoard> freeBoards = freeBoardRepository.findSliceByUser_GithubIdContaining(keyword,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());
 
