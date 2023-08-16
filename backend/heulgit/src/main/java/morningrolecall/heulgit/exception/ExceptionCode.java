@@ -37,9 +37,11 @@ public enum ExceptionCode {
 	ALREADY_FOLLOWED(HttpStatus.CONFLICT, "이미 팔로우 관계입니다."),
 
 	/* GM */
-	CHAT_MESSAGE_NOT_EXIST(HttpStatus.NOT_FOUND, "메세지가 존재하지 않습니다.");
+	CHAT_MESSAGE_NOT_EXIST(HttpStatus.NOT_FOUND, "메세지가 존재하지 않습니다."),
 
 	/* Notification */
+	RECEIVER_USER_MISMATCH(HttpStatus.FORBIDDEN,"알림 받는 사용자가 아닙니다."),
+	NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND,"알림을 찾을 수 없습니다.");
 
 	private final HttpStatus status;
 	private final String message;

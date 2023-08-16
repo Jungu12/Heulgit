@@ -309,8 +309,17 @@ public class NotificationService {
 	 * @param notificationId
 	 * */
 	@Transactional
-	public void changeNotificationState(Long notificationId) {
+	public void changeNotificationState(Long notificationId,String githubId) {
 		logger.debug("changeNotificationState(), notificationId = {}, ", notificationId);
+		User user = userRepository.findUserByGithubId(githubId)
+				.orElseThrow(()->new NotificationException(ExceptionCode.USER_NOT_FOUND));
+		Notification notification = notificationRepository.findById(notificationId)
+			.orElseThrow(()-> new NotificationException(ExceptionCode.NOTIFICATION_NOT_FOUND));
+		if(!user.getGithubId().equals(notification.getReceiver().getGithubId())){
+			throw new NotificationException(ExceptionCode.RECEIVER_USER_MISMATCH);
+		}
+
+		// if(user.getGithubId())
 		notificationRepository.updateHasReadById(notificationId);
 	}
 
