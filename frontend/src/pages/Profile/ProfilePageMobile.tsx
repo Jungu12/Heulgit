@@ -131,7 +131,7 @@ const ProfilePageMobile = ({
 	const [view, setView] = useState(false);
 	const [userInfo, setUserInfo] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
-	const [isFollowing, setIsFollowing] = useState<boolean>();
+	const [isFollowing, setIsFollowing] = useState<FollowType>();
 
 	// 유저 정보 불러오기
 	useEffect(() => {
@@ -165,14 +165,14 @@ const ProfilePageMobile = ({
 				.then((response) => {
 					console.log(isFollowing); // 담기는지 확인
 					console.log('팔로우 정보 성공:', response);
-					setIsFollowing(response.follow);
-					console.log(isFollowing);
+					setIsFollowing(response);
 				})
 				.catch((error) => {
 					console.error('팔로우 정보 실패:', error);
 				});
 		}, []);
 	}
+	console.log('팔로잉 정보', isFollowing);
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
@@ -181,8 +181,7 @@ const ProfilePageMobile = ({
 			authHttp
 				.post(`relations/follow?to=${userId}`)
 				.then(() => {
-					setIsFollowing(!isFollowing);
-					console.log('팔로우 성공', isFollowing);
+					console.log('팔로우 성공');
 				})
 				.catch((error) => {
 					console.error('팔로우 실패:', error);
@@ -192,8 +191,7 @@ const ProfilePageMobile = ({
 			authHttp
 				.delete(`relations/unfollow?to=${userId}`)
 				.then(() => {
-					setIsFollowing(!isFollowing);
-					console.log('언팔로우 성공', isFollowing);
+					console.log('언팔로우 성공');
 				})
 				.catch((error) => {
 					console.error('언팔로우 실패', error);
