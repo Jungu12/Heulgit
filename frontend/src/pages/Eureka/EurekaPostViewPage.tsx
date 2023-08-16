@@ -196,7 +196,10 @@ const EurekaPostViewPage = () => {
 		navigation('like');
 	}, [navigation]);
 
+	console.log('userId', feed?.user.githubId);
+
 	const onClickUserProfile = useCallback(() => {
+		console.log('userId', feed?.user.githubId);
 		navigation(`/profiles/${feed?.user.githubId}`);
 	}, []);
 
