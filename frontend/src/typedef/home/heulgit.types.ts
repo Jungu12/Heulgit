@@ -44,6 +44,6 @@ export type ProgrammingLanguageType = {
 export type HeulgitCommentWriteType = {
 	content: string;
 	heulgitId: number;
-	mentioedFollowers: [];
+	mentionedFollowers: [];
 	parentId: null | number;
 };

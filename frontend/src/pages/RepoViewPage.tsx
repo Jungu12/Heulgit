@@ -160,7 +160,7 @@ const RepoViewPage = () => {
 			await authHttp.post<HeulgitCommentWriteType>('h-comments/comments', {
 				content: commentInput,
 				heulgitId: repoId,
-				mentioedFollowers: mentionList,
+				mentionedFollowers: mentionList,
 				parentId: null,
 			});
 			setCommentInput('');

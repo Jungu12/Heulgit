@@ -16,6 +16,15 @@ const Separation = styled.div`
 	margin-top: 20px;
 `;
 
+const StyledCommentEmpty = styled.div`
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	font-weight: 700;
+`;
+
 type Props = {
 	commentList: EurekaCommentType[];
 	onClickDelete: (commentId: number) => void;
@@ -24,12 +33,16 @@ type Props = {
 const EurekaCommentList = ({ commentList, onClickDelete }: Props) => {
 	return (
 		<StyledCommentListContainer>
-			{commentList.map((comment) => (
-				<div key={comment.commentId}>
-					<EurekaComment comment={comment} onClickDelete={onClickDelete} />
-					<Separation />
-				</div>
-			))}
+			{commentList.length ? (
+				commentList.map((comment) => (
+					<div key={comment.commentId}>
+						<EurekaComment comment={comment} onClickDelete={onClickDelete} />
+						<Separation />
+					</div>
+				))
+			) : (
+				<StyledCommentEmpty>아직 댓글이 없습니다.</StyledCommentEmpty>
+			)}
 		</StyledCommentListContainer>
 	);
 };
