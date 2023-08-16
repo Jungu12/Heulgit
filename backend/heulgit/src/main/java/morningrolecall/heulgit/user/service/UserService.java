@@ -88,6 +88,10 @@ public class UserService {
 			.orElseThrow(() -> new UserException(ExceptionCode.USER_NOT_FOUND));
 		return user;
 	}
+	public List<User> findContainUser(String githubId) {
+
+		return userRepository.findByGithubIdContaining(githubId);
+	}
 
 	public List<UserCommitInfoResponse> findCommitInfo(String githubId) {
 		// 해당 사용자의 1달 내 update된 repo를 긁어 온다(공식 api)
