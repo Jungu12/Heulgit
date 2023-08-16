@@ -99,7 +99,7 @@ const StyledCreateButtonMobile = styled.button`
 	display: flex;
 	position: fixed;
 	bottom: 100px;
-	right: 50px;
+	right: 40px;
 
 	width: 56px;
 	height: 56px;
