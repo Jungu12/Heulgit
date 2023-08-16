@@ -110,13 +110,16 @@ const FreeBoardFeedItemListMobile = ({
 		loadCommentList,
 	]);
 
-	const onClickDelete = useCallback(() => {
-		if (confirm('정말 삭제하시겠습니까?')) {
-			authHttp.delete(`f-comments/${seletedComment}`).then(() => {
-				loadCommentList();
-			});
-		}
-	}, [authHttp, seletedComment]);
+	const onClickDelete = useCallback(
+		(commentId: number) => {
+			if (confirm('정말 삭제하시겠습니까?')) {
+				authHttp.delete(`f-comments/${commentId}`).then(() => {
+					loadCommentList();
+				});
+			}
+		},
+		[authHttp, loadCommentList],
+	);
 
 	useEffect(() => {
 		if (seletedComment >= 0) {
