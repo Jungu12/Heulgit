@@ -36,6 +36,7 @@ public class NotificationController {
 	@GetMapping(value ="/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public SseEmitter connect(@AuthenticationPrincipal String githubId, @RequestHeader(value = "Last-Event-ID",required = false,
 		defaultValue = "") String lastEventId){
+		logger.debug("connect(), who={}",githubId);
 		return notificationService.connect(githubId,lastEventId);
 	}
 
@@ -53,18 +54,22 @@ public class NotificationController {
 
 
 	@GetMapping("/{githubId}")
-	public ResponseEntity<?> userNotifications(@AuthenticationPrincipal String githubId){
+	public ResponseEntity<?> userNotification(@AuthenticationPrincipal String githubId){
+		logger.debug("userNotification(), who={}",githubId);
 		return ResponseEntity.ok().body(notificationService.findNotification(githubId));
+
 	}
 
 	@GetMapping("/isread/{notificationId}")
 	public ResponseEntity<?> changeReadState(@PathVariable Long notificationId){
 		notificationService.changeNotificationState(notificationId);
+		logger.debug("changeReadState(), notificaiton={}", notificationId  );
 		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/count")
 	public ResponseEntity<?> getUnreadCount(@AuthenticationPrincipal String githubId){
+		logger.debug("getUnreadCount(), who={}",githubId);
 		return ResponseEntity.ok().body(notificationService.getUnreadNotificationCount(githubId));
 	}
 

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.HeulgitCommentException;
 import morningrolecall.heulgit.heulgit.domain.Heulgit;
 import morningrolecall.heulgit.heulgit.domain.HeulgitComment;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitCommentDto;
@@ -80,14 +82,13 @@ public class HeulgitCommentService {
 	@Transactional
 	public void removeComment(String githubId, Long commentId) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(()-> new NoResultException("해당 사용자가 등록되어 있지 않습니다"));
+			.orElseThrow(()-> new HeulgitCommentException(ExceptionCode.USER_NOT_FOUND));
 
 		HeulgitComment heulgitComment = heulgitCommentRepository.findHeulgitCommentByCommentId(commentId)
-			.orElseThrow(() -> new NoResultException("해당 댓글은 존재하지 않습니다."));
+			.orElseThrow(() -> new HeulgitCommentException(ExceptionCode.COMMENT_NOT_FOUND));
 
 		if (!user.getGithubId().equals(heulgitComment.getUser().getGithubId())) {
-			System.out.println("작성자와 사용자가 일치하지 않습니다.");
-			return;
+			throw new HeulgitCommentException(ExceptionCode.WRITER_USER_MISMATCH);
 		}
 
 		heulgitCommentRepository.delete(heulgitComment);
@@ -96,14 +97,14 @@ public class HeulgitCommentService {
 	public List<HeulgitComment> findComments(Long heulgitId){
 		return heulgitCommentRepository.findHeulgitCommentsByHeulgitOrderByUpdatedDateDesc(
 			heulgitRepository.findHeulgitByHeulgitId(heulgitId)
-				.orElseThrow(()-> new NoResultException("헤당 게시물이 존재 하지 않습니다")));
+				.orElseThrow(()-> new HeulgitCommentException(ExceptionCode.POST_NOT_FOUND)));
 	}
 
 	/**
 	 * 부모 댓글 조회*/
 	public Slice<ParentCommentDto> findParentComments(Long heulgitId,int pages){
 		Heulgit heulgit =heulgitRepository.findHeulgitByHeulgitId(heulgitId)
-			.orElseThrow(()-> new NoResultException("헤당 게시물이 존재 하지 않습니다"));
+			.orElseThrow(()-> new HeulgitCommentException(ExceptionCode.POST_NOT_FOUND));
 
 		Slice<Object []> comments= heulgitCommentRepository.findByHeulgitAndParentCommentIsNull(heulgit,PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 
@@ -112,9 +113,9 @@ public class HeulgitCommentService {
 	/** 자식 댓글 조회*/
 	public Slice<HeulgitCommentResponse> findChildComments(Long heulgitId, Long parentId, int pages){
 		Heulgit heulgit =heulgitRepository.findHeulgitByHeulgitId(heulgitId)
-			.orElseThrow(()-> new NoResultException("헤당 게시물이 존재 하지 않습니다"));
+			.orElseThrow(()-> new HeulgitCommentException(ExceptionCode.POST_NOT_FOUND));
 		HeulgitComment parent = heulgitCommentRepository.findHeulgitCommentByCommentId(parentId)
-			.orElseThrow(()-> new NoResultException("헤당 댓글이 존재 하지 않습니다"));
+			.orElseThrow(()-> new HeulgitCommentException(ExceptionCode.PARENT_COMMENT_NOT_FOUND));
 
 		Slice<HeulgitComment> comments = heulgitCommentRepository.findChildCommentsByParentComment(parent,PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return new SliceImpl<>(toCommentResponse(comments),comments.getPageable(),comments.hasNext());
@@ -126,7 +127,7 @@ public class HeulgitCommentService {
 	 * 2. 페이지네이션 처리*/
 	public Slice<HeulgitComment> findMyComments(String githubId, int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new HeulgitCommentException(ExceptionCode.USER_NOT_FOUND));
 		Slice<HeulgitComment> comments = heulgitCommentRepository.findHeulgitCommentsByUserOrderByUpdatedDateDesc(user, PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return  comments;
 	}
