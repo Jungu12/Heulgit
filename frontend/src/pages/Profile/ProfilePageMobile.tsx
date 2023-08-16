@@ -312,12 +312,13 @@ const ProfilePageMobile = ({
 					</Sdiv>
 				</SboxTop>
 			)}
-			if(userId === user?.githubId)
-			{
+			{userId === user?.githubId ? (
 				<StyledFooter>
 					<Navigation />
 				</StyledFooter>
-			}
+			) : (
+				<></>
+			)}
 		</StyledProfilePage>
 	);
 };
