@@ -64,7 +64,9 @@ const EurekaFeedItemListMobile = ({
 	const onHandleComment: OnChangeHandlerFunc = useCallback(
 		(event, newValue, newPlainTextValue, mentions) => {
 			setCommentInput(newPlainTextValue);
-			setMentionList(mentions.map((mention) => mention.display));
+			setMentionList(
+				mentions.map((mention) => mention.display.replace(/@|\s/g, '')),
+			);
 			console.log(`${newValue} ${newPlainTextValue} ${mentions}`);
 		},
 		[],

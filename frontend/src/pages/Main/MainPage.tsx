@@ -38,6 +38,7 @@ const MainPage = () => {
 	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [endDate, setEndDate] = useState<Date | null>(null);
 	const [commentPage, setCommentPage] = useState(1);
+	const [mentionList, setMentionList] = useState<string[]>([]);
 
 	const loadFeedList = useCallback(
 		async (cur: number) => {
@@ -115,21 +116,12 @@ const MainPage = () => {
 		setIsCommentOpen(true);
 	}, []);
 
-	// const onHandleComment = useCallback(
-	// 	(
-	// 		event: React.ChangeEvent<HTMLInputElement>,
-	// 		newValue: string,
-	// 		newPlainTextValue: string,
-	// 	) => {
-	// 		setCommentInput(newPlainTextValue);
-	// 	},
-	// 	[],
-	// );
-
 	const onHandleComment: OnChangeHandlerFunc = useCallback(
 		(event, newValue, newPlainTextValue, mentions) => {
 			setCommentInput(newPlainTextValue);
-			console.log(`${newValue} ${newPlainTextValue} ${mentions}`);
+			setMentionList(
+				mentions.map((mention) => mention.display.replace(/@|\s/g, '')),
+			);
 		},
 		[],
 	);
@@ -212,7 +204,7 @@ const MainPage = () => {
 			await authHttp.post<HeulgitCommentWriteType>('e-comments/comments', {
 				content: commentInput,
 				eurekaId: selelctedComment,
-				mentioedFollowers: [],
+				mentioedFollowers: mentionList,
 				parentId: null,
 			});
 			setCommentInput('');

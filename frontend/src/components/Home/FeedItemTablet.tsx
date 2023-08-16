@@ -42,7 +42,7 @@ const StyledUserMarker = styled.img`
 const StyledUpdateTime = styled.p`
 	color: ${colors.greyScale.grey4};
 	font-size: 12px;
-	font-weight: 400;
+	font-weight: 500;
 	margin-right: 12px;
 `;
 
