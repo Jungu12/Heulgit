@@ -25,8 +25,9 @@ const StyledProfileHigh = styled.div`
 const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
-	align-items: end;
-	height: 150px;
+	/* align-items: end; */
+	margin-top: 40px;
+	min-height: 150px;
 `;
 const StyledUserImage = styled.img`
 	display: flex;
@@ -128,8 +129,9 @@ const ProfilePageMobile = ({
 	const { userId } = useParams();
 	const user = useSelector((state: RootState) => state.user.user);
 	const [view, setView] = useState(false);
+	const [userInfo, setUserInfo] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
-	const [isFollowing, setIsFollowing] = useState(false);
+	const [isFollowing, setIsFollowing] = useState<boolean>();
 
 	// 유저 정보 불러오기
 	useEffect(() => {
@@ -138,6 +140,17 @@ const ProfilePageMobile = ({
 			.then((response) => {
 				console.log('유저 정보 성공:', response);
 				setLoadedUser(response);
+
+				// 추가 정보가 있을 경우에만 view를 true로 설정
+				if (
+					response.name !== 'null' ||
+					response.bio !== 'null' ||
+					response.company !== 'null' ||
+					response.location !== 'null' ||
+					response.blog !== ''
+				) {
+					setUserInfo(true);
+				}
 			})
 			.catch((error) => {
 				console.error('유저 정보 실패:', error);
@@ -161,13 +174,12 @@ const ProfilePageMobile = ({
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
-		setIsFollowing(!isFollowing);
-
 		if (!isFollowing) {
 			// 팔로우
 			authHttp
 				.post(`relations/follow?to=${userId}`)
 				.then(() => {
+					setIsFollowing(!isFollowing);
 					console.log('팔로우 성공', isFollowing);
 				})
 				.catch((error) => {
@@ -178,6 +190,7 @@ const ProfilePageMobile = ({
 			authHttp
 				.delete(`relations/unfollow?to=${userId}`)
 				.then(() => {
+					setIsFollowing(!isFollowing);
 					console.log('언팔로우 성공', isFollowing);
 				})
 				.catch((error) => {
@@ -195,48 +208,47 @@ const ProfilePageMobile = ({
 						<div className="user-name">{loadedUser?.githubId}</div>
 						<div className="user-follow">
 							<StyledFollowing
-								onClick={() =>
-									navigation(`/profiles/${loadedUser?.githubId}/following`)
-								}
+								onClick={() => navigation(`/profiles/${userId}/following`)}
 							>
 								<div>팔로잉</div>
 							</StyledFollowing>
 							<StyledFollower
-								onClick={() =>
-									navigation(`/profiles/${loadedUser?.githubId}/follower`)
-								}
+								onClick={() => navigation(`/profiles/${userId}/follower`)}
 							>
 								<div>팔로워</div>
 							</StyledFollower>
 						</div>
+						{/* 유저 정보 */}
 						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
-						<div className="user-info">
-							<div
-								onClick={() => {
-									setView(!view);
-								}}
-							>
-								추가정보{' '}
-								{view ? (
-									<img src={images.arrowUpBlack} alt="up" />
-								) : (
-									<img src={images.arrowDownBlack} alt="down" />
+						{userInfo && (
+							<div className="user-info">
+								<div
+									onClick={() => {
+										setView(!view);
+									}}
+								>
+									추가정보{' '}
+									{view ? (
+										<img src={images.arrowUpBlack} alt="up" />
+									) : (
+										<img src={images.arrowDownBlack} alt="down" />
+									)}
+								</div>
+								{view && (
+									<div>
+										{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
+										{loadedUser?.company !== 'null' && (
+											<p>{loadedUser?.company}</p>
+										)}
+										{loadedUser?.location !== 'null' && (
+											<p>{loadedUser?.location}</p>
+										)}
+										{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
+										{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
+									</div>
 								)}
 							</div>
-							{view && (
-								<div>
-									{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
-									{loadedUser?.company !== 'null' && (
-										<p>{loadedUser?.company}</p>
-									)}
-									{loadedUser?.location !== 'null' && (
-										<p>{loadedUser?.location}</p>
-									)}
-									{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
-									{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
-								</div>
-							)}
-						</div>
+						)}
 					</StyledUserInformation>
 				</StyledUserProfile>
 
@@ -251,14 +263,11 @@ const ProfilePageMobile = ({
 							</div>
 							<div>
 								<StyledActivityButtonItem onClick={handleFollowClick}>
-									<img
-										src={
-											isFollowing
-												? images.profile.followingIcon
-												: images.profile.followIcon
-										}
-										alt={isFollowing ? '팔로잉' : '팔로우'}
-									/>
+									{isFollowing ? (
+										<img src="images.profile.followingIcon" alt="팔로잉" />
+									) : (
+										<img src="images.profile.followIcon" alt="팔로우" />
+									)}
 								</StyledActivityButtonItem>
 								<StyledActivityButtonItem onClick={onClickGM}>
 									<img src={images.gitMessage} alt="채팅" />
@@ -312,12 +321,13 @@ const ProfilePageMobile = ({
 					</Sdiv>
 				</SboxTop>
 			)}
-			if(userId === user?.githubId)
-			{
+			{userId === user?.githubId ? (
 				<StyledFooter>
 					<Navigation />
 				</StyledFooter>
-			}
+			) : (
+				<></>
+			)}
 		</StyledProfilePage>
 	);
 };

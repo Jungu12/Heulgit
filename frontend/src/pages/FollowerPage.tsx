@@ -28,13 +28,14 @@ const StyledUserList = styled.div`
 `;
 
 const FollowerPage = () => {
-	const { loadedUserId } = useParams();
+	const { userId } = useParams();
 
 	// 팔로워 목록
 	useEffect(() => {
 		authHttp
-			.get<UserFollowingType[]>(`relations/followers/${loadedUserId}`)
+			.get<UserFollowingType[]>(`relations/followers/${userId}`)
 			.then((response) => {
+				console.log(userId);
 				console.log('팔로워 로드 성공.', response);
 			})
 			.catch((error) => {

@@ -40,7 +40,6 @@ public class UserController {
 	private final HeulgitService heulgitService;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-
 	/**
 	 * 사용자를 logout시킨다.
 	 * Redis에 저장된 토큰을 삭제하고, 쿠키에 실린 토큰을 지운다.
@@ -209,4 +208,46 @@ public class UserController {
 		return ResponseEntity.ok().body(userService.findFollowingsByKeyword(githubId, keyword));
 	}
 
+	/** 사용자의 최신 레포를
+	 * 흘깃 테이블에 저장 */
+	@GetMapping("/repo")
+	public ResponseEntity<?> getRepos(@AuthenticationPrincipal String githubId) {
+		logger.debug("getRepos(), who={} ", githubId);
+		userService.fetchAndSaveUserRespositories(githubId);
+
+		return ResponseEntity.ok().build();
+	}
+
+	/**
+	 * 내가 자유게시판에 작성한 게시물 반환
+	 * @param githubId
+	 */
+	@GetMapping("myposts/freeboard")
+	public ResponseEntity<?> myFreeBoardList(@AuthenticationPrincipal String githubId, @RequestParam int pages) {
+		logger.debug("myFreeBoardList(), githubId = {}", githubId);
+
+		return ResponseEntity.ok().body(freeBoardService.findMyFreeBoards(githubId, pages));
+	}
+
+	/**
+	 * 내가 흘깃에 작성한 게시물 반환
+	 * @param githubId
+	 */
+	@GetMapping("myposts/heulgit")
+	public ResponseEntity<?> myHeulgitList(@AuthenticationPrincipal String githubId, @RequestParam int pages) {
+		logger.debug("myHeulgitList(), githubId = {}", githubId);
+
+		return ResponseEntity.ok().body(heulgitService.findMyHeulgits(githubId, pages));
+	}
+
+	/**
+	 * 내가 유레카에 작성한 게시물 반환
+	 * @param githubId
+	 */
+	@GetMapping("myposts/eureka")
+	public ResponseEntity<?> myEurekaList(@AuthenticationPrincipal String githubId, @RequestParam int pages) {
+		logger.debug("myEurekaList(), githubId = {}", githubId);
+
+		return ResponseEntity.ok().body(eurekaService.findMyEurekas(githubId, pages));
+	}
 }
