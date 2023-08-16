@@ -179,7 +179,7 @@ const EurekaPostViewFeedTabletPC = ({ feed }: Props) => {
 	}, [navigation]);
 
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${1}`);
+		navigation(`/profiles/${feed.user.githubId}`);
 	}, []);
 
 	return (
