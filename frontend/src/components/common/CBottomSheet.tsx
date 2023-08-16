@@ -10,7 +10,7 @@ const StyledBottomSheetContainer = styled.div`
 	flex-direction: column;
 
 	.comment-bottom-sheet {
-		[data-rsbs-footer] {
+		[data-rsbs-footer='true'] {
 			overflow: visible;
 		}
 	}
