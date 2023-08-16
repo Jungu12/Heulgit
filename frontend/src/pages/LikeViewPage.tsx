@@ -143,7 +143,7 @@ type NavigateProps = {
 const LikeViewPage: React.FC = () => {
 	const [isFollowing, setIsFollowing] = useState(false);
 	const { state } = useLocation() as NavigateProps; // useLocation() 훅 사용
-
+	console.log('state:', state);
 	const handleFollowButtonClick = () => {
 		setIsFollowing((prevState) => !prevState);
 	};
