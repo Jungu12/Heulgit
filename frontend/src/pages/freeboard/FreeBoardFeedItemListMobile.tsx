@@ -14,6 +14,7 @@ import { authHttp } from '@utils/http';
 import CBottomSheet from '@components/common/CBottomSheet';
 import FreeBoardCommentList from '@components/community/FreeBoardCommentList';
 import { OnChangeHandlerFunc } from 'react-mentions';
+import { useNavigate } from 'react-router-dom';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -47,6 +48,7 @@ const FreeBoardFeedItemListMobile = ({
 	freeboardNextPageLoad,
 }: Props) => {
 	const scrollContinaerRef = useRef<HTMLDivElement>(null);
+	const navigation = useNavigate();
 
 	const [isCommentOpen, setIsCommentOpen] = useState(false); // 댓글 바텀시트 열기
 	const [seletedComment, setSeletedComment] = useState(-1); // 댓글 선택
@@ -110,9 +112,16 @@ const FreeBoardFeedItemListMobile = ({
 		loadCommentList,
 	]);
 
-	const onClickDelete = useCallback((commentId: number) => {
-		console.log('삭제될 댓글', commentId);
-	}, []);
+	const onClickDelete = useCallback(
+		(commentId: number) => {
+			if (confirm('정말 삭제하시겠습니까?')) {
+				authHttp.delete(`f-comments/${commentId}`).then(() => {
+					loadCommentList();
+				});
+			}
+		},
+		[authHttp, loadCommentList],
+	);
 
 	useEffect(() => {
 		if (seletedComment >= 0) {
