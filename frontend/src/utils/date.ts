@@ -51,3 +51,17 @@ export function formatDateFromString(dateTimeString: string): string {
 
 	return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
+
+export function isWithinOneMonth(dateString: string): boolean {
+	const today = new Date();
+	const targetDate = new Date(dateString);
+
+	// Calculate the difference in milliseconds between the two dates
+	const timeDiff = Math.abs(targetDate.getTime() - today.getTime());
+
+	// Calculate the difference in days
+	const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+	// Check if the difference in days is within 30 days (1 month)
+	return daysDiff <= 30;
+}
