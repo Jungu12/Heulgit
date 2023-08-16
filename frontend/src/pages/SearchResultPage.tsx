@@ -9,7 +9,7 @@ import { HeulgitPostResponseType } from '@typedef/home/heulgit.types';
 import { authHttp } from '@utils/http';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import EurekaFeedItem from './Eureka/EurekaFeedItem';
 import FreeBoardFeedItem from './freeboard/FreeBoardFeedItem';
@@ -155,6 +155,7 @@ const StyledUserID = styled.img`
 `;
 
 const SearchResultPage = () => {
+	const navigation = useNavigate();
 	const dropDownRef = useRef(null);
 	const [isViewOptionOpen, setIsViewOptionOpen] = useDetectClose(
 		dropDownRef,
@@ -251,7 +252,11 @@ const SearchResultPage = () => {
 	return (
 		<StyledSearchResultContainer>
 			<StyledHeaderContainer>
-				<StyledBackButton src={images.header.back} alt="back" />
+				<StyledBackButton
+					src={images.header.back}
+					alt="back"
+					onClick={() => navigation('/search')}
+				/>
 				<StyledHeaderTitle>{q}</StyledHeaderTitle>
 			</StyledHeaderContainer>
 			<StyledCategory>
@@ -302,10 +307,14 @@ const SearchResultPage = () => {
 						hasMore={heulgitHasNextPage ? true : false}
 						loader={<div>loading...</div>}
 						height={`calc(100vh - 114px)`}
+						style={{
+							overflowY: 'scroll',
+							overflowX: 'hidden',
+						}}
 					>
 						{heulgitList.pages.map((heulgit) =>
 							heulgit.content.map((item) => (
-								<FeedItem feed={item} type="search" />
+								<FeedItem key={item.heulgitId} feed={item} type="search" />
 							)),
 						)}
 					</InfiniteScroll>
@@ -316,9 +325,15 @@ const SearchResultPage = () => {
 						next={eurekaFetchNextPage}
 						hasMore={eurekaHasNextPage ? true : false}
 						loader={<div>loading...</div>}
+						style={{
+							overflowY: 'scroll',
+							overflowX: 'hidden',
+						}}
 					>
 						{eurekaList.pages.map((eureka) =>
-							eureka.content.map((item) => <EurekaFeedItem feed={item} />),
+							eureka.content.map((item) => (
+								<EurekaFeedItem key={item.eurekaId} feed={item} />
+							)),
 						)}
 					</InfiniteScroll>
 				)}
@@ -328,22 +343,28 @@ const SearchResultPage = () => {
 						next={freeBoardFetchNextPage}
 						hasMore={freeBoardHasNextPage ? true : false}
 						loader={<div>loading...</div>}
+						style={{
+							overflowY: 'scroll',
+							overflowX: 'hidden',
+						}}
 					>
 						{freeBoardList.pages.map((freeBoard) =>
 							freeBoard.content.map((item) => (
-								<FreeBoardFeedItem feed={item} />
+								<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
 							)),
 						)}
 					</InfiniteScroll>
 				)}
-				{seletedCategory === '사용자' &&
-					userList &&
-					userList.map((user) => (
-						<StyledUserContainer>
-							<StyledUserAvatar src={user.avatarUrl} alt="avatar" />
-							<StyledUserID>{user.githubId}</StyledUserID>
-						</StyledUserContainer>
-					))}
+				{seletedCategory === '사용자' && userList && (
+					<StyledUserContainer>
+						{userList.map((user) => (
+							<div key={user.githubId}>
+								<StyledUserAvatar src={user.avatarUrl} alt="avatar" />
+								<StyledUserID>{user.githubId}</StyledUserID>
+							</div>
+						))}
+					</StyledUserContainer>
+				)}
 			</StyledContentList>
 		</StyledSearchResultContainer>
 	);
