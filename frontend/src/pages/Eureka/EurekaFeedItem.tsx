@@ -79,24 +79,6 @@ const StyledContentContainer = styled.div`
 	-webkit-box-orient: vertical;
 `;
 
-// 이미지 담는 컨테이너
-// const StyledImgContainer = styled.div`
-// 	display: flex;
-// 	position: relative;
-// 	justify-content: start;
-// 	align-items: center;
-
-// 	max-width: 100%;
-// 	/* height: 190px; */
-
-// 	margin: 20px 12px 0 12px;
-// `;
-
-// 이미지
-// const StyledImg = styled.img`
-// 	max-width: 100%;
-// `;
-
 const StyledButtonContainer = styled.div`
 	display: flex;
 	margin: 24px 12px 0px 12px;
