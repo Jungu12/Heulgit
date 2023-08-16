@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.RelationException;
 import morningrolecall.heulgit.relation.domain.Relation;
+import morningrolecall.heulgit.relation.domain.dto.RelationUserInfo;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
 import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.domain.dto.UserDetail;
@@ -53,7 +54,7 @@ public class RelationService {
 		relationRepository.save(relation);
 	}
 
-	public List<UserDetail> getFollowers(String userId) {
+	public List<RelationUserInfo> getFollowers(String myId, String userId) {
 		List<Relation> relations = relationRepository.findByToId(userId);
 
 		if (relations.isEmpty()) {
@@ -62,11 +63,21 @@ public class RelationService {
 
 		//나를 팔로우 하는 유저 목록
 		List<String> followers = relations.stream().map(Relation::getFromId).collect(Collectors.toList());
-		List<UserDetail> userInfos = getUserInfoById(followers);
+		List<RelationUserInfo> userInfos = new ArrayList<>();
+
+		for (String follower : followers) {
+			User user = userRepository.findUserByGithubId(follower).orElseThrow();
+			boolean follow = relationRepository.existsByFromIdAndToId(myId, user.getGithubId());
+			userInfos.add(RelationUserInfo.builder()
+				.id(user.getGithubId())
+				.avater_url(user.getAvatarUrl())
+				.follow(follow)
+				.build());
+		}
 		return userInfos;
 	}
 
-	public List<UserDetail> getFollowings(String userId) {
+	public List<RelationUserInfo> getFollowings(String myId, String userId) {
 		List<Relation> relations = relationRepository.findByFromId(userId);
 
 		if (relations.isEmpty()) {
@@ -75,7 +86,39 @@ public class RelationService {
 
 		//내가 팔로우 하는 유저 목록
 		List<String> followings = relations.stream().map(Relation::getToId).collect(Collectors.toList());
-		List<UserDetail> userInfos = getUserInfoById(followings);
+		List<RelationUserInfo> userInfos = new ArrayList<>();
+
+		for (String following : followings) {
+			User user = userRepository.findUserByGithubId(following).orElseThrow();
+			boolean follow = relationRepository.existsByFromIdAndToId(myId, user.getGithubId());
+			userInfos.add(RelationUserInfo.builder()
+				.id(user.getGithubId())
+				.avater_url(user.getAvatarUrl())
+				.follow(follow)
+				.build());
+		}
+
+		return userInfos;
+	}
+
+	public List<UserDetail> getFollowingsWithUserId(String userId) {
+		List<Relation> relations = relationRepository.findByFromId(userId);
+
+		if (relations.isEmpty()) {
+			return new ArrayList<>();
+		}
+
+		//내가 팔로우 하는 유저 목록
+		List<String> followings = relations.stream().map(Relation::getToId).collect(Collectors.toList());
+		List<UserDetail> userInfos = new ArrayList<>();
+
+		for (String following : followings) {
+			User user = userRepository.findUserByGithubId(following).orElseThrow();
+			userInfos.add(UserDetail.builder()
+				.id(user.getGithubId())
+				.avater_url(user.getAvatarUrl())
+				.build());
+		}
 
 		return userInfos;
 	}
@@ -84,7 +127,7 @@ public class RelationService {
 		List<String> followings = relationRepository.findAllByIdContainingKeyword(userId, keyword);
 
 		if (followings.isEmpty()) {
-			return getFollowings(userId);
+			return getFollowingsWithUserId(userId);
 		}
 
 		List<UserDetail> userInfos = getUserInfoById(followings);
