@@ -134,7 +134,7 @@ const StyledImageSliderContainer = styled.div`
 
 type Props = {
 	feed: EurekaPostType;
-	onClickComment: (id: number) => void;
+	onClickComment?: (id: number) => void;
 };
 
 const EurekaFeedItem = ({ feed, onClickComment }: Props) => {
@@ -232,7 +232,9 @@ const EurekaFeedItem = ({ feed, onClickComment }: Props) => {
 			<StyledSubDataContainer>
 				<div onClick={onClickLike}>{`좋아요 ${likeNum}개 · `}</div>
 				<div
-					onClick={() => onClickComment(feed.eurekaId)}
+					onClick={
+						onClickComment ? () => onClickComment(feed.eurekaId) : () => {}
+					}
 				>{`댓글 ${feed.eurekaComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>

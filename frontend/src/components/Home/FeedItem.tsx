@@ -87,7 +87,7 @@ const StyledMoreDataText = styled.div`
 
 type Props = {
 	feed: HeulGitPostType;
-	type: 'summary' | 'full';
+	type: 'summary' | 'full' | 'search';
 	onClickComment?: (commentId: number) => void;
 };
 
@@ -155,31 +155,35 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 					''
 				)}
 			</StyledContentContainer>
-			<StyledButtonContainer>
-				{like ? (
+			{type === 'search' ? (
+				''
+			) : (
+				<StyledButtonContainer>
+					{like ? (
+						<img
+							src={images.community.likesActive}
+							alt="like_button"
+							onClick={onClickUnLikeIcon}
+						/>
+					) : (
+						<img
+							src={images.like}
+							alt="unlike_button"
+							onClick={onClickLikeIcon}
+						/>
+					)}
 					<img
-						src={images.community.likesActive}
-						alt="like_button"
-						onClick={onClickUnLikeIcon}
+						src={images.chat}
+						alt="comment_button"
+						onClick={() => {
+							if (onClickComment) {
+								onClickComment(feed.heulgitId);
+							}
+						}}
 					/>
-				) : (
-					<img
-						src={images.like}
-						alt="unlike_button"
-						onClick={onClickLikeIcon}
-					/>
-				)}
-				<img
-					src={images.chat}
-					alt="comment_button"
-					onClick={() => {
-						if (onClickComment) {
-							onClickComment(feed.heulgitId);
-						}
-					}}
-				/>
-				<img src={images.share} alt="share_button" />
-			</StyledButtonContainer>
+					<img src={images.share} alt="share_button" />
+				</StyledButtonContainer>
+			)}
 			<StyledSubDataContainer>
 				<div onClick={onClickLike}>{`좋아요 ${likeNum}개 · `}</div>
 				<div

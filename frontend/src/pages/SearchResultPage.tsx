@@ -1,3 +1,4 @@
+import FeedItem from '@components/Home/FeedItem';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import useDetectClose from '@hooks/useDetectClose';
@@ -10,6 +11,9 @@ import React, { useState, useCallback, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
+import EurekaFeedItem from './Eureka/EurekaFeedItem';
+import FreeBoardFeedItem from './freeboard/FreeBoardFeedItem';
+import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
 
 type StyledCategoryItemProps = {
 	$isSeleted: boolean;
@@ -199,7 +203,7 @@ const SearchResultPage = () => {
 	} = useInfiniteQuery(
 		['/search/freeBoard'],
 		({ pageParam = 1 }) =>
-			authHttp.get<EurekaFeedResponseType>(
+			authHttp.get<FreeBoarFeedResponseType>(
 				`search/freeboard-${
 					seletedFilter === '작성자' ? 'user' : 'title'
 				}?keyword=${q}&pages=${pageParam}`,
@@ -213,7 +217,7 @@ const SearchResultPage = () => {
 	);
 	// 사용자 검색 호출
 	const { data: userList } = useQuery(['/serach/user'], () =>
-		authHttp.get<UserType[]>(`search/user?keyword${q}`),
+		authHttp.get<UserType[]>(`search/user?keyword=${q}`),
 	);
 
 	return (
@@ -271,7 +275,9 @@ const SearchResultPage = () => {
 						loader={<div>loading...</div>}
 					>
 						{heulgitList.pages.map((heulgit) =>
-							heulgit.content.map((item) => <div>{item.content}</div>),
+							heulgit.content.map((item) => (
+								<FeedItem feed={item} type="search" />
+							)),
 						)}
 					</InfiniteScroll>
 				)}
@@ -283,7 +289,7 @@ const SearchResultPage = () => {
 						loader={<div>loading...</div>}
 					>
 						{eurekaList.pages.map((eureka) =>
-							eureka.content.map((item) => <div>{item.content}</div>),
+							eureka.content.map((item) => <EurekaFeedItem feed={item} />),
 						)}
 					</InfiniteScroll>
 				)}
@@ -295,7 +301,9 @@ const SearchResultPage = () => {
 						loader={<div>loading...</div>}
 					>
 						{freeBoardList.pages.map((freeBoard) =>
-							freeBoard.content.map((item) => <div>{item.content}</div>),
+							freeBoard.content.map((item) => (
+								<FreeBoardFeedItem feed={item} />
+							)),
 						)}
 					</InfiniteScroll>
 				)}

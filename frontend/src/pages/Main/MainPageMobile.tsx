@@ -406,7 +406,6 @@ const MainPageMobile = ({
 				<li onClick={onClickLikeSort}>좋아요 많은 순</li>
 			</StyledDropDown>
 			{/* 피드가 담길 곳 */}
-
 			{feedList ? (
 				<FeedItemList
 					feedList={feedList}

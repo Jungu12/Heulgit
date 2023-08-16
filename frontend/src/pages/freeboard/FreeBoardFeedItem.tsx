@@ -83,24 +83,6 @@ const StyledContentContainer = styled.div`
 	-webkit-box-orient: vertical;
 `;
 
-// 이미지 담는 컨테이너
-// const StyledImgContainer = styled.div`
-// 	display: flex;
-// 	position: relative;
-// 	justify-content: start;
-// 	align-items: center;
-
-// 	max-width: 100%;
-// 	/* height: 190px; */
-
-// 	margin: 20px 12px 0 12px;
-// `;
-
-// 이미지
-// const StyledImg = styled.img`
-// 	max-width: 100%;
-// `;
-
 // 버튼 담는 컨테이너
 const StyledButtonContainer = styled.div`
 	display: flex;
@@ -140,7 +122,7 @@ const StyledImageSliderContainer = styled.div`
 
 type Props = {
 	feed: FreeBoardPostType;
-	onClickComment: (id: number) => void;
+	onClickComment?: (id: number) => void;
 };
 
 const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
@@ -236,14 +218,18 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 				<img
 					src={images.chat}
 					alt="comment_button"
-					onClick={() => onClickComment(feed.freeBoardId)}
+					onClick={
+						onClickComment ? () => onClickComment(feed.freeBoardId) : () => {}
+					}
 				/>
 			</StyledButtonContainer>
 			{/* 좋아요 및 댓글 */}
 			<StyledSubDataContainer>
 				<div onClick={onClickLike}>{`좋아요 ${likeNum}개 · `}</div>
 				<div
-					onClick={() => onClickComment(feed.freeBoardId)}
+					onClick={
+						onClickComment ? () => onClickComment(feed.freeBoardId) : () => {}
+					}
 				>{`댓글 ${feed.freeBoardComments.length}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
