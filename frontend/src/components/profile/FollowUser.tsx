@@ -1,6 +1,7 @@
 import { colors } from '@constants/colors';
 import { UserFollowingType } from '@typedef/profile/user.types';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 type StyledFollowButtonProps = {
@@ -43,7 +44,9 @@ type FollowUserProps = {
 };
 
 const FollowUser = ({ userData }: FollowUserProps) => {
-	const [isFollowing, setIsFollowing] = useState(false); // 초기 값 설정
+	const navigation = useNavigate();
+
+	const [isFollowing, setIsFollowing] = useState(false);
 
 	const handleFollowButtonClick = () => {
 		// 팔로우 버튼 클릭 시 팔로우 상태를 업데이트
@@ -52,7 +55,7 @@ const FollowUser = ({ userData }: FollowUserProps) => {
 
 	return (
 		<StyledFollowUser>
-			<StyledUser>
+			<StyledUser onClick={() => navigation(`profiles/${userData.id}`)}>
 				<StyledUserImage src={userData.avater_url} alt="User" />{' '}
 				<StyledUserName>{userData.id}</StyledUserName>
 			</StyledUser>
