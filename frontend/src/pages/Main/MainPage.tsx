@@ -191,7 +191,7 @@ const MainPage = () => {
 		if (commentInput.trim() === '') return;
 
 		try {
-			await authHttp.post<HeulgitCommentWriteType>('e-comments/comments', {
+			await authHttp.post<HeulgitCommentWriteType>('h-comments/comments', {
 				content: commentInput,
 				eurekaId: selelctedComment,
 				mentionedFollowers: mentionList,
