@@ -97,7 +97,7 @@ const MyLikeRepoPage = () => {
 		['/search/heulgit'],
 		({ pageParam = 1 }) =>
 			authHttp.get<HeulgitPostResponseType>(
-				`users/activities/heulgit?pages=${pageParam}`,
+				`users/activities/heulgit/my-likes?pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
