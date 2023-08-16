@@ -13,6 +13,8 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.GmException;
 import morningrolecall.heulgit.gm.dto.ChatMessage;
 import morningrolecall.heulgit.gm.dto.ChatRoom;
 import morningrolecall.heulgit.gm.repository.ChatRoomRepository;
@@ -111,7 +113,7 @@ public class ChatRoomService {
 		List<ChatMessage> ChatMessages = chatRoomRepository.getChatLogs(roomId);
 
 		if (ChatMessages == null) {
-			throw new RuntimeException("채팅방에 메세지가 없습니다.");
+			throw new GmException(ExceptionCode.CHAT_MESSAGE_NOT_EXIST);
 		}
 
 		return ChatMessages;
