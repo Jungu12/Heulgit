@@ -53,14 +53,15 @@ const StyledMentionContainer = styled.div`
 	display: flex;
 
 	span {
-		font-size: 16px;
-		font-weight: 500;
+		font-size: 14px;
+		font-weight: 700;
 	}
 `;
 
 const StyledMentionImage = styled.img`
-	height: 24px;
-	width: 24px;
+	height: 32px;
+	width: 32px;
+	margin-right: 12px;
 `;
 
 type Props = {
@@ -111,6 +112,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 							id: index,
 							display: v.id,
 						}))}
+						style={{ bottom: '50px' }}
 						renderSuggestion={(suggestion) => (
 							<StyledMentionContainer>
 								<StyledMentionImage
