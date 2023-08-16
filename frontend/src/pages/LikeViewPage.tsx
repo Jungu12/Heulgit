@@ -156,7 +156,7 @@ const LikeViewPage: React.FC = () => {
 		console.log(id);
 
 		authHttp
-			.get<UserType[]>(`freeboard/posts/likes/${id}`)
+			.get<UserType[]>('freeboard/posts/likes')
 			.then((response) => {
 				console.log('좋아요 누른 유저 목록 보자!!!!!!!!!!', response);
 				setLikedUsers(response);
