@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
-// import FeedItemList from '@components/Home/FeedItemList';
 import { authHttp } from '@utils/http';
-import { UserLikePostType } from '@typedef/profile/user.types';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import FeedItem from '@components/Home/FeedItem';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { HeulgitPostResponseType } from '@typedef/home/heulgit.types';
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -87,16 +89,23 @@ const MyLikeRepoPage = () => {
 	}, []);
 
 	// 좋아요 흘깃 불러오기
-	useEffect(() => {
-		authHttp
-			.get<UserLikePostType[]>('users/activities/heulgit/my-likes?pages=1')
-			.then((response) => {
-				console.log('좋아요 흘깃 성공.', response);
-			})
-			.catch((error) => {
-				console.error('좋아요 흘깃 실패.', error);
-			});
-	}, []);
+	const {
+		data: heulgitLikeList,
+		fetchNextPage: heulgitFetchNextPage,
+		hasNextPage: heulgitHasNextPage,
+	} = useInfiniteQuery(
+		['/search/heulgit'],
+		({ pageParam = 1 }) =>
+			authHttp.get<HeulgitPostResponseType>(
+				`users/activities/heulgit?pages=${pageParam}`,
+			),
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.last) return;
+				return allPages.length + 1;
+			},
+		},
+	);
 
 	return (
 		<StyledBox>
@@ -113,7 +122,25 @@ const MyLikeRepoPage = () => {
 					)}
 				</StyledHeader>
 				<StyledLikeRepo>
-					{/* <FeedItemList feedList={dummyFeedList} /> */}
+					{heulgitLikeList && (
+						<InfiniteScroll
+							dataLength={heulgitLikeList.pages.length}
+							next={heulgitFetchNextPage}
+							hasMore={heulgitHasNextPage ? true : false}
+							loader={<div>loading...</div>}
+							height={`calc(100vh - 114px)`}
+							style={{
+								overflowY: 'scroll',
+								overflowX: 'hidden',
+							}}
+						>
+							{heulgitLikeList.pages.map((heulgit) =>
+								heulgit.content.map((item) => (
+									<FeedItem key={item.heulgitId} feed={item} type="summary" />
+								)),
+							)}
+						</InfiniteScroll>
+					)}
 				</StyledLikeRepo>
 			</StyledContent>
 
