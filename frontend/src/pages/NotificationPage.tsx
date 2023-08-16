@@ -24,6 +24,7 @@ const StyledWeekNotiContainer = styled.div`
 	align-items: center;
 	position: relative;
 	top: 56px;
+	width: 100%;
 `;
 
 // 알림
@@ -44,6 +45,14 @@ const StyleNoti = styled.div`
 	display: flex;
 	justify-content: start;
 	margin-left: 18px;
+`;
+
+const StyledEmptyNotification = styled.div`
+	display: flex;
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
 `;
 
 const NotificationPage = () => {
@@ -72,6 +81,10 @@ const NotificationPage = () => {
 
 	console.log(data);
 
+	if (data?.length) {
+		return <StyledEmptyNotification>알림이 없습니다.</StyledEmptyNotification>;
+	}
+
 	return (
 		<StyledNotificationContainer>
 			<Header title="알림" />
@@ -81,12 +94,14 @@ const NotificationPage = () => {
 				</StyledNotiDiv>
 				<NotiFollow notificationList={recentNotifications} />
 			</StyledWeekNotiContainer>
-			<StyledWeekNotiContainer>
-				<StyledNotiDiv>
-					<StyleNoti>이전 알림</StyleNoti>
-				</StyledNotiDiv>
-				<NotiFollow notificationList={pastNotifications} />
-			</StyledWeekNotiContainer>
+			{pastNotifications && (
+				<StyledWeekNotiContainer>
+					<StyledNotiDiv>
+						<StyleNoti>이전 알림</StyleNoti>
+					</StyledNotiDiv>
+					<NotiFollow notificationList={pastNotifications} />
+				</StyledWeekNotiContainer>
+			)}
 		</StyledNotificationContainer>
 	);
 };
