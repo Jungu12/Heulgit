@@ -27,7 +27,7 @@ const StyledBackButton = styled.img`
 
 const StyledTitle = styled.h2`
 	text-align: center;
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: 700;
 	right: 50%;
 	top: 16px;

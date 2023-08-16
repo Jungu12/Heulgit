@@ -52,11 +52,13 @@ const StyledInput = styled(MentionsInput)`
 	font-size: 16px;
 	font-weight: 500;
 	flex: 1;
-	outline: none;
 	margin-right: 12px;
-	outline: none;
 	white-space: pre-wrap;
 	padding-top: 6px;
+
+	textarea {
+		outline: none;
+	}
 `;
 
 const StyledSubmitButton = styled.button`

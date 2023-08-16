@@ -126,16 +126,6 @@ const MainPage = () => {
 		[],
 	);
 
-	// const handleMentionsInputChange: OnChangeHandlerFunc = (
-	//   event: ChangeEvent<HTMLInputElement>,
-	//   newValue: string,
-	//   newPlainTextValue: string,
-	//   mentions: MentionData[],
-	// ) => {
-	//   setCommentInput(newPlainTextValue);
-	//   // 여기서 필요한 추가적인 처리를 수행할 수 있습니다.
-	// };
-
 	const onClickOutsideCalendar = useCallback(
 		(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 			if (
