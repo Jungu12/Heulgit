@@ -141,7 +141,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 					<Mention
 						trigger="@"
 						markup="@__display__ "
-						displayTransform={(username, id) => `@${id} tt`}
+						displayTransform={(username, id) => `@${id} `}
 						data={followingList.map((v, index) => ({
 							id: index,
 							display: v.id,
