@@ -53,7 +53,7 @@ public class NotificationController {
 	}
 
 
-	@GetMapping("/{githubId}")
+	@GetMapping("")
 	public ResponseEntity<?> userNotification(@AuthenticationPrincipal String githubId){
 		logger.debug("userNotification(), who={}",githubId);
 		return ResponseEntity.ok().body(notificationService.findNotification(githubId));
