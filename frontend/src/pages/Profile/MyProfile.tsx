@@ -135,8 +135,9 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 
 	return (
 		<StyledBox>
+			{/* 커밋 그래프/테이블 */}
 			<StyledCommitBox>
-				{loadedUser?.githubId == user?.githubId ? (
+				{loadedUser?.githubId === user?.githubId ? (
 					<StyledActivityButton
 						onClick={() =>
 							navigation(`/profiles/${loadedUser?.githubId}/commit-edit`)
@@ -147,23 +148,31 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 				) : (
 					<div></div>
 				)}
-				{commitGraphData !== undefined ? (
-					<StyledCommitList>
-						<StyledCommitItem>
-							<CommitGraph
-								labels={commitGraphData.map((data) => data.type)}
-								datas={commitGraphData.map((data) => data.count)}
-							/>
-						</StyledCommitItem>
-						<StyledCommitItem>
-							<CommitTable commitTag={commitGraphData} />
-						</StyledCommitItem>
-					</StyledCommitList>
-				) : (
-					<p>Loading...</p>
+
+				{commitGraphData !== undefined && (
+					<>
+						{commitGraphData.length === 1 &&
+						commitGraphData[0].type === 'etc' ? (
+							<p>커밋 메시지를 설정해주세요</p>
+						) : (
+							<StyledCommitList>
+								<StyledCommitItem>
+									<CommitGraph
+										labels={commitGraphData.map((data) => data.type)}
+										datas={commitGraphData.map((data) => data.count)}
+									/>
+								</StyledCommitItem>
+								<StyledCommitItem>
+									<CommitTable commitTag={commitGraphData} />
+								</StyledCommitItem>
+							</StyledCommitList>
+						)}
+					</>
 				)}
+				{commitGraphData === undefined && <p>Loading...</p>}
 			</StyledCommitBox>
 
+			{/* 랭킹 */}
 			<StyledRankBox>
 				<StyledTitle>
 					<StyledTitleItem>
