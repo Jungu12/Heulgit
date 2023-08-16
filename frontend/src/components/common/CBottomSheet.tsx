@@ -8,6 +8,12 @@ const StyledBottomSheetContainer = styled.div`
 	display: flex;
 	z-index: 100;
 	flex-direction: column;
+
+	.comment-bottom-sheet {
+		[data-rsbs-footer] {
+			overflow: visible;
+		}
+	}
 `;
 
 const StyledTitle = styled.h1`
