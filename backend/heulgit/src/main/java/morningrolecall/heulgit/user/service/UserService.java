@@ -213,7 +213,7 @@ public class UserService {
 				}
 			}
 
-			userRankingResponses.add(new UserRankingResponse(githubId, count));
+			userRankingResponses.add(new UserRankingResponse(following, count));
 		}
 		Collections.sort(userRankingResponses, ((o1, o2) -> o2.getCount() - o1.getCount()));
 
