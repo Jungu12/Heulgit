@@ -208,11 +208,10 @@ public class UserService {
 			int count = 0;
 
 			for (String commitMessage : commitMessages) {
-
-				String[] commit = commitMessage.split("\\(");
+				String[] commit = commitMessage.split(":");
 				String commitType = commit[0];
 
-				if (commitType.equals(type)) {
+				if (commitType.contains(type)) {
 					count++;
 				}
 			}
@@ -237,7 +236,7 @@ public class UserService {
 				commits.add(commitMessage);
 			}
 		} catch (Exception e) {
-			throw new AuthException(ExceptionCode.COMMIT_MESSAGE_NOT_FOUND);
+			throw new UserException(ExceptionCode.COMMIT_MESSAGE_NOT_FOUND);
 		}
 
 		return commits;
