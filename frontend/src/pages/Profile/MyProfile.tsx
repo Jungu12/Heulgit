@@ -117,21 +117,23 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 	}, []);
 
 	// 커밋 랭킹 불러오기
-	useEffect(() => {
-		authHttp
-			.get<UserRankingType[]>(`users/ranking?type=${tags[currentTagIndex]}`)
-			.then((response) => {
-				console.log(
-					'커밋 랭킹을 불러왔습니다.',
-					tags[currentTagIndex],
-					response,
-				);
-				setCommitRankingData(response);
-			})
-			.catch((error) => {
-				console.error('커밋 랭킹을 불러오지 못했습니다.', error);
-			});
-	}, [currentTagIndex]);
+	if (loadedUser?.githubId === user?.githubId) {
+		useEffect(() => {
+			authHttp
+				.get<UserRankingType[]>(`users/ranking?type=${tags[currentTagIndex]}`)
+				.then((response) => {
+					console.log(
+						'커밋 랭킹을 불러왔습니다.',
+						tags[currentTagIndex],
+						response,
+					);
+					setCommitRankingData(response);
+				})
+				.catch((error) => {
+					console.error('커밋 랭킹을 불러오지 못했습니다.', error);
+				});
+		}, [currentTagIndex]);
+	}
 
 	return (
 		<StyledBox>
