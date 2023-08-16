@@ -150,29 +150,35 @@ const LikeViewPage: React.FC = () => {
 
 	return (
 		<StyledLikeViewPageContainer>
-			<Header title="좋아요"></Header>
+			<Header title="좋아요" />
 			<StyledLikeUserContainer>
 				<StyledLikeUserP>좋아하는 사람</StyledLikeUserP>
-				<StyledLikeUsersCount>{state.user.length}</StyledLikeUsersCount>
+				{state && state.user ? (
+					<>
+						<StyledLikeUsersCount>{state.user.length}</StyledLikeUsersCount>
+						<StyledUserContainer>
+							{state.user.map((user, index) => (
+								<StyledLikeUser key={index}>
+									<StyledUserProfileContainer>
+										<StyledProfileImg src={user.avatarUrl} alt="Profile" />
+										<StyledUserName>{user.githubId}</StyledUserName>
+									</StyledUserProfileContainer>
+									<StyledFollowButtonContainer>
+										<StyledFollowButton
+											$following={isFollowing}
+											onClick={handleFollowButtonClick}
+										>
+											{isFollowing ? '팔로잉' : '팔로우'}
+										</StyledFollowButton>
+									</StyledFollowButtonContainer>
+								</StyledLikeUser>
+							))}
+						</StyledUserContainer>
+					</>
+				) : (
+					<p>Loading...</p>
+				)}
 			</StyledLikeUserContainer>
-			<StyledUserContainer>
-				{state.user.map((user, index) => (
-					<StyledLikeUser key={index}>
-						<StyledUserProfileContainer>
-							<StyledProfileImg src={user.avatarUrl} alt="Profile" />
-							<StyledUserName>{user.githubId}</StyledUserName>
-						</StyledUserProfileContainer>
-						<StyledFollowButtonContainer>
-							<StyledFollowButton
-								$following={isFollowing}
-								onClick={handleFollowButtonClick}
-							>
-								{isFollowing ? '팔로잉' : '팔로우'}
-							</StyledFollowButton>
-						</StyledFollowButtonContainer>
-					</StyledLikeUser>
-				))}
-			</StyledUserContainer>
 		</StyledLikeViewPageContainer>
 	);
 };
