@@ -25,8 +25,9 @@ const StyledProfileHigh = styled.div`
 const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
-	align-items: end;
-	height: 150px;
+	/* align-items: end; */
+	margin-top: 40px;
+	min-height: 150px;
 `;
 const StyledUserImage = styled.img`
 	display: flex;
@@ -146,7 +147,7 @@ const ProfilePageMobile = ({
 					response.bio !== 'null' ||
 					response.company !== 'null' ||
 					response.location !== 'null' ||
-					response.blog !== 'null'
+					response.blog !== ''
 				) {
 					setUserInfo(true);
 				}
