@@ -52,6 +52,8 @@ const NotificationPage = () => {
 			.then((res) => console.log('[알림 테스트]', res));
 	});
 
+	console.log(data);
+
 	return (
 		<StyledNotificationContainer>
 			<Header title="알림" />
