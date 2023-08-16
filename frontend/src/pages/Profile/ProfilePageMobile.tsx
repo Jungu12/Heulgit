@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
 import { UserType } from '@typedef/common.types';
+import { FollowType } from '@typedef/profile/user.types';
 // import { UserType } from '@typedef/common.types';
 
 const StyledProfilePage = styled.div``;
@@ -130,12 +131,40 @@ const ProfilePageMobile = ({
 	const [loadedUser, setLoadedUser] = useState<UserType>();
 	const [isFollowing, setIsFollowing] = useState(false);
 
+	// 유저 정보 불러오기
+	useEffect(() => {
+		authHttp
+			.get<UserType>(`users/${userId}`)
+			.then((response) => {
+				console.log('유저 정보 성공:', response);
+				setLoadedUser(response);
+			})
+			.catch((error) => {
+				console.error('유저 정보 실패:', error);
+			});
+	}, []);
+
+	// 팔로우 상태 확인
+	if (userId !== user?.githubId) {
+		useEffect(() => {
+			authHttp
+				.get<FollowType>(`relations/state?to=${userId}`)
+				.then((response) => {
+					console.log('팔로우 정보 성공:', response);
+					setIsFollowing(response.follow);
+				})
+				.catch((error) => {
+					console.error('팔로우 정보 실패:', error);
+				});
+		}, []);
+	}
+
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
 		if (!isFollowing) {
 			// 팔로우
 			authHttp
-				.post(`relations/follow/${userId}`)
+				.post(`relations/follow/${userId}`, isFollowing)
 				.then(() => {
 					setIsFollowing(true);
 					console.log('팔로우 성공');
@@ -156,19 +185,6 @@ const ProfilePageMobile = ({
 				});
 		}
 	};
-
-	// 유저 정보 불러오기
-	useEffect(() => {
-		authHttp
-			.get<UserType>(`users/${userId}`)
-			.then((data) => {
-				console.log('유저 정보 성공:', data);
-				setLoadedUser(data);
-			})
-			.catch((error) => {
-				console.error('유저 정보 실패:', error);
-			});
-	}, []);
 
 	return (
 		<StyledProfilePage>
