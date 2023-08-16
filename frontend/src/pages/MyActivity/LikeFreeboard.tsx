@@ -20,11 +20,11 @@ const LikeFreeboard = () => {
 	}, []);
 
 	const {
-		data: freeLikeList,
-		fetchNextPage: freeFetchNextPage,
-		hasNextPage: freeHasNextPage,
+		data: freeBoardLikeList,
+		fetchNextPage: freeBoardFetchNextPage,
+		hasNextPage: freeBoardHasNextPage,
 	} = useInfiniteQuery(
-		['/my-likes/heulgit'],
+		['/my-likes/freeBoard'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
 				`users/activities/eureka/my-likes?pages=${pageParam}`,
@@ -39,20 +39,19 @@ const LikeFreeboard = () => {
 
 	return (
 		<div>
-			{freeLikeList && (
+			{freeBoardLikeList && (
 				<InfiniteScroll
-					dataLength={freeLikeList.pages.length}
-					next={freeFetchNextPage}
-					hasMore={freeHasNextPage ? true : false}
+					dataLength={freeBoardLikeList.pages.length}
+					next={freeBoardFetchNextPage}
+					hasMore={freeBoardHasNextPage ? true : false}
 					loader={<div>loading...</div>}
-					height={`calc(100vh - 114px)`}
 					style={{
 						overflowY: 'scroll',
 						overflowX: 'hidden',
 					}}
 				>
-					{freeLikeList.pages.map((free) =>
-						free.content.map((item) => (
+					{freeBoardLikeList.pages.map((freeBoard) =>
+						freeBoard.content.map((item) => (
 							<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
 						)),
 					)}
