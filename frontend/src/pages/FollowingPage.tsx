@@ -48,8 +48,8 @@ const FollowingPage = () => {
 			</StyledHeader>
 			<StyledUserList>
 				{userFollowingData &&
-					userFollowingData.map((user) => (
-						<FollowUser key={user.id} userData={user} />
+					userFollowingData.map((followUser) => (
+						<FollowUser userData={followUser} />
 					))}
 			</StyledUserList>
 		</StyledBox>
