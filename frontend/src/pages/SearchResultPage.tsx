@@ -149,7 +149,7 @@ const StyledUserContainer = styled.div`
 	}
 `;
 
-const StyledUserID = styled.img`
+const StyledUserID = styled.p`
 	font-size: 18px;
 	font-weight: 700;
 `;
