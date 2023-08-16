@@ -167,25 +167,19 @@ const CommunityPage = () => {
 	}, []);
 
 	const eurekaNextPageLoad = useCallback(async () => {
-		console.log('다음 페이지 부르기');
 		const nextPage = page + 1;
 		setPage(nextPage);
 		getEurekaFeedList(seletedSort, nextPage).then((res) => {
 			if (res.length < 20) {
 				setEurekaHasMore(false);
 			}
-
 			const newFeedList = [...feedList, ...res];
-			setFeedList((prev) => [...prev, ...res]);
-			console.log(res);
-			console.log(newFeedList);
+			setFeedList(newFeedList);
 		});
 	}, [seletedSort, page, feedList]);
 
 	// 컴포넌트 렌더링 시 FeedList 불러옴
 	useEffect(() => {
-		console.log('새로운 피드리스트 불러오기!');
-
 		getEurekaFeedList(seletedSort, page).then((res) => {
 			setFeedList(res);
 			console.log('새로운 데이터', res);
@@ -195,7 +189,7 @@ const CommunityPage = () => {
 	useEffect(() => {
 		if (seletedCommunityTitle === '유레카') {
 			getEurekaFeedList(seletedSort, page).then((res) => {
-				setFeedList(res);
+				setFeedList((prev) => [...prev, ...res]);
 			});
 		} else if (seletedCommunityTitle === '자유게시판') {
 			getFreeBoardFeedList(seletedSort, page).then((res) => {
@@ -204,17 +198,26 @@ const CommunityPage = () => {
 				setfreeBoardFeedList(res);
 			});
 		}
-	}, [seletedCommunityTitle, seletedSort, page]);
+	}, [seletedCommunityTitle, page]);
 
 	useEffect(() => {
 		console.log('[현재 페이지]', page);
 	}, [page]);
 
 	useEffect(() => {
-		setPage(1);
-		getEurekaFeedList(seletedSort, 1).then((res) => {
-			setFeedList(res);
-		});
+		if (seletedCommunityTitle === '유레카') {
+			setPage(1);
+			setFeedList([]);
+			getEurekaFeedList(seletedSort, 1).then((res) => {
+				setFeedList(res);
+			});
+		}
+
+		if (seletedCommunityTitle === '자유게시판') {
+			getFreeBoardFeedList(seletedSort, page).then((res) => {
+				setfreeBoardFeedList(res);
+			});
+		}
 	}, [seletedSort]);
 
 	return (
