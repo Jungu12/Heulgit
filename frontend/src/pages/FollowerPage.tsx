@@ -4,6 +4,7 @@ import Header from '@components/common/Header';
 import FollowUser from '@components/profile/FollowUser';
 import { authHttp } from '@utils/http';
 import { UserFollowingType } from '@typedef/profile/user.types';
+import { useParams } from 'react-router-dom';
 
 const StyledBox = styled.div`
 	/* height: 100vh; */
@@ -27,10 +28,12 @@ const StyledUserList = styled.div`
 `;
 
 const FollowerPage = () => {
+	const { loadedUserId } = useParams();
+
 	// 팔로워 목록
 	useEffect(() => {
 		authHttp
-			.get<UserFollowingType[]>('freeboard/myposts?pages=1')
+			.get<UserFollowingType[]>(`relations/followers/${loadedUserId}`)
 			.then((response) => {
 				console.log('팔로워 로드 성공.', response);
 			})
@@ -45,15 +48,6 @@ const FollowerPage = () => {
 				<Header title={'팔로워'}></Header>
 			</StyledHeader>
 			<StyledUserList>
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
 				<FollowUser />
 			</StyledUserList>
 		</StyledBox>

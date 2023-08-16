@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
 const MentionInputStyle = {
+	outline: 'none',
+
 	suggestions: {
 		bottom: '50px',
 		top: 'auto',
@@ -136,8 +138,8 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 				>
 					<Mention
 						trigger="@"
-						markup="@__id__"
-						displayTransform={(username) => `@${username}`}
+						markup="@__display__ "
+						displayTransform={(username) => `@${username} `}
 						data={followingList.map((v, index) => ({
 							id: index,
 							display: v.id,
