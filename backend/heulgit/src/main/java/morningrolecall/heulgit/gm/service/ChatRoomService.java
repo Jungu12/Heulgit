@@ -37,7 +37,6 @@ public class ChatRoomService {
 
 	// 채팅방 입장 : redis에 topic을 만들고 pub/sub 통신을 하기 위해 리스너를 설정한다.
 	public void enterChatRoom(String roomId, String githubId) {
-		String[] userInfo = roomId.split(":");
 		ChannelTopic topic = topics.get(roomId);
 
 		if (topic == null) {
@@ -47,8 +46,7 @@ public class ChatRoomService {
 		redisMessageListener.addMessageListener(redisSubscriber, topic);
 		topics.put(roomId, topic);
 
-		userJoinedChatRoom(roomId, userInfo[0]);
-		userJoinedChatRoom(roomId, userInfo[1]);
+		userJoinedChatRoom(roomId, githubId);
 		logger.debug("enterChatRoom()에서 redis에 토픽 저장");
 
 		//모든 메세지 읽음 처리
@@ -61,7 +59,9 @@ public class ChatRoomService {
 
 			logger.debug("enterChatRoom()에서 메세지 읽음 시도");
 			chatRoom.markAllMessagesAsRead(githubId);
+			chatRoomRepository.updateChatRoom(chatRoom);
 			logger.debug("enterChatRoom()에서 메세지 읽음 처리 마침");
+			break;
 		}
 
 	}
@@ -103,7 +103,7 @@ public class ChatRoomService {
 		for (ChatMessage chatMessage : curChatRoom.getChatMessages()) {
 			logger.debug("메세지 = {}, 메세지 읽음 상태 = {}", chatMessage.getMessage(), chatMessage.isRead());
 		}
-		chatRoomRepository.updateChatRoom(curChatRoom, message);
+		chatRoomRepository.updateChatRoomAndNewMessage(curChatRoom, message);
 	}
 
 	//메세지를 반환한다.

@@ -76,9 +76,12 @@ public class ChatRoomRepository {
 		return opsHashChatRoom.get(CHAT_ROOMS, roomId);
 	}
 
-	public void updateChatRoom(ChatRoom chatRoom, ChatMessage messageContent) {
+	public void updateChatRoomAndNewMessage(ChatRoom chatRoom, ChatMessage messageContent) {
 		chatRoom.addChatMessage(messageContent);
 		opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
 	}
 
+	public void updateChatRoom(ChatRoom chatRoom) {
+		opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
+	}
 }
