@@ -1,4 +1,4 @@
-package morningrolecall.heulgit.relation.controlller;
+package morningrolecall.heulgit.relation.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class RelationController {
 	@GetMapping("/state")
 	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from, @RequestParam String to) {
 		logger.debug("followStateCheck(), from = {}, to = {}", from, to);
-
+		
 		return ResponseEntity.ok().body(relationService.checkFollowState(from, to));
 	}
 
