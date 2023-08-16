@@ -35,6 +35,7 @@ public interface EurekaRepository extends JpaRepository<Eureka, Long> {
 	Page<Eureka> findContainsTitleSortedByCommentsEurekas(@Param("title") String title, Pageable pageable);
 
 	Slice<Eureka> findSliceByUser_GithubId(String id, Pageable pageable);
+	Slice<Eureka> findSliceByUser_GithubIdContaining(String id, Pageable pageable);
 
 	@Query("SELECT e FROM Eureka e WHERE e.user.githubId = :id ORDER BY SIZE(e.likedUsers) DESC, e.updatedDate DESC")
 	Page<Eureka> findByUserNameSortedByLikesEurekas(@Param("id") String id, Pageable pageable);
