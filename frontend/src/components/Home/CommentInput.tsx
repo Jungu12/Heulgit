@@ -8,6 +8,22 @@ import { Mention, MentionsInput, OnChangeHandlerFunc } from 'react-mentions';
 import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
+const MentionInputStyle = {
+	suggestions: {
+		bottom: '50px',
+		top: 'auto',
+		list: {
+			display: 'flex',
+			flexDirection: 'column',
+			gap: '6px',
+			background: 'white',
+			border: '1px solid rgba(0, 0, 0, 0.15)',
+			height: '75vh',
+			overflow: 'scroll',
+		},
+	},
+};
+
 const CommentInputContainer = styled.div`
 	width: 100%;
 	display: flex;
@@ -36,6 +52,7 @@ const StyledInput = styled(MentionsInput)`
 	flex: 1;
 	outline: none;
 	margin-right: 12px;
+	outline: none;
 `;
 
 const StyledSubmitButton = styled.button`
@@ -51,6 +68,15 @@ const StyledSubmitButton = styled.button`
 
 const StyledMentionContainer = styled.div`
 	display: flex;
+	align-items: center;
+	display: flex;
+	align-items: center;
+	padding: 5px 15px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+
+	&:focus {
+		background-color: #cee4e5;
+	}
 
 	span {
 		font-size: 14px;
@@ -62,6 +88,7 @@ const StyledMentionImage = styled.img`
 	height: 32px;
 	width: 32px;
 	margin-right: 12px;
+	border-radius: 50%;
 `;
 
 type Props = {
@@ -105,6 +132,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 					maxLength={50}
 					value={input}
 					onChange={onHandleComment}
+					style={MentionInputStyle}
 				>
 					<Mention
 						trigger="@"
@@ -112,7 +140,6 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 							id: index,
 							display: v.id,
 						}))}
-						style={{ bottom: '50px' }}
 						renderSuggestion={(suggestion) => (
 							<StyledMentionContainer>
 								<StyledMentionImage
