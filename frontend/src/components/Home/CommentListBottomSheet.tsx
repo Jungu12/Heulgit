@@ -21,8 +21,9 @@ const StyledCommentEmpty = styled.div`
 	flex: 1;
 	align-items: center;
 	justify-content: center;
-	font-size: 16px;
+	font-size: 20px;
 	font-weight: 700;
+	margin: 50% 0 32px 0;
 `;
 
 type Props = {
