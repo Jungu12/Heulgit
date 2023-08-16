@@ -194,7 +194,7 @@ const FreePostViewPage = () => {
 
 	// 좋아요 누른 사람 목록 보기
 	const onClickLike = useCallback(() => {
-		navigation('like');
+		navigation(`freeboard/posts/likes/${feed?.freeBoardId}`);
 	}, [navigation]);
 
 	const onClickUserProfile = useCallback(() => {
