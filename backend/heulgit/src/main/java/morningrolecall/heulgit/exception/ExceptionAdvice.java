@@ -14,7 +14,8 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(EurekaException.class)
 	public ResponseEntity<ExceptionResponse> handleEurekaException(EurekaException exception) {
-		logger.debug("handleEurekaException(), exception status : {}, exception message: {}", exception.getHttpStatus(),
+		logger.debug("handleEurekaException(), exception status : {}, exception message: {}",
+			exception.getHttpStatus(),
 			exception.getMessage());
 		return ResponseEntity.status(exception.getHttpStatus()).body(new ExceptionResponse(exception.getMessage()));
 	}
@@ -37,6 +38,14 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(AuthException.class)
 	public ResponseEntity<ExceptionResponse> handleAuthException(AuthException exception) {
+		logger.debug("handleAuthException(), exception status : {}, exception message: {}",
+			exception.getHttpStatus(),
+			exception.getMessage());
+		return ResponseEntity.status(exception.getHttpStatus()).body(new ExceptionResponse(exception.getMessage()));
+	}
+
+	@ExceptionHandler(GmException.class)
+	public ResponseEntity<ExceptionResponse> handleGMException(AuthException exception) {
 		logger.debug("handleAuthException(), exception status : {}, exception message: {}",
 			exception.getHttpStatus(),
 			exception.getMessage());
