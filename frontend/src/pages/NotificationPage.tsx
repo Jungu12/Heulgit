@@ -1,5 +1,7 @@
 import Header from '@components/common/Header';
 import NotiFollow from '@components/notification/NotiFollow';
+import { useQuery } from '@tanstack/react-query';
+import { authHttp } from '@utils/http';
 import React from 'react';
 import { styled } from 'styled-components';
 
@@ -44,6 +46,12 @@ const StyleNoti = styled.div`
 `;
 
 const NotificationPage = () => {
+	const { data } = useQuery(['/notifications'], () => {
+		authHttp
+			.get('notifications')
+			.then((res) => console.log('[알림 테스트]', res));
+	});
+
 	return (
 		<StyledNotificationContainer>
 			<Header title="알림" />

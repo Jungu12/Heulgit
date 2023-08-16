@@ -91,8 +91,8 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledLinkImg = styled.img`
-	width: 99px;
-	height: 28px;
+	width: 99px !important;
+	height: 28px !important;
 `;
 
 type Props = {
