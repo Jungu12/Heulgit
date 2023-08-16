@@ -136,6 +136,24 @@ const StyledContentList = styled.section`
 	overflow-x: hidden;
 `;
 
+const StyledUserContainer = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
+const StyledUserAvatar = styled.img`
+	width: 48px;
+	height: 48px;
+	margin-right: 16px;
+	border-radius: 50%;
+`;
+
+const StyledUserID = styled.img`
+	font-size: 18px;
+	font-weight: 700;
+`;
+
 const SearchResultPage = () => {
 	const dropDownRef = useRef(null);
 	const [isViewOptionOpen, setIsViewOptionOpen] = useDetectClose(
@@ -283,6 +301,7 @@ const SearchResultPage = () => {
 						next={heulgitFetchNextPage}
 						hasMore={heulgitHasNextPage ? true : false}
 						loader={<div>loading...</div>}
+						height={`calc(100vh - 114px)`}
 					>
 						{heulgitList.pages.map((heulgit) =>
 							heulgit.content.map((item) => (
@@ -319,7 +338,12 @@ const SearchResultPage = () => {
 				)}
 				{seletedCategory === '사용자' &&
 					userList &&
-					userList.map((user) => <div>{user.githubId}</div>)}
+					userList.map((user) => (
+						<StyledUserContainer>
+							<StyledUserAvatar src={user.avatarUrl} alt="avatar" />
+							<StyledUserID>{user.githubId}</StyledUserID>
+						</StyledUserContainer>
+					))}
 			</StyledContentList>
 		</StyledSearchResultContainer>
 	);
