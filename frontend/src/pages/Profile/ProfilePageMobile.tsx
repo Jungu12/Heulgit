@@ -131,7 +131,7 @@ const ProfilePageMobile = ({
 	const [view, setView] = useState(false);
 	const [userInfo, setUserInfo] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
-	const [isFollowing, setIsFollowing] = useState(false);
+	const [isFollowing, setIsFollowing] = useState<boolean>();
 
 	// 유저 정보 불러오기
 	useEffect(() => {

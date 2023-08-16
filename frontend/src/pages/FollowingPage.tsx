@@ -29,7 +29,7 @@ const StyledUserList = styled.div`
 
 const FollowingPage = () => {
 	const { loadedUserId } = useParams();
-
+	console.log(loadedUserId);
 	// 팔로잉 목록
 	useEffect(() => {
 		authHttp
