@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +32,20 @@ public class WebConfig implements WebMvcConfigurer {
 		return new RestTemplate();
 	}
 
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.OAS_30)
+			.apiInfo(apiInfo())
+			.securityContexts(Collections.singletonList(securityContext()))
+			.securitySchemes(List.of(apiKey()))
+			.useDefaultResponseMessages(false)
+			.select()
+			.apis(RequestHandlerSelectors.basePackage("morningrolecall.heulgit"))
+			.paths(PathSelectors.any())
+			.build()
+			.host("https://i9d211.p.ssafy.io:9001");
+	}
+
 	// @Override
 	// public void addInterceptors(InterceptorRegistry registry) {
 	// 	registry.addInterceptor(authInterceptor)
@@ -43,18 +56,6 @@ public class WebConfig implements WebMvcConfigurer {
 	// 			"/favicon.ico",
 	// 			"/swagger-resources/**");
 	// }
-
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)
-			.apiInfo(apiInfo())
-			.securityContexts(Collections.singletonList(securityContext()))
-			.securitySchemes(List.of(apiKey()))
-			.select()
-			.apis(RequestHandlerSelectors.basePackage("morningrolecall.heulgit"))
-			.paths(PathSelectors.any())
-			.build();
-	}
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
@@ -79,15 +80,5 @@ public class WebConfig implements WebMvcConfigurer {
 
 	private ApiKey apiKey() {
 		return new ApiKey("Authorization", "Authorization", "header");
-	}
-
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addRedirectViewController("/v2/api-docs", "/v2/api-docs");
-		registry.addRedirectViewController("/swagger-resources/configuration/ui",
-			"/swagger-resources/configuration/ui");
-		registry.addRedirectViewController("/swagger-resources/configuration/security",
-			"/swagger-resources/configuration/security");
-		registry.addRedirectViewController("/swagger-resources", "/swagger-resources");
 	}
 }
