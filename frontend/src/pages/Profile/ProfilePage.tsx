@@ -35,7 +35,7 @@ const ProfilePage = () => {
 
 	const onClickGM = useCallback(() => {
 		authHttp.get<ChatRoomType>(`gm/room/access/${userId}`).then((res) => {
-			navigation(`/gm/${res.roomId}`);
+			navigation(`/gm/${res.roomId}`, { state: { room: res } });
 		});
 	}, []);
 

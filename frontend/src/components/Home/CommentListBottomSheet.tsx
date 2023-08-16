@@ -27,20 +27,24 @@ const CommentListBottomSheet = ({ postId, commentList }: Props) => {
 
 	return (
 		<StyledCommentListContainer>
-			{commentList.map((comment) => (
-				<>
-					<Comment
-						comment={comment}
-						key={comment.commentId}
-						// onClickCommentMenuOpen 수정해야함
-						onClickCommentMenuOpen={function (commentId: number): void {
-							console.log(commentId);
-							throw new Error('Function not implemented.');
-						}}
-					/>
-					<Separation />
-				</>
-			))}
+			{commentList ? (
+				commentList.map((comment) => (
+					<>
+						<Comment
+							comment={comment}
+							key={comment.commentId}
+							// onClickCommentMenuOpen 수정해야함
+							onClickCommentMenuOpen={function (commentId: number): void {
+								console.log(commentId);
+								throw new Error('Function not implemented.');
+							}}
+						/>
+						<Separation />
+					</>
+				))
+			) : (
+				<></>
+			)}
 		</StyledCommentListContainer>
 	);
 };

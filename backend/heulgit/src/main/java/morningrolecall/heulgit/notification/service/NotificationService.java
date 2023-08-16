@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import lombok.RequiredArgsConstructor;
+import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.NotificationException;
 import morningrolecall.heulgit.notification.domain.Notification;
 import morningrolecall.heulgit.notification.domain.NotificationType;
 import morningrolecall.heulgit.notification.domain.dto.NotificationFollowRequest;
@@ -142,10 +144,10 @@ public class NotificationService {
 	public void addFollowNotification(NotificationFollowRequest notificationFollowRequest) {
 		logger.debug("addFollowNotification(), notificationFollowRequest = {}, ", notificationFollowRequest);
 		User receiver = userRepository.findUserByGithubId(notificationFollowRequest.getReceiverId())
-			.orElseThrow(() -> new NoResultException());
+			.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
 
 		User sender = userRepository.findUserByGithubId(notificationFollowRequest.getSenderId())
-			.orElseThrow(() -> new NoResultException());
+			.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
 
 		Notification notification = Notification.builder()
 			.sender(sender)
@@ -168,10 +170,10 @@ public class NotificationService {
 			logger.debug("addLikeNotification(), notificationLikeRequest = {}, ", notificationLikeRequest);
 			//게시글 작성자가 없으면 끝
 			User receiver = userRepository.findUserByGithubId(notificationLikeRequest.getWriterId())
-				.orElseThrow(() -> new NoResultException());
+				.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
 
 			User sender = userRepository.findUserByGithubId(notificationLikeRequest.getSenderId())
-				.orElseThrow(() -> new NoResultException());
+				.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
 
 			Notification notification = Notification.builder()
 				.sender(sender).receiver(receiver)
@@ -182,7 +184,7 @@ public class NotificationService {
 				.build();
 			notificationRepository.saveAndFlush(notification);
 			send(notificationMapper.toLikeResponse(notification));
-		} catch(NoResultException e){
+		} catch(NotificationException e){
 			logger.debug("사용자가 우리서비스 사용자가 아님");
 
 		}
@@ -198,21 +200,62 @@ public class NotificationService {
 		logger.debug("addCommentNotification(), notificationCommentRequest = {}, ", notificationCommentRequest);
 		// 댓글 사용자 찾기
 		User sender = userRepository.findUserByGithubId(notificationCommentRequest.getSenderId())
-			.orElseThrow(() -> new NoResultException());
+			.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
 
-		// 멘션 처리 @뒤에 있는 문자열 띄어쓰기 전까지를 githubId로 인식
-		String text = notificationCommentRequest.getContent();
-		Pattern pattern = Pattern.compile("@(\\w+)");
-		Matcher matcher = pattern.matcher(text);
-
+		// // 멘션 처리 @뒤에 있는 문자열 띄어쓰기 전까지를 githubId로 인식
+		// String text = notificationCommentRequest.getContent();
+		// Pattern pattern = Pattern.compile("@(\\w+)");
+		// Matcher matcher = pattern.matcher(text);
+		for(String receiverId :notificationCommentRequest.getMentionedFollowers()){
+			try{
+				User reciever = userRepository.findUserByGithubId(receiverId)
+					.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
+				Notification notification = Notification.builder()
+					.sender(sender)
+					.receiver(reciever)
+					.createdDate(LocalDateTime.now())
+					.hasRead(false)
+					.type(NotificationType.COMMENT)
+					.content(notificationCommentRequest.getContent())
+					.relatedLink(notificationCommentRequest.getRelatedLink())
+					.build();
+				notificationRepository.saveAndFlush(notification);
+				send(notificationMapper.toMentionResponse(notification));
+			} catch (NotificationException e){
+				logger.debug("멘션된 사용자가 서비스 사용자가 아님");
+			}
+		}
 		//멘션된 사용자에게 보낼 알림을 모두 저장
-		while (matcher.find()) {
-			String receiverId = matcher.group().replaceAll("@", "");
+		// while (matcher.find()) {
+		// 	String receiverId = matcher.group().replaceAll("@", "");
 			// 멘션된 사용자가 우리 서비스 사용자가 아니면 예외처리
 			// 사용자이면 알림 저장
-			try {
-				User receiver = userRepository.findUserByGithubId(receiverId)
-					.orElseThrow(() -> new NoResultException());
+			// try {
+			// 	User receiver = userRepository.findUserByGithubId(receiverId)
+			// 		.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
+			// 	Notification notification = Notification.builder()
+			// 		.sender(sender)
+			// 		.receiver(receiver)
+			// 		.createdDate(LocalDateTime.now())
+			// 		.hasRead(false)
+			// 		.type(NotificationType.COMMENT)
+			// 		.content(notificationCommentRequest.getContent())
+			// 		.relatedLink(notificationCommentRequest.getRelatedLink())
+			// 		.build();
+			// 	notificationRepository.saveAndFlush(notification);
+			// 	send(notificationMapper.toMentionResponse(notification));
+			// } catch (NotificationException e) {
+			// 	logger.debug("멘션된 사용자가 서비스 사용자가 아님");
+			//
+			// }
+
+		// }
+		try{
+			// 게시글 작성자가 우리 서비스 사용자일 때 알림 전송
+			User receiver = userRepository.findUserByGithubId(notificationCommentRequest.getWriterId())
+				.orElseThrow(() -> new NoResultException());
+			//댓글작성자가 게시글 작성자가 아닐 경우에 알림 전송
+			if(!receiver.getGithubId().equals(sender.getGithubId())){
 				Notification notification = Notification.builder()
 					.sender(sender)
 					.receiver(receiver)
@@ -223,28 +266,9 @@ public class NotificationService {
 					.relatedLink(notificationCommentRequest.getRelatedLink())
 					.build();
 				notificationRepository.saveAndFlush(notification);
-				send(notificationMapper.toMentionResponse(notification));
-			} catch (NoResultException e) {
-				logger.debug("멘션된 사용자가 서비스 사용자가 아님");
+				send(notificationMapper.toCommentResponse(notification));
 
 			}
-
-		}
-		try{
-			// 게시글 작성자가 우리 서비스 사용자일 때 알림 전송
-			User receiver = userRepository.findUserByGithubId(notificationCommentRequest.getWriterId())
-				.orElseThrow(() -> new NoResultException());
-			Notification notification = Notification.builder()
-				.sender(sender)
-				.receiver(receiver)
-				.createdDate(LocalDateTime.now())
-				.hasRead(false)
-				.type(NotificationType.COMMENT)
-				.content(notificationCommentRequest.getContent())
-				.relatedLink(notificationCommentRequest.getRelatedLink())
-				.build();
-			notificationRepository.saveAndFlush(notification);
-			send(notificationMapper.toCommentResponse(notification));
 
 		} catch (NoResultException e) {
 			logger.debug("작성자가 서비스 사용자가 아님");
@@ -261,7 +285,7 @@ public class NotificationService {
 	public List<NotificationResponse> findNotification(String githubId) {
 		logger.debug("findNotification(), githubId = {}, ", githubId);
 		User receiver = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException());
+			.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
 		List<Notification> notifications = notificationRepository.findByReceiverOrderByCreatedDateDesc(receiver);
 
 		List<NotificationResponse> notificationResponses = new ArrayList<>();

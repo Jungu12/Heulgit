@@ -36,6 +36,9 @@ public enum ExceptionCode {
 	FOLLOW_CANCEL_FAILED(HttpStatus.BAD_REQUEST, "팔로우를 취소할 수 없습니다."),
 	ALREADY_FOLLOWED(HttpStatus.CONFLICT, "이미 팔로우 관계입니다.");
 
+
+	/* Notification */
+
 	private final HttpStatus status;
 	private final String message;
 }

@@ -44,6 +44,7 @@ public class HeulgitController {
 
 	@GetMapping("/posts")
 	public ResponseEntity<?> heulgitList(
+		@AuthenticationPrincipal String githubId,
 		@RequestParam(required = false) String language,
 		@RequestParam(required = false) String sort,
 		@RequestParam(name = "start-year", required = false) Integer startYear,
@@ -68,7 +69,7 @@ public class HeulgitController {
 			endDate = null;
 
 		}
-		return ResponseEntity.ok().body(heulgitService.searchHeulgits(sort,language,startDate,endDate,pages));
+		return ResponseEntity.ok().body(heulgitService.searchHeulgits(githubId,sort,language,startDate,endDate,pages));
 	}
 
 	@GetMapping("/posts/{heulgitId}")
@@ -135,6 +136,10 @@ public class HeulgitController {
 		logger.debug("heulgitLikedUsers() who ={},heulgitId={} pages={}",githubId,heulgitId,pages);
 		return ResponseEntity.ok().body(heulgitService.findLikedUser(heulgitId, githubId, pages));
 
+	}
+	@GetMapping("/posts/feedlist")
+	public ResponseEntity testHeulgit(@RequestParam int pages){
+		return ResponseEntity.ok().body(heulgitService.feedList("LEEILHO",pages));
 	}
 
 

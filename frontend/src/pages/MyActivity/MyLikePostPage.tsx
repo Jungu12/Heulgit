@@ -5,7 +5,8 @@ import BigHeader from '@components/profile/BigHeader';
 import Category from '@components/profile/Category';
 import CategoryT from '@components/profile/CategoryT';
 import { colors } from '@constants/colors';
-import LikeEureka from '@pages/MyActivity/LikeEureka';
+import LikeEureka from './LikeEureka';
+import LikeFreeboard from './LikeFreeboard';
 
 //스타일
 const StyledBox = styled.div`
@@ -143,7 +144,12 @@ const MyLikePostPage = () => {
 							<LikeEureka />
 						</div>
 					)}
-					{selectedPost === '자유' && <div>{/* <LikeFreeboard /> */}</div>}
+					{selectedPost === '자유' && (
+						<div>
+							{' '}
+							<LikeFreeboard />
+						</div>
+					)}
 				</div>
 			</StyledContent>
 

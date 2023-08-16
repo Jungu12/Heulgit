@@ -12,6 +12,7 @@ import {
 } from '@typedef/home/heulgit.types';
 import { getYearAndMonth } from '@utils/date';
 import React from 'react';
+import { OnChangeHandlerFunc } from 'react-mentions';
 import ReactModal from 'react-modal';
 import { css, styled } from 'styled-components';
 
@@ -229,6 +230,13 @@ const StyledClose = styled.img`
 	transform: translate(-50%, -50%);
 `;
 
+const LoadingConatiner = styled.div`
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+`;
+
 type Props = {
 	onClickHeulGit: () => void;
 	onClickStarSort: () => void;
@@ -252,7 +260,7 @@ type Props = {
 	handleClickCalendar: () => void;
 	setIsCommentOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	setIsViewOptionOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	onHandleComment: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onHandleComment: OnChangeHandlerFunc;
 	onClickSubbmit: () => Promise<void>;
 	isViewOptionOpen: boolean;
 	dropDownRef: React.MutableRefObject<null>;
@@ -316,112 +324,111 @@ const MainPageMobile = ({
 					<img src={images.gitMessage} alt="gm" onClick={onClickGitMessage} />
 				</StyledIconContainer>
 			</StyledMainTitleSection>
-			{feedList ? (
-				<>
-					<MainCatecorySection>
-						<StyledDropDownContainer>
-							<StyledViewFillter
-								ref={dropDownRef}
-								onClick={() => setIsViewOptionOpen(!isViewOptionOpen)}
-							>
-								{selelctedOption}
+			<MainCatecorySection>
+				<StyledDropDownContainer>
+					<StyledViewFillter
+						ref={dropDownRef}
+						onClick={() => setIsViewOptionOpen(!isViewOptionOpen)}
+					>
+						{selelctedOption}
+						<img
+							src={isViewOptionOpen ? images.arrowUp : images.arrowDown}
+							alt="option"
+						/>
+					</StyledViewFillter>
+					<StyledCalendarFillter
+						onClick={handleClickCalendar}
+						ref={calendarRef}
+					>
+						<StyledCalendarFont>
+							{`${startDate ? getYearAndMonth(startDate) : 'YYYY-MM'} ~ ${
+								endDate ? getYearAndMonth(endDate) : 'YYYY-MM'
+							} `}
+							{endDate ? (
 								<img
-									src={isViewOptionOpen ? images.arrowUp : images.arrowDown}
-									alt="option"
+									src={images.close}
+									alt="clear"
+									onClick={(e) => {
+										e.stopPropagation();
+										onClickClearCalendar();
+									}}
 								/>
-							</StyledViewFillter>
-							<StyledCalendarFillter
-								onClick={handleClickCalendar}
-								ref={calendarRef}
-							>
-								<StyledCalendarFont>
-									{`${startDate ? getYearAndMonth(startDate) : 'YYYY-MM'} ~ ${
-										endDate ? getYearAndMonth(endDate) : 'YYYY-MM'
-									} `}
-									{endDate ? (
-										<img
-											src={images.close}
-											alt="clear"
-											onClick={(e) => {
-												e.stopPropagation();
-												onClickClearCalendar();
-											}}
-										/>
-									) : (
-										<img src={images.calendar} alt="calendar" />
-									)}
-								</StyledCalendarFont>
-							</StyledCalendarFillter>
-							<StyledLanguageFillter
-								onClick={onClickLanguageChoiceButton}
-								name={selectedLanguage}
-							>
-								{selectedLanguage ? selectedLanguage : '언어 선택'}
-								{selectedLanguage && (
-									<img
-										src={images.close}
-										alt="clear"
-										onClick={(e) => {
-											e.stopPropagation();
-											onClickClearLanguage();
-										}}
-									/>
-								)}
-							</StyledLanguageFillter>
-						</StyledDropDownContainer>
-						{isCalendarOpen && (
-							<StyledCalendarContainer>
-								<Calendar
-									startDate={startDate}
-									endDate={endDate}
-									onClickOutside={onClickOutsideCalendar}
-									handleChangeCalendar={handleChangeCalendar}
-								/>
-							</StyledCalendarContainer>
+							) : (
+								<img src={images.calendar} alt="calendar" />
+							)}
+						</StyledCalendarFont>
+					</StyledCalendarFillter>
+					<StyledLanguageFillter
+						onClick={onClickLanguageChoiceButton}
+						name={selectedLanguage}
+					>
+						{selectedLanguage ? selectedLanguage : '언어 선택'}
+						{selectedLanguage && (
+							<img
+								src={images.close}
+								alt="clear"
+								onClick={(e) => {
+									e.stopPropagation();
+									onClickClearLanguage();
+								}}
+							/>
 						)}
-					</MainCatecorySection>
-					<ReactModal
-						isOpen={isLanguageOpen}
-						style={customStyles}
-						overlayClassName="custom-overlay"
-					>
-						<LanguageSearchModal onClickLanguage={onClickLanguage} />
-					</ReactModal>
-					{isLanguageOpen && (
-						<StyledClose
-							src={images.closeBlack}
-							alt="close"
-							onClick={onClickLanguageCloseButton}
+					</StyledLanguageFillter>
+				</StyledDropDownContainer>
+				{isCalendarOpen && (
+					<StyledCalendarContainer>
+						<Calendar
+							startDate={startDate}
+							endDate={endDate}
+							onClickOutside={onClickOutsideCalendar}
+							handleChangeCalendar={handleChangeCalendar}
 						/>
-					)}
-					<StyledDropDown className={isViewOptionOpen ? 'active' : ''}>
-						<li onClick={onClickHeulGit}>흘깃</li>
-						<li onClick={onClickStarSort}>스타 많은 순</li>
-						<li onClick={onClickLikeSort}>좋아요 많은 순</li>
-					</StyledDropDown>
-					{/* 피드가 담길 곳 */}
-					<FeedItemList
-						feedList={feedList}
-						onClickComment={onClickComment}
-						loadNextFeedList={loadNextFeedList}
-						hasMore={hasMore}
-					/>
-					<CBottomSheet
-						open={isCommentOpen}
-						onDismiss={() => setIsCommentOpen(false)}
-						onHandleComment={onHandleComment}
-						input={commentInput}
-						onClickSubbmit={onClickSubbmit}
-					>
-						<CommentListBottomSheet
-							postId={selelctedComment}
-							commentList={commentList}
-						/>
-					</CBottomSheet>
-				</>
-			) : (
-				<div>loading...</div>
+					</StyledCalendarContainer>
+				)}
+			</MainCatecorySection>
+			<ReactModal
+				isOpen={isLanguageOpen}
+				style={customStyles}
+				overlayClassName="custom-overlay"
+			>
+				<LanguageSearchModal onClickLanguage={onClickLanguage} />
+			</ReactModal>
+			{isLanguageOpen && (
+				<StyledClose
+					src={images.closeBlack}
+					alt="close"
+					onClick={onClickLanguageCloseButton}
+				/>
 			)}
+			<StyledDropDown className={isViewOptionOpen ? 'active' : ''}>
+				<li onClick={onClickHeulGit}>흘깃</li>
+				<li onClick={onClickStarSort}>스타 많은 순</li>
+				<li onClick={onClickLikeSort}>좋아요 많은 순</li>
+			</StyledDropDown>
+			{/* 피드가 담길 곳 */}
+
+			{feedList ? (
+				<FeedItemList
+					feedList={feedList}
+					onClickComment={onClickComment}
+					loadNextFeedList={loadNextFeedList}
+					hasMore={hasMore}
+				/>
+			) : (
+				<LoadingConatiner>loading...</LoadingConatiner>
+			)}
+			<CBottomSheet
+				open={isCommentOpen}
+				onDismiss={() => setIsCommentOpen(false)}
+				onHandleComment={onHandleComment}
+				input={commentInput}
+				onClickSubbmit={onClickSubbmit}
+			>
+				<CommentListBottomSheet
+					postId={selelctedComment}
+					commentList={commentList}
+				/>
+			</CBottomSheet>
 			<Navigation />
 		</StyledMainContainer>
 	);

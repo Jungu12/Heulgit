@@ -12,6 +12,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import CBottomSheet from '@components/common/CBottomSheet';
 import EurekaCommentList from '@components/community/EurekaCommentList';
 import { authHttp } from '@utils/http';
+import { OnChangeHandlerFunc } from 'react-mentions';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -47,6 +48,7 @@ const EurekaFeedItemListMobile = ({
 	const [seletedComment, setSeletedComment] = useState(-1);
 	const [commentInput, setCommentInput] = useState('');
 	const [commentList, setCommentList] = useState<EurekaCommentType[]>([]);
+	const [mentionList, setMentionList] = useState<string[]>([]);
 	// const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
 
 	// 댓글 모달 나오게 할 거
@@ -59,9 +61,11 @@ const EurekaFeedItemListMobile = ({
 		[setIsCommentOpen],
 	);
 
-	const onHandleComment = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
-			setCommentInput(e.target.value);
+	const onHandleComment: OnChangeHandlerFunc = useCallback(
+		(event, newValue, newPlainTextValue, mentions) => {
+			setCommentInput(newPlainTextValue);
+			setMentionList(mentions.map((mention) => mention.display));
+			console.log(`${newValue} ${newPlainTextValue} ${mentions}`);
 		},
 		[],
 	);
@@ -84,7 +88,7 @@ const EurekaFeedItemListMobile = ({
 			await authHttp.post<EurekaCommentWriteType>('e-comments/comments', {
 				content: commentInput,
 				eurekaId: seletedComment,
-				mentioedFollowers: [],
+				mentioedFollowers: mentionList,
 				parentId: null,
 			});
 			setCommentInput('');
@@ -96,6 +100,7 @@ const EurekaFeedItemListMobile = ({
 		authHttp,
 		commentInput,
 		seletedComment,
+		mentionList,
 		setCommentInput,
 		loadCommentList,
 	]);

@@ -1,9 +1,30 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { RootState } from '@store/index';
-import React from 'react';
+import { authHttp } from '@utils/http';
+import React, { useCallback, useEffect, useState } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Mention, MentionsInput, OnChangeHandlerFunc } from 'react-mentions';
 import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
+
+const MentionInputStyle = {
+	outline: 'none',
+
+	suggestions: {
+		bottom: '50px',
+		top: 'auto',
+		list: {
+			display: 'flex',
+			flexDirection: 'column',
+			gap: '6px',
+			background: 'white',
+			border: '1px solid rgba(0, 0, 0, 0.15)',
+			maxHeight: '75vh',
+			overflow: 'scroll',
+		},
+	},
+};
 
 const CommentInputContainer = styled.div`
 	width: 100%;
@@ -27,12 +48,15 @@ const StyledInputContainer = styled.div`
 	flex: 1;
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled(MentionsInput)`
 	font-size: 16px;
 	font-weight: 500;
 	flex: 1;
 	outline: none;
 	margin-right: 12px;
+	outline: none;
+	white-space: pre-wrap;
+	padding-top: 6px;
 `;
 
 const StyledSubmitButton = styled.button`
@@ -46,28 +70,100 @@ const StyledSubmitButton = styled.button`
 	}
 `;
 
+const StyledMentionContainer = styled.div`
+	display: flex;
+	align-items: center;
+	display: flex;
+	align-items: center;
+	padding: 5px 15px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+
+	&:focus {
+		background-color: #cee4e5;
+	}
+
+	span {
+		font-size: 14px;
+		font-weight: 700;
+	}
+`;
+
+const StyledMentionImage = styled.img`
+	height: 32px;
+	width: 32px;
+	margin-right: 12px;
+	border-radius: 50%;
+`;
+
 type Props = {
 	input: string;
-	onHandleComment: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onHandleComment: OnChangeHandlerFunc;
 	onClickSubbmit: () => Promise<void>;
 };
 
+type UserSimpleType = {
+	avater_url: string;
+	id: string;
+};
+
 const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
-	const userImage = useSelector(
-		(state: RootState) => state.user.user?.avatarUrl,
-	);
+	const user = useSelector((state: RootState) => state.user.user);
+	const [followingList, setFollowingList] = useState<UserSimpleType[]>([]);
+
+	const getFollersData = useCallback(() => {
+		authHttp
+			.get<UserSimpleType[]>(`relations/followings/${user?.githubId}`)
+			.then((res) => {
+				console.log(res);
+				setFollowingList(res);
+			});
+	}, [authHttp]);
+
+	useEffect(() => {
+		getFollersData();
+	}, []);
+
+	useEffect(() => {
+		console.log('[내 팔로우 목록]', followingList);
+	}, [followingList]);
 
 	return (
 		<CommentInputContainer>
-			<StyledProfile src={userImage} alt="profile" />
+			<StyledProfile src={user?.avatarUrl} alt="profile" />
 			<StyledInputContainer>
 				<StyledInput
-					type="text"
 					placeholder="댓글을 입력해주세요."
 					maxLength={50}
 					value={input}
 					onChange={onHandleComment}
-				/>
+					style={MentionInputStyle}
+				>
+					<Mention
+						trigger="@"
+						markup="@__display__ "
+						displayTransform={(username, id) => `@${id} `}
+						data={followingList.map((v, index) => ({
+							id: index,
+							display: v.id,
+						}))}
+						renderSuggestion={(suggestion) => (
+							<StyledMentionContainer>
+								<StyledMentionImage
+									src={followingList[suggestion.id as number].avater_url}
+									alt=""
+								/>
+								<span>{suggestion.display}</span>
+							</StyledMentionContainer>
+						)}
+					/>
+				</StyledInput>
+				{/* <StyledInput
+					placeholder="댓글을 입력해주세요."
+					maxLength={50}
+					value={input}
+					onChange={(e) => onHandleComment(e)}
+					// onChange={onHandleComment}
+				></StyledInput> */}
 				<StyledSubmitButton>
 					<img src={images.send} alt="send" onClick={onClickSubbmit} />
 				</StyledSubmitButton>

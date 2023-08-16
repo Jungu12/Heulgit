@@ -1,6 +1,7 @@
 package morningrolecall.heulgit.heulgit.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
@@ -84,4 +85,9 @@ public interface HeulgitRepository extends JpaRepository<Heulgit, Long>, JpaSpec
 	Slice<User> findLikedUsersByHeulgitId(Long heulgitId, Pageable pageable);
 
 	Optional<Heulgit> findByGithubIdAndHeulgitName(String githubId, String heulgitName);
+
+	List<Heulgit> findHeulgitsByGithubId(String githubId);
+
+	@Query(value = "SELECT h FROM Heulgit h ORDER BY RAND()")
+	List<Heulgit> findRandomHeulgitsLimitedTo1000();
 }

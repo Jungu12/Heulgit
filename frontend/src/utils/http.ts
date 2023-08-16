@@ -6,6 +6,7 @@ import Axios, {
 	AxiosRequestHeaders,
 	InternalAxiosRequestConfig,
 } from 'axios';
+import { setUserData } from './api/Login/loginApi';
 
 const axios = Axios.create();
 const authAxios = Axios.create();
@@ -63,6 +64,8 @@ authAxios.interceptors.request.use(
 				const refreshResponse = await http.get<AuthType>('oauth/refresh-token');
 				const newAccessToken = refreshResponse.accessToken;
 
+				console.log('새로운 accessToken 발급 :', newAccessToken);
+
 				if (newAccessToken) {
 					config.headers = config.headers || {};
 					(
@@ -70,11 +73,14 @@ authAxios.interceptors.request.use(
 					).Authorization = `Bearer ${newAccessToken}`;
 
 					// 액세스 토큰을 리덕스 스토어에 저장
-					store.dispatch(setToken(newAccessToken)); // setToken은 리덕스 액션으로 액세스 토큰을 저장하는 액션입니다.
+					store.dispatch(setToken(newAccessToken));
+
+					await setUserData();
 				}
 			} catch (error) {
 				console.error('액세스 토큰 재발급 실패:', error);
 				// 재발급 실패 시 로그아웃 등의 처리를 진행할 수 있습니다.
+				localStorage.removeItem('login');
 			}
 		}
 		return config;

@@ -51,4 +51,44 @@ public class ExceptionAdvice {
 			exception.getMessage());
 		return ResponseEntity.status(exception.getHttpStatus()).body(new ExceptionResponse(exception.getMessage()));
 	}
+
+	@ExceptionHandler(HeulgitException.class)
+	public ResponseEntity<ExceptionResponse> handleHeulgitException(HeulgitException exception) {
+		logger.debug("handleHeulgitException, exception status : {}, exception message: {}",
+			exception.getHttpStatus(),
+			exception.getMessage());
+		return ResponseEntity.status(exception.getHttpStatus()).body(new ExceptionResponse(exception.getMessage()));
+	}
+
+	@ExceptionHandler(NotificationException.class)
+	public ResponseEntity<ExceptionResponse> handleNotificationException(NotificationException exception) {
+		logger.debug("handleHeulgitException, exception status : {}, exception message: {}",
+			exception.getHttpStatus(),
+			exception.getMessage());
+		return ResponseEntity.status(exception.getHttpStatus()).body(new ExceptionResponse(exception.getMessage()));
+	}
+
+	@ExceptionHandler(EurekaCommentException.class)
+	public ResponseEntity<ExceptionResponse> handleEurekaCommentException(EurekaCommentException exception) {
+		logger.debug("handleEurekaCommentException, exception status : {}, exception message: {}",
+			exception.getHttpStatus(),
+			exception.getMessage());
+		return ResponseEntity.status(exception.getHttpStatus()).body(new ExceptionResponse(exception.getMessage()));
+	}
+
+	@ExceptionHandler(FreeBoardCommentException.class)
+	public ResponseEntity<ExceptionResponse> handleFreeBoardCommentException(FreeBoardCommentException exception) {
+		logger.debug("handleFreeBoardCommentException, exception status : {}, exception message: {}",
+			exception.getHttpStatus(),
+			exception.getMessage());
+		return ResponseEntity.status(exception.getHttpStatus()).body(new ExceptionResponse(exception.getMessage()));
+	}
+
+	@ExceptionHandler(HeulgitCommentException.class)
+	public ResponseEntity<ExceptionResponse> handleHeulgitCommentException(HeulgitCommentException exception) {
+		logger.debug("handleHeulgitCommentException, exception status : {}, exception message: {}",
+			exception.getHttpStatus(),
+			exception.getMessage());
+		return ResponseEntity.status(exception.getHttpStatus()).body(new ExceptionResponse(exception.getMessage()));
+	}
 }

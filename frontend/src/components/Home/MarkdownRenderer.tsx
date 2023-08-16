@@ -152,7 +152,7 @@ type Props = {
 	text: string;
 };
 
-const MarkdownRenderer = ({ text }: Props) => {
+const MarkdownRenderer = React.memo(({ text }: Props) => {
 	const memoizedText = useMemo(() => decodeUnicode(text), [text]);
 
 	return (
@@ -175,8 +175,6 @@ const MarkdownRenderer = ({ text }: Props) => {
 					},
 					img({ src, alt }) {
 						if (src && src.includes('travis')) {
-							console.log('너냐?');
-
 							return <></>; // 빈 요소를 반환하여 렌더링하지 않도록 처리
 						}
 						return <StyledMarkDownImg src={src} alt={alt} />;
@@ -239,6 +237,6 @@ const MarkdownRenderer = ({ text }: Props) => {
 			</ReactMarkdown>
 		</StyledMarkDownContainer>
 	);
-};
+});
 
 export default MarkdownRenderer;
