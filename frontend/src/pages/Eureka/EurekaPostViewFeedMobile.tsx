@@ -62,6 +62,7 @@ const StyledProfileImage = styled.img`
 	display: flex;
 	width: 36px;
 	height: 36px;
+	border-radius: 50%;
 `;
 
 // pTag Div
