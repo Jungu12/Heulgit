@@ -28,6 +28,7 @@ const PrivateRoutes: React.FC<Props> = ({ redirectTo }: Props) => {
 					);
 
 					eventSource.onmessage = async (event) => {
+						console.log('서버에서 뭐 옴');
 						const res = await event.data;
 						console.log(res);
 					};
