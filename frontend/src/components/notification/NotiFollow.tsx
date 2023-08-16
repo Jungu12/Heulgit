@@ -161,7 +161,7 @@ const NotiFollow = ({ notificationList, loadNotification }: Props) => {
 							<StyledFollowButton
 								$following={noti.follow}
 								onClick={() =>
-									onClickFollowButton(!noti.follow, noti.sender.githubId)
+									onClickFollowButton(noti.follow, noti.sender.githubId)
 								}
 							>
 								{noti.follow ? '팔로우' : '팔로잉'}
