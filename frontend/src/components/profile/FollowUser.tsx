@@ -55,7 +55,7 @@ const FollowUser = ({ userData }: FollowUserProps) => {
 
 	return (
 		<StyledFollowUser>
-			<StyledUser onClick={() => navigation(`profiles/${userData.id}`)}>
+			<StyledUser onClick={() => navigation(`/profiles/${userData.id}`)}>
 				<StyledUserImage src={userData.avater_url} alt="User" />{' '}
 				<StyledUserName>{userData.id}</StyledUserName>
 			</StyledUser>
