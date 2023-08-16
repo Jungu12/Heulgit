@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
 const MentionInputStyle = {
+	outline: 'none',
+
 	suggestions: {
 		bottom: '50px',
 		top: 'auto',
@@ -18,7 +20,7 @@ const MentionInputStyle = {
 			gap: '6px',
 			background: 'white',
 			border: '1px solid rgba(0, 0, 0, 0.15)',
-			height: '75vh',
+			maxHeight: '75vh',
 			overflow: 'scroll',
 		},
 	},
@@ -108,7 +110,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 
 	const getFollersData = useCallback(() => {
 		authHttp
-			.get<UserSimpleType[]>(`relations/followings?userId=${user?.githubId}`)
+			.get<UserSimpleType[]>(`relations/followings/${user?.githubId}`)
 			.then((res) => {
 				console.log(res);
 				setFollowingList(res);
@@ -136,6 +138,8 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 				>
 					<Mention
 						trigger="@"
+						markup="@__display__ "
+						displayTransform={(username) => `@${username} `}
 						data={followingList.map((v, index) => ({
 							id: index,
 							display: v.id,
