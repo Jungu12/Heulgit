@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -65,11 +67,11 @@ public class UserService {
 	private final RelationRepository relationRepository;
 	private final UserCommentRepository userCommentRepository;
 	private final RestTemplate restTemplate;
-<<<<<<<HEAD
 	private final int SIZE = 20;
-=======
 	private final HeulgitRepository heulgitRepository;
->>>>>>>cb58f2072fa67c30d4871d64a19c09fc11b1334c
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Value("${github.user.repo-url}")
 	private String userInfoUrl;
 	@Value("${github.user.repo.commit-url}")
@@ -201,7 +203,7 @@ public class UserService {
 			// 유저의 한달 내 repo 긁어오기 (github API)
 			List<UserRepositoryResponse> repos = getRepoInfo(following);
 			// 유저의 한달 내 repo 안의 커밋 긁어오기 (github API)
-			List<String> commitMessages = getCommitMessageInfo(githubId, repos);
+			List<String> commitMessages = getCommitMessageInfo(following, repos);
 
 			int count = 0;
 
