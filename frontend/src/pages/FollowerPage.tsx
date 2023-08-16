@@ -4,7 +4,7 @@ import Header from '@components/common/Header';
 import FollowUser from '@components/profile/FollowUser';
 import { authHttp } from '@utils/http';
 import { UserFollowingType } from '@typedef/profile/user.types';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const StyledBox = styled.div`
 	/* height: 100vh; */
@@ -28,14 +28,15 @@ const StyledUserList = styled.div`
 `;
 
 const FollowerPage = () => {
-	const { loadedUserId } = useParams();
+	const location = useLocation();
+	const { userId } = location.state;
 
 	// 팔로워 목록
 	useEffect(() => {
 		authHttp
-			.get<UserFollowingType[]>(`relations/followers/${loadedUserId}`)
+			.get<UserFollowingType[]>(`relations/followers/${userId}`)
 			.then((response) => {
-				console.log(loadedUserId);
+				console.log(userId);
 				console.log('팔로워 로드 성공.', response);
 			})
 			.catch((error) => {
