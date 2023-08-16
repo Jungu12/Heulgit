@@ -94,7 +94,7 @@ const FreeBoardFeedItemListMobile = ({
 			await authHttp.post<FreeBoardCommentWriteType>('f-comments/comments', {
 				content: commentInput,
 				freeBoardId: seletedComment,
-				mentioedFollowers: mentionList,
+				mentionedFollowers: mentionList,
 				parentId: null,
 			});
 			setCommentInput('');

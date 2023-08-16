@@ -90,7 +90,7 @@ const EurekaFeedItemListMobile = ({
 			await authHttp.post<EurekaCommentWriteType>('e-comments/comments', {
 				content: commentInput,
 				eurekaId: seletedComment,
-				mentioedFollowers: mentionList,
+				mentionedFollowers: mentionList,
 				parentId: null,
 			});
 			setCommentInput('');

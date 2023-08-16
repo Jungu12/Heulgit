@@ -204,7 +204,7 @@ const MainPage = () => {
 			await authHttp.post<HeulgitCommentWriteType>('e-comments/comments', {
 				content: commentInput,
 				eurekaId: selelctedComment,
-				mentioedFollowers: mentionList,
+				mentionedFollowers: mentionList,
 				parentId: null,
 			});
 			setCommentInput('');
@@ -244,7 +244,9 @@ const MainPage = () => {
 
 	useEffect(() => {
 		console.log(endDate, startDate);
-		refetch();
+		if (endDate || selelctedOption !== '흘깃' || selectedLanguage) {
+			refetch();
+		}
 	}, [selelctedOption, selectedLanguage, endDate]);
 
 	useEffect(() => {

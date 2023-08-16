@@ -250,7 +250,7 @@ const FreePostViewPage = () => {
 			await authHttp.post<FreeBoardCommentWriteType>('f-comments/comments', {
 				content: input,
 				freeBoardId: feed?.freeBoardId,
-				mentioedFollowers: [],
+				mentionedFollowers: [],
 				parentId: null,
 			});
 			setInput('');
