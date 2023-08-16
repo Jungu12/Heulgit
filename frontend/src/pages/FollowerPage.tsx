@@ -4,7 +4,7 @@ import Header from '@components/common/Header';
 import FollowUser from '@components/profile/FollowUser';
 import { authHttp } from '@utils/http';
 import { UserFollowingType } from '@typedef/profile/user.types';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const StyledBox = styled.div`
 	/* height: 100vh; */
@@ -28,8 +28,7 @@ const StyledUserList = styled.div`
 `;
 
 const FollowerPage = () => {
-	const location = useLocation();
-	const { userId } = location.state;
+	const { userId } = useParams();
 
 	// 팔로워 목록
 	useEffect(() => {

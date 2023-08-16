@@ -208,16 +208,12 @@ const ProfilePageMobile = ({
 						<div className="user-name">{loadedUser?.githubId}</div>
 						<div className="user-follow">
 							<StyledFollowing
-								onClick={() =>
-									navigation(`/profiles/${loadedUser?.githubId}/following`)
-								}
+								onClick={() => navigation(`/profiles/${userId}/following`)}
 							>
 								<div>팔로잉</div>
 							</StyledFollowing>
 							<StyledFollower
-								onClick={() =>
-									navigation(`/profiles/${loadedUser?.githubId}/follower`)
-								}
+								onClick={() => navigation(`/profiles/${userId}/follower`)}
 							>
 								<div>팔로워</div>
 							</StyledFollower>
