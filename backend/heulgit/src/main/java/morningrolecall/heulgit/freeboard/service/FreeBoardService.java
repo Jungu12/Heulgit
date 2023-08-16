@@ -299,7 +299,7 @@ public class FreeBoardService {
 	public Slice<FreeBoardDetailResponse> findMyLikeFreeBoards(String githubId,
 		int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new FreeBoardException(ExceptionCode.USER_NOT_FOUND));
 		Slice<FreeBoard> freeBoards = freeBoardRepository.findByLikedUsersContains(user,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return new SliceImpl<>(toResponse(freeBoards), freeBoards.getPageable(), freeBoards.hasNext());

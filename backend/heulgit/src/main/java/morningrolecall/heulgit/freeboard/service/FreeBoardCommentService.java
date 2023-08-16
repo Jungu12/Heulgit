@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.exception.FreeBoardCommentException;
 import morningrolecall.heulgit.exception.FreeBoardException;
 import morningrolecall.heulgit.freeboard.domain.FreeBoard;
 import morningrolecall.heulgit.freeboard.domain.FreeBoardComment;
@@ -103,7 +104,7 @@ public class FreeBoardCommentService {
 	 * */
 	public Slice<FreeBoardComment> findByComments(String githubId, int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new FreeBoardCommentException(ExceptionCode.USER_NOT_FOUND));
 		Slice<FreeBoardComment> comments = freeBoardCommentRepository.findFreeBoardCommentByUserOrderByUpdatedDateDesc(
 			user, PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return comments;
@@ -114,7 +115,7 @@ public class FreeBoardCommentService {
 	 * */
 	public Slice<FreeBoardParentCommentDto> findParentComments(Long freeBoardId, int pages) {
 		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
-			.orElseThrow(() -> new NoResultException("헤당 게시물이 존재 하지 않습니다"));
+			.orElseThrow(() -> new FreeBoardCommentException(ExceptionCode.POST_NOT_FOUND));
 
 		Slice<Object[]> comments = freeBoardCommentRepository.findParentCommentsWithChildCountByFreeBoard(freeBoard,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
@@ -127,10 +128,10 @@ public class FreeBoardCommentService {
 	 * */
 	public Slice<FreeBoardCommentResponse> findChildComments(Long freeBoardId, Long parentId, int pages) {
 		FreeBoard freeBoard = freeBoardRepository.findFreeBoardByFreeBoardId(freeBoardId)
-			.orElseThrow(() -> new NoResultException("헤당 게시물이 존재 하지 않습니다"));
+			.orElseThrow(() -> new FreeBoardCommentException(ExceptionCode.POST_NOT_FOUND));
 
 		FreeBoardComment parent = freeBoardCommentRepository.findFreeBoardCommentByCommentId(parentId)
-			.orElseThrow(() -> new NoResultException("헤당 댓글이 존재 하지 않습니다"));
+			.orElseThrow(() -> new FreeBoardCommentException(ExceptionCode.PARENT_COMMENT_NOT_FOUND));
 		Slice<FreeBoardComment> comments = freeBoardCommentRepository.findChildCommentsByParentComment(parent,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return new SliceImpl<>(toCommentResponse(comments), comments.getPageable(), comments.hasNext());

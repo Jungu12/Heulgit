@@ -46,7 +46,7 @@ public class HeulgitCommentController {
 		heulgitCommentService.addComment(githubId, heulgitCommentDto);
 		String writerId = heulgitService.findHeulgit(heulgitCommentDto.getHeulgitId()).getGithubId();
 		NotificationCommentRequest notificationCommentRequest = new NotificationCommentRequest(githubId,
-			writerId,"/heulgit/posts/" + heulgitCommentDto.getHeulgitId(),heulgitCommentDto.getContent());
+			writerId,"/heulgit/posts/" + heulgitCommentDto.getHeulgitId(),heulgitCommentDto.getContent(),heulgitCommentDto.getMentionedFollowers());
 		notificationService.addCommentNotification(notificationCommentRequest);
 
 		return ResponseEntity.ok().build();
