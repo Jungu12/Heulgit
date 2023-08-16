@@ -99,7 +99,7 @@ const RootRouter = () => {
 					<Route path="/repo">
 						<Route index element={<NotFound />}></Route>
 						<Route path=":repoId" element={<RepoViewPage />}></Route>
-						<Route path=":repoId/like" element={<LikeViewPage />}></Route>
+						<Route path=":id/like" element={<LikeViewPage />}></Route>
 					</Route>
 					<Route path="/search">
 						<Route index element={<SearchPage />}></Route>

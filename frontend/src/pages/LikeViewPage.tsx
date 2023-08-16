@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { UserType } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import { findParams } from '@utils/relation';
 
 // 좋아요 한 사람 페이지 전체 컨테이너
 const StyledLikeViewPageContainer = styled.div`
@@ -135,25 +136,27 @@ const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 	color: ${(props) => (props.$following ? 'black' : 'white')};
 `;
 
-// type NavigateProps = {
-// 	state: {
-// 		user: UserType[];
-// 	};
-// };
-
 const LikeViewPage: React.FC = () => {
+	const { id } = useParams<{ id: string }>();
+	const location = useLocation();
+	const curLoction = findParams(location.pathname);
+
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [likedUsers, setLikedUsers] = useState<UserType[]>([]); // 좋아요 누른 사람들의 정보를 저장할 상태 변수
-
-	const { postId } = useParams();
 
 	const handleFollowButtonClick = () => {
 		setIsFollowing((prevState) => !prevState);
 	};
 
 	useEffect(() => {
+		console.log(id, curLoction);
+	}, []);
+
+	useEffect(() => {
+		console.log(id);
+
 		authHttp
-			.get<UserType[]>(`freeboard/posts/like/${postId}`)
+			.get<UserType[]>(`freeboard/posts/likes/${id}`)
 			.then((response) => {
 				console.log('좋아요 누른 유저 목록 보자!!!!!!!!!!', response);
 				setLikedUsers(response);
