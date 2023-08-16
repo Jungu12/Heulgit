@@ -1,13 +1,21 @@
 // 디코딩 함수
 export const decodeUnicode = (str: string) => {
-	return decodeURIComponent(
-		atob(str)
+	try {
+		const decodedBase64 = atob(str);
+		const decodedUnicode = decodedBase64
 			.split('')
 			.map((c) => {
 				return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
 			})
-			.join(''),
-	);
+			.join('');
+
+		const result = decodeURIComponent(decodedUnicode);
+
+		return result;
+	} catch (error) {
+		console.error('Error decoding Unicode:', error);
+		return '';
+	}
 };
 
 export const getImgTag = (text: string) => {
@@ -26,3 +34,19 @@ export const getImgTag = (text: string) => {
 
 	return imageInfoArray;
 };
+
+export function sliceTextToParagraph(text: string, maxLength: number) {
+	const paragraphs = text.split('\n\n'); // 문단 단위로 분리
+
+	let summary = '';
+	for (const paragraph of paragraphs) {
+		if (summary.length + paragraph.length + 2 <= maxLength) {
+			// +2는 빈 줄 고려
+			summary += paragraph + '\n\n';
+		} else {
+			break;
+		}
+	}
+
+	return summary;
+}

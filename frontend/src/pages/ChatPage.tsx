@@ -3,6 +3,7 @@ import UserLog from '@components/profile/UserLog';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import { RootState } from '@store/index';
 import { ChatRoomType, MessageType } from '@typedef/gm/gm.types';
+import { findUnReadMessage } from '@utils/gm';
 import { authHttp } from '@utils/http';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -24,6 +25,7 @@ const StyledChatList = styled.div`
 `;
 
 const ChatPage = () => {
+	const user = useSelector((state: RootState) => state.user.user);
 	const [chatRoomList, setChatRoomList] = useState<ChatRoomType[]>([]);
 	const [newMessage, setnewMessage] = useState<MessageType | null>(null);
 	const client = useRef<CompatClient>();
@@ -33,7 +35,7 @@ const ChatPage = () => {
 	// 채팅방 연결 함수
 	const connectHandler = useCallback(() => {
 		client.current = Stomp.over(() => {
-			const sock = new SockJS('http://192.168.100.64:8080/gm', {
+			const sock = new SockJS('https://i9d211.p.ssafy.io/api/gm', {
 				headers: { Authorization: `Bearer ${accessToken}` },
 			});
 			return sock;
@@ -60,16 +62,12 @@ const ChatPage = () => {
 							Authorization: accessToken,
 						},
 						() => {
-							console.log('소켓 오픈~', accessToken);
-
 							client.current!.subscribe(
 								`/sub/chat/room/${room.roomId}`,
 								(msg) => {
 									const sendMsg: MessageType = JSON.parse(msg.body);
 									setnewMessage(sendMsg);
 									console.log(sendMsg.message, chatRoomList);
-
-									// setChatRoomList(updatedChatRoomList);
 								},
 								{
 									Authorization: accessToken ? accessToken : '',
@@ -132,9 +130,6 @@ const ChatPage = () => {
 				}
 				return prevRoom;
 			});
-			console.log('ㅅㅂ..', chatRoomList);
-
-			console.log('업데이트 후 :', updatedChatRoomList);
 			setChatRoomList(updatedChatRoomList);
 		}
 		// 룸ID 같은 값 찾아서 message 내용 바꿔주기
@@ -142,24 +137,32 @@ const ChatPage = () => {
 
 	return (
 		<StyledChatPage>
-			<StyledHeader>
-				<Header
-					title={'깃속말'}
-					children={<button onClick={onClickTestButton}>test</button>}
-				/>
-			</StyledHeader>
-			<StyledChatList>
-				{chatRoomList.length &&
-					chatRoomList.map((room) => (
-						<div onClick={() => onClickChatRoom(room)}>
-							<UserLog
-								userLName={findPartnerId(room)}
-								userLog={getLastMessage(room)}
-								logDate={getLastMessageTime(room)}
-							/>
-						</div>
-					))}
-			</StyledChatList>
+			{user && (
+				<>
+					<StyledHeader>
+						<Header
+							title={'깃속말'}
+							children={<button onClick={onClickTestButton}>test</button>}
+						/>
+					</StyledHeader>
+					<StyledChatList>
+						{chatRoomList.length &&
+							chatRoomList.map((room) => (
+								<div onClick={() => onClickChatRoom(room)}>
+									<UserLog
+										userLName={findPartnerId(room)}
+										userLog={getLastMessage(room)}
+										logDate={getLastMessageTime(room)}
+										unReadNum={findUnReadMessage(
+											user.githubId,
+											room.chatMessages,
+										)}
+									/>
+								</div>
+							))}
+					</StyledChatList>
+				</>
+			)}
 		</StyledChatPage>
 	);
 };

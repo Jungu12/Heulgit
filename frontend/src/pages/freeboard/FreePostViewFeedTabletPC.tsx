@@ -2,9 +2,9 @@
 
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // import { FreeBoardPostListType } from '@typedef/community/freeboard.types';
 
 // 피드 전체 컨테이너
@@ -32,47 +32,47 @@ const StyledProfileContainer = styled.div`
 	margin-bottom: 20px;
 `;
 
-// 프로필 이미지
-const StyledProfileImage = styled.img`
-	display: flex;
-	width: 36px;
-	height: 36px;
-`;
+// // 프로필 이미지
+// const StyledProfileImage = styled.img`
+// 	display: flex;
+// 	width: 36px;
+// 	height: 36px;
+// `;
 
-// pTag Div
-const StyledP = styled.div`
-	display: flex;
-	flex-direction: column;
-`;
+// // pTag Div
+// const StyledP = styled.div`
+// 	display: flex;
+// 	flex-direction: column;
+// `;
 
-// 유저 id p 태그
-const StyledUserId = styled.p`
-	font-size: 15px;
-	font-weight: 600;
+// // 유저 id p 태그
+// const StyledUserId = styled.p`
+// 	font-size: 15px;
+// 	font-weight: 600;
 
-	margin-left: 5px;
-`;
+// 	margin-left: 5px;
+// `;
 
-// 업데이트 시간 p 태그
-const StyledUpdateTime = styled.p`
-	color: ${colors.greyScale.grey4};
-	font-size: 12px;
-	font-weight: 400;
+// // 업데이트 시간 p 태그
+// const StyledUpdateTime = styled.p`
+// 	color: ${colors.greyScale.grey4};
+// 	font-size: 12px;
+// 	font-weight: 400;
 
-	margin-left: 5px;
-	margin-top: 6px;
-`;
+// 	margin-left: 5px;
+// 	margin-top: 6px;
+// `;
 
-// 제목 컨테이너
-const StyledTitleContainer = styled.div`
-	display: block;
-	margin: 20px 12px 20px 12px;
+// // 제목 컨테이너
+// const StyledTitleContainer = styled.div`
+// 	display: block;
+// 	margin: 20px 12px 20px 12px;
 
-	line-height: 1.3;
+// 	line-height: 1.3;
 
-	font-size: 20px;
-	font-weight: 600;
-`;
+// 	font-size: 20px;
+// 	font-weight: 600;
+// `;
 
 // 내용 컨테이너
 const StyledContentContainer = styled.div`
@@ -86,37 +86,37 @@ const StyledContentContainer = styled.div`
 `;
 
 // 내용
-const StyledContent = styled.div`
-	display: flex;
-	position: relative;
+// const StyledContent = styled.div`
+// 	display: flex;
+// 	position: relative;
 
-	font-size: 14px;
+// 	font-size: 14px;
 
-	line-height: 1.3;
-	margin: 12px;
-`;
+// 	line-height: 1.3;
+// 	margin: 12px;
+// `;
 
-// 이미지 담는 컨테이너
-const StyledImgContainer = styled.div`
-	display: flex;
-	position: relative;
-	justify-content: start;
-	align-items: center;
+// // 이미지 담는 컨테이너
+// const StyledImgContainer = styled.div`
+// 	display: flex;
+// 	position: relative;
+// 	justify-content: start;
+// 	align-items: center;
 
-	max-width: 100%;
-	/* height: 190px; */
+// 	max-width: 100%;
+// 	/* height: 190px; */
 
-	margin: 0px 12px 12px 12px;
-	background-color: #495c83;
-`;
+// 	margin: 0px 12px 12px 12px;
+// 	background-color: #495c83;
+// `;
 
-// 이미지
-const StyledImg = styled.img`
-	max-width: 100%;
-	/* height: 190px; */
+// // 이미지
+// const StyledImg = styled.img`
+// 	max-width: 100%;
+// 	/* height: 190px; */
 
-	background-color: aquamarine;
-`;
+// 	background-color: aquamarine;
+// `;
 
 // 버튼 담는 컨테이너
 const StyledButtonContainer = styled.div`
@@ -131,14 +131,14 @@ const StyledButtonContainer = styled.div`
 `;
 
 // 좋아요, 댓글 수 담는 컨테이너
-const StyledSubDataContainer = styled.div`
-	display: flex;
-	align-items: center;
-	color: ${colors.greyScale.grey4};
-	font-size: 12px;
-	font-weight: 400;
-	margin: 8px 12px 12px 12px;
-`;
+// const StyledSubDataContainer = styled.div`
+// 	display: flex;
+// 	align-items: center;
+// 	color: ${colors.greyScale.grey4};
+// 	font-size: 12px;
+// 	font-weight: 400;
+// 	margin: 8px 12px 12px 12px;
+// `;
 
 const StyledUnderline = styled.div`
 	width: 100%;
@@ -152,23 +152,23 @@ const StyledUnderline = styled.div`
 // };
 
 const FreePostViewFeedTabletPC = () => {
-	const navigation = useNavigate();
+	// const navigation = useNavigate();
 
-	const [liked, setLiked] = useState(false);
-	const handleLikeClick = () => {
-		setLiked((prevLiked) => !prevLiked);
-	};
+	// const [liked, setLiked] = useState(false);
+	// const handleLikeClick = () => {
+	// 	setLiked((prevLiked) => !prevLiked);
+	// };
 
 	// 이미지 있는 경우에만 컨테이너 보여주기
 	// const imageSrc = feed.images.length > 0 ? feed.images[0].file_uri : '';
 
-	const onClickComment = useCallback(() => {
-		console.log('댓글 클릭');
-	}, []);
+	// const onClickComment = useCallback(() => {
+	// 	console.log('댓글 클릭');
+	// }, []);
 
-	const onClickLike = useCallback(() => {
-		navigation('like');
-	}, []);
+	// const onClickLike = useCallback(() => {
+	// 	navigation('like');
+	// }, []);
 
 	const onClickUserProfile = useCallback(() => {
 		// navigation(`/profiles/${feed.user.githubId}`);
@@ -200,7 +200,7 @@ const FreePostViewFeedTabletPC = () => {
 				</StyledImgContainer>
 			)} */}
 			<StyledButtonContainer>
-				<img
+				{/* <img
 					src={
 						liked
 							? images.community.likesActive
@@ -208,7 +208,7 @@ const FreePostViewFeedTabletPC = () => {
 					}
 					alt="likesActive"
 					onClick={handleLikeClick} // 좋아요 아이콘 클릭 이벤트 처리
-				/>
+				/> */}
 				<img src={images.share} alt="share_button" />
 			</StyledButtonContainer>
 			{/* <StyledSubDataContainer>

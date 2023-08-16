@@ -36,6 +36,8 @@ const StyledFilterButton = styled.button<{ $active: boolean }>`
 
 	background-color: ${({ $active }) =>
 		$active ? colors.primary.primary : 'white'};
+
+	cursor: pointer;
 `;
 
 type Props = {

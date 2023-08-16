@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,8 +35,7 @@ public class RelationController {
 	 * @param to : follow 여부를 확인하고 싶은 user
 	 */
 	@GetMapping("/state")
-	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from1, @RequestParam String to) {
-		String from = "user1";
+	public ResponseEntity<?> checkFollowState(@AuthenticationPrincipal String from, @RequestParam String to) {
 		logger.debug("followStateCheck(), from = {}, to = {}", from, to);
 
 		return ResponseEntity.ok().body(relationService.checkFollowState(from, to));
@@ -59,13 +59,12 @@ public class RelationController {
 	 * @param userId : 사용자가 팔로우하려는 다른 유저 Github ID
 	 */
 	@PostMapping("/follow")
-	public ResponseEntity<?> addFollow(@AuthenticationPrincipal String from1, @RequestParam String to) {
-		String from = "user1";
+	public ResponseEntity<?> addFollow(@AuthenticationPrincipal String from, @RequestParam String to) {
 		logger.debug("addFollow(), from = {}, to = {}", from, to);
-		relationService.addFollow(from, to);
-		NotificationFollowRequest notificationFollowRequest = new NotificationFollowRequest(from1, to, NotificationType.FOLLOW);
-		notificationService.addFollowNotification(notificationFollowRequest);
 
+		relationService.addFollow(from, to);
+		NotificationFollowRequest notificationFollowRequest = new NotificationFollowRequest(from, to, NotificationType.FOLLOW);
+		notificationService.addFollowNotification(notificationFollowRequest);
 
 		return ResponseEntity.ok().build();
 	}
@@ -74,8 +73,8 @@ public class RelationController {
 	 * 사용자는 자신을 팔로우하는 다른 유저들을 확인할 수 있다.
 	 * @param userId : 사용자가 팔로우하려는 다른 유저 Github ID
 	 */
-	@GetMapping("/followers")
-	public ResponseEntity<?> getFollowers(@AuthenticationPrincipal String userId) {
+	@GetMapping("/followers/{userId}")
+	public ResponseEntity<?> getFollowers(@PathVariable String userId) {
 		logger.debug("getFollowers(), userId = {}");
 
 		return ResponseEntity.ok().body(relationService.getFollowers(userId));
@@ -83,10 +82,10 @@ public class RelationController {
 
 	/**
 	 * 사용자는 자신이 팔로우하는 다른 유저들을 확인할 수 있다.
-	 * @param userId : 사용자가 팔로앙 중인 다른 유저 Github ID
+	 * @param userId : 사용자가 팔로잉 중인 다른 유저 Github ID
 	 */
-	@GetMapping("/followings")
-	public ResponseEntity<?> getFollowings(@AuthenticationPrincipal String userId) {
+	@GetMapping("/followings/{userId}")
+	public ResponseEntity<?> getFollowings(@PathVariable String userId) {
 		logger.debug("getFollowings(), userId = {}");
 
 		return ResponseEntity.ok().body(relationService.getFollowings(userId));

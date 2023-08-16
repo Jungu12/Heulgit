@@ -60,7 +60,9 @@ const StyledContentInput = styled.textarea.attrs({
 	line-height: 1.2;
 
 	border: none;
-	outline: none;
+	textarea {
+		outline: none;
+	}
 
 	flex: 1;
 `;

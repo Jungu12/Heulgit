@@ -9,7 +9,7 @@ const StyledCommentListContainer = styled.div`
 	flex-direction: column;
 
 	width: 100%;
-	margin-bottom: 50px;
+	margin-bottom: 60px;
 `;
 
 // 분리 선
@@ -21,17 +21,24 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	comments: FreeBoardCommentType[];
+	commentList: FreeBoardCommentType[];
+	onClickCommentMenuOpen: (id: number) => void;
 };
 
-const FreePostCommentList = ({ comments }: Props) => {
+const FreePostCommentList = ({
+	commentList,
+	onClickCommentMenuOpen,
+}: Props) => {
 	return (
 		<StyledCommentListContainer>
-			{comments.map((comment) => (
-				<>
-					<FreePostComment comment={comment} key={comment.commentId} />
+			{commentList.map((comment) => (
+				<div key={comment.commentId}>
+					<FreePostComment
+						comment={comment}
+						onClickCommentMenuOpen={onClickCommentMenuOpen}
+					/>
 					<Separation />
-				</>
+				</div>
 			))}
 		</StyledCommentListContainer>
 	);

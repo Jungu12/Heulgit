@@ -3,6 +3,8 @@ import React from 'react';
 import { styled } from 'styled-components';
 import Comment from './Comment';
 import { colors } from '@constants/colors';
+import CommentInput from './CommentInput';
+import { OnChangeHandlerFunc } from 'react-mentions';
 
 const StyledCommentListContainer = styled.div`
 	display: flex;
@@ -18,17 +20,37 @@ const Separation = styled.div`
 
 type Props = {
 	comments: HeulGitCommentType[];
+	onClickSubbmit: () => Promise<void>;
+	handleInputChange: OnChangeHandlerFunc;
+	onClickCommentMenuOpen: (commentId: number) => void;
+	input: string;
 };
 
-const CommentList = ({ comments }: Props) => {
+const CommentList = ({
+	comments,
+	onClickSubbmit,
+	handleInputChange,
+	onClickCommentMenuOpen,
+	input,
+}: Props) => {
 	return (
 		<StyledCommentListContainer>
 			{comments.map((comment) => (
 				<>
-					<Comment comment={comment} key={comment.id} />
+					<Comment
+						comment={comment}
+						key={comment.commentId}
+						onClickCommentMenuOpen={onClickCommentMenuOpen}
+					/>
 					<Separation />
 				</>
 			))}
+			{/* 댓글 입력창 */}
+			<CommentInput
+				onClickSubbmit={onClickSubbmit}
+				input={input}
+				onHandleComment={handleInputChange}
+			/>
 		</StyledCommentListContainer>
 	);
 };

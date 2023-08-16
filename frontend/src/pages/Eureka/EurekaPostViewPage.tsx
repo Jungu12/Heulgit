@@ -245,7 +245,7 @@ const EurekaPostViewPage = () => {
 			await authHttp.post<EurekaCommentWriteType>('e-comments/comments', {
 				content: input,
 				eurekaId: feed?.eurekaId,
-				mentioedFollowers: [],
+				mentionedFollowers: [],
 				parentId: null,
 			});
 			setInput('');

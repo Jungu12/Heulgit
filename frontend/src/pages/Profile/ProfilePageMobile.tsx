@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Category from '@components/profile/Category';
 import Navigation from '@components/common/Navigation';
 import { useNavigate, useParams } from 'react-router-dom';
-import MyFreeboard from '@components/profile/MyFreeboard';
-import MyEureka from '@components/profile/MyEureka';
-import MyProfile from '@components/profile/MyProfile';
+import MyFreeboard from './MyFreeboard';
+import MyEureka from '@pages/Profile/MyEureka';
+import MyProfile from './MyProfile';
 import { images } from '@constants/images';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
+import { authHttp } from '@utils/http';
+import { UserType } from '@typedef/common.types';
+import { FollowType } from '@typedef/profile/user.types';
 // import { UserType } from '@typedef/common.types';
+
 const StyledProfilePage = styled.div``;
 
 const StyledProfileHigh = styled.div`
@@ -21,8 +25,9 @@ const StyledProfileHigh = styled.div`
 const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
-	align-items: center;
-	height: 150px;
+	/* align-items: end; */
+	margin-top: 40px;
+	min-height: 150px;
 `;
 const StyledUserImage = styled.img`
 	display: flex;
@@ -91,7 +96,7 @@ const CateDiv = styled.div`
 
 	position: sticky;
 	top: 0;
-	background-color: white; /* Add a background color for better visibility */
+	background-color: white;
 	z-index: 1;
 `;
 const Sdiv = styled.div``;
@@ -123,35 +128,127 @@ const ProfilePageMobile = ({
 }: ProfileProps) => {
 	const { userId } = useParams();
 	const user = useSelector((state: RootState) => state.user.user);
+	const [view, setView] = useState(false);
+	const [userInfo, setUserInfo] = useState(false);
+	const [loadedUser, setLoadedUser] = useState<UserType>();
+	const [isFollowing, setIsFollowing] = useState<boolean>();
+
+	// 유저 정보 불러오기
+	useEffect(() => {
+		authHttp
+			.get<UserType>(`users/${userId}`)
+			.then((response) => {
+				console.log('유저 정보 성공:', response);
+				setLoadedUser(response);
+
+				// 추가 정보가 있을 경우에만 view를 true로 설정
+				if (
+					response.name !== 'null' ||
+					response.bio !== 'null' ||
+					response.company !== 'null' ||
+					response.location !== 'null' ||
+					response.blog !== ''
+				) {
+					setUserInfo(true);
+				}
+			})
+			.catch((error) => {
+				console.error('유저 정보 실패:', error);
+			});
+	}, []);
+
+	// 팔로우 상태 확인
+	if (userId !== user?.githubId) {
+		useEffect(() => {
+			authHttp
+				.get<FollowType>(`relations/state?to=${userId}`)
+				.then((response) => {
+					console.log('팔로우 정보 성공:', response);
+					setIsFollowing(response.follow);
+				})
+				.catch((error) => {
+					console.error('팔로우 정보 실패:', error);
+				});
+		}, []);
+	}
+
+	// 유저 팔로우/언팔로우
+	const handleFollowClick = () => {
+		if (!isFollowing) {
+			// 팔로우
+			authHttp
+				.post(`relations/follow?to=${userId}`)
+				.then(() => {
+					setIsFollowing(!isFollowing);
+					console.log('팔로우 성공', isFollowing);
+				})
+				.catch((error) => {
+					console.error('팔로우 실패:', error);
+				});
+		} else {
+			// 언팔로우
+			authHttp
+				.delete(`relations/unfollow?to=${userId}`)
+				.then(() => {
+					setIsFollowing(!isFollowing);
+					console.log('언팔로우 성공', isFollowing);
+				})
+				.catch((error) => {
+					console.error('언팔로우 실패', error);
+				});
+		}
+	};
 
 	return (
 		<StyledProfilePage>
 			<StyledProfileHigh>
 				<StyledUserProfile>
-					<StyledUserImage src={user?.avatarUrl} alt="user_profile" />
+					<StyledUserImage src={loadedUser?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
-						<div className="user-name">{user?.githubId}</div>
+						<div className="user-name">{loadedUser?.githubId}</div>
 						<div className="user-follow">
 							<StyledFollowing
-								onClick={() => navigation('/profiles/1/following')}
+								onClick={() => navigation(`/profiles/${userId}/following`)}
 							>
-								{`팔로잉 20`}
+								<div>팔로잉</div>
 							</StyledFollowing>
 							<StyledFollower
-								onClick={() => navigation('/profiles/1/follower')}
+								onClick={() => navigation(`/profiles/${userId}/follower`)}
 							>
-								{`팔로워 20`}
+								<div>팔로워</div>
 							</StyledFollower>
 						</div>
+						{/* 유저 정보 */}
 						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
-						<div className="user-info">
-							<p>추가정보</p>
-							{user?.name !== 'null' && <p>{user?.name}</p>}
-							{user?.company !== 'null' && <p>{user?.company}</p>}
-							{user?.location !== 'null' && <p>{user?.location}</p>}
-							{user?.blog !== 'null' && <p>{user?.blog}</p>}
-							{user?.bio !== 'null' && <p>{user?.bio}</p>}
-						</div>
+						{userInfo && (
+							<div className="user-info">
+								<div
+									onClick={() => {
+										setView(!view);
+									}}
+								>
+									추가정보{' '}
+									{view ? (
+										<img src={images.arrowUpBlack} alt="up" />
+									) : (
+										<img src={images.arrowDownBlack} alt="down" />
+									)}
+								</div>
+								{view && (
+									<div>
+										{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
+										{loadedUser?.company !== 'null' && (
+											<p>{loadedUser?.company}</p>
+										)}
+										{loadedUser?.location !== 'null' && (
+											<p>{loadedUser?.location}</p>
+										)}
+										{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
+										{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
+									</div>
+								)}
+							</div>
+						)}
 					</StyledUserInformation>
 				</StyledUserProfile>
 
@@ -165,10 +262,12 @@ const ProfilePageMobile = ({
 								</StyledActivityButtonItem>
 							</div>
 							<div>
-								<StyledActivityButtonItem
-									onClick={() => navigation('/profiles/1')}
-								>
-									<img src={images.profile.followIcon} alt="팔로우" />
+								<StyledActivityButtonItem onClick={handleFollowClick}>
+									{isFollowing ? (
+										<img src="images.profile.followingIcon" alt="팔로잉" />
+									) : (
+										<img src="images.profile.followIcon" alt="팔로우" />
+									)}
 								</StyledActivityButtonItem>
 								<StyledActivityButtonItem onClick={onClickGM}>
 									<img src={images.gitMessage} alt="채팅" />
@@ -178,7 +277,9 @@ const ProfilePageMobile = ({
 					) : (
 						<StyledMyButton>
 							<StyledActivityButtonItem
-								onClick={() => navigation('/profiles/1/activity')}
+								onClick={() =>
+									navigation(`/profiles/${user?.githubId}/activity`)
+								}
 							>
 								<img src={images.profile.settingIcon} alt="내활동" />
 							</StyledActivityButtonItem>
@@ -186,36 +287,47 @@ const ProfilePageMobile = ({
 					)}
 				</StyledActivityButton>
 			</StyledProfileHigh>
-			<SboxTop>
-				<CateDiv>
-					<Category
-						menu1={'프로필'}
-						icon11={images.profile.profileActive}
-						icon12={images.profile.profileInactive}
-						menuRouter1={() => handleMenuClick('프로필')}
-						menu2={'유레카'}
-						icon21={images.profile.eurekaActive}
-						icon22={images.profile.eurekaInactive}
-						menuRouter2={() => handleMenuClick('유레카')}
-						menu3={'자유'}
-						icon31={images.profile.freeActive}
-						icon32={images.profile.freeInactive}
-						menuRouter3={() => handleMenuClick('자유')}
-						selectedMenu={selectedMenu}
-					/>
-				</CateDiv>
-				<Sdiv>
-					<StyledProfileLow>
-						{selectedMenu === '프로필' && <MyProfile />}
-						{selectedMenu === '유레카' && <MyEureka />}
-						{selectedMenu === '자유' && <MyFreeboard />}
-					</StyledProfileLow>
-				</Sdiv>
-			</SboxTop>
-
-			<StyledFooter>
-				<Navigation />
-			</StyledFooter>
+			{loadedUser && (
+				<SboxTop>
+					<CateDiv>
+						<Category
+							menu1={'프로필'}
+							icon11={images.profile.profileActive}
+							icon12={images.profile.profileInactive}
+							menuRouter1={() => handleMenuClick('프로필')}
+							menu2={'유레카'}
+							icon21={images.profile.eurekaActive}
+							icon22={images.profile.eurekaInactive}
+							menuRouter2={() => handleMenuClick('유레카')}
+							menu3={'자유'}
+							icon31={images.profile.freeActive}
+							icon32={images.profile.freeInactive}
+							menuRouter3={() => handleMenuClick('자유')}
+							selectedMenu={selectedMenu}
+						/>
+					</CateDiv>
+					<Sdiv>
+						<StyledProfileLow>
+							{selectedMenu === '프로필' && user !== null && (
+								<MyProfile loadedUser={loadedUser} user={user} />
+							)}
+							{selectedMenu === '유레카' && user !== null && (
+								<MyEureka user={loadedUser} />
+							)}
+							{selectedMenu === '자유' && user !== null && (
+								<MyFreeboard user={loadedUser} />
+							)}
+						</StyledProfileLow>
+					</Sdiv>
+				</SboxTop>
+			)}
+			{userId === user?.githubId ? (
+				<StyledFooter>
+					<Navigation />
+				</StyledFooter>
+			) : (
+				<></>
+			)}
 		</StyledProfilePage>
 	);
 };

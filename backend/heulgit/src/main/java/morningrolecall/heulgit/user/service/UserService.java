@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -35,7 +33,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import morningrolecall.heulgit.auth.repository.AuthRepository;
+import morningrolecall.heulgit.auth.util.JwtRedisManager;
 import morningrolecall.heulgit.exception.AuthException;
 import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.exception.UserException;
@@ -62,15 +60,13 @@ public class UserService {
 
 	private final RelationService relationService;
 	private final UserRepository userRepository;
-	private final AuthRepository authRepository;
+	private final JwtRedisManager jwtRedisManager;
 	private final CommitAnalyzeRepository commitAnalyzeRepository;
 	private final RelationRepository relationRepository;
 	private final UserCommentRepository userCommentRepository;
 	private final RestTemplate restTemplate;
 	private final int SIZE = 20;
 	private final HeulgitRepository heulgitRepository;
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Value("${github.user.repo-url}")
 	private String userInfoUrl;
@@ -80,7 +76,7 @@ public class UserService {
 	private String githubApiToken;
 
 	public void logout(String userId) {
-		int deleteCount = authRepository.deleteJwt(userId);
+		int deleteCount = jwtRedisManager.deleteJwt(userId);
 
 		if (deleteCount == 0) {
 			throw new AuthException(ExceptionCode.TOKEN_DELETE_FAILED);
@@ -332,37 +328,38 @@ public class UserService {
 			requestEntity,
 			String.class
 		);
+		System.out.print("정보 불러오기 실행!!!");
 
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode rootNode = objectMapper.readTree(response.getBody());
-			JsonNode itemsNode = rootNode.get("items");
-
-			if (itemsNode != null && itemsNode.isArray()) {
-				for (JsonNode itemNode : itemsNode) {
-					String owner = itemNode.get("owner").get("login").asText();
-					String repoName = itemNode.get("name").asText();
+			if (rootNode.isArray()) {
+				for (JsonNode repositoryNode : rootNode) {
+					String owner = repositoryNode.get("owner").get("login").asText();
+					String repoName = repositoryNode.get("name").asText();
 					String readmeContent = fetchReadmeContent(owner, repoName);
-					ZonedDateTime updatedDate = ZonedDateTime.parse(itemNode.get("updated_at").asText());
+					ZonedDateTime updatedDate = ZonedDateTime.parse(repositoryNode.get("updated_at").asText());
+
 					Heulgit heulgit = Heulgit.builder()
 						.githubId(owner)
 						.heulgitName(repoName)
 						.content(readmeContent)
-						.star(itemNode.get("stargazers_count").asInt())
+						.star(repositoryNode.get("stargazers_count").asInt())
 						.updatedDate(updatedDate.toLocalDateTime())
-						.language(itemNode.get("language").asText())
+						.language(repositoryNode.get("language").asText())
 						.view(0)
-						.avatarUrl(itemNode.get("owner").get("avatar_url").asText())
+						.avatarUrl(repositoryNode.get("owner").get("avatar_url").asText())
 						.build();
 
 					heulgitList.add(heulgit);
 				}
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// 이건 전체 저장.
-		heulgitRepository.saveAll(heulgitList);
+		// heulgitRepository.saveAll(heulgitList);
 		for (Heulgit heulgit : heulgitList) {
 			Optional<Heulgit> existingHeulgit = heulgitRepository.findByGithubIdAndHeulgitName(heulgit.getGithubId(),
 				heulgit.getHeulgitName());
@@ -416,4 +413,5 @@ public class UserService {
 
 		return null;
 	}
+
 }

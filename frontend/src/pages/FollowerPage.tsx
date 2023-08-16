@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '@components/common/Header';
 import FollowUser from '@components/profile/FollowUser';
+import { authHttp } from '@utils/http';
+import { UserFollowingType } from '@typedef/profile/user.types';
+import { useParams } from 'react-router-dom';
 
 const StyledBox = styled.div`
 	/* height: 100vh; */
@@ -25,21 +28,27 @@ const StyledUserList = styled.div`
 `;
 
 const FollowerPage = () => {
+	const { userId } = useParams();
+
+	// 팔로워 목록
+	useEffect(() => {
+		authHttp
+			.get<UserFollowingType[]>(`relations/followers/${userId}`)
+			.then((response) => {
+				console.log(userId);
+				console.log('팔로워 로드 성공.', response);
+			})
+			.catch((error) => {
+				console.error('팔로워 로드 실패.', error);
+			});
+	}, []);
+
 	return (
 		<StyledBox>
 			<StyledHeader>
 				<Header title={'팔로워'}></Header>
 			</StyledHeader>
 			<StyledUserList>
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
-				<FollowUser />
 				<FollowUser />
 			</StyledUserList>
 		</StyledBox>

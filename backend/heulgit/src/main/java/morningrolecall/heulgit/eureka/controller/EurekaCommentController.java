@@ -39,8 +39,10 @@ public class EurekaCommentController {
 
 		eurekaCommentService.addComment(githubId, eurekaCommentDto);
 		String writerId = eurekaService.findEureka(eurekaCommentDto.getEurekaId()).getUser().getGithubId();
-		NotificationCommentRequest notificationCommentRequest = new NotificationCommentRequest(githubId,writerId,
-			"/eureka/posts/"+eurekaCommentDto.getEurekaId(),eurekaCommentDto.getContent());
+
+		NotificationCommentRequest notificationCommentRequest = new NotificationCommentRequest(githubId, writerId,
+			"/eureka/posts/" + eurekaCommentDto.getEurekaId(), eurekaCommentDto.getContent(),eurekaCommentDto.getMentionedFollowers());
+
 		notificationService.addCommentNotification(notificationCommentRequest);
 
 		return ResponseEntity.ok().build();
@@ -59,18 +61,18 @@ public class EurekaCommentController {
 	@GetMapping("/{eurekaId}")
 	public ResponseEntity<?> commentList(@PathVariable Long eurekaId) {
 
-
 		return ResponseEntity.ok().body(eurekaCommentService.findComments(eurekaId));
 	}
 
 	@GetMapping("/parent-comments")
-	public ResponseEntity<?> parentCommentList(@RequestParam Long eurekaId, @RequestParam int pages){
-		logger.debug("parentCommentList(), eurekaId ={},pages={}",eurekaId,pages);
-		return ResponseEntity.ok().body(eurekaCommentService.findParentComments(eurekaId,pages));
+	public ResponseEntity<?> parentCommentList(@RequestParam Long eurekaId, @RequestParam int pages) {
+		logger.debug("parentCommentList(), eurekaId ={},pages={}", eurekaId, pages);
+		return ResponseEntity.ok().body(eurekaCommentService.findParentComments(eurekaId, pages));
 	}
+
 	@GetMapping("/child-comments")
-	public ResponseEntity<?> childCommentList(@RequestParam Long eurekaId, @RequestParam Long parentId, int pages){
-		logger.debug("childCommentList(),eurekaId={},parentId={}, pages={}",eurekaId,parentId,pages);
-		return  ResponseEntity.ok().body(eurekaCommentService.findChildComments(eurekaId, parentId, pages));
+	public ResponseEntity<?> childCommentList(@RequestParam Long eurekaId, @RequestParam Long parentId, int pages) {
+		logger.debug("childCommentList(),eurekaId={},parentId={}, pages={}", eurekaId, parentId, pages);
+		return ResponseEntity.ok().body(eurekaCommentService.findChildComments(eurekaId, parentId, pages));
 	}
 }
