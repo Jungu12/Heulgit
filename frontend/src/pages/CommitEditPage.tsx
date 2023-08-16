@@ -6,9 +6,12 @@ import BigHeader from '@components/profile/BigHeader';
 import CommitTag from '@components/profile/Commit';
 import { colors } from '@constants/colors';
 import { authHttp } from '@utils/http';
-import { UserCommitCustomData } from '@typedef/profile/user.types';
+import {
+	UserCommitCustomData,
+	UserCommitCustomType,
+} from '@typedef/profile/user.types';
 
-// 더미
+// 기본 데이터
 const basicData = [
 	{ type: 'feat', description: '새로운 기능 개발' },
 	{ type: 'fix', description: '버그 수정' },
@@ -220,25 +223,35 @@ const StyledModalButtonItem = styled.div`
 const CommitEditPage = () => {
 	// const navigation = useNavigate();
 
-	const [commitTags, setCommitTags] = useState(basicData);
+	const [commitTags, setCommitTags] = useState<UserCommitCustomType[]>();
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [newCommit, setNewCommit] = useState({ type: '', description: '' });
 	const [errorMessage, setErrorMessage] = useState('');
+
+	// 커밋 메시지 불러오기
+	useEffect(() => {
+		authHttp
+			.get<UserCommitCustomData[]>('users/commit-type') // API 요청
+			.then((response) => {
+				if (response.length < 1) {
+					setCommitTags(basicData);
+				} else {
+					setCommitTags(response); // 받아온 데이터를 commitTags 상태에 설정
+				}
+				console.log('커밋 메시지를 불러왔습니다.', response);
+			})
+			.catch((error) => {
+				console.error('커밋 메시지를 불러오지 못했습니다.', error);
+			});
+	}, []);
 
 	const $inputContent = Boolean(newCommit.type);
 	const $textareaContent = Boolean(newCommit.description);
 	const isSubmitDisabled =
 		!newCommit.type ||
 		!newCommit.description ||
-		commitTags.some((tag) => tag.type === newCommit.type);
-
-	// CommitTag 삭제
-	const handleDeleteCommitTag = (idToDelete: string) => {
-		setCommitTags((prevTags) =>
-			prevTags.filter((tag) => tag.type !== idToDelete),
-		);
-	};
+		(commitTags && commitTags.some((tag) => tag.type === newCommit.type));
 
 	// 모달
 	const handleOpenModal = () => {
@@ -254,13 +267,20 @@ const CommitEditPage = () => {
 	const handleAddCommit = () => {
 		if (newCommit.type && newCommit.description) {
 			setCommitTags((prevTags) => [
-				...prevTags,
+				...(prevTags || []), // prevTags가 undefined인 경우 빈 배열로 초기화
 				{ ...newCommit, type: `${newCommit.type}`, id: Date.now() },
 			]);
 			setNewCommit({ type: '', description: '' });
 			setIsModalOpen(false);
 			setErrorMessage('');
 		}
+	};
+
+	// 커밋 삭제
+	const handleDeleteCommitTag = (idToDelete: string) => {
+		setCommitTags((prevTags) =>
+			(prevTags || []).filter((tag) => tag.type !== idToDelete),
+		);
 	};
 
 	// 커밋 메시지 저장
@@ -283,19 +303,6 @@ const CommitEditPage = () => {
 		return () => {
 			window.removeEventListener('resize', handleResize);
 		};
-	}, []);
-
-	// 커밋 메시지 불러오기
-	useEffect(() => {
-		authHttp
-			.get<UserCommitCustomData[]>('users/commit-type') // API 요청
-			.then((response) => {
-				setCommitTags(response); // 받아온 데이터를 commitTags 상태에 설정
-				console.log('커밋 메시지를 불러왔습니다.', response);
-			})
-			.catch((error) => {
-				console.error('커밋 메시지를 불러오지 못했습니다.', error);
-			});
 	}, []);
 
 	return (
@@ -323,14 +330,15 @@ const CommitEditPage = () => {
 
 				<CommitPageMiddle>
 					{/* CommitTag 목록을 매핑하여 렌더링 */}
-					{commitTags.map((tag) => (
-						<CommitTag
-							key={tag.type}
-							type={tag.type}
-							description={tag.description}
-							onClickDeleteButton={() => handleDeleteCommitTag(tag.type)}
-						/>
-					))}
+					{commitTags &&
+						commitTags.map((tag) => (
+							<CommitTag
+								key={tag.type}
+								type={tag.type}
+								description={tag.description}
+								onClickDeleteButton={() => handleDeleteCommitTag(tag.type)}
+							/>
+						))}
 				</CommitPageMiddle>
 				<StyledFooter>
 					<CommitPlusButton onClick={handleOpenModal}>
@@ -366,13 +374,16 @@ const CommitEditPage = () => {
 								setNewCommit({ ...newCommit, type: newtype });
 
 								// 타이틀 중복 검사
-								const isDuplicate = commitTags.some(
-									(tag) => tag.type === `${newtype}`,
-								);
-								if (isDuplicate) {
-									setErrorMessage('중복되는 커밋 타입이 있습니다.');
-								} else {
-									setErrorMessage('');
+								if (commitTags) {
+									const isDuplicate = commitTags.some(
+										(tag) => tag.type === `${newtype}`,
+									);
+
+									if (isDuplicate) {
+										setErrorMessage('중복되는 커밋 타입이 있습니다.');
+									} else {
+										setErrorMessage('');
+									}
 								}
 							}}
 						/>
