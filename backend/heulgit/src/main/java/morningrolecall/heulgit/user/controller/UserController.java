@@ -222,8 +222,8 @@ public class UserController {
 	 * 내가 자유게시판에 작성한 게시물 반환
 	 * @param githubId
 	 */
-	@GetMapping("myposts/freeboard")
-	public ResponseEntity<?> myFreeBoardList(@AuthenticationPrincipal String githubId, @RequestParam int pages) {
+	@GetMapping("myposts/freeboard/{githubId}")
+	public ResponseEntity<?> myFreeBoardList(@PathVariable String githubId, @RequestParam int pages) {
 		logger.debug("myFreeBoardList(), githubId = {}", githubId);
 
 		return ResponseEntity.ok().body(freeBoardService.findMyFreeBoards(githubId, pages));
@@ -233,8 +233,8 @@ public class UserController {
 	 * 내가 흘깃에 작성한 게시물 반환
 	 * @param githubId
 	 */
-	@GetMapping("myposts/heulgit")
-	public ResponseEntity<?> myHeulgitList(@AuthenticationPrincipal String githubId, @RequestParam int pages) {
+	@GetMapping("myposts/heulgit/{githubId}")
+	public ResponseEntity<?> myHeulgitList(@PathVariable String githubId, @RequestParam int pages) {
 		logger.debug("myHeulgitList(), githubId = {}", githubId);
 
 		return ResponseEntity.ok().body(heulgitService.findMyHeulgits(githubId, pages));
@@ -244,8 +244,8 @@ public class UserController {
 	 * 내가 유레카에 작성한 게시물 반환
 	 * @param githubId
 	 */
-	@GetMapping("myposts/eureka")
-	public ResponseEntity<?> myEurekaList(@AuthenticationPrincipal String githubId, @RequestParam int pages) {
+	@GetMapping("myposts/eureka/{githubId}")
+	public ResponseEntity<?> myEurekaList(@PathVariable String githubId, @RequestParam int pages) {
 		logger.debug("myEurekaList(), githubId = {}", githubId);
 
 		return ResponseEntity.ok().body(eurekaService.findMyEurekas(githubId, pages));
