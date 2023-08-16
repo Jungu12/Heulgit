@@ -11,12 +11,15 @@ import { styled } from 'styled-components';
 const MentionInputStyle = {
 	suggestions: {
 		bottom: '50px',
+		top: 'auto',
 		list: {
 			display: 'flex',
 			flexDirection: 'column',
 			gap: '6px',
 			background: 'white',
 			border: '1px solid rgba(0, 0, 0, 0.15)',
+			height: '75vh',
+			overflow: 'scroll',
 		},
 	},
 };
@@ -49,6 +52,7 @@ const StyledInput = styled(MentionsInput)`
 	flex: 1;
 	outline: none;
 	margin-right: 12px;
+	outline: none;
 `;
 
 const StyledSubmitButton = styled.button`
