@@ -131,7 +131,7 @@ const ProfilePageMobile = ({
 	const [view, setView] = useState(false);
 	const [userInfo, setUserInfo] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
-	const [isFollowing, setIsFollowing] = useState<FollowType>();
+	const [isFollowing, setIsFollowing] = useState<boolean>();
 
 	// 유저 정보 불러오기
 	useEffect(() => {
@@ -165,14 +165,14 @@ const ProfilePageMobile = ({
 				.then((response) => {
 					console.log(isFollowing); // 담기는지 확인
 					console.log('팔로우 정보 성공:', response);
-					setIsFollowing(response);
+					// setIsFollowing(response);
 				})
 				.catch((error) => {
 					console.error('팔로우 정보 실패:', error);
 				});
 		}, []);
 	}
-	console.log('팔로잉 정보', isFollowing);
+	console.log('팔로잉 정보1 :', isFollowing);
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
@@ -182,6 +182,7 @@ const ProfilePageMobile = ({
 				.post(`relations/follow?to=${userId}`)
 				.then(() => {
 					console.log('팔로우 성공');
+					setIsFollowing(true);
 				})
 				.catch((error) => {
 					console.error('팔로우 실패:', error);
@@ -192,6 +193,7 @@ const ProfilePageMobile = ({
 				.delete(`relations/unfollow?to=${userId}`)
 				.then(() => {
 					console.log('언팔로우 성공');
+					setIsFollowing(false);
 				})
 				.catch((error) => {
 					console.error('언팔로우 실패', error);
@@ -262,18 +264,15 @@ const ProfilePageMobile = ({
 								</StyledActivityButtonItem>
 							</div>
 							<div>
-								<StyledActivityButtonItem onClick={handleFollowClick}>
-									{isFollowing !== undefined && (
-										<img
-											src={
-												isFollowing
-													? images.profile.followingIcon
-													: images.profile.followIcon
-											}
-											alt={isFollowing ? '팔로잉' : '팔로우'}
-										/>
-									)}
-								</StyledActivityButtonItem>
+								{isFollowing !== undefined && (
+									<StyledActivityButtonItem onClick={handleFollowClick}>
+										{isFollowing ? (
+											<img src={images.profile.followingIcon} alt="팔로잉" />
+										) : (
+											<img src={images.profile.followIcon} alt="팔로우" />
+										)}
+									</StyledActivityButtonItem>
+								)}
 								<StyledActivityButtonItem onClick={onClickGM}>
 									<img src={images.gitMessage} alt="채팅" />
 								</StyledActivityButtonItem>
