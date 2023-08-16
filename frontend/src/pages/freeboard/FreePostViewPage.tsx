@@ -197,7 +197,7 @@ const FreePostViewPage = () => {
 	}, [navigation, feed?.likedUsers]);
 
 	const onClickUserProfile = useCallback(() => {
-		navigation(`/profiles/${userId}`);
+		navigation(`/profiles/${feed?.user.githubId}`);
 	}, []);
 
 	// 포스트 불러오기
