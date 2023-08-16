@@ -212,7 +212,23 @@ const NotiFollow = ({ notificationList }: Props) => {
 								>
 									{noti.sender.githubId}
 								</StyledSenderName>
-								<StyledNoficationContent>{`님이 게시물에 좋아요를 했습니다.`}</StyledNoficationContent>
+								<StyledNoficationContent
+									onClick={() => {
+										const notiType = noti.relatedLink.split('/posts/');
+										const boardType = notiType[0].slice(1);
+										const postId = notiType[1].trim();
+										console.log(postId);
+
+										if (boardType === 'heulgit') {
+											navigation(`/repo/${postId}}`);
+										}
+										if (boardType === 'freeboard') {
+											navigation(`/community/free/${postId}}`);
+										} else {
+											navigation(`/community/${boardType}/${postId}}`);
+										}
+									}}
+								>{`님이 게시물에 좋아요를 했습니다.`}</StyledNoficationContent>
 								<StyledNotificationDate>
 									{getTimeAgo(noti.createdDate)}
 								</StyledNotificationDate>
@@ -265,7 +281,7 @@ const NotiFollow = ({ notificationList }: Props) => {
 										const notiType = noti.relatedLink.split('/posts/');
 										const boardType = notiType[0].slice(1);
 										const postId = notiType[1].trim();
-										console.log('postId:', postId);
+										console.log(postId);
 
 										if (boardType === 'heulgit') {
 											navigation(`/repo/${postId}}`);
@@ -300,8 +316,8 @@ const NotiFollow = ({ notificationList }: Props) => {
 									onClick={() => {
 										const notiType = noti.relatedLink.split('/posts/');
 										const boardType = notiType[0].slice(1);
-										const postId = notiType[1];
-										console.log('postId:', postId);
+										const postId = notiType[1].trim();
+										console.log(postId);
 
 										if (boardType === 'heulgit') {
 											navigation(`/repo/${postId}}`);
