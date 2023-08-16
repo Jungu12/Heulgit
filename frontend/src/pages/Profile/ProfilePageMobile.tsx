@@ -138,19 +138,21 @@ const ProfilePageMobile = ({
 				.post(`relations/follow/${userId}`)
 				.then(() => {
 					setIsFollowing(true);
+					console.log('팔로우 성공');
 				})
 				.catch((error) => {
-					console.error('Failed to follow user:', error);
+					console.error('팔로우 실패:', error);
 				});
 		} else {
 			// 언팔로우
 			authHttp
-				.delete(`relations/follow/${userId}`)
+				.delete(`relations/unfollow/${userId}`)
 				.then(() => {
 					setIsFollowing(false);
+					console.log('언팔로우 성공');
 				})
 				.catch((error) => {
-					console.error('Failed to unfollow user:', error);
+					console.error('언팔로우 실패', error);
 				});
 		}
 	};
