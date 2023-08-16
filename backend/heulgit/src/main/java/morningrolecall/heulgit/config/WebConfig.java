@@ -43,7 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
 			.apis(RequestHandlerSelectors.basePackage("morningrolecall.heulgit"))
 			.paths(PathSelectors.any())
 			.build()
-			.host("http://i9d211.p.ssafy.io");
+			.host("https://i9d211.p.ssafy.io");
 	}
 
 	// @Override
