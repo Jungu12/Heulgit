@@ -209,4 +209,15 @@ public class UserController {
 		return ResponseEntity.ok().body(userService.findFollowingsByKeyword(githubId, keyword));
 	}
 
+	/** 사용자의 최신 레포를
+	 * 흘깃 테이블에 저장*/
+	@GetMapping("/repo")
+	public ResponseEntity<?> getRepos(@AuthenticationPrincipal String githubId){
+		logger.debug("getRepos(), who={} ", githubId);
+		userService.fetchAndSaveUserRespositories(githubId);
+
+		return ResponseEntity.ok().build();
+	}
+
+
 }
