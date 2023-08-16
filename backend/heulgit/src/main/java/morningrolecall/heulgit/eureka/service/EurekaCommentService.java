@@ -20,6 +20,8 @@ import morningrolecall.heulgit.eureka.domain.dto.EurekaCommentResponse;
 import morningrolecall.heulgit.eureka.domain.dto.EurekaParentCommentDto;
 import morningrolecall.heulgit.eureka.repository.EurekaCommentRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaRepository;
+import morningrolecall.heulgit.exception.EurekaCommentException;
+import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.freeboard.domain.FreeBoard;
 import morningrolecall.heulgit.heulgit.domain.dto.ParentCommentDto;
 import morningrolecall.heulgit.user.domain.User;
@@ -44,15 +46,15 @@ public class EurekaCommentService {
 	@Transactional
 	public void addComment(String githubId, EurekaCommentDto eurekaCommentDto) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
+			.orElseThrow(() -> new EurekaCommentException(ExceptionCode.USER_NOT_FOUND));
 
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaCommentDto.getEurekaId())
-			.orElseThrow(() -> new NoResultException("해당 게시물이 존재하지 않습니다."));
+			.orElseThrow(() -> new EurekaCommentException(ExceptionCode.POST_NOT_FOUND));
 
 		EurekaComment parentComment = null;
 		if (eurekaCommentDto.getParentId() != null) {
 			parentComment = eurekaCommentRepository.findEurekaCommentByCommentId(eurekaCommentDto.getParentId())
-				.orElseThrow(() -> new NoResultException("해당 부모 댓글이 존재하지 않습니다."));
+				.orElseThrow(() -> new EurekaCommentException(ExceptionCode.PARENT_COMMENT_NOT_FOUND));
 		}
 
 		EurekaComment eurekaComment = EurekaComment.builder()
@@ -78,14 +80,13 @@ public class EurekaCommentService {
 	@Transactional
 	public void removeComment(String githubId, Long commentId) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
+			.orElseThrow(() -> new EurekaCommentException(ExceptionCode.USER_NOT_FOUND));
 
 		EurekaComment eurekaComment = eurekaCommentRepository.findEurekaCommentByCommentId(commentId)
-			.orElseThrow(() -> new NoResultException("해당 댓글은 존재하지 않습니다."));
+			.orElseThrow(() -> new EurekaCommentException(ExceptionCode.PARENT_COMMENT_NOT_FOUND));
 
 		if (!user.getGithubId().equals(eurekaComment.getUser().getGithubId())) {
-			System.out.println("작성자와 사용자가 일치하지 않습니다.");
-			return;
+			throw new EurekaCommentException(ExceptionCode.WRITER_USER_MISMATCH);
 		}
 
 		eurekaCommentRepository.delete(eurekaComment);
@@ -94,14 +95,14 @@ public class EurekaCommentService {
 	public List<EurekaComment> findComments(Long eurekaId) {
 		return eurekaCommentRepository.findEurekaCommentsByEurekaOrderByUpdatedDateDesc(
 			eurekaRepository.findEurekaByEurekaId(eurekaId)
-				.orElseThrow(() -> new NoResultException("해당 게시물은 존재하지 않습니다.")));
+				.orElseThrow(() -> new EurekaCommentException(ExceptionCode.POST_NOT_FOUND)));
 	}
 	/**
 	 * 부모 댓글 조회
 	 * */
 	public Slice<EurekaParentCommentDto> findParentComments(Long eurekaId,int pages){
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
-			.orElseThrow(()-> new NoResultException("헤당 게시물이 존재 하지 않습니다"));
+			.orElseThrow(()-> new EurekaCommentException(ExceptionCode.POST_NOT_FOUND));
 
 		Slice<Object []> comments = eurekaCommentRepository.findByEurekaAndParentCommentIsNull(eureka,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
@@ -113,10 +114,10 @@ public class EurekaCommentService {
 	 * */
 	public Slice<EurekaCommentResponse> findChildComments(Long eurekaId, Long parentId, int pages) {
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
-			.orElseThrow(() -> new NoResultException("해당 게시물이 존재하지 않습니다"));
+			.orElseThrow(() -> new EurekaCommentException(ExceptionCode.POST_NOT_FOUND));
 
 		EurekaComment parent = eurekaCommentRepository.findEurekaCommentByCommentId(parentId)
-			.orElseThrow(() -> new NoResultException("해당 댓글이 존재하지 않습니다"));
+			.orElseThrow(() -> new EurekaCommentException(ExceptionCode.PARENT_COMMENT_NOT_FOUND));
 
 		Slice<EurekaComment> comments = eurekaCommentRepository.findChildCommentsByParentComment(parent,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
@@ -129,7 +130,7 @@ public class EurekaCommentService {
 	 * 2. 페이지네이션 처리*/
 	public Slice<EurekaComment> findMyComments(String githubId, int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new EurekaCommentException(ExceptionCode.USER_NOT_FOUND));
 		Slice<EurekaComment> eurekaComments = eurekaCommentRepository.findEurekaCommentsByUserOrderByUpdatedDateDesc(user,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return  eurekaComments;

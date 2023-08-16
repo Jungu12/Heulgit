@@ -41,7 +41,7 @@ public class EurekaCommentController {
 		String writerId = eurekaService.findEureka(eurekaCommentDto.getEurekaId()).getUser().getGithubId();
 
 		NotificationCommentRequest notificationCommentRequest = new NotificationCommentRequest(githubId, writerId,
-			"/eureka/posts/" + eurekaCommentDto.getEurekaId(), eurekaCommentDto.getContent());
+			"/eureka/posts/" + eurekaCommentDto.getEurekaId(), eurekaCommentDto.getContent(),eurekaCommentDto.getMentionedFollowers());
 
 		notificationService.addCommentNotification(notificationCommentRequest);
 
