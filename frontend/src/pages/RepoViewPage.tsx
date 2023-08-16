@@ -95,6 +95,7 @@ const RepoViewPage = () => {
 	const [page, setPage] = useState(1);
 	const [commentList, setCommentList] = useState<HeulGitCommentType[]>([]);
 	const [seletedComment, setseletedComment] = useState(-1);
+	const [mentionList, setMentionList] = useState<string[]>([]);
 
 	const loadFeed = useCallback(() => {
 		authHttp.get<HeulGitPostType>(`heulgit/posts/${repoId}`).then((res) => {
@@ -120,7 +121,9 @@ const RepoViewPage = () => {
 	const handleInputChange: OnChangeHandlerFunc = useCallback(
 		(event, newValue, newPlainTextValue, mentions) => {
 			setCommentInput(newPlainTextValue);
-			console.log(mentions);
+			setMentionList(
+				mentions.map((mention) => mention.display.replace(/@|\s/g, '')),
+			);
 		},
 		[],
 	);
@@ -157,7 +160,7 @@ const RepoViewPage = () => {
 			await authHttp.post<HeulgitCommentWriteType>('h-comments/comments', {
 				content: commentInput,
 				heulgitId: repoId,
-				mentioedFollowers: [],
+				mentioedFollowers: mentionList,
 				parentId: null,
 			});
 			setCommentInput('');

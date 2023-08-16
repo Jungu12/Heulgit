@@ -45,7 +45,7 @@ const StyledContentBox = styled.div`
 // 댓글 내용 p 태그
 const StyledContent = styled.p`
 	font-size: 14px;
-	font-weight: 400;
+	font-weight: 500;
 
 	margin-bottom: 10px;
 	margin-right: 10px;

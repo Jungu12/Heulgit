@@ -52,6 +52,7 @@ const FreeBoardFeedItemListMobile = ({
 	const [seletedComment, setSeletedComment] = useState(-1); // 댓글 선택
 	const [commentInput, setCommentInput] = useState(''); // 댓글 입력
 	const [commentList, setCommentList] = useState<FreeBoardCommentType[]>([]); // 댓글 리스트
+	const [mentionList, setMentionList] = useState<string[]>([]);
 
 	// 댓글 모달 나오게 할 거
 	const onClickComment = useCallback(
@@ -67,7 +68,9 @@ const FreeBoardFeedItemListMobile = ({
 	const onHandleComment: OnChangeHandlerFunc = useCallback(
 		(event, newValue, newPlainTextValue, mentions) => {
 			setCommentInput(newPlainTextValue);
-			console.log(mentions);
+			setMentionList(
+				mentions.map((mention) => mention.display.replace(/@|\s/g, '')),
+			);
 		},
 		[],
 	);
@@ -91,7 +94,7 @@ const FreeBoardFeedItemListMobile = ({
 			await authHttp.post<FreeBoardCommentWriteType>('f-comments/comments', {
 				content: commentInput,
 				freeBoardId: seletedComment,
-				mentioedFollowers: [],
+				mentioedFollowers: mentionList,
 				parentId: null,
 			});
 			setCommentInput('');

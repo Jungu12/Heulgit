@@ -100,28 +100,23 @@ const StyledFilterButton = styled.button`
 // 테블릿 끝
 
 // 상세페이지 PC버전
-const StyledFreeBoardPostViewPC = styled.div`
-	display: flex;
-
-	justify-content: space-between;
-`;
 
 // 커뮤니티 PC 버전
-const CommunityContainerPC = styled.div`
-	display: flex;
-	flex-direction: column;
-	/* align-items: center; */
+// const CommunityContainerPC = styled.div`
+// 	display: flex;
+// 	flex-direction: column;
+// 	/* align-items: center; */
 
-	width: 520px;
-	height: 100vh;
+// 	width: 520px;
+// 	height: 100vh;
 
-	overflow-y: scroll;
-	scrollbar-width: none; /* 파이어폭스 */
-	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
-	&::-webkit-scrollbar {
-		display: none;
-	}
-`;
+// 	overflow-y: scroll;
+// 	scrollbar-width: none; /* 파이어폭스 */
+// 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+// 	&::-webkit-scrollbar {
+// 		display: none;
+// 	}
+// `;
 
 const StyledMenuItem = styled.div`
 	height: 60px;
@@ -375,14 +370,14 @@ const FreePostViewPage = () => {
 			</Tablet>
 
 			<PC>
-				<StyledFreeBoardPostViewPC>
-					<CommunityContainerPC>
-						{/* <FreePostViewFeedTabletPC feed={dummyPost} />
+				{/* <StyledFreeBoardPostViewPC> */}
+				{/* <CommunityContainerPC> */}
+				{/* <FreePostViewFeedTabletPC feed={dummyPost} />
 						<FreePostCommentList comments={dummyComment} /> */}
-						<CommentInput />
-					</CommunityContainerPC>
-					<CommunityFilterPC />
-				</StyledFreeBoardPostViewPC>
+				<CommentInput />
+				{/* </CommunityContainerPC> */}
+				<CommunityFilterPC />
+				{/* </StyledFreeBoardPostViewPC> */}
 			</PC>
 		</>
 	);

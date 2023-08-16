@@ -31,7 +31,7 @@ const StyledUserName = styled.p`
 
 const StyledContent = styled.p`
 	font-size: 14px;
-	font-weight: 400;
+	font-weight: 500;
 `;
 
 // const StyledReply = styled.p`

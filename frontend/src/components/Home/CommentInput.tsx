@@ -157,13 +157,6 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 						)}
 					/>
 				</StyledInput>
-				{/* <StyledInput
-					placeholder="댓글을 입력해주세요."
-					maxLength={50}
-					value={input}
-					onChange={(e) => onHandleComment(e)}
-					// onChange={onHandleComment}
-				></StyledInput> */}
 				<StyledSubmitButton>
 					<img src={images.send} alt="send" onClick={onClickSubbmit} />
 				</StyledSubmitButton>
