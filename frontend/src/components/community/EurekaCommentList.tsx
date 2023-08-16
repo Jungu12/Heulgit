@@ -33,7 +33,7 @@ type Props = {
 const EurekaCommentList = ({ commentList, onClickDelete }: Props) => {
 	return (
 		<StyledCommentListContainer>
-			{commentList ? (
+			{commentList.length ? (
 				commentList.map((comment) => (
 					<div key={comment.commentId}>
 						<EurekaComment comment={comment} onClickDelete={onClickDelete} />

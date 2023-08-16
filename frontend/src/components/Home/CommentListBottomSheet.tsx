@@ -36,7 +36,7 @@ const CommentListBottomSheet = ({ postId, commentList }: Props) => {
 
 	return (
 		<StyledCommentListContainer>
-			{commentList ? (
+			{commentList.length ? (
 				commentList.map((comment) => (
 					<>
 						<Comment

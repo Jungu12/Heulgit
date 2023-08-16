@@ -33,7 +33,7 @@ type Props = {
 const FreeBoardCommentList = ({ commentList, onClickDelete }: Props) => {
 	return (
 		<StyledCommentListContainer>
-			{commentList ? (
+			{commentList.length ? (
 				commentList.map((comment) => (
 					<div key={comment.commentId}>
 						<FreeBoardComment comment={comment} onClickDelete={onClickDelete} />
