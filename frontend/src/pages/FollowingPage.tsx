@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Header from '@components/common/Header';
 import FollowUser from '@components/profile/FollowUser';
@@ -7,11 +7,8 @@ import { UserFollowingType } from '@typedef/profile/user.types';
 import { useParams } from 'react-router-dom';
 
 const StyledBox = styled.div`
-	/* height: 100vh; */
-
 	overflow-y: auto;
-	scrollbar-width: none; /* 파이어폭스 */
-	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+	scrollbar-width: none;
 	&::-webkit-scrollbar {
 		display: none;
 	}
@@ -29,14 +26,15 @@ const StyledUserList = styled.div`
 
 const FollowingPage = () => {
 	const { userId } = useParams();
+	const [userFollowingData, setUserFollowingData] =
+		useState<UserFollowingType[]>();
 
-	// 팔로잉 목록
 	useEffect(() => {
 		authHttp
 			.get<UserFollowingType[]>(`relations/followings/${userId}`)
 			.then((response) => {
-				console.log(userId);
-				console.log('팔로잉 로드 성공.', response);
+				console.log('팔로잉 로드 성공.', userId, response);
+				setUserFollowingData(response); // 받아온 데이터의 followings 배열을 상태에 저장
 			})
 			.catch((error) => {
 				console.error('팔로잉 로드 실패.', error);
@@ -49,7 +47,10 @@ const FollowingPage = () => {
 				<Header title={'팔로잉'}></Header>
 			</StyledHeader>
 			<StyledUserList>
-				<FollowUser />
+				{userFollowingData &&
+					userFollowingData.map((user) => (
+						<FollowUser key={user.id} userData={user} />
+					))}
 			</StyledUserList>
 		</StyledBox>
 	);
