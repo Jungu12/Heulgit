@@ -227,7 +227,7 @@ const SearchResultPage = () => {
 	useEffect(() => {
 		heulgitRefetch();
 		eurekaRefetch();
-		heulgitRefetch();
+		freeBoardRefetch();
 	}, [seletedFilter]);
 
 	return (
