@@ -1,6 +1,5 @@
 import Header from '@components/common/Header';
 import NotiFollow from '@components/notification/NotiFollow';
-import { useQuery } from '@tanstack/react-query';
 import { UnionNotificationType } from '@typedef/notification/notification.types';
 import { isWithinOneMonth } from '@utils/date';
 import { authHttp } from '@utils/http';
@@ -13,7 +12,6 @@ const StyledNotificationContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	overflow-y: scroll;
-
 	height: 100vh;
 `;
 
