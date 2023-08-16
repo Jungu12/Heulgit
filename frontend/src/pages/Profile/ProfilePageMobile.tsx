@@ -211,7 +211,7 @@ const ProfilePageMobile = ({
 						</div>
 						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
 						<div className="user-info">
-							<p
+							<div
 								onClick={() => {
 									setView(!view);
 								}}
@@ -222,9 +222,9 @@ const ProfilePageMobile = ({
 								) : (
 									<img src={images.arrowDownBlack} alt="down" />
 								)}
-							</p>
+							</div>
 							{view && (
-								<>
+								<div>
 									{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
 									{loadedUser?.company !== 'null' && (
 										<p>{loadedUser?.company}</p>
@@ -234,7 +234,7 @@ const ProfilePageMobile = ({
 									)}
 									{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
 									{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
-								</>
+								</div>
 							)}
 						</div>
 					</StyledUserInformation>
@@ -312,10 +312,12 @@ const ProfilePageMobile = ({
 					</Sdiv>
 				</SboxTop>
 			)}
-
-			<StyledFooter>
-				<Navigation />
-			</StyledFooter>
+			if(userId === user?.githubId)
+			{
+				<StyledFooter>
+					<Navigation />
+				</StyledFooter>
+			}
 		</StyledProfilePage>
 	);
 };
