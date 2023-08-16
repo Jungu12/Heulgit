@@ -133,6 +133,7 @@ const StyledContentList = styled.section`
 	display: flex;
 	flex: 1;
 	overflow-y: scroll;
+	overflow-x: hidden;
 `;
 
 const SearchResultPage = () => {
