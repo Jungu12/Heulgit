@@ -1,9 +1,9 @@
 import Header from '@components/common/Header';
 import { colors } from '@constants/colors';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from 'styled-components';
-import { useLocation } from 'react-router-dom';
 import { UserType } from '@typedef/common.types';
+import { authHttp } from '@utils/http';
 
 // 좋아요 한 사람 페이지 전체 컨테이너
 const StyledLikeViewPageContainer = styled.div`
@@ -142,42 +142,48 @@ type NavigateProps = {
 
 const LikeViewPage: React.FC = () => {
 	const [isFollowing, setIsFollowing] = useState(false);
-	const { state } = useLocation() as NavigateProps; // useLocation() 훅 사용
-	console.log('state:', state);
+	const [likedUsers, setLikedUsers] = useState<UserType[]>([]); // 좋아요 누른 사람들의 정보를 저장할 상태 변수
+
 	const handleFollowButtonClick = () => {
 		setIsFollowing((prevState) => !prevState);
 	};
+
+	useEffect(() => {
+		authHttp
+			.get<UserType[]>('freeboard/posts/like')
+			.then((response) => {
+				console.log('좋아요 누른 유저 목록 보자!!!!!!!!!!', response);
+				setLikedUsers(response);
+			})
+			.catch((error) => {
+				console.error('제발 보게 해주세요./....,,', error);
+			});
+	}, []);
 
 	return (
 		<StyledLikeViewPageContainer>
 			<Header title="좋아요" />
 			<StyledLikeUserContainer>
 				<StyledLikeUserP>좋아하는 사람</StyledLikeUserP>
-				{state && state.user ? (
-					<>
-						<StyledLikeUsersCount>{state.user.length}</StyledLikeUsersCount>
-						<StyledUserContainer>
-							{state.user.map((user, index) => (
-								<StyledLikeUser key={index}>
-									<StyledUserProfileContainer>
-										<StyledProfileImg src={user.avatarUrl} alt="Profile" />
-										<StyledUserName>{user.githubId}</StyledUserName>
-									</StyledUserProfileContainer>
-									<StyledFollowButtonContainer>
-										<StyledFollowButton
-											$following={isFollowing}
-											onClick={handleFollowButtonClick}
-										>
-											{isFollowing ? '팔로잉' : '팔로우'}
-										</StyledFollowButton>
-									</StyledFollowButtonContainer>
-								</StyledLikeUser>
-							))}
-						</StyledUserContainer>
-					</>
-				) : (
-					<p>Loading...</p>
-				)}
+				<StyledLikeUsersCount>{likedUsers.length}</StyledLikeUsersCount>
+				<StyledUserContainer>
+					{likedUsers.map((user, index) => (
+						<StyledLikeUser key={index}>
+							<StyledUserProfileContainer>
+								<StyledProfileImg src={user.avatarUrl} alt="Profile" />
+								<StyledUserName>{user.githubId}</StyledUserName>
+							</StyledUserProfileContainer>
+							<StyledFollowButtonContainer>
+								<StyledFollowButton
+									$following={isFollowing}
+									onClick={handleFollowButtonClick}
+								>
+									{isFollowing ? '팔로잉' : '팔로우'}
+								</StyledFollowButton>
+							</StyledFollowButtonContainer>
+						</StyledLikeUser>
+					))}
+				</StyledUserContainer>
 			</StyledLikeUserContainer>
 		</StyledLikeViewPageContainer>
 	);
