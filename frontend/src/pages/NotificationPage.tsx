@@ -79,6 +79,8 @@ const NotificationPage = () => {
 	}, []);
 
 	useEffect(() => {
+		setRecentNotifications([]);
+		setPastNotifications([]);
 		for (const noti of notifications) {
 			if (isWithinOneMonth(noti.createdDate)) {
 				setRecentNotifications((prev) => [...prev, noti]);
