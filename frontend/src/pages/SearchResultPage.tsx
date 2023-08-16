@@ -7,7 +7,7 @@ import { UserType } from '@typedef/common.types';
 import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
 import { HeulgitPostResponseType } from '@typedef/home/heulgit.types';
 import { authHttp } from '@utils/http';
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -161,6 +161,7 @@ const SearchResultPage = () => {
 		data: heulgitList,
 		fetchNextPage: heulgitFetchNextPage,
 		hasNextPage: heulgitHasNextPage,
+		refetch: heulgitRefetch,
 	} = useInfiniteQuery(
 		['/search/heulgit'],
 		({ pageParam = 1 }) =>
@@ -181,6 +182,7 @@ const SearchResultPage = () => {
 		data: eurekaList,
 		fetchNextPage: eurekaFetchNextPage,
 		hasNextPage: eurekaHasNextPage,
+		refetch: eurekaRefetch,
 	} = useInfiniteQuery(
 		['/search/eureka'],
 		({ pageParam = 1 }) =>
@@ -201,6 +203,7 @@ const SearchResultPage = () => {
 		data: freeBoardList,
 		fetchNextPage: freeBoardFetchNextPage,
 		hasNextPage: freeBoardHasNextPage,
+		refetch: freeBoardRefetch,
 	} = useInfiniteQuery(
 		['/search/freeBoard'],
 		({ pageParam = 1 }) =>
@@ -220,6 +223,12 @@ const SearchResultPage = () => {
 	const { data: userList } = useQuery(['/serach/user'], () =>
 		authHttp.get<UserType[]>(`search/user?keyword=${q}`),
 	);
+
+	useEffect(() => {
+		heulgitRefetch();
+		eurekaRefetch();
+		heulgitRefetch();
+	}, [seletedFilter]);
 
 	return (
 		<StyledSearchResultContainer>
