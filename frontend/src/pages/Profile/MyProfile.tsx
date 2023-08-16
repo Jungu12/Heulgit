@@ -136,7 +136,7 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 	return (
 		<StyledBox>
 			<StyledCommitBox>
-				{loadedUser?.githubId !== user?.githubId ? (
+				{loadedUser?.githubId == user?.githubId ? (
 					<StyledActivityButton
 						onClick={() =>
 							navigation(`/profiles/${loadedUser?.githubId}/commit-edit`)

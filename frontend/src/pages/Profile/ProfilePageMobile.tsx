@@ -164,7 +164,7 @@ const ProfilePageMobile = ({
 		if (!isFollowing) {
 			// 팔로우
 			authHttp
-				.post(`relations/follow/${userId}`)
+				.post(`relations/follow/${userId}`, isFollowing)
 				.then(() => {
 					setIsFollowing(true);
 					console.log('팔로우 성공');
