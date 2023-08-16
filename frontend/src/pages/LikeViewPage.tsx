@@ -1,6 +1,7 @@
 import Header from '@components/common/Header';
 import { colors } from '@constants/colors';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 // 좋아요 한 사람 페이지 전체 컨테이너
@@ -134,6 +135,8 @@ const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 
 const LikeViewPage: React.FC = () => {
 	const [isFollowing, setIsFollowing] = useState(false);
+	const location = useLocation();
+	console.log(location.state.user);
 
 	const handleFollowButtonClick = () => {
 		setIsFollowing((prevState) => !prevState);
