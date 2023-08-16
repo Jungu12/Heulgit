@@ -6,7 +6,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.NoResultException;
@@ -39,6 +38,8 @@ import morningrolecall.heulgit.eureka.repository.EurekaGithubInfoRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaImageRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaLabelRepository;
 import morningrolecall.heulgit.eureka.repository.EurekaRepository;
+import morningrolecall.heulgit.exception.EurekaException;
+import morningrolecall.heulgit.exception.ExceptionCode;
 import morningrolecall.heulgit.heulgit.domain.dto.HeulgitLikeUserResponse;
 import morningrolecall.heulgit.image.Service.ImageService;
 import morningrolecall.heulgit.relation.repository.RelationRepository;
@@ -103,7 +104,7 @@ public class EurekaService {
 	 * */
 	public EurekaDetailResponse findEureka(Long eurekaId) {
 		Eureka eureka = eurekaRepository.findEurekaAndEurekaCommentsByEurekaId(eurekaId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.POST_NOT_FOUND));
 
 		eureka.increaseView();
 
@@ -112,7 +113,7 @@ public class EurekaService {
 		eureka.setEurekaComments(eurekaComments);
 
 		EurekaGithubInfo eurekaGithubInfo = eurekaGithubInfoRepository.findEurekaGithubInfoByEureka(eureka)
-			.orElseThrow(() -> new NoResultException("이슈나 풀리퀘스트의 내용이 존재하지 않습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.ISSUE_OR_PULL_REQUEST_NOT_FOUND));
 		List<EurekaLabel> eurekaLabels = eurekaLabelRepository.findEurekaLabelsByEurekaGithubInfo(eurekaGithubInfo);
 
 		eurekaRepository.save(eureka);
@@ -144,7 +145,7 @@ public class EurekaService {
 	@Transactional
 	public void addEureka(String githubId, EurekaRequest eurekaRequest,List<MultipartFile> multipartFiles) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 등록되어 있지 않습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.USER_NOT_FOUND));
 		Eureka eureka = Eureka.builder()
 			.user(user)
 			.title(eurekaRequest.getTitle())
@@ -183,11 +184,11 @@ public class EurekaService {
 	@Transactional
 	public void updateEureka(Long eurekaId,String githubId, EurekaUpdateRequest eurekaUpdateRequest,List<MultipartFile> multipartFiles) {
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.POST_NOT_FOUND));
 
 		if (!githubId.equals(eureka.getUser().getGithubId())) {
-			System.out.println("작성자가 아님!!!");
-			return;
+			throw new EurekaException(ExceptionCode.WRITER_USER_MISMATCH);
+
 			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
 		}
 
@@ -201,7 +202,7 @@ public class EurekaService {
 			String githubInfo = githubApiClient.requestGithubInfo(eurekaUpdateRequest.getLink());
 
 			EurekaGithubInfo eurekaGithubInfo = eurekaGithubInfoRepository.findEurekaGithubInfoByEureka(eureka)
-				.orElseThrow(() -> new NoResultException("해당 이슈(풀리퀘스트) 정보가 존재하지 않습니다."));
+				.orElseThrow(() -> new EurekaException(ExceptionCode.ISSUE_OR_PULL_REQUEST_NOT_FOUND));
 			List<EurekaLabel> eurekaLabels = eurekaLabelRepository.findEurekaLabelsByEurekaGithubInfo(eurekaGithubInfo);
 
 			EurekaGithubInfo newEurekaGithubInfo = parseGithubInfo(githubInfo, eureka);
@@ -251,11 +252,11 @@ public class EurekaService {
 	@Transactional
 	public void removeEureka(String githubId, Long eurekaId) {
 		Eureka findEureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.POST_NOT_FOUND));
 
 		if (!githubId.equals(findEureka.getUser().getGithubId())) {
-			System.out.println("작성자가 아님!!!");
-			return;
+			throw new EurekaException(ExceptionCode.WRITER_USER_MISMATCH);
+
 			// throw new IllegalAccessException("작성자와 사용자가 일치하지 않습니다.");
 		}
 		List<EurekaImage> eurekaImages= eurekaImageRepository.findEurekaImagesByEureka(findEureka);
@@ -285,14 +286,13 @@ public class EurekaService {
 	 * */
 	public void likeEureka(String githubId, Long eurekaId) {
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.POST_NOT_FOUND));
 
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자를 찾을 수 업습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.USER_NOT_FOUND));
 
 		if (eureka.getLikedUsers().contains(user)) {
-			System.out.println("이미 좋아요를 눌렀음");
-			return;
+			throw new EurekaException(ExceptionCode.LIKE_ALREADY_EXIST);
 			// throw new IllegalAccessException("사용자가 좋아요를 이미 눌렀습니다.");
 		}
 
@@ -309,15 +309,13 @@ public class EurekaService {
 	 * */
 	public void unlikeEureka(String githubId, Long eurekaId) {
 		Eureka eureka = eurekaRepository.findEurekaByEurekaId(eurekaId)
-			.orElseThrow(() -> new NoResultException("해당 게시물을 찾을 수 없습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.POST_NOT_FOUND));
 
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자를 찾을 수 업습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.USER_NOT_FOUND));
 
 		if (!eureka.getLikedUsers().contains(user)) {
-			System.out.println("좋아요를 누르지 않았음");
-			return;
-			// throw new IllegalAccessException("사용자가 좋아요를 이미 눌렀습니다.");
+			throw new EurekaException(ExceptionCode.LIKE_NOT_EXIST);
 		}
 
 		eureka.removeLikeUser(user);
@@ -392,7 +390,7 @@ public class EurekaService {
 	 * */
 	public Slice<EurekaDetailResponse> findMyEurekas(String githubId, int pages) {
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.USER_NOT_FOUND));
 
 		Slice<Eureka> eurekas = eurekaRepository.findSliceByUser_GithubId(githubId,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
@@ -416,7 +414,7 @@ public class EurekaService {
 	 * */
 	public Slice<EurekaDetailResponse> findMyLikeEurekas(String githubId, int pages){
 		User user = userRepository.findUserByGithubId(githubId)
-			.orElseThrow(() -> new NoResultException("해당 사용자가 존재하지 않습니다."));
+			.orElseThrow(() -> new EurekaException(ExceptionCode.USER_NOT_FOUND));
 		Slice<Eureka> eurekas = eurekaRepository.findByLikedUsersContains(user,
 			PageRequest.of(pages - 1, SIZE, Sort.by("updatedDate").descending()));
 		return new SliceImpl<>(toResponse(eurekas),eurekas.getPageable(),eurekas.hasNext());
@@ -448,7 +446,7 @@ public class EurekaService {
 	private List<EurekaDetailResponse> toResponse(Slice<Eureka> eurekas) {
 		return eurekas.getContent().stream().map(eureka -> {
 			EurekaGithubInfo eurekaGithubInfo = eurekaGithubInfoRepository.findEurekaGithubInfoByEureka(eureka)
-				.orElseThrow(() -> new NoResultException("이슈나 풀리퀘스트에 대한 정보가 존재하지 않습니다."));
+				.orElseThrow(() -> new EurekaException(ExceptionCode.ISSUE_OR_PULL_REQUEST_NOT_FOUND));
 			List<EurekaLabel> eurekaLabels = eurekaLabelRepository.findEurekaLabelsByEurekaGithubInfo(eurekaGithubInfo);
 
 			return EurekaDetailResponse.builder()

@@ -42,7 +42,7 @@ public class FreeBoardCommentController {
 		freeBoardCommentService.addComment(githubId, freeBoardCommentRequest);
 		String writerId = freeBoardService.findFreeBoard(freeBoardCommentRequest.getFreeBoardId()).getUser().getGithubId();
 		NotificationCommentRequest notificationCommentRequest = new NotificationCommentRequest(githubId,writerId,
-			"/freeboard/posts"+freeBoardCommentRequest.getFreeBoardId(),freeBoardCommentRequest.getContent());
+			"/freeboard/posts/"+freeBoardCommentRequest.getFreeBoardId(),freeBoardCommentRequest.getContent(),freeBoardCommentRequest.getMentionedFollowers());
 		notificationService.addCommentNotification(notificationCommentRequest);
 
 		return ResponseEntity.ok().build();
