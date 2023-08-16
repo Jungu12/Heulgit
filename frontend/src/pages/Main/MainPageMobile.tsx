@@ -55,7 +55,7 @@ const StyledMainTitleSection = styled.section`
 		color: ${colors.primary.primary};
 		text-align: center;
 		font-family: 'RixYeoljeongdo_Regular';
-		font-size: 22px;
+		font-size: 26px;
 		margin-left: 20px;
 	}
 `;

@@ -31,6 +31,7 @@ const StyledNoImage = styled.div`
 	justify-content: center;
 	font-size: 24px;
 	font-weight: 700;
+	height: calc(100vh - 56px);
 `;
 
 const ChatPage = () => {

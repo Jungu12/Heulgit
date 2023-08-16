@@ -176,7 +176,7 @@ const CommunityPage = () => {
 			}
 
 			const newFeedList = [...feedList, ...res];
-			setFeedList(newFeedList);
+			setFeedList((prev) => [...prev, ...res]);
 			console.log(res);
 			console.log(newFeedList);
 		});

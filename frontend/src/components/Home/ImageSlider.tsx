@@ -29,10 +29,6 @@ const StyledSliderContainer = styled.div`
 		font-size: 32px;
 		color: ${colors.primary.primatyDark};
 	}
-
-	.swiper-pagination {
-		bottom: -8px;
-	}
 `;
 
 const StyledImage = styled.img`

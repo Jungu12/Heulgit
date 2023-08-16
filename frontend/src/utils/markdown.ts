@@ -28,6 +28,14 @@ export const getImgTag = (text: string) => {
 	let match;
 
 	while ((match = regex.exec(text)) !== null) {
+		// 특정 경우 무시
+		if (text && text.includes('travis')) {
+			continue;
+		}
+		if (text.includes('img.shields.io')) {
+			continue;
+		}
+
 		const value = match[2] || match[4]; // 첫 번째 그룹 또는 두 번째 그룹 사용
 		imageInfoArray.push(value);
 	}
