@@ -163,8 +163,10 @@ const ProfilePageMobile = ({
 			authHttp
 				.get<FollowType>(`relations/state?to=${userId}`)
 				.then((response) => {
+					console.log(isFollowing); // 담기는지 확인
 					console.log('팔로우 정보 성공:', response);
 					setIsFollowing(response.follow);
+					console.log(isFollowing);
 				})
 				.catch((error) => {
 					console.error('팔로우 정보 실패:', error);
