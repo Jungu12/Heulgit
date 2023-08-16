@@ -18,6 +18,20 @@ const StyledSliderContainer = styled.div`
 	.swiper {
 		--swiper-theme-color: ${colors.primary.primary};
 	}
+
+	.swiper-slide-active {
+		display: flex;
+	}
+
+	.swiper-button-next:after,
+	.swiper-button-prev:after {
+		font-size: 32px;
+		color: ${colors.primary.primatyDark};
+	}
+
+	.swiper-pagination {
+		bottom: -8px;
+	}
 `;
 
 const StyledImage = styled.img`
