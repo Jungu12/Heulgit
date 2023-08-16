@@ -172,7 +172,7 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 
 	// 좋아요 누른 유저 목록 페이지로 이동
 	const onClickLike = useCallback(() => {
-		navigation(`free/${feed.freeBoardId}/like`);
+		navigation(`${feed.freeBoardId}/like`);
 	}, [navigation]);
 
 	// 유레카 피드 상세보기 페이지로 이동
