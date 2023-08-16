@@ -265,8 +265,13 @@ const NotiFollow = ({ notificationList }: Props) => {
 										const notiType = noti.relatedLink.split('/posts/');
 										const boardType = notiType[0].slice(1);
 										const postId = notiType[1];
-										if (boardType === 'repo') {
-											navigation(`/${boardType}/${postId}}`);
+										console.log('postId:', postId);
+
+										if (boardType === 'heulgit') {
+											navigation(`/repo/${postId}}`);
+										}
+										if (boardType === 'freeboard') {
+											navigation(`/community/free/${postId}}`);
 										} else {
 											navigation(`/community/${boardType}/${postId}}`);
 										}
@@ -296,8 +301,13 @@ const NotiFollow = ({ notificationList }: Props) => {
 										const notiType = noti.relatedLink.split('/posts/');
 										const boardType = notiType[0].slice(1);
 										const postId = notiType[1];
-										if (boardType === 'repo') {
-											navigation(`/${boardType}/${postId}}`);
+										console.log('postId:', postId);
+
+										if (boardType === 'heulgit') {
+											navigation(`/repo/${postId}}`);
+										}
+										if (boardType === 'freeboard') {
+											navigation(`/community/free/${postId}}`);
 										} else {
 											navigation(`/community/${boardType}/${postId}}`);
 										}

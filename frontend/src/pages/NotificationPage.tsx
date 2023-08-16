@@ -81,26 +81,28 @@ const NotificationPage = () => {
 
 	console.log(data);
 
-	if (data?.length) {
-		return <StyledEmptyNotification>알림이 없습니다.</StyledEmptyNotification>;
-	}
-
 	return (
 		<StyledNotificationContainer>
 			<Header title="알림" />
-			<StyledWeekNotiContainer>
-				<StyledNotiDiv>
-					<StyleNoti>이번 주</StyleNoti>
-				</StyledNotiDiv>
-				<NotiFollow notificationList={recentNotifications} />
-			</StyledWeekNotiContainer>
-			{pastNotifications && (
-				<StyledWeekNotiContainer>
-					<StyledNotiDiv>
-						<StyleNoti>이전 알림</StyleNoti>
-					</StyledNotiDiv>
-					<NotiFollow notificationList={pastNotifications} />
-				</StyledWeekNotiContainer>
+			{pastNotifications.length === 0 && recentNotifications.length === 0 ? (
+				<StyledEmptyNotification>알림이 없습니다.</StyledEmptyNotification>
+			) : (
+				<>
+					<StyledWeekNotiContainer>
+						<StyledNotiDiv>
+							<StyleNoti>이번 주</StyleNoti>
+						</StyledNotiDiv>
+						<NotiFollow notificationList={recentNotifications} />
+					</StyledWeekNotiContainer>
+					{pastNotifications.length && (
+						<StyledWeekNotiContainer>
+							<StyledNotiDiv>
+								<StyleNoti>이전 알림</StyleNoti>
+							</StyledNotiDiv>
+							<NotiFollow notificationList={pastNotifications} />
+						</StyledWeekNotiContainer>
+					)}
+				</>
 			)}
 		</StyledNotificationContainer>
 	);
