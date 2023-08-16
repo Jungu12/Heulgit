@@ -159,6 +159,9 @@ const StyledNoficationContent = styled.span`
 	font-weight: 500;
 	color: black;
 	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 `;
 
 const StyledFollowButton = styled.button<StyledFollowButtonProps>`
@@ -233,15 +236,15 @@ const NotiFollow = ({ notificationList }: Props) => {
 								<StyledNotificationDate>
 									{getTimeAgo(noti.createdDate)}
 								</StyledNotificationDate>
-								<StyledFollowButton
-									$following={noti.follow}
-									onClick={() =>
-										onClickFollowButton(noti.follow, noti.sender.githubId)
-									}
-								>
-									{noti.follow ? '팔로우' : '팔로잉'}
-								</StyledFollowButton>
 							</StyledNotificationTextBox>
+							<StyledFollowButton
+								$following={noti.follow}
+								onClick={() =>
+									onClickFollowButton(noti.follow, noti.sender.githubId)
+								}
+							>
+								{noti.follow ? '팔로우' : '팔로잉'}
+							</StyledFollowButton>
 						</StyledNotificationItem>
 					);
 				}
