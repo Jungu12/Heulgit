@@ -166,7 +166,7 @@ const ProfilePageMobile = ({
 		if (!isFollowing) {
 			// 팔로우
 			authHttp
-				.post(`relations/follow/${userId}`)
+				.post(`relations/follow?to=${userId}`)
 				.then(() => {
 					console.log('팔로우 성공', isFollowing);
 				})
@@ -176,7 +176,7 @@ const ProfilePageMobile = ({
 		} else {
 			// 언팔로우
 			authHttp
-				.delete(`relations/unfollow/${userId}`)
+				.delete(`relations/unfollow?to=${userId}`)
 				.then(() => {
 					console.log('언팔로우 성공', isFollowing);
 				})

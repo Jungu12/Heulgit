@@ -197,7 +197,7 @@ public class NotificationService {
 	 * @param notificationCommentRequest
 	 * */
 	public void addCommentNotification(NotificationCommentRequest notificationCommentRequest) {
-		logger.debug("addCommentNotification(), notificationCommentRequest = {}, ", notificationCommentRequest);
+		logger.debug("addCommentNotification(),  ", notificationCommentRequest);
 		// 댓글 사용자 찾기
 		User sender = userRepository.findUserByGithubId(notificationCommentRequest.getSenderId())
 			.orElseThrow(() -> new NotificationException(ExceptionCode.USER_NOT_FOUND));
@@ -206,6 +206,7 @@ public class NotificationService {
 		// String text = notificationCommentRequest.getContent();
 		// Pattern pattern = Pattern.compile("@(\\w+)");
 		// Matcher matcher = pattern.matcher(text);
+		logger.debug("mentionSize={}",notificationCommentRequest.getMentionedFollowers().size());
 		for(String receiverId :notificationCommentRequest.getMentionedFollowers()){
 			try{
 				User reciever = userRepository.findUserByGithubId(receiverId)

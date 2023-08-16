@@ -1,5 +1,6 @@
 package morningrolecall.heulgit.notification.domain.dto;
 
+import java.util.List;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -12,5 +13,5 @@ public class NotificationCommentRequest {
 	private String writerId;
 	private String relatedLink;
 	private String content;
-	private Set<String> mentionedFollowers;
+	private List<String> mentionedFollowers;
 }
