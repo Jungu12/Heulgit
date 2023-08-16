@@ -7,6 +7,7 @@ export type FollowType = {
 export type UserFollowingType = {
 	id: string;
 	avater_url: string;
+	follow: boolean;
 };
 
 // 사용자 커밋 분석
