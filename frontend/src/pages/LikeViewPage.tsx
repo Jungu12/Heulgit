@@ -134,11 +134,11 @@ const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 	color: ${(props) => (props.$following ? 'black' : 'white')};
 `;
 
-type NavigateProps = {
-	state: {
-		user: UserType[];
-	};
-};
+// type NavigateProps = {
+// 	state: {
+// 		user: UserType[];
+// 	};
+// };
 
 const LikeViewPage: React.FC = () => {
 	const [isFollowing, setIsFollowing] = useState(false);
