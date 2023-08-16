@@ -3,7 +3,7 @@ import { images } from '@constants/images';
 import { HeulGitPostType } from '@typedef/home/heulgit.types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MarkdownSummaryRenderer from './MarkdownSummaryRenderer';
 import MarkdownRenderer from './MarkdownRenderer';
 import { getTimeAgo } from '@utils/date';
@@ -84,6 +84,15 @@ const StyledMoreDataText = styled.div`
 	font-weight: 500;
 	margin: 6px 0 0 auto;
 	color: ${colors.greyScale.grey4};
+`;
+
+const StyledLink = styled(Link)`
+	margin-left: auto;
+`;
+
+const StyledLinkImg = styled.img`
+	width: 99px;
+	height: 28px;
 `;
 
 type Props = {
@@ -173,16 +182,12 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 							onClick={onClickLikeIcon}
 						/>
 					)}
-					<img
-						src={images.chat}
-						alt="comment_button"
-						onClick={() => {
-							if (onClickComment) {
-								onClickComment(feed.heulgitId);
-							}
-						}}
-					/>
-					<img src={images.share} alt="share_button" />
+					<StyledLink
+						to={`https://github.com/${feed.githubId}/${feed.heulgitName}`}
+						target="_blank"
+					>
+						<StyledLinkImg src={images.gotoGit} />
+					</StyledLink>
 				</StyledButtonContainer>
 			)}
 			<StyledSubDataContainer>
