@@ -42,13 +42,10 @@ const useHandleChat = ({
 	};
 
 	const connectHandler = (mockId: string, mockName: string) => {
-		console.log(client);
-		console.log(mockId);
 		client.connect({}, () => {
 			client.subscribe(
 				`/sub/chat/room/${mockId}`,
 				(messages) => {
-					console.log(messages.body);
 					setChatMessageList(chatMessages.concat(JSON.parse(messages.body)));
 				},
 				{},

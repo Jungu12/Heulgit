@@ -102,7 +102,6 @@ const CreateEurekaPostPage: React.FC = () => {
 	};
 
 	const onClickSubmitButton = useCallback(async () => {
-		// const image: string[] = [];
 		// 깃허브 이슈, 풀리퀘스트 주소인지 확인
 		if (!isGitHubIssuesOrPullUrl(postInput.link)) {
 			alert('올바른 주소가 아닙니다.');
