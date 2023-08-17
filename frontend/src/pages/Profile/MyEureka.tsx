@@ -7,6 +7,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
 import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
 import Loading from '@components/common/Loading';
+import { useParams } from 'react-router-dom';
 
 const StyledBox = styled.div`
 	width: 100%;
@@ -17,7 +18,7 @@ type MyProfileProps = {
 };
 
 const MyEureka = ({ loadeduser }: MyProfileProps) => {
-	console.log('userprofile:', { loadeduser });
+	const { userId } = useParams();
 
 	// 작성한 유레카 불러오기
 	const {
@@ -28,7 +29,7 @@ const MyEureka = ({ loadeduser }: MyProfileProps) => {
 		['/my/eureka'],
 		({ pageParam = 1 }) =>
 			authHttp.get<EurekaFeedResponseType>(
-				`eureka/myposts?userId=${loadeduser.githubId}&pages=${pageParam}`,
+				`eureka/myposts?userId=${userId}&pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {

@@ -23,7 +23,6 @@ const StyledProfileHigh = styled.div`
 const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
-	/* align-items: end; */
 	margin-top: 40px;
 	min-height: 150px;
 `;
@@ -51,6 +50,15 @@ const StyledUserInformation = styled.div`
 		justify-content: center;
 	}
 `;
+
+type StyledUserInfoBoxProps = {
+	$view: boolean;
+};
+const StyledUserInfoBox = styled.div<StyledUserInfoBoxProps>`
+	height: ${(props) => (props.$view ? 'auto' : '0')};
+	font-size: 16px;
+`;
+
 const StyledFollowing = styled.div`
 	cursor: pointer;
 	/* background-color: aquamarine; */
@@ -99,8 +107,6 @@ const CateDiv = styled.div`
 `;
 const Sdiv = styled.div``;
 const StyledProfileLow = styled.div`
-	/* display: flex; */
-	/* flex-direction: column; */
 	justify-content: center;
 	align-items: center;
 	padding: 20px;
@@ -202,6 +208,7 @@ const ProfilePageMobile = ({
 	return (
 		<StyledProfilePage>
 			<StyledProfileHigh>
+				{/* 유저 프로필 */}
 				<StyledUserProfile>
 					<StyledUserImage src={loadedUser?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
@@ -219,9 +226,8 @@ const ProfilePageMobile = ({
 							</StyledFollower>
 						</div>
 						{/* 유저 정보 */}
-						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
 						{userInfo && (
-							<div className="user-info">
+							<StyledUserInfoBox $view={view}>
 								<div
 									onClick={() => {
 										setView(!view);
@@ -247,7 +253,7 @@ const ProfilePageMobile = ({
 										{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
 									</div>
 								)}
-							</div>
+							</StyledUserInfoBox>
 						)}
 					</StyledUserInformation>
 				</StyledUserProfile>

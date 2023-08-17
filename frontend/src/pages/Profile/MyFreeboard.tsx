@@ -7,6 +7,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
 import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 import Loading from '@components/common/Loading';
+import { useParams } from 'react-router-dom';
 
 const StyledBox = styled.div`
 	width: 100%;
@@ -17,7 +18,7 @@ type MyProfileProps = {
 };
 
 const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
-	console.log('userprofile:', { loadeduser });
+	const { userId } = useParams();
 
 	// 작성한 유레카 불러오기
 	const {
@@ -28,7 +29,7 @@ const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
 		['/my/freeboard'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
-				`freeboard/myposts?userId=${loadeduser.githubId}&pages=${pageParam}`,
+				`freeboard/myposts?userId=${userId}&pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {

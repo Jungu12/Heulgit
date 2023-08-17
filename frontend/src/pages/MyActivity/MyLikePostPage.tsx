@@ -87,20 +87,7 @@ const MyLikePostPage = () => {
 	const [selectedPost, setSelectedPost] = useState('유레카');
 	const handleMenuClick = (menu: '유레카' | '자유') => {
 		setSelectedPost(menu);
-		// sessionStorage.setItem('selectedPost', menu);
 	};
-
-	// useEffect(() => {
-	// 	const categoryItem = sessionStorage.getItem('selectedPost') as
-	// 		| '유레카'
-	// 		| '자유';
-
-	// 	if (categoryItem) {
-	// 		setSelectedPost(categoryItem);
-	// 	} else {
-	// 		setSelectedPost('유레카');
-	// 	}
-	// }, []);
 
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
