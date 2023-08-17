@@ -16,7 +16,9 @@ type MyProfileProps = {
 	loadeduser: UserType;
 };
 
-const MyEureka = ({ loadeduser: user }: MyProfileProps) => {
+const MyEureka = ({ loadeduser }: MyProfileProps) => {
+	console.log('userprofile:', { loadeduser });
+
 	// 작성한 유레카 불러오기
 	const {
 		data: myEurekaList,
@@ -26,7 +28,7 @@ const MyEureka = ({ loadeduser: user }: MyProfileProps) => {
 		['/my/eureka'],
 		({ pageParam = 1 }) =>
 			authHttp.get<EurekaFeedResponseType>(
-				`eureka/myposts?userId=${user.githubId}&pages=${pageParam}`,
+				`eureka/myposts?userId=${loadeduser.githubId}&pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
@@ -38,7 +40,7 @@ const MyEureka = ({ loadeduser: user }: MyProfileProps) => {
 
 	return (
 		<StyledBox>
-			{user?.githubId}
+			{loadeduser?.githubId}
 			{myEurekaList && (
 				<InfiniteScroll
 					dataLength={myEurekaList.pages.length}

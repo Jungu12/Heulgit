@@ -17,6 +17,8 @@ type MyProfileProps = {
 };
 
 const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
+	console.log('userprofile:', { loadeduser });
+
 	// 작성한 유레카 불러오기
 	const {
 		data: myFreeBoardList,
