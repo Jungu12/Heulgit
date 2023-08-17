@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { styled } from 'styled-components';
-// import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
 import { UserType } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
-import { UserPostType } from '@typedef/profile/user.types';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
+import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 
 const StyledBox = styled.div`
 	margin-bottom: -70px;
@@ -15,22 +17,47 @@ type MyProfileProps = {
 };
 
 const MyFreeboard = ({ user }: MyProfileProps) => {
-	// 작성한 유레카
-	useEffect(() => {
-		authHttp
-			.get<UserPostType[]>('freeboard/myposts?pages=1')
-			.then((response) => {
-				console.log('자유 성공.', response);
-			})
-			.catch((error) => {
-				console.error('자유 실패.', error);
-			});
-	}, []);
+	// 작성한 유레카 불러오기
+	const {
+		data: myFreeBoardList,
+		fetchNextPage: myFreeBoardFetchNextPage,
+		hasNextPage: myFreeBoardHasNextPage,
+	} = useInfiniteQuery(
+		['/my/freeboard'],
+		({ pageParam = 1 }) =>
+			authHttp.get<FreeBoarFeedResponseType>(
+				`freeboard/myposts?userId=${user.githubId}&pages=${pageParam}`,
+			),
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.last) return;
+				return allPages.length + 1;
+			},
+		},
+	);
 
 	return (
 		<StyledBox>
 			{user?.githubId}
-			{/* <FreeBoardFeedItemListMobile feedList={dummyPosts} /> */}
+			{myFreeBoardList && (
+				<InfiniteScroll
+					dataLength={myFreeBoardList.pages.length}
+					next={myFreeBoardFetchNextPage}
+					hasMore={myFreeBoardHasNextPage ? true : false}
+					loader={<div>loading...</div>}
+					height={`calc(100vh - 102px)`}
+					style={{
+						overflowY: 'scroll',
+						overflowX: 'hidden',
+					}}
+				>
+					{myFreeBoardList.pages.map((freeboard) =>
+						freeboard.content.map((item) => (
+							<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
+						)),
+					)}
+				</InfiniteScroll>
+			)}
 		</StyledBox>
 	);
 };

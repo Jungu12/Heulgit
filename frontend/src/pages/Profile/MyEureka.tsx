@@ -1,10 +1,11 @@
-import { UserType } from '@typedef/common.types';
-import { UserPostType } from '@typedef/profile/user.types';
-import { authHttp } from '@utils/http';
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import { styled } from 'styled-components';
-// import { colors } from '@constants/colors';
+import { UserType } from '@typedef/common.types';
+import { authHttp } from '@utils/http';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
+import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
 
 const StyledBox = styled.div`
 	margin-bottom: -70px;
@@ -16,24 +17,47 @@ type MyProfileProps = {
 };
 
 const MyEureka = ({ user }: MyProfileProps) => {
-	const { id } = useParams();
-
-	// 작성한 유레카
-	useEffect(() => {
-		authHttp
-			.get<UserPostType[]>(`eureka/myposts?userId=${id}&pages=1`)
-			.then((response) => {
-				console.log('유레카 성공.', response);
-			})
-			.catch((error) => {
-				console.error('유레카 실패.', error);
-			});
-	}, []);
+	// 작성한 유레카 불러오기
+	const {
+		data: myEurekaList,
+		fetchNextPage: myEurekaFetchNextPage,
+		hasNextPage: myEurekaHasNextPage,
+	} = useInfiniteQuery(
+		['/my/eureka'],
+		({ pageParam = 1 }) =>
+			authHttp.get<EurekaFeedResponseType>(
+				`eureka/myposts?userId=${user.githubId}&pages=${pageParam}`,
+			),
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.last) return;
+				return allPages.length + 1;
+			},
+		},
+	);
 
 	return (
 		<StyledBox>
 			{user?.githubId}
-			{/* <EurekaFeedItemListMobile feedList={dummyPosts} /> */}
+			{myEurekaList && (
+				<InfiniteScroll
+					dataLength={myEurekaList.pages.length}
+					next={myEurekaFetchNextPage}
+					hasMore={myEurekaHasNextPage ? true : false}
+					loader={<div>loading...</div>}
+					height={`calc(100vh - 102px)`}
+					style={{
+						overflowY: 'scroll',
+						overflowX: 'hidden',
+					}}
+				>
+					{myEurekaList.pages.map((eureka) =>
+						eureka.content.map((item) => (
+							<EurekaFeedItem key={item.eurekaId} feed={item} />
+						)),
+					)}
+				</InfiniteScroll>
+			)}
 		</StyledBox>
 	);
 };
