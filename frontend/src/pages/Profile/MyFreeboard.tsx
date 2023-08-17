@@ -9,7 +9,6 @@ import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 import Loading from '@components/common/Loading';
 
 const StyledBox = styled.div`
-	/* margin-bottom: -70px; */
 	width: 100%;
 `;
 
@@ -48,9 +47,8 @@ const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
 					next={myFreeBoardFetchNextPage}
 					hasMore={myFreeBoardHasNextPage ? true : false}
 					loader={<Loading />}
-					height={`calc(100vh - 102px)`}
 					style={{
-						overflowY: 'scroll',
+						overflowY: 'hidden',
 						overflowX: 'hidden',
 					}}
 				>
