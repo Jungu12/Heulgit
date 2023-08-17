@@ -24,7 +24,7 @@ const MyEureka = () => {
 		['/my/eureka'],
 		({ pageParam = 1 }) =>
 			authHttp.get<EurekaFeedResponseType>(
-				`users/myposts/eureka?userId=${userId}&pages=${pageParam}`,
+				`users/myposts/eureka/${userId}?pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
