@@ -39,7 +39,7 @@ export const images = {
 		profileInactive: '/assets/images/ic-profilecat-inactive.png',
 		eurekaActive: '/assets/images/ic-profileceureka-active.png',
 		eurekaInactive: '/assets/images/ic-profileceureka-inactive.png',
-		freeActive: '/assets/images/ic-profilefree-active.png',
+		freeActive: '/assets/images/ic-profilefree-Active.png',
 		freeInactive: '/assets/images/ic-profilefree-inactive.png',
 	},
 	header: {
