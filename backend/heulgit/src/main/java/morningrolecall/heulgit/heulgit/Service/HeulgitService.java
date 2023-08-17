@@ -280,11 +280,18 @@ public class HeulgitService {
 				if(followIdx <followHuelgit.size()){
 					heulgits.add(followHuelgit.get(followIdx++));
 				} else{
-					heulgits.add(randoms.get(randomIdx++));
+					if(githubId.equals(randoms.get(randomIdx).getGithubId())){
+						heulgits.add(randoms.get(randomIdx++));
+					} else{
+						heulgits.add(randoms.get(randomIdx++));
+					}
 				}
 			} else{
-				heulgits.add(randoms.get(randomIdx++));
-
+				if(githubId.equals(randoms.get(randomIdx).getGithubId())){
+					heulgits.add(randoms.get(randomIdx++));
+				} else{
+					heulgits.add(randoms.get(randomIdx++));
+				}
 			}
 
 		}
