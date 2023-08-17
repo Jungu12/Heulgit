@@ -1,6 +1,11 @@
+import { colors } from '@constants/colors';
 import { getTimeAgo } from '@utils/date';
 import React from 'react';
 import { styled } from 'styled-components';
+
+type LogProps = {
+	$isRead: boolean;
+};
 
 const StyledUserLog = styled.div`
 	display: flex;
@@ -41,12 +46,29 @@ const StyledInfoContainer = styled.div`
 	flex-direction: column;
 	margin-left: 4px;
 	justify-content: space-between;
+
+	.current-date {
+		font-size: 14px;
+		font-weight: 500;
+		color: ${colors.greyScale.grey3};
+	}
 `;
 
 const StyeldChatDataContainer = styled.div`
 	display: flex;
 	flex: 1;
 	justify-content: space-between;
+`;
+
+const StyledUserName = styled.p`
+	font-size: 16px;
+	font-weight: 700;
+`;
+
+const StyledLastMessage = styled.p<LogProps>`
+	font-size: 14px;
+	font-weight: 500;
+	color: ${(props) => (props.$isRead ? 'black' : colors.greyScale.grey3)};
 `;
 
 type Props = {
@@ -62,13 +84,15 @@ const UserLog = ({ userLName, userLog, logDate, unReadNum }: Props) => {
 			<StyledUserImage src="" alt="User" />
 			<StyeldChatDataContainer>
 				<StyledLog>
-					<div>{userLName}</div>
-					<div> {userLog}</div>
+					<StyledUserName>{userLName}</StyledUserName>
+					<StyledLastMessage $isRead={unReadNum > 0}>
+						{userLog}
+					</StyledLastMessage>
 				</StyledLog>
 
 				<StyledInfoContainer>
-					<div>{getTimeAgo(logDate)}</div>
-					<StyledUnReadNum>{unReadNum}</StyledUnReadNum>
+					<div className="current-date">{getTimeAgo(logDate)}</div>
+					{unReadNum > 0 && <StyledUnReadNum>{unReadNum}</StyledUnReadNum>}
 				</StyledInfoContainer>
 			</StyeldChatDataContainer>
 		</StyledUserLog>
