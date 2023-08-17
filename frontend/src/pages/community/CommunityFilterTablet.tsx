@@ -1,6 +1,6 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ReactModal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';

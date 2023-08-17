@@ -2,6 +2,7 @@ import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { RootState } from '@store/index';
 import { HeulGitCommentType } from '@typedef/home/heulgit.types';
+import { getTimeAgo } from '@utils/date';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
@@ -80,7 +81,7 @@ const Comment = ({
 				<StyledReply>답글 달기</StyledReply>
 			</StyledContentBox>
 			<StyledOptionContainer>
-				{comment.updatedDate}
+				{getTimeAgo(comment.updatedDate)}
 				{comment.user.githubId === user?.githubId && (
 					<img
 						src={images.closeBlack}
