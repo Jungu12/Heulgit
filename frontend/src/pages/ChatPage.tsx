@@ -37,6 +37,9 @@ const StyledNoImage = styled.div`
 const ChatPage = () => {
 	const user = useSelector((state: RootState) => state.user.user);
 	const [chatRoomList, setChatRoomList] = useState<ChatRoomType[]>([]);
+	const [sortedChatRoomList, setSortedChatRoomList] = useState<ChatRoomType[]>(
+		[],
+	);
 	const [newMessage, setnewMessage] = useState<MessageType | null>(null);
 	const client = useRef<CompatClient>();
 	const navigation = useNavigate();
@@ -125,7 +128,7 @@ const ChatPage = () => {
 					room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
 				).getTime(),
 		);
-		setChatRoomList(sortedChatRoom);
+		setSortedChatRoomList(sortedChatRoom);
 	}, [chatRoomList]);
 
 	useEffect(() => {
@@ -167,8 +170,8 @@ const ChatPage = () => {
 						<Header title={'깃속말'} />
 					</StyledHeader>
 					<StyledChatList>
-						{chatRoomList.length ? (
-							chatRoomList.map((room) => (
+						{sortedChatRoomList.length ? (
+							sortedChatRoomList.map((room) => (
 								<div onClick={() => onClickChatRoom(room)}>
 									<UserLog
 										user={findPartner(user.githubId, room)}

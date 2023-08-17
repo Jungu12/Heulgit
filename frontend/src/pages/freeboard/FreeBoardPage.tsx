@@ -10,6 +10,7 @@ import {
 	InfiniteQueryObserverResult,
 } from '@tanstack/react-query';
 import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+import Loading from '@components/common/Loading';
 
 type OutletProps = {
 	freeboardFeedList: InfiniteData<FreeBoardPostType[]> | undefined;
@@ -24,7 +25,7 @@ const FreeBoardPage = () => {
 		useOutletContext<OutletProps>();
 
 	if (!freeboardFeedList) {
-		return <div>loading...</div>;
+		return <Loading />;
 	}
 
 	return (
