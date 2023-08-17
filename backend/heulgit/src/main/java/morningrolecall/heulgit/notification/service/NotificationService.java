@@ -71,6 +71,7 @@ public class NotificationService {
 			logger.debug("미수신한 Event 목록 존재");
 			sendLostData(lastEventId,githubId,emitterId,emitter);
 		}
+		System.out.println(emitter.toString());
 		return emitter;
 	}
 
