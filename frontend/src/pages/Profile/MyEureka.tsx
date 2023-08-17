@@ -1,6 +1,5 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { UserType } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -13,11 +12,7 @@ const StyledBox = styled.div`
 	width: 100%;
 `;
 
-type MyProfileProps = {
-	loadeduser: UserType;
-};
-
-const MyEureka = ({ loadeduser }: MyProfileProps) => {
+const MyEureka = () => {
 	const { userId } = useParams();
 
 	// 작성한 유레카 불러오기
@@ -29,7 +24,7 @@ const MyEureka = ({ loadeduser }: MyProfileProps) => {
 		['/my/eureka'],
 		({ pageParam = 1 }) =>
 			authHttp.get<EurekaFeedResponseType>(
-				`eureka/myposts?userId=${userId}&pages=${pageParam}`,
+				`users/myposts/eureka?userId=${userId}&pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
@@ -41,7 +36,6 @@ const MyEureka = ({ loadeduser }: MyProfileProps) => {
 
 	return (
 		<StyledBox>
-			{loadeduser?.githubId}
 			{myEurekaList && (
 				<InfiniteScroll
 					dataLength={myEurekaList.pages.length}
