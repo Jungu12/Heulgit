@@ -18,7 +18,7 @@ export const getFreeBoardFeedList = async (sort: string, page: number) => {
 		const response = await authHttp.get<FreeBoarFeedResponseType>(
 			`freeboard/posts?sort=${sortType.get(sort)}&pages=${page}`,
 		);
-		return response.content;
+		return response;
 	} catch (error) {
 		console.error(error);
 		throw error;

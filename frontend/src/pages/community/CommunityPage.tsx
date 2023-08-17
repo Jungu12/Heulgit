@@ -170,7 +170,7 @@ const CommunityPage = () => {
 		({ pageParam = 1 }) => getEurekaFeedList(seletedSort, pageParam),
 		{
 			getNextPageParam: (lastPage, allPages) => {
-				if (lastPage.length < 20) return;
+				if (lastPage.last) return;
 				return allPages.length + 1;
 			},
 			staleTime: 100000,
@@ -187,7 +187,7 @@ const CommunityPage = () => {
 		({ pageParam = 1 }) => getFreeBoardFeedList(seletedSort, pageParam),
 		{
 			getNextPageParam: (lastPage, allPages) => {
-				if (lastPage.length < 20) return;
+				if (lastPage.last) return;
 				return allPages.length + 1;
 			},
 			staleTime: 100000,

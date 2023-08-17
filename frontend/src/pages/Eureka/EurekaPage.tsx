@@ -2,7 +2,10 @@
 import React from 'react';
 import EurekaFeedItemListMobile from './EurekaFeedItemListMobile';
 import { useOutletContext } from 'react-router-dom';
-import { EurekaPostType } from '@typedef/community/eureka.types';
+import {
+	EurekaFeedResponseType,
+	EurekaPostType,
+} from '@typedef/community/eureka.types';
 import {
 	FetchNextPageOptions,
 	InfiniteData,
@@ -11,7 +14,7 @@ import {
 import Loading from '@components/common/Loading';
 
 type OutletProps = {
-	eurekaFeedList: InfiniteData<EurekaPostType[]> | undefined;
+	eurekaFeedList: InfiniteData<EurekaFeedResponseType> | undefined;
 	eurekaFetchNextPage: (
 		options?: FetchNextPageOptions | undefined,
 	) => Promise<InfiniteQueryObserverResult<EurekaPostType[], unknown>>;

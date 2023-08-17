@@ -4,6 +4,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import {
+	FreeBoarFeedResponseType,
 	FreeBoardCommentType,
 	FreeBoardCommentWriteType,
 	FreeBoardPostType,
@@ -41,7 +42,7 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	freeboardFeedList: InfiniteData<FreeBoardPostType[]>;
+	freeboardFeedList: InfiniteData<FreeBoarFeedResponseType>;
 	freeboardFetchNextPage: (
 		options?: FetchNextPageOptions | undefined,
 	) => Promise<InfiniteQueryObserverResult<FreeBoardPostType[], unknown>>;
@@ -112,6 +113,7 @@ const FreeBoardFeedItemListMobile = ({
 		authHttp,
 		commentInput,
 		seletedComment,
+		mentionList,
 		setCommentInput,
 		loadCommentList,
 	]);
@@ -144,8 +146,8 @@ const FreeBoardFeedItemListMobile = ({
 					height={`calc(100vh - 234px)`}
 				>
 					{freeboardFeedList.pages.map((feed) =>
-						feed.map((item, index) => (
-							<div key={index}>
+						feed.content.map((item) => (
+							<div key={item.freeBoardId}>
 								<FreeBoardFeedItem
 									feed={item}
 									onClickComment={onClickComment}

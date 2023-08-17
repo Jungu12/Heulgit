@@ -5,6 +5,7 @@ import { colors } from '@constants/colors';
 import {
 	EurekaCommentType,
 	EurekaCommentWriteType,
+	EurekaFeedResponseType,
 	EurekaPostType,
 } from '@typedef/community/eureka.types';
 import EurekaFeedItem from './EurekaFeedItem';
@@ -38,7 +39,7 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	feedList: InfiniteData<EurekaPostType[]>;
+	feedList: InfiniteData<EurekaFeedResponseType>;
 	eurekaHasMore: boolean;
 	eurekaFetchNextPage: (
 		options?: FetchNextPageOptions | undefined,
@@ -56,7 +57,6 @@ const EurekaFeedItemListMobile = ({
 	const [commentInput, setCommentInput] = useState('');
 	const [commentList, setCommentList] = useState<EurekaCommentType[]>([]);
 	const [mentionList, setMentionList] = useState<string[]>([]);
-	// const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
 
 	// 댓글 모달 나오게 할 거
 	const onClickComment = useCallback(
@@ -140,8 +140,8 @@ const EurekaFeedItemListMobile = ({
 					height={`calc(100vh - 234px)`}
 				>
 					{feedList.pages.map((feed) =>
-						feed.map((item, index) => (
-							<div key={index}>
+						feed.content.map((item) => (
+							<div key={item.eurekaId}>
 								<EurekaFeedItem feed={item} onClickComment={onClickComment} />
 								<Separation />
 							</div>
