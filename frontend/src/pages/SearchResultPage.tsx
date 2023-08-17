@@ -167,6 +167,13 @@ const StyledUserID = styled.p`
 	font-weight: 700;
 `;
 
+const Seperation = styled.div`
+	height: 1px;
+	width: 100%;
+	background-color: rgb(238, 238, 238);
+	margin-top: 12px;
+`;
+
 const SearchResultPage = () => {
 	const navigation = useNavigate();
 	const dropDownRef = useRef(null);
@@ -331,7 +338,10 @@ const SearchResultPage = () => {
 					>
 						{heulgitList.pages.map((heulgit) =>
 							heulgit.content.map((item) => (
-								<FeedItem key={item.heulgitId} feed={item} type="search" />
+								<div key={item.heulgitId}>
+									<FeedItem feed={item} type="search" />
+									<Seperation />
+								</div>
 							)),
 						)}
 					</InfiniteScroll>
@@ -350,7 +360,10 @@ const SearchResultPage = () => {
 					>
 						{eurekaList.pages.map((eureka) =>
 							eureka.content.map((item) => (
-								<EurekaFeedItem key={item.eurekaId} feed={item} />
+								<div key={item.eurekaId}>
+									<EurekaFeedItem feed={item} />
+									<Seperation />
+								</div>
 							)),
 						)}
 					</InfiniteScroll>
@@ -369,7 +382,10 @@ const SearchResultPage = () => {
 					>
 						{freeBoardList.pages.map((freeBoard) =>
 							freeBoard.content.map((item) => (
-								<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
+								<div key={item.freeBoardId}>
+									<FreeBoardFeedItem feed={item} />
+									<Seperation />
+								</div>
 							)),
 						)}
 					</InfiniteScroll>

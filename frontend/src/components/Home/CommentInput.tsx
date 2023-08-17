@@ -121,6 +121,24 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 			});
 	}, [authHttp]);
 
+	const onKeyDown = useCallback(
+		(
+			event:
+				| React.KeyboardEvent<HTMLInputElement>
+				| React.KeyboardEvent<HTMLTextAreaElement>,
+		) => {
+			if (event.key === 'Enter' && !event.shiftKey) {
+				// 엔터키를 누르면 전송 로직 실행
+				event.preventDefault(); // 기본 엔터 동작 방지
+				onClickSubbmit();
+			} else if (event.key === 'Enter' && event.shiftKey) {
+				// 쉬프트 + 엔터키를 누르면 줄바꿈 로직 실행
+				return;
+			}
+		},
+		[],
+	);
+
 	useEffect(() => {
 		getFollersData();
 	}, []);
@@ -138,6 +156,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 					maxLength={50}
 					value={input}
 					onChange={onHandleComment}
+					onKeyDown={onKeyDown}
 					style={MentionInputStyle}
 				>
 					<Mention

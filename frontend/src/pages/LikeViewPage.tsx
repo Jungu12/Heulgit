@@ -9,6 +9,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@components/common/Loading';
 import LikeUserItem from '@components/common/LikeUserItem';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/index';
 
 // 좋아요 한 사람 페이지 전체 컨테이너
 const StyledLikeViewPageContainer = styled.div`
@@ -58,6 +60,7 @@ const StyledUserContainer = styled.div`
 
 const LikeViewPage: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
+	const gitId = useSelector((state: RootState) => state.user.user?.githubId);
 	const location = useLocation();
 	const curLoction = findParams(location.pathname);
 	let curApiLocation = curLoction;
@@ -113,7 +116,10 @@ const LikeViewPage: React.FC = () => {
 						}}
 					>
 						{likeList?.pages.map((users) =>
-							users.content.map((user) => <LikeUserItem user={user} />),
+							users.content.map((user) => {
+								if (gitId && user.user.githubId === gitId) return;
+								return <LikeUserItem user={user} />;
+							}),
 						)}
 					</InfiniteScroll>
 				) : (

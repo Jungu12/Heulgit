@@ -1,7 +1,7 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { RootState } from '@store/index';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
@@ -89,13 +89,23 @@ type Props = {
 };
 
 const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
-	const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			if (input!.trim() !== '') {
+	const onKeyDown = useCallback(
+		(
+			event:
+				| React.KeyboardEvent<HTMLInputElement>
+				| React.KeyboardEvent<HTMLTextAreaElement>,
+		) => {
+			if (event.key === 'Enter' && !event.shiftKey) {
+				// 엔터키를 누르면 전송 로직 실행
+				event.preventDefault(); // 기본 엔터 동작 방지
 				if (onSubmitComment) onSubmitComment();
+			} else if (event.key === 'Enter' && event.shiftKey) {
+				// 쉬프트 + 엔터키를 누르면 줄바꿈 로직 실행
+				return;
 			}
-		}
-	};
+		},
+		[],
+	);
 
 	const userImage = useSelector(
 		(state: RootState) => state.user.user?.avatarUrl,
@@ -110,7 +120,7 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 				<StyledCommentInput
 					value={input}
 					onChange={handleInputChange}
-					onKeyDown={handleEnter}
+					onKeyDown={onKeyDown}
 				/>
 				<StyledRegisterButton>
 					<img src={images.send} alt="send" onClick={onSubmitComment} />
