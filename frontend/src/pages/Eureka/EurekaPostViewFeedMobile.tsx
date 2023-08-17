@@ -305,7 +305,7 @@ const EurekaPostViewFeedMobile = ({
 				<StyledLikedSiteTitle>
 					{feed.eurekaGithubInfo.title}
 				</StyledLikedSiteTitle>
-				{feed.eurekaLabels.length && (
+				{feed.eurekaLabels.length > 0 && (
 					<StyledLabelContainer>
 						{feed.eurekaLabels.map((label) => (
 							<StyledLabel $color={getColorFromName(label.name)}>
