@@ -101,7 +101,6 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 			}
 			if (event.key === 'Enter') {
 				console.log('엔텅 ㅋㅋ');
-				event.preventDefault();
 				if (onSubmitComment) onSubmitComment();
 			}
 		},
