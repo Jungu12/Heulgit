@@ -43,9 +43,9 @@ const MainPage = () => {
 
 	// 흘깃 선택되어있을때와 조건이 있을때 다른 api 호출
 	const loadOriginFeedList = useCallback(async (cur: number) => {
-		return authHttp.get<HeulGitPostType[]>(
-			`heulgit/posts/feedlist?pages=${cur}`,
-		);
+		return authHttp
+			.get<HeulgitPostResponseType>(`heulgit/posts/feedlist?pages=${cur}`)
+			.then((res) => res.content);
 	}, []);
 
 	const loadOptionalFeddList = useCallback(
