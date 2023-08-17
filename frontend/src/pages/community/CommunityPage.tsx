@@ -17,6 +17,7 @@ import Sidebar from '@components/common/Sidebar';
 import CommunitySideBarContent from './CommunitySideBarContent';
 import { getFreeBoardFeedList } from '@utils/api/freeBoard/freeBoardApi';
 import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -180,6 +181,25 @@ const CommunityPage = () => {
 		});
 	}, [seletedSort, page, feedList]);
 
+	// 유레카 무한 리스트 불러오기 부분
+	const {
+		data: eurekaFeedList,
+		fetchNextPage: eurekaFetchNextPage,
+		hasNextPage: eurekaHasNextPage,
+	} = useInfiniteQuery(
+		['/eureka/lists', seletedSort],
+		({ pageParam = 1 }) => getEurekaFeedList(seletedSort, pageParam),
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				console.log('[allPage]', allPages);
+
+				if (lastPage.length < 20) return;
+				return allPages.length + 1;
+			},
+			staleTime: 100000,
+		},
+	);
+
 	// 컴포넌트 렌더링 시 FeedList 불러옴
 	useEffect(() => {
 		getEurekaFeedList(seletedSort, page).then((res) => {
@@ -239,7 +259,9 @@ const CommunityPage = () => {
 					<StyledFeedContainerMobile>
 						<Outlet
 							context={{
-								feedList,
+								eurekaFeedList,
+								eurekaFetchNextPage,
+								eurekaHasNextPage,
 								freeBoardFeedList,
 								eurekaHasMore,
 								eurekaNextPageLoad,
