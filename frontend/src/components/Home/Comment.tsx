@@ -1,5 +1,4 @@
 import { colors } from '@constants/colors';
-import { images } from '@constants/images';
 import { HeulGitCommentType } from '@typedef/home/heulgit.types';
 import React from 'react';
 import { styled } from 'styled-components';
@@ -57,10 +56,9 @@ const StyledOptionContainer = styled.div`
 
 type Props = {
 	comment: HeulGitCommentType;
-	onClickCommentMenuOpen: (commentId: number) => void;
 };
 
-const Comment = ({ comment, onClickCommentMenuOpen }: Props) => {
+const Comment = ({ comment }: Props) => {
 	return (
 		<StyledComment>
 			<StyledProfile src={comment.user.avatarUrl} alt="profile" />
@@ -69,14 +67,7 @@ const Comment = ({ comment, onClickCommentMenuOpen }: Props) => {
 				<StyledContent>{comment.content}</StyledContent>
 				<StyledReply>답글 달기</StyledReply>
 			</StyledContentBox>
-			<StyledOptionContainer>
-				{comment.updatedDate}
-				<img
-					src={images.menu}
-					alt="option"
-					onClick={() => onClickCommentMenuOpen(comment.commentId)}
-				/>
-			</StyledOptionContainer>
+			<StyledOptionContainer>{comment.updatedDate}</StyledOptionContainer>
 		</StyledComment>
 	);
 };

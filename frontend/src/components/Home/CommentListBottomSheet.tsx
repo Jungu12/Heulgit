@@ -32,20 +32,13 @@ type Props = {
 };
 
 // 받은 postId로 댓글 생성해서 넘기기
-const CommentListBottomSheet = ({ postId, commentList }: Props) => {
+const CommentListBottomSheet = ({ commentList }: Props) => {
 	return (
 		<StyledCommentListContainer>
 			{commentList.length ? (
 				commentList.map((comment) => (
 					<>
-						<Comment
-							comment={comment}
-							key={comment.commentId}
-							// onClickCommentMenuOpen 수정해야함
-							onClickCommentMenuOpen={function (commentId: number): void {
-								throw new Error('Function not implemented.');
-							}}
-						/>
+						<Comment comment={comment} key={comment.commentId} />
 						<Separation />
 					</>
 				))

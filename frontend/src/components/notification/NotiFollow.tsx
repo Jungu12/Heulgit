@@ -2,7 +2,7 @@ import { colors } from '@constants/colors';
 import { UnionNotificationType } from '@typedef/notification/notification.types';
 import { getTimeAgo } from '@utils/date';
 import { authHttp } from '@utils/http';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
