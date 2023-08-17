@@ -45,11 +45,11 @@ const MyFreeboard = ({ user }: MyProfileProps) => {
 					next={myFreeBoardFetchNextPage}
 					hasMore={myFreeBoardHasNextPage ? true : false}
 					loader={<div>loading...</div>}
-					height={`calc(100vh - 102px)`}
-					style={{
-						overflowY: 'scroll',
-						overflowX: 'hidden',
-					}}
+					// height={`calc(100vh - 102px)`}
+					// style={{
+					// 	overflowY: 'scroll',
+					// 	overflowX: 'hidden',
+					// }}
 				>
 					{myFreeBoardList.pages.map((freeboard) =>
 						freeboard.content.map((item) => (
