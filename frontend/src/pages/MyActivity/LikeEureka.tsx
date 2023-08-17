@@ -1,4 +1,5 @@
 import Loading from '@components/common/Loading';
+import MySeparation from '@components/myActivity/MySeparation';
 import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
@@ -42,7 +43,10 @@ const LikeEureka = () => {
 				>
 					{LikeEurekaList.pages.map((eureka) =>
 						eureka.content.map((item) => (
-							<EurekaFeedItem key={item.eurekaId} feed={item} />
+							<div>
+								<EurekaFeedItem key={item.eurekaId} feed={item} />
+								<MySeparation />
+							</div>
 						)),
 					)}
 				</InfiniteScroll>
