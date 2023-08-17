@@ -6,7 +6,7 @@ export function getSortType(sortName: string) {
 	}
 
 	if (sortName === '스타 많은 순') {
-		return 'starts';
+		return 'stars';
 	}
 }
 

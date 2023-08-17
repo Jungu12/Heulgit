@@ -202,7 +202,7 @@ const MainPage = () => {
 		return newCommentList;
 	}, [authHttp, commentPage, selelctedComment]);
 
-	const { data, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery(
+	const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
 		['infiniteHeulgitFeed', endDate, selelctedOption, selectedLanguage],
 		({ pageParam = 1 }) => loadFeedList(pageParam),
 		{
@@ -228,8 +228,6 @@ const MainPage = () => {
 			setCommentInput('');
 			setCommentList([]);
 			loadCommentList();
-			// 댓글 작성 시 다시 피드 호출
-			refetch();
 		} catch (err) {
 			console.error(err);
 		}

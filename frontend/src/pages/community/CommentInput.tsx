@@ -84,19 +84,11 @@ const StyledRegisterButton = styled.button`
 
 type Props = {
 	input?: string;
-	onSubmitComment?: () => void;
+	onSubmitComment: () => void;
 	handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
-	const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			if (input!.trim() !== '') {
-				if (onSubmitComment) onSubmitComment();
-			}
-		}
-	};
-
 	const userImage = useSelector(
 		(state: RootState) => state.user.user?.avatarUrl,
 	);
@@ -110,7 +102,13 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 				<StyledCommentInput
 					value={input}
 					onChange={handleInputChange}
-					onKeyDown={handleEnter}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault(); // 엔터 키의 기본 동작 막기
+							if (e.shiftKey) return;
+							onSubmitComment();
+						}
+					}}
 				/>
 				<StyledRegisterButton>
 					<img src={images.send} alt="send" onClick={onSubmitComment} />

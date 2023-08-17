@@ -33,6 +33,7 @@ const StyledProfileContainer = styled.div`
 	font-weight: 700;
 	gap: 4px;
 	margin-left: 12px;
+	cursor: pointer;
 `;
 
 const StyledProfileImage = styled.img`
@@ -67,6 +68,7 @@ const StyledButtonContainer = styled.div`
 	img {
 		height: 24px;
 		width: 24px;
+		cursor: pointer;
 	}
 `;
 
@@ -77,6 +79,10 @@ const StyledSubDataContainer = styled.div`
 	font-size: 12px;
 	font-weight: 400;
 	margin: 8px 12px 0 12px;
+
+	.click {
+		cursor: pointer;
+	}
 `;
 
 const StyledMoreDataText = styled.div`
@@ -84,6 +90,7 @@ const StyledMoreDataText = styled.div`
 	font-weight: 500;
 	margin: 6px 0 0 auto;
 	color: ${colors.greyScale.grey4};
+	cursor: pointer;
 `;
 
 const StyledLink = styled(Link)`
@@ -165,7 +172,7 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 				) : (
 					<MarkdownSummaryRenderer text={decodeUnicode(feed.content)} />
 				)}
-				{type === 'summary' ? (
+				{type !== 'full' ? (
 					<StyledMoreDataText
 						onClick={() => {
 							navigation(`/repo/${feed.heulgitId}`);
@@ -194,13 +201,15 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 							onClick={onClickLikeIcon}
 						/>
 					)}
-					<img
-						src={images.chat}
-						alt="comment_button"
-						onClick={
-							onClickComment ? () => onClickComment(feed.heulgitId) : () => {}
-						}
-					/>
+					{type !== 'full' && (
+						<img
+							src={images.chat}
+							alt="comment_button"
+							onClick={
+								onClickComment ? () => onClickComment(feed.heulgitId) : () => {}
+							}
+						/>
+					)}
 					<StyledLink
 						to={`https://github.com/${feed.githubId}/${feed.heulgitName}`}
 						target="_blank"
@@ -210,14 +219,19 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 				</StyledButtonContainer>
 			)}
 			<StyledSubDataContainer>
-				<div onClick={onClickLike}>{`좋아요 ${likeNum}개 · `}</div>
 				<div
+					className="click"
+					onClick={onClickLike}
+				>{`좋아요 ${likeNum}개 · `}</div>
+				<div
+					className="click"
 					onClick={() => {
 						if (onClickComment) {
 							onClickComment(feed.heulgitId);
 						}
 					}}
-				>{`댓글 ${feed.heulgitComments.length}개`}</div>
+				>{` 댓글 ${feed.heulgitComments.length}개 `}</div>
+				<div onClick={onClickLike}>{` · 스타 ${feed.star}개`}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);

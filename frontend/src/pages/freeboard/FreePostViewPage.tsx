@@ -324,7 +324,6 @@ const FreePostViewPage = () => {
 				onClickMenuClose={onClickMenuClose}
 				onClickEdit={onClickEdit}
 			/>
-
 			<FreePostCommentList
 				commentList={feed?.freeBoardComments ?? []}
 				onClickCommentMenuOpen={onClickCommentMenuOpen}

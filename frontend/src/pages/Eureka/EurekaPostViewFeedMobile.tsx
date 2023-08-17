@@ -213,8 +213,9 @@ const StyledLikedSiteContainer = styled.div`
 `;
 
 const StyledLikedSiteTitle = styled.div`
-	font-size: 20px;
+	font-size: 28px;
 	font-weight: 700;
+	margin-bottom: 12px;
 `;
 
 const StyledLabelContainer = styled.div`
