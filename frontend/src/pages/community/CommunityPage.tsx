@@ -173,7 +173,6 @@ const CommunityPage = () => {
 				if (lastPage.last) return;
 				return allPages.length + 1;
 			},
-			staleTime: 100000,
 		},
 	);
 
@@ -190,7 +189,6 @@ const CommunityPage = () => {
 				if (lastPage.last) return;
 				return allPages.length + 1;
 			},
-			staleTime: 100000,
 		},
 	);
 
