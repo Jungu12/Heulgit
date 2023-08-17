@@ -91,7 +91,7 @@ const LikeUserItem = ({ user }: Props) => {
 				.post(`relations/follow?to=${user.user.githubId}`)
 				.then(() => setIsFollowed(true));
 		}
-	}, []);
+	}, [isFollowed]);
 
 	return (
 		<StyledLikeUser key={user.user.githubId}>
@@ -101,7 +101,7 @@ const LikeUserItem = ({ user }: Props) => {
 			</StyledUserProfileContainer>
 			<StyledFollowButtonContainer>
 				<StyledFollowButton
-					$following={user.follow}
+					$following={isFollowed}
 					onClick={onClickFollowButton}
 				>
 					{isFollowed ? '팔로잉' : '팔로우'}
