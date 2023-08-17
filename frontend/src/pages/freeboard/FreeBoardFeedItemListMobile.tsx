@@ -23,10 +23,8 @@ import {
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
-
 	height: calc(100vh - 234px);
 	margin-bottom: 70px;
-
 	scrollbar-width: none; /* 파이어폭스 */
 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
 	&::-webkit-scrollbar {

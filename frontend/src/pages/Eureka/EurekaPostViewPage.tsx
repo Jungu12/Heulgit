@@ -16,12 +16,13 @@ import { authHttp } from '@utils/http';
 import { RootState } from '@store/index';
 import { useSelector } from 'react-redux';
 import EurekaPostViewFeedMobile from './EurekaPostViewFeedMobile';
-import CommentInput from '@pages/community/CommentInput';
 // import CommunitySideBarContent from '@pages/community/CommunitySideBarContent';
 // import CommunityMenuBarPC from '@pages/community/CommunityMenuBarPC';
 // import CommunityFilterPC from '@pages/community/CommunityFilterPC';
 import ReactModal from 'react-modal';
 import { colors } from '@constants/colors';
+import CommentInput from '@components/Home/CommentInput';
+import { OnChangeHandlerFunc } from 'react-mentions';
 
 const customStyles = {
 	overlay: {
@@ -168,6 +169,7 @@ const EurekaPostViewPage = () => {
 	const [input, setInput] = useState('');
 	const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
 	const [seletedComment, setseletedComment] = useState(-1);
+	const [mentionList, setMentionList] = useState<string[]>([]);
 
 	// 좋아요 클릭시 변환 이벤트
 	const handleLikeClick = () => {
@@ -235,9 +237,15 @@ const EurekaPostViewPage = () => {
 		}
 	}, [id, authHttp]);
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInput(e.target.value);
-	};
+	const onHandleComment: OnChangeHandlerFunc = useCallback(
+		(event, newValue, newPlainTextValue, mentions) => {
+			setInput(newPlainTextValue);
+			setMentionList(
+				mentions.map((mention) => mention.display.replace(/@|\s/g, '')),
+			);
+		},
+		[],
+	);
 
 	const onSubmitComment = useCallback(async () => {
 		if (input.trim() === '') return;
@@ -246,7 +254,7 @@ const EurekaPostViewPage = () => {
 			await authHttp.post<EurekaCommentWriteType>('e-comments/comments', {
 				content: input,
 				eurekaId: feed?.eurekaId,
-				mentionedFollowers: [],
+				mentionedFollowers: mentionList,
 				parentId: null,
 			});
 			setInput('');
@@ -316,8 +324,8 @@ const EurekaPostViewPage = () => {
 			/>
 			<CommentInput
 				input={input}
-				onSubmitComment={onSubmitComment}
-				handleInputChange={handleInputChange}
+				onHandleComment={onHandleComment}
+				onClickSubbmit={onSubmitComment}
 			/>
 			<ReactModal
 				isOpen={isCommentMenuOpen}

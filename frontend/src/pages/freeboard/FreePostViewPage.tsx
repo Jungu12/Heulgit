@@ -1,7 +1,6 @@
 // 자유게시판 게시물 리스트 보여지는 페이지
 
 import Header from '@components/common/Header';
-import CommentInput from '@pages/community/CommentInput';
 // import { images } from '@constants/images';
 import React, { useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -21,6 +20,8 @@ import {
 } from '@typedef/community/freeboard.types';
 import FreePostCommentList from '@components/community/FreePostCommentList';
 import ReactModal from 'react-modal';
+import { OnChangeHandlerFunc } from 'react-mentions';
+import CommentInput from '@components/Home/CommentInput';
 
 const customStyles = {
 	overlay: {
@@ -160,10 +161,10 @@ const FreePostViewPage = () => {
 	const [likeNum, setLikeNum] = useState(0);
 
 	// const [isFilterOpen, setIsFilterOpen] = useState(false);
-
 	const [input, setInput] = useState('');
 	const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
 	const [seletedComment, setseletedComment] = useState(-1);
+	const [mentionList, setMentionList] = useState<string[]>([]);
 
 	// 좋아요 클릭시 변환 이벤트
 	const handleLikeClick = () => {
@@ -190,6 +191,16 @@ const FreePostViewPage = () => {
 	const onClickLike = useCallback(() => {
 		navigation('like', { state: { user: feed?.likedUsers } });
 	}, [navigation, feed?.likedUsers]);
+
+	const onHandleComment: OnChangeHandlerFunc = useCallback(
+		(event, newValue, newPlainTextValue, mentions) => {
+			setInput(newPlainTextValue);
+			setMentionList(
+				mentions.map((mention) => mention.display.replace(/@|\s/g, '')),
+			);
+		},
+		[],
+	);
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동
 	const onClickUserProfile = useCallback(() => {
@@ -241,10 +252,6 @@ const FreePostViewPage = () => {
 		}
 	}, [id, authHttp]);
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInput(e.target.value);
-	};
-
 	const onSubmitComment = useCallback(async () => {
 		if (input.trim() === '') return;
 
@@ -252,7 +259,7 @@ const FreePostViewPage = () => {
 			await authHttp.post<FreeBoardCommentWriteType>('f-comments/comments', {
 				content: input,
 				freeBoardId: feed?.freeBoardId,
-				mentionedFollowers: [],
+				mentionedFollowers: mentionList,
 				parentId: null,
 			});
 			setInput('');
@@ -322,8 +329,8 @@ const FreePostViewPage = () => {
 			/>
 			<CommentInput
 				input={input}
-				onSubmitComment={onSubmitComment}
-				handleInputChange={handleInputChange}
+				onHandleComment={onHandleComment}
+				onClickSubbmit={onSubmitComment}
 			/>
 			<ReactModal
 				isOpen={isCommentMenuOpen}
