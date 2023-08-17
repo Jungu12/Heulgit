@@ -45,7 +45,6 @@ const StyledUserInformation = styled.div`
 	gap: 4px;
 
 	div {
-		height: 25px;
 		margin-bottom: 5px;
 	}
 	.user-follow {
@@ -119,6 +118,8 @@ const CateDiv = styled.div`
 	top: 0;
 	background-color: white;
 	z-index: 1;
+
+	margin-top: 2px;
 `;
 const Sdiv = styled.div``;
 const StyledProfileLow = styled.div`
