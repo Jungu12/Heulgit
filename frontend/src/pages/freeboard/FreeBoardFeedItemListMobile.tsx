@@ -134,6 +134,10 @@ const FreeBoardFeedItemListMobile = ({
 		}
 	}, [seletedComment]);
 
+	useEffect(() => {
+		console.log(freeboardFeedList);
+	}, [freeboardFeedList]);
+
 	return (
 		<StyledFeedListSection ref={scrollContinaerRef}>
 			{freeboardFeedList && (
