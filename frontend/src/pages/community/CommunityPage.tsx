@@ -10,14 +10,12 @@ import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import CommunityMenuBarPC from './CommunityMenuBarPC';
 import CommunityFilterPC from './CommunityFilterPC';
-import { EurekaPostType } from '@typedef/community/eureka.types';
 import { getEurekaFeedList } from '@utils/api/eureka/eurekaApi';
 import TabletNavigation from '@components/common/TabletNavigation';
 import Sidebar from '@components/common/Sidebar';
 import CommunitySideBarContent from './CommunitySideBarContent';
-import { getFreeBoardFeedList } from '@utils/api/freeBoard/freeBoardApi';
-import { FreeBoardPostType } from '@typedef/community/freeboard.types';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { getFreeBoardFeedList } from '@utils/api/freeBoard/freeBoardApi';
 
 // 커뮤니티 모바일 버전
 const CommunityContainerMobile = styled.div`
@@ -135,15 +133,8 @@ const CommunityPage = () => {
 	);
 	const navigation = useNavigate();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
-	const [page, setPage] = useState(1);
-	const [feedList, setFeedList] = useState<EurekaPostType[]>([]);
-	const [freeBoardFeedList, setfreeBoardFeedList] = useState<
-		FreeBoardPostType[]
-	>([]);
-
 	const [seletedCommunityTitle, setSeletedCommunityTitle] = useState('유레카');
 	const [seletedSort, setSeletedSort] = useState('전체 보기');
-	const [eurekaHasMore, setEurekaHasMore] = useState(true);
 
 	const onClickFilter = useCallback(() => {
 		setIsFilterOpen(true);
@@ -170,20 +161,6 @@ const CommunityPage = () => {
 		return 'eureka';
 	}, []);
 
-	const eurekaNextPageLoad = useCallback(async () => {
-		const nextPage = page + 1;
-		setPage(nextPage);
-		setEurekaHasMore(false);
-		getEurekaFeedList(seletedSort, nextPage).then((res) => {
-			if (res.length < 20) {
-				setEurekaHasMore(false);
-			}
-			const newFeedList = [...feedList, ...res];
-			setFeedList(newFeedList);
-			setEurekaHasMore(true);
-		});
-	}, [seletedSort, page, feedList]);
-
 	// 유레카 무한 리스트 불러오기 부분
 	const {
 		data: eurekaFeedList,
@@ -194,8 +171,6 @@ const CommunityPage = () => {
 		({ pageParam = 1 }) => getEurekaFeedList(seletedSort, pageParam),
 		{
 			getNextPageParam: (lastPage, allPages) => {
-				console.log('[allPage]', allPages);
-
 				if (lastPage.length < 20) return;
 				return allPages.length + 1;
 			},
@@ -203,49 +178,22 @@ const CommunityPage = () => {
 		},
 	);
 
-	// 컴포넌트 렌더링 시 FeedList 불러옴
-	useEffect(() => {
-		getEurekaFeedList(seletedSort, page).then((res) => {
-			if (res.length < 20) {
-				setEurekaHasMore(false);
-			}
-			setFeedList(res);
-		});
-	}, []);
-
-	useEffect(() => {
-		if (seletedCommunityTitle === '유레카') {
-			getEurekaFeedList(seletedSort, page).then((res) => {
-				setFeedList((prev) => [...prev, ...res]);
-			});
-		} else if (seletedCommunityTitle === '자유게시판') {
-			getFreeBoardFeedList(seletedSort, page).then((res) => {
-				console.log(res);
-
-				setfreeBoardFeedList(res);
-			});
-		}
-	}, [seletedCommunityTitle, page]);
-
-	useEffect(() => {
-		console.log('[현재 페이지]', page);
-	}, [page]);
-
-	useEffect(() => {
-		if (seletedCommunityTitle === '유레카') {
-			setPage(1);
-			setFeedList([]);
-			getEurekaFeedList(seletedSort, 1).then((res) => {
-				setFeedList(res);
-			});
-		}
-
-		if (seletedCommunityTitle === '자유게시판') {
-			getFreeBoardFeedList(seletedSort, page).then((res) => {
-				setfreeBoardFeedList(res);
-			});
-		}
-	}, [seletedSort]);
+	// 자유게시판 무한 리스트 불러오기 부분
+	const {
+		data: freeboardFeedList,
+		fetchNextPage: freeboardFetchNextPage,
+		hasNextPage: freeboardHasNextPage,
+	} = useInfiniteQuery(
+		['/freeboard/lists', seletedSort],
+		({ pageParam = 1 }) => getFreeBoardFeedList(seletedSort, pageParam),
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.length < 20) return;
+				return allPages.length + 1;
+			},
+			staleTime: 100000,
+		},
+	);
 
 	useEffect(() => {
 		if (InfinityContainerRef) InfinityContainerRef.scrollTop = 0;
@@ -269,9 +217,9 @@ const CommunityPage = () => {
 								eurekaFeedList,
 								eurekaFetchNextPage,
 								eurekaHasNextPage,
-								freeBoardFeedList,
-								eurekaHasMore,
-								eurekaNextPageLoad,
+								freeboardFeedList,
+								freeboardFetchNextPage,
+								freeboardHasNextPage,
 							}}
 						/>
 					</StyledFeedContainerMobile>
