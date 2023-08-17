@@ -1,6 +1,8 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
+import { RootState } from '@store/index';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
@@ -19,17 +21,18 @@ const StyledNavigationConatiner = styled.div`
 	img {
 		width: 32px;
 		height: 32px;
+		cursor: pointer;
 	}
 `;
 
 const Navigation = () => {
+	const id = useSelector((state: RootState) => state.user.user?.githubId);
 	const navigation = useNavigate();
 	const location = useLocation();
 	const [pathName, setPathName] = useState('');
 
 	useEffect(() => {
 		setPathName(location.pathname.split('/')[1]);
-		console.log(location.pathname.split('/')[1]);
 	}, []);
 
 	return (
@@ -65,7 +68,7 @@ const Navigation = () => {
 						: images.navigation.profileInactive
 				}
 				// 여기 1값에 사용자의 id 들어가야함
-				onClick={() => navigation('/profiles/1')}
+				onClick={() => navigation(`/profiles/${id}`)}
 			/>
 		</StyledNavigationConatiner>
 	);

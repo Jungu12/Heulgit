@@ -1,7 +1,11 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
+import { RootState } from '@store/index';
 import { HeulGitCommentType } from '@typedef/home/heulgit.types';
-import React from 'react';
+import { getTimeAgo } from '@utils/date';
+import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 const StyledComment = styled.div`
@@ -30,7 +34,7 @@ const StyledUserName = styled.p`
 
 const StyledContent = styled.p`
 	font-size: 14px;
-	font-weight: 400;
+	font-weight: 500;
 	margin-bottom: 10px;
 `;
 
@@ -57,20 +61,50 @@ const StyledOptionContainer = styled.div`
 
 type Props = {
 	comment: HeulGitCommentType;
+	onClickDelete?: (commentId: number) => void;
+	onClickCommentMenuOpen?: (commentId: number) => void;
+	type: 'bottomSheet' | 'detail';
 };
 
-const Comment = ({ comment }: Props) => {
+const Comment = ({
+	comment,
+	onClickDelete,
+	onClickCommentMenuOpen,
+	type,
+}: Props) => {
+	const navigation = useNavigate();
+	const user = useSelector((state: RootState) => state.user.user);
+
+	const goUserProfile = useCallback(() => {
+		navigation(`/profiles/${comment.user.githubId}`);
+	}, [comment.user.githubId]);
+
 	return (
 		<StyledComment>
-			<StyledProfile src={comment.user.avater_url} alt="profile" />
+			<StyledProfile
+				onClick={goUserProfile}
+				src={comment.user.avatarUrl}
+				alt="profile"
+			/>
 			<StyledContentBox>
-				<StyledUserName>{comment.user.id}</StyledUserName>
+				<StyledUserName onClick={goUserProfile}>
+					{comment.user.githubId}
+				</StyledUserName>
 				<StyledContent>{comment.content}</StyledContent>
 				<StyledReply>답글 달기</StyledReply>
 			</StyledContentBox>
 			<StyledOptionContainer>
-				{comment.updated_date}
-				<img src={images.menu} alt="option" />
+				{getTimeAgo(comment.updatedDate)}
+				{comment.user.githubId === user?.githubId && (
+					<img
+						src={images.closeBlack}
+						alt="delete"
+						onClick={() => {
+							if (type === 'bottomSheet') onClickDelete!(comment.commentId);
+							if (type === 'detail') onClickCommentMenuOpen!(comment.commentId);
+						}}
+					/>
+				)}
 			</StyledOptionContainer>
 		</StyledComment>
 	);

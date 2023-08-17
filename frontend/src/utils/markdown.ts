@@ -1,13 +1,21 @@
 // 디코딩 함수
 export const decodeUnicode = (str: string) => {
-	return decodeURIComponent(
-		atob(str)
+	try {
+		const decodedBase64 = atob(str);
+		const decodedUnicode = decodedBase64
 			.split('')
 			.map((c) => {
 				return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
 			})
-			.join(''),
-	);
+			.join('');
+
+		const result = decodeURIComponent(decodedUnicode);
+
+		return result;
+	} catch (error) {
+		console.error('Error decoding Unicode:', error);
+		return '';
+	}
 };
 
 export const getImgTag = (text: string) => {
@@ -20,9 +28,33 @@ export const getImgTag = (text: string) => {
 	let match;
 
 	while ((match = regex.exec(text)) !== null) {
+		// 특정 경우 무시
+		if (text && text.includes('travis')) {
+			continue;
+		}
+		if (text.includes('img.shields.io')) {
+			continue;
+		}
+
 		const value = match[2] || match[4]; // 첫 번째 그룹 또는 두 번째 그룹 사용
 		imageInfoArray.push(value);
 	}
 
 	return imageInfoArray;
 };
+
+export function sliceTextToParagraph(text: string, maxLength: number) {
+	const paragraphs = text.split('\n\n'); // 문단 단위로 분리
+
+	let summary = '';
+	for (const paragraph of paragraphs) {
+		if (summary.length + paragraph.length + 2 <= maxLength) {
+			// +2는 빈 줄 고려
+			summary += paragraph + '\n\n';
+		} else {
+			break;
+		}
+	}
+
+	return summary;
+}

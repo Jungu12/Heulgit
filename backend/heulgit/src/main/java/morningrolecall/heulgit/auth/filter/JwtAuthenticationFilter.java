@@ -32,11 +32,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		FilterChain filterChain) throws ServletException, IOException {
 		String requestURI = request.getRequestURI();
 
-		// /oauth로 시작하는 URL에 대해서는 필터 처리 X
-		if (requestURI.startsWith("/")) {
+		// oauth, swagger ui에 대한 URL은 필터 처리 X
+		if (requestURI.startsWith("/api/oauth") || requestURI.startsWith("/v3/api-docs") || requestURI.startsWith(
+			"/swagger-ui") || requestURI.startsWith("/favicon.ico") || requestURI.startsWith("/swagger-resources")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
+
+		// if (requestURI.startsWith("/")) {
+		// 	filterChain.doFilter(request, response);
+		// 	return;
+		// }
 
 		String token = jwtProvider.resolveToken(request);
 
@@ -55,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		logger.debug("[Filter] Token 존재하지 않거나 만료");
 
-		// 유효하지 않은 경우는 403 에러 전달
-		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		// 유효하지 않은 경우는 401 에러 전달
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 }

@@ -1,5 +1,5 @@
 import { colors } from '@constants/colors';
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkEmoji from 'remark-emoji';
 import raw from 'rehype-raw';
@@ -7,6 +7,7 @@ import gfm from 'remark-gfm';
 import { CopyBlock, dracula } from 'react-code-blocks';
 // import remarkCodeBlocks from 'remark-code-blocks';
 import { styled } from 'styled-components';
+import { decodeUnicode } from '@utils/markdown';
 
 const StyledMarkDownContainer = styled.div`
 	font-size: 1rem;
@@ -149,9 +150,12 @@ const StyledTableContainer = styled.div`
 
 type Props = {
 	text: string;
+	type?: 'text';
 };
 
-const MarkdownRenderer = ({ text }: Props) => {
+const MarkdownRenderer = React.memo(({ text, type }: Props) => {
+	const memoizedText = useMemo(() => decodeUnicode(text), [text]);
+
 	return (
 		<StyledMarkDownContainer>
 			<ReactMarkdown
@@ -171,6 +175,9 @@ const MarkdownRenderer = ({ text }: Props) => {
 						return <StyledMarkDownP>{children}</StyledMarkDownP>;
 					},
 					img({ src, alt }) {
+						if (src && src.includes('travis')) {
+							return <></>; // 빈 요소를 반환하여 렌더링하지 않도록 처리
+						}
 						return <StyledMarkDownImg src={src} alt={alt} />;
 					},
 					code({ children, className }) {
@@ -227,10 +234,10 @@ const MarkdownRenderer = ({ text }: Props) => {
 					},
 				}}
 			>
-				{text}
+				{type === 'text' ? text : memoizedText}
 			</ReactMarkdown>
 		</StyledMarkDownContainer>
 	);
-};
+});
 
 export default MarkdownRenderer;

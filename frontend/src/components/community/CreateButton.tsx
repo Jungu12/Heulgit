@@ -6,8 +6,6 @@ import { styled } from 'styled-components';
 
 const StyledCreateButton = styled.button`
 	display: flex;
-	justify-content: center;
-	align-items: center;
 	position: fixed;
 	bottom: 100px;
 	right: 40px;
@@ -23,6 +21,7 @@ const StyledCreateButton = styled.button`
 	background-size: 60%;
 	background-repeat: no-repeat;
 	background-position: center;
+	cursor: pointer;
 `;
 
 const CreateButton = () => {

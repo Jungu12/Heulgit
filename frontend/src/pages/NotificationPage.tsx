@@ -1,6 +1,9 @@
 import Header from '@components/common/Header';
 import NotiFollow from '@components/notification/NotiFollow';
-import React from 'react';
+import { UnionNotificationType } from '@typedef/notification/notification.types';
+import { isWithinOneMonth } from '@utils/date';
+import { authHttp } from '@utils/http';
+import React, { useCallback, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 // 알림 전체 컨테이너
@@ -9,7 +12,6 @@ const StyledNotificationContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	overflow-y: scroll;
-
 	height: 100vh;
 `;
 
@@ -20,6 +22,7 @@ const StyledWeekNotiContainer = styled.div`
 	align-items: center;
 	position: relative;
 	top: 56px;
+	width: 100%;
 `;
 
 // 알림
@@ -39,26 +42,81 @@ const StyledNotiDiv = styled.div`
 const StyleNoti = styled.div`
 	display: flex;
 	justify-content: start;
-
 	margin-left: 18px;
 `;
 
+const StyledEmptyNotification = styled.div`
+	display: flex;
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+`;
+
 const NotificationPage = () => {
+	const [notifications, setNotifications] = useState<UnionNotificationType[]>(
+		[],
+	);
+	const [recentNotifications, setRecentNotifications] = useState<
+		UnionNotificationType[]
+	>([]);
+	const [pastNotifications, setPastNotifications] = useState<
+		UnionNotificationType[]
+	>([]);
+
+	const loadNotification = useCallback(() => {
+		authHttp
+			.get<UnionNotificationType[]>('notifications')
+			.then((res) => setNotifications(res));
+	}, []);
+
+	useEffect(() => {
+		loadNotification();
+	}, []);
+
+	useEffect(() => {
+		setRecentNotifications([]);
+		setPastNotifications([]);
+		for (const noti of notifications) {
+			if (isWithinOneMonth(noti.createdDate)) {
+				setRecentNotifications((prev) => [...prev, noti]);
+				continue;
+			}
+			setPastNotifications((prev) => [...prev, noti]);
+		}
+	}, [notifications]);
+
 	return (
 		<StyledNotificationContainer>
 			<Header title="알림" />
-			<StyledWeekNotiContainer>
-				<StyledNotiDiv>
-					<StyleNoti>이번 주</StyleNoti>
-				</StyledNotiDiv>
-				<NotiFollow />
-			</StyledWeekNotiContainer>
-			<StyledWeekNotiContainer>
-				<StyledNotiDiv>
-					<StyleNoti>이전 알림</StyleNoti>
-				</StyledNotiDiv>
-				<NotiFollow />
-			</StyledWeekNotiContainer>
+			{pastNotifications.length === 0 && recentNotifications.length === 0 ? (
+				<StyledEmptyNotification>알림이 없습니다.</StyledEmptyNotification>
+			) : (
+				<>
+					{recentNotifications.length > 0 && (
+						<StyledWeekNotiContainer>
+							<StyledNotiDiv>
+								<StyleNoti>이번 주</StyleNoti>
+							</StyledNotiDiv>
+							<NotiFollow
+								notificationList={recentNotifications}
+								loadNotification={loadNotification}
+							/>
+						</StyledWeekNotiContainer>
+					)}
+					{pastNotifications.length > 0 && (
+						<StyledWeekNotiContainer>
+							<StyledNotiDiv>
+								<StyleNoti>이전 알림</StyleNoti>
+							</StyledNotiDiv>
+							<NotiFollow
+								notificationList={pastNotifications}
+								loadNotification={loadNotification}
+							/>
+						</StyledWeekNotiContainer>
+					)}
+				</>
+			)}
 		</StyledNotificationContainer>
 	);
 };

@@ -7,6 +7,7 @@ const StyledItemContainer = styled.div`
 	display: flex;
 	align-items: center;
 	padding: 10px 20px;
+	cursor: pointer;
 	&:hover {
 		background-color: ${colors.primary.primaryLighten};
 	}

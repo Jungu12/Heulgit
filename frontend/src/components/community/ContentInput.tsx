@@ -1,5 +1,6 @@
 import { colors } from '@constants/colors';
-import React, { ChangeEvent, useState } from 'react';
+import { EurekaWriteType } from '@typedef/community/eureka.types';
+import React, { ChangeEvent } from 'react';
 import { styled } from 'styled-components';
 
 // 내용 컨테이너
@@ -8,6 +9,7 @@ const StyledContentInputContainer = styled.div`
 	flex-direction: column;
 
 	width: 100%;
+	flex: 1;
 `;
 
 // url 컨테이너
@@ -20,10 +22,10 @@ const StyledURLInput = styled.textarea.attrs({
 	overflow: auto;
 
 	height: 50px;
-	padding: 0px 15px 15px 15px;
-	top: 10px;
+	padding: 10px 15px 15px 15px;
+	/* top: 10px; */
 
-	font-size: 17px;
+	font-size: 15px;
 	font-weight: bold;
 	word-break: break-word;
 
@@ -43,53 +45,62 @@ const StyledContentInput = styled.textarea.attrs({
 	position: relative;
 	overflow: auto;
 
-	height: calc(100vh - 400px);
-
-	padding: 0px 15px 15px 15px;
-	top: 10px;
+	padding: 10px 15px 15px 15px;
+	/* top: 10px; */
 	/* margin: 0 20px; */
 	/* background-color: ${colors.greyScale.grey3}; */
+
+	/* height: 300px; */
 
 	/* textarea 크기 조절 막기 */
 	resize: none;
 
-	font-size: 17px;
+	font-size: 15px;
 	font-weight: bold;
+	line-height: 1.2;
 
 	border: none;
-	outline: none;
+	textarea {
+		outline: none;
+	}
+
+	flex: 1;
 `;
 
 type ContentInputProps = {
+	postInput?: EurekaWriteType;
 	onChange: (value: string) => void;
+	onChangeLink?: (value: string) => void;
 	showURLInput?: boolean; // URL 입력 부분을 보여줄지 여부를 props로 받음
 };
 
-const ContentInput: React.FC<ContentInputProps> = ({
+const ContentInput = ({
 	onChange,
+	onChangeLink,
+	postInput,
 	showURLInput = true,
-}) => {
-	const [content, setContent] = useState('');
-	const [url, setUrl] = useState('');
-
+}: ContentInputProps) => {
 	const contentChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		const inputValue = e.target.value;
-		setContent(inputValue);
 		onChange(inputValue);
 	};
 
 	const urlChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		const inputValue = e.target.value;
-		setUrl(inputValue);
-		onChange(inputValue);
+		if (onChangeLink) {
+			onChangeLink(inputValue);
+		}
 	};
 
 	return (
 		<StyledContentInputContainer>
 			{showURLInput && (
-				<StyledURLInput onChange={urlChangeHandler} value={url} />
+				<StyledURLInput onChange={urlChangeHandler} value={postInput?.link} />
 			)}
-			<StyledContentInput onChange={contentChangeHandler} value={content} />
+			<StyledContentInput
+				onChange={contentChangeHandler}
+				value={postInput?.content}
+			/>
 		</StyledContentInputContainer>
 	);
 };

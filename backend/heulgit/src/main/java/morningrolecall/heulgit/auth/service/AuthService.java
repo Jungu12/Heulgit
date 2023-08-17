@@ -14,8 +14,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import morningrolecall.heulgit.auth.dto.OAuthToken;
+import morningrolecall.heulgit.auth.dto.TokenInfoResponse;
 import morningrolecall.heulgit.auth.util.JwtProvider;
-import morningrolecall.heulgit.user.entity.User;
+import morningrolecall.heulgit.auth.util.JwtRedisManager;
+import morningrolecall.heulgit.exception.AuthException;
+import morningrolecall.heulgit.exception.ExceptionCode;
+import morningrolecall.heulgit.user.domain.User;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @Service
@@ -32,13 +36,16 @@ public class AuthService {
 
 	private final UserRepository userRepository;
 
+	private final JwtRedisManager jwtRedisManager;
+
 	private final JwtProvider jwtProvider;
 
 	public AuthService(RestTemplate restTemplate,
 		@Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
 		@Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret,
 		@Value("${github.accesstoken-url}") String accessTokenUrl,
-		@Value("${github.userinfo-url}") String userInfoUrl, UserRepository userRepository, JwtProvider jwtProvider) {
+		@Value("${github.userinfo-url}") String userInfoUrl, UserRepository userRepository, JwtProvider jwtProvider,
+		JwtRedisManager jwtRedisManager) {
 		this.restTemplate = restTemplate;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
@@ -46,6 +53,7 @@ public class AuthService {
 		this.userInfoUrl = userInfoUrl;
 		this.userRepository = userRepository;
 		this.jwtProvider = jwtProvider;
+		this.jwtRedisManager = jwtRedisManager;
 	}
 
 	/**
@@ -71,19 +79,39 @@ public class AuthService {
 
 		User user = extractUser(response.getBody());
 
-		// 사용자 정보 추출이 정상적이지 않은 경우
-		if (user == null) {
-			// TODO 예외 처리 필요
-			return null;
-		}
-
-		String id = user.getId();
+		String githubId = user.getGithubId();
 		// 사용자가 처음 서비스를 이용하는 경우
-		if (userRepository.findUserById(id).isEmpty()) {
+		if (userRepository.findUserByGithubId(githubId).isEmpty()) {
 			userRepository.save(user);
 		}
 
-		// JWT 생성!
+		//JWT 생성 하고, Redis 저장소에 Token 저장하는 로직 추가 필요 (확인 필요!)
+		OAuthToken oAuthToken = new OAuthToken(jwtProvider.generateAccessToken(githubId),
+			jwtProvider.generateRefreshToken(githubId));
+		jwtRedisManager.storeJwt(githubId, oAuthToken.getRefreshToken());
+
+		return oAuthToken;
+	}
+
+	/**
+	 * 토큰으로부터 사용자 ID 추출 후 반환
+	 * */
+	public TokenInfoResponse getUserId(String token) {
+		return new TokenInfoResponse(jwtProvider.getUserId(token));
+	}
+
+	/**
+	 * Refresh Token을 받아 유효성을 검사하고, 유효한 경우는 Access Token과 Refresh Token을 재발급
+	 */
+	public OAuthToken reGenerateAuthToken(HttpServletRequest request) {
+		String refreshToken = jwtProvider.resolveToken(request);
+
+		if (refreshToken == null || !jwtProvider.validateToken(refreshToken)) {
+			return null;
+		}
+
+		String id = jwtProvider.getUserId(refreshToken);
+
 		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
 	}
 
@@ -93,25 +121,7 @@ public class AuthService {
 	 * @return String 액세스 토큰
 	 * */
 	private String getAccessToken(String code) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", "application/json");
-
-		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-
-		ResponseEntity<String> response = restTemplate.exchange(
-			accessTokenUrl + "?client_id=" + clientId + "&client_secret=" + clientSecret + "&code=" + code,
-			HttpMethod.POST,
-			requestEntity,
-			String.class
-		);
-
-		String accessTokenResponse = extractAccessToken(response.getBody());
-
-		if (accessTokenResponse != null) {
-			return accessTokenResponse;
-		} else {
-			throw new RuntimeException("[Exception] Access Token을 얻는데 실패했습니다.");
-		}
+		return extractAccessToken(requestAccessToken(code).getBody());
 	}
 
 	/**
@@ -129,10 +139,8 @@ public class AuthService {
 				jsonNode.get("bio").asText(), jsonNode.get("company").asText(), jsonNode.get("location").asText(),
 				jsonNode.get("blog").asText());
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new AuthException(ExceptionCode.USER_CREATED_FAILED);
 		}
-
-		return null;
 	}
 
 	/**
@@ -145,27 +153,27 @@ public class AuthService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(response);
 
-			if (jsonNode.has("access_token")) {
-				return jsonNode.get("access_token").asText();
-			}
+			return jsonNode.get("access_token").asText();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new AuthException(ExceptionCode.GITHUB_TOKEN_RESPONSE_FAILED);
 		}
-		return null;
 	}
 
-	/**
-	 * Refresh Token을 받아 유효성을 검사하고, 유효한 경우는 Access Token과 Refresh Token을 재발급
-	 */
-	public OAuthToken reGenerateAuthToken(HttpServletRequest request) {
-		String refreshToken = jwtProvider.resolveToken(request);
+	private ResponseEntity<String> requestAccessToken(String code) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", "application/json");
 
-		if (refreshToken == null || !jwtProvider.validateToken(refreshToken)) {
-			return null;
+			HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+			return restTemplate.exchange(
+				accessTokenUrl + "?client_id=" + clientId + "&client_secret=" + clientSecret + "&code=" + code,
+				HttpMethod.POST,
+				requestEntity,
+				String.class
+			);
+		} catch (Exception e) {
+			throw new AuthException(ExceptionCode.GITHUB_ACCESS_TOKEN_FETCH_FAILED);
 		}
-
-		String id = jwtProvider.getUserId(refreshToken);
-
-		return new OAuthToken(jwtProvider.generateAccessToken(id), jwtProvider.generateRefreshToken(id));
 	}
 }

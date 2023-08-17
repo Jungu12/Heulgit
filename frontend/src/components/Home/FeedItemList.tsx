@@ -1,8 +1,11 @@
-import { HeulGitPostType } from '@typedef/home/heulgit.types';
+import { HeulgitPostResponseType } from '@typedef/home/heulgit.types';
 import React from 'react';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import FeedItem from './FeedItem';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import Loading from '@components/common/Loading';
+import { InfiniteData } from '@tanstack/react-query';
 
 const StyledFeedListSection = styled.section`
 	/* height: calc(100vh - 194px); */
@@ -24,18 +27,47 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	feedList: HeulGitPostType[];
+	feedList: InfiniteData<HeulgitPostResponseType>;
+	onClickComment?: (id: number) => void;
+	loadNextFeedList: () => void;
+	hasMore: boolean;
 };
 
-const FeedItemList = ({ feedList }: Props) => {
+const FeedItemList = ({
+	feedList,
+	hasMore,
+	onClickComment,
+	loadNextFeedList,
+}: Props) => {
 	return (
 		<StyledFeedListSection>
-			{feedList.map((feed, index) => (
-				<div key={index}>
-					<FeedItem feed={feed} type="summary" />
-					<Separation />
-				</div>
-			))}
+			{feedList ? (
+				<InfiniteScroll
+					dataLength={feedList.pages.length}
+					next={loadNextFeedList}
+					hasMore={hasMore}
+					style={{
+						overflowX: 'hidden',
+					}}
+					loader={<Loading />}
+					height={`calc(100vh - 193px)`}
+				>
+					{feedList.pages.map((feed) =>
+						feed.content.map((item) => (
+							<div key={item.heulgitId}>
+								<FeedItem
+									feed={item}
+									type="summary"
+									onClickComment={onClickComment}
+								/>
+								<Separation />
+							</div>
+						)),
+					)}
+				</InfiniteScroll>
+			) : (
+				<Loading />
+			)}
 		</StyledFeedListSection>
 	);
 };

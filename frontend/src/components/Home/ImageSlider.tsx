@@ -10,6 +10,7 @@ import 'swiper/css/navigation';
 import { EffectCreative, Pagination, Navigation } from 'swiper/modules';
 import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
+import { images } from '@constants/images';
 
 const StyledSliderContainer = styled.div`
 	display: flex;
@@ -18,17 +19,29 @@ const StyledSliderContainer = styled.div`
 	.swiper {
 		--swiper-theme-color: ${colors.primary.primary};
 	}
+
+	.swiper-slide-active {
+		display: flex;
+	}
+
+	.swiper-button-next:after,
+	.swiper-button-prev:after {
+		font-size: 32px;
+		color: ${colors.primary.primatyDark};
+	}
 `;
 
 const StyledImage = styled.img`
-	max-width: 100%;
+	max-width: 75% !important;
+	margin: auto;
+	object-fit: contain;
 `;
 
 type Props = {
 	images: string[];
 };
 
-const ImageSlider = ({ images }: Props) => {
+const ImageSlider = ({ images: imageList }: Props) => {
 	return (
 		<StyledSliderContainer onClick={(e) => e.stopPropagation()}>
 			<Swiper
@@ -56,9 +69,13 @@ const ImageSlider = ({ images }: Props) => {
 				}}
 				className="mySwiper"
 			>
-				{images.map((image, index) => (
+				{imageList.map((image, index) => (
 					<SwiperSlide key={index}>
-						<StyledImage src={image} alt="" />
+						<StyledImage
+							src={image}
+							alt=""
+							onError={(e) => (e.currentTarget.src = images.noImage)}
+						/>
 					</SwiperSlide>
 				))}
 			</Swiper>
