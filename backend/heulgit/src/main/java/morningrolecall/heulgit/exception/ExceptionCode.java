@@ -34,14 +34,16 @@ public enum ExceptionCode {
 
 	/* Relation */
 	FOLLOW_CANCEL_FAILED(HttpStatus.BAD_REQUEST, "팔로우를 취소할 수 없습니다."),
+
 	ALREADY_FOLLOWED(HttpStatus.CONFLICT, "이미 팔로우 관계입니다."),
 
 	/* GM */
 	CHAT_MESSAGE_NOT_EXIST(HttpStatus.NOT_FOUND, "메세지가 존재하지 않습니다."),
 
 	/* Notification */
-	RECEIVER_USER_MISMATCH(HttpStatus.FORBIDDEN,"알림 받는 사용자가 아닙니다."),
-	NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND,"알림을 찾을 수 없습니다.");
+	RECEIVER_USER_MISMATCH(HttpStatus.FORBIDDEN, "알림 받는 사용자가 아닙니다."),
+
+	NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다.");
 
 	private final HttpStatus status;
 	private final String message;
