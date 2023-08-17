@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.gm.dto.ChatMessage;
 import morningrolecall.heulgit.gm.dto.ChatRoom;
+import morningrolecall.heulgit.user.domain.dto.UserDetail;
+import morningrolecall.heulgit.user.repository.UserRepository;
 
 @RequiredArgsConstructor
 @Repository
@@ -22,7 +24,7 @@ public class ChatRoomRepository {
 	//Redis
 	private final RedisTemplate<String, Object> redisTemplate;
 	private HashOperations<String, String, ChatRoom> opsHashChatRoom;
-	// 채팅방의 대화 메시지를 발행하기 위한 redis topic 정보. 서버별로 채팅방에 매치되는 topic정보를 Map에 넣어 roomId로 찾을수 있도록 한다.
+	private final UserRepository userRepository;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@PostConstruct
@@ -35,11 +37,12 @@ public class ChatRoomRepository {
 		List<ChatRoom> ChatRooms = opsHashChatRoom.values(CHAT_ROOMS);
 		List<ChatRoom> myChatRooms = new ArrayList<>();
 		for (ChatRoom chatRoom : ChatRooms) {
-			if (chatRoom.getUser1().equals(githubId) || chatRoom.getUser2().equals(githubId)) {
+			if (chatRoom.getUser1().getId().equals(githubId) || chatRoom.getUser2().getId().equals(githubId)) {
 				myChatRooms.add(chatRoom);
 				logger.debug("added chatRoom = {}", chatRoom);
 			}
 		}
+		
 		return myChatRooms;
 	}
 
@@ -50,14 +53,17 @@ public class ChatRoomRepository {
 	public ChatRoom createChatRoom(String user1, String user2) {
 		ChatRoom chatRoom = getChatRoom(user1 + ":" + user2);
 		if (chatRoom == null) {
+			String user1AvatarUrl = userRepository.findUserByGithubId(user1).get().getAvatarUrl();
+			String user2AvatarUrl = userRepository.findUserByGithubId(user2).get().getAvatarUrl();
 			chatRoom = ChatRoom.builder()
 				.roomId(user1 + ":" + user2)
-				.user1(user1)
-				.user2(user2)
+				.user1(UserDetail.builder().id(user1).avater_url(user1AvatarUrl).build())
+				.user2(UserDetail.builder().id(user2).avater_url(user2AvatarUrl).build())
 				.build();
 
 			opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
 		}
+
 		return chatRoom;
 	}
 
@@ -69,6 +75,7 @@ public class ChatRoomRepository {
 		if (curChatRoom == null) {
 			return new ArrayList<>();
 		}
+
 		return curChatRoom.getChatMessages();
 	}
 
