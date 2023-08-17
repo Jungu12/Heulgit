@@ -1,21 +1,52 @@
-import { UserLikePostType } from '@typedef/profile/user.types';
+import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
 import { authHttp } from '@utils/http';
-import React, { useEffect } from 'react';
+import React from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const LikeEureka = () => {
 	// 좋아요 게시물 불러오기
-	useEffect(() => {
-		authHttp
-			.get<UserLikePostType[]>('users/activities/eureka/my-likes?pages=1')
-			.then((response) => {
-				console.log('좋아요 유레카 성공.', response);
-			})
-			.catch((error) => {
-				console.error('좋아요 유레카 실패.', error);
-			});
-	}, []);
+	const {
+		data: eurekaLikeList,
+		fetchNextPage: eurekaFetchNextPage,
+		hasNextPage: eurekaHasNextPage,
+	} = useInfiniteQuery(
+		['/my-likes/eureka'],
+		({ pageParam = 1 }) =>
+			authHttp.get<EurekaFeedResponseType>(
+				`users/activities/eureka/my-likes?pages=${pageParam}`,
+			),
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.last) return;
+				return allPages.length + 1;
+			},
+		},
+	);
 
-	return <div></div>;
+	return (
+		<div>
+			{eurekaLikeList && (
+				<InfiniteScroll
+					dataLength={eurekaLikeList.pages.length}
+					next={eurekaFetchNextPage}
+					hasMore={eurekaHasNextPage ? true : false}
+					loader={<div>loading...</div>}
+					style={{
+						overflowY: 'scroll',
+						overflowX: 'hidden',
+					}}
+				>
+					{eurekaLikeList.pages.map((eureka) =>
+						eureka.content.map((item) => (
+							<EurekaFeedItem key={item.eurekaId} feed={item} />
+						)),
+					)}
+				</InfiniteScroll>
+			)}
+		</div>
+	);
 };
 
 export default LikeEureka;

@@ -95,6 +95,8 @@ const MyActivityPage = () => {
 			.get('users/logout')
 			.then(() => {
 				alert('로그아웃 되었습니다.');
+				localStorage.removeItem('login');
+				navigation('/login');
 			})
 			.catch((err) => {
 				console.error(err);

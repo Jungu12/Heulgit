@@ -94,7 +94,7 @@ const MyLikeRepoPage = () => {
 		fetchNextPage: heulgitFetchNextPage,
 		hasNextPage: heulgitHasNextPage,
 	} = useInfiniteQuery(
-		['/search/heulgit'],
+		['/my-likes/heulgit'],
 		({ pageParam = 1 }) =>
 			authHttp.get<HeulgitPostResponseType>(
 				`users/activities/heulgit/my-likes?pages=${pageParam}`,
@@ -128,7 +128,6 @@ const MyLikeRepoPage = () => {
 							next={heulgitFetchNextPage}
 							hasMore={heulgitHasNextPage ? true : false}
 							loader={<div>loading...</div>}
-							height={`calc(100vh - 114px)`}
 							style={{
 								overflowY: 'scroll',
 								overflowX: 'hidden',

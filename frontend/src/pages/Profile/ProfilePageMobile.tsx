@@ -163,16 +163,14 @@ const ProfilePageMobile = ({
 			authHttp
 				.get<FollowType>(`relations/state?to=${userId}`)
 				.then((response) => {
-					console.log(isFollowing); // 담기는지 확인
 					console.log('팔로우 정보 성공:', response);
-					// setIsFollowing(response);
+					setIsFollowing(response.follow);
 				})
 				.catch((error) => {
 					console.error('팔로우 정보 실패:', error);
 				});
 		}, []);
 	}
-	console.log('팔로잉 정보1 :', isFollowing);
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
@@ -182,7 +180,7 @@ const ProfilePageMobile = ({
 				.post(`relations/follow?to=${userId}`)
 				.then(() => {
 					console.log('팔로우 성공');
-					setIsFollowing(true);
+					setIsFollowing(!isFollowing);
 				})
 				.catch((error) => {
 					console.error('팔로우 실패:', error);
@@ -193,7 +191,7 @@ const ProfilePageMobile = ({
 				.delete(`relations/unfollow?to=${userId}`)
 				.then(() => {
 					console.log('언팔로우 성공');
-					setIsFollowing(false);
+					setIsFollowing(!isFollowing);
 				})
 				.catch((error) => {
 					console.error('언팔로우 실패', error);
@@ -264,7 +262,7 @@ const ProfilePageMobile = ({
 								</StyledActivityButtonItem>
 							</div>
 							<div>
-								{isFollowing !== undefined && (
+								{isFollowing && (
 									<StyledActivityButtonItem onClick={handleFollowClick}>
 										{isFollowing ? (
 											<img src={images.profile.followingIcon} alt="팔로잉" />
