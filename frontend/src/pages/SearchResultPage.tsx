@@ -14,6 +14,7 @@ import { styled } from 'styled-components';
 import EurekaFeedItem from './Eureka/EurekaFeedItem';
 import FreeBoardFeedItem from './freeboard/FreeBoardFeedItem';
 import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
+import Loading from '@components/common/Loading';
 
 type StyledCategoryItemProps = {
 	$isSeleted: boolean;
@@ -141,6 +142,7 @@ const StyledUserContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	overflow-y: scroll;
 `;
 
 const StyledUserItem = styled.div`
@@ -320,8 +322,8 @@ const SearchResultPage = () => {
 						dataLength={heulgitList.pages.length}
 						next={heulgitFetchNextPage}
 						hasMore={heulgitHasNextPage ? true : false}
-						loader={<div>loading...</div>}
-						height={`calc(100vh - 114px)`}
+						loader={<Loading />}
+						height={`calc(100vh - 134px)`}
 						style={{
 							overflowY: 'scroll',
 							overflowX: 'hidden',
@@ -339,7 +341,8 @@ const SearchResultPage = () => {
 						dataLength={eurekaList.pages.length}
 						next={eurekaFetchNextPage}
 						hasMore={eurekaHasNextPage ? true : false}
-						loader={<div>loading...</div>}
+						loader={<Loading />}
+						height={`calc(100vh - 134px)`}
 						style={{
 							overflowY: 'scroll',
 							overflowX: 'hidden',
@@ -357,7 +360,8 @@ const SearchResultPage = () => {
 						dataLength={freeBoardList.pages.length}
 						next={freeBoardFetchNextPage}
 						hasMore={freeBoardHasNextPage ? true : false}
-						loader={<div>loading...</div>}
+						loader={<Loading />}
+						height={`calc(100vh - 134px)`}
 						style={{
 							overflowY: 'scroll',
 							overflowX: 'hidden',

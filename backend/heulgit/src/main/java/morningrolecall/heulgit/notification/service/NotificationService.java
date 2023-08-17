@@ -71,6 +71,7 @@ public class NotificationService {
 			logger.debug("미수신한 Event 목록 존재");
 			sendLostData(lastEventId,githubId,emitterId,emitter);
 		}
+		System.out.println(emitter.toString());
 		return emitter;
 	}
 
@@ -102,6 +103,7 @@ public class NotificationService {
 		logger.debug("sendLostData()");
 
 		Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByGithubId(githubId);
+		
 		eventCaches.entrySet().stream()
 			.filter(entry -> lastEventId.compareTo(entry.getKey())<0)
 			.forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
@@ -113,6 +115,7 @@ public class NotificationService {
 	public void send(NotificationResponse notificationResponse){
 		logger.debug("send()");
 		Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByGithubId(notificationResponse.getReceiver().getGithubId());
+		logger.debug("test",sseEmitters.size());
 		sseEmitters.forEach(
 			(key, emitter) ->{
 				// 데이터 캐시 저장(유실된 데이터 처리하기 위함)
@@ -133,8 +136,10 @@ public class NotificationService {
 			emitter.send(SseEmitter.event()
 				.id(id)
 				.name("sse")
-				.data(data, MediaType.APPLICATION_JSON));
-				// .reconnectTime(0));
+				.data(data, MediaType.APPLICATION_JSON)
+				.reconnectTime(0));
+			emitter.complete();
+			emitterRepository.deleteById(id);
 		} catch (Exception exception) {
 			logger.debug("예외");
 			logger.debug(exception.getMessage());
@@ -317,21 +322,17 @@ public class NotificationService {
 
 	/**
 	 * notificationId를 받아 읽지 않은 알림 읽음 처리
-	 * @param notificationId
+	 * @param githubId
 	 * */
 	@Transactional
-	public void changeNotificationState(Long notificationId,String githubId) {
-		logger.debug("changeNotificationState(), notificationId = {}, ", notificationId);
+	public void changeNotificationState(String githubId) {
+		logger.debug("changeNotificationState(), who={}",githubId);
 		User user = userRepository.findUserByGithubId(githubId)
 				.orElseThrow(()->new NotificationException(ExceptionCode.USER_NOT_FOUND));
-		Notification notification = notificationRepository.findById(notificationId)
-			.orElseThrow(()-> new NotificationException(ExceptionCode.NOTIFICATION_NOT_FOUND));
-		if(!user.getGithubId().equals(notification.getReceiver().getGithubId())){
-			throw new NotificationException(ExceptionCode.RECEIVER_USER_MISMATCH);
-		}
+
 
 		// if(user.getGithubId())
-		notificationRepository.updateHasReadById(notificationId);
+		notificationRepository.updateHasReadByGithubId(githubId);
 	}
 
 	/**

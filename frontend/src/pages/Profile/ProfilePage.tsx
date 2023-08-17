@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import ProfilePageMobile from './ProfilePageMobile';
@@ -19,38 +19,19 @@ const StyledProfile = styled.div`
 	}
 `;
 
-// const deleteKeysFromSession = (keys: string[]) => {
-// 	keys.forEach((key) => sessionStorage.removeItem(key));
-// };
-
 const ProfilePage = () => {
 	const navigation = useNavigate();
 	const { userId } = useParams();
 
-	const [selectedMenu, setSelectedMenu] = useState('');
+	const [selectedMenu, setSelectedMenu] = useState('프로필');
 	const handleMenuClick = (menu: '프로필' | '유레카' | '자유') => {
 		setSelectedMenu(menu);
-		sessionStorage.setItem('selectedMenu', menu);
 	};
 
 	const onClickGM = useCallback(() => {
 		authHttp.get<ChatRoomType>(`gm/room/access/${userId}`).then((res) => {
 			navigation(`/gm/${res.roomId}`, { state: { room: res } });
 		});
-	}, []);
-
-	useEffect(() => {
-		// selectedMenu가 변경될 때마다 sessionStorage에 저장.
-		const categoryItem = sessionStorage.getItem('selectedMenu') as
-			| '프로필'
-			| '유레카'
-			| '자유';
-
-		if (categoryItem) {
-			setSelectedMenu(categoryItem);
-		} else {
-			setSelectedMenu('프로필');
-		}
 	}, []);
 
 	return (

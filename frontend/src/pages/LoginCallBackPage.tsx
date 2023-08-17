@@ -1,5 +1,5 @@
 import { setToken } from '@store/auth';
-import { http } from '@utils/http';
+import { authHttp, http } from '@utils/http';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -26,14 +26,6 @@ const StyledCallBackContainer = styled.div`
 const LoginCallBackPage = () => {
 	const navigation = useNavigate();
 	const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
-
-	// const getUserId = useCallback(() => {
-	// 	http
-	// 		.get('oauth/me')
-	// 		.then((res) => console.log(res))
-	// 		.catch((err) => console.log(err));
-	// }, []);
-
 	const getToken = useCallback(
 		async (code: string) => {
 			http
@@ -49,6 +41,7 @@ const LoginCallBackPage = () => {
 					// 로그인 성공 시 토큰과 아이콘 저장 및 로컬 스토리지에 로그인 정보 저장하고 홈화면으로 보내기
 					dispatch(setToken(accessToken));
 					window.localStorage.setItem('login', 'true');
+					authHttp.get('users/repo').then(() => console.log('레포 슥삭'));
 				})
 				.then(() => {
 					// navigation('/', { replace: true });

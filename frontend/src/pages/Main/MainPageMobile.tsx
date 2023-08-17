@@ -3,12 +3,14 @@ import CommentListBottomSheet from '@components/Home/CommentListBottomSheet';
 import FeedItemList from '@components/Home/FeedItemList';
 import LanguageSearchModal from '@components/Home/LanguageSearchModal';
 import CBottomSheet from '@components/common/CBottomSheet';
+import Loading from '@components/common/Loading';
 import Navigation from '@components/common/Navigation';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
+import { InfiniteData } from '@tanstack/react-query';
 import {
 	HeulGitCommentType,
-	HeulGitPostType,
+	HeulgitPostResponseType,
 } from '@typedef/home/heulgit.types';
 import { getYearAndMonth } from '@utils/date';
 import React from 'react';
@@ -68,6 +70,12 @@ const StyledIconContainer = styled.div`
 	img {
 		width: 28px;
 		height: 28px;
+	}
+
+	.alarm-icon {
+		position: relative;
+		display: flex;
+		align-items: center;
 	}
 `;
 
@@ -220,6 +228,17 @@ const StyledCalendarContainer = styled.div`
 	position: fixed;
 `;
 
+const NotificationBadge = styled.span`
+	position: absolute;
+	bottom: -5px;
+	right: -5px;
+	background-color: red;
+	color: white;
+	font-size: 12px;
+	border-radius: 50%;
+	padding: 2px 6px;
+`;
+
 const StyledClose = styled.img`
 	position: fixed;
 	bottom: 0;
@@ -228,13 +247,6 @@ const StyledClose = styled.img`
 	height: 50px;
 	z-index: 100;
 	transform: translate(-50%, -50%);
-`;
-
-const LoadingConatiner = styled.div`
-	display: flex;
-	flex: 1;
-	align-items: center;
-	justify-content: center;
 `;
 
 type Props = {
@@ -273,10 +285,11 @@ type Props = {
 	isLanguageOpen: boolean;
 	isCommentOpen: boolean;
 	selelctedComment: number;
-	feedList: HeulGitPostType[][] | undefined;
+	feedList: InfiniteData<HeulgitPostResponseType> | undefined;
 	hasMore: boolean;
 	commentInput: string;
 	commentList: HeulGitCommentType[];
+	notificationCount: number;
 };
 
 const MainPageMobile = ({
@@ -314,13 +327,19 @@ const MainPageMobile = ({
 	hasMore,
 	commentInput,
 	commentList,
+	notificationCount,
 }: Props) => {
 	return (
 		<StyledMainContainer>
 			<StyledMainTitleSection>
 				<h2>흘깃</h2>
 				<StyledIconContainer>
-					<img src={images.alarm} alt="alarm" onClick={onClickNotification} />
+					<div className="alarm-icon">
+						<img src={images.alarm} alt="alarm" onClick={onClickNotification} />
+						{notificationCount > 0 && (
+							<NotificationBadge>{notificationCount}</NotificationBadge>
+						)}
+					</div>
 					<img src={images.gitMessage} alt="gm" onClick={onClickGitMessage} />
 				</StyledIconContainer>
 			</StyledMainTitleSection>
@@ -414,7 +433,7 @@ const MainPageMobile = ({
 					hasMore={hasMore}
 				/>
 			) : (
-				<LoadingConatiner>loading...</LoadingConatiner>
+				<Loading />
 			)}
 			<CBottomSheet
 				open={isCommentOpen}

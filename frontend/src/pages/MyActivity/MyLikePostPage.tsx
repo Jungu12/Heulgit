@@ -59,7 +59,6 @@ const StyledSideR = styled.div`
 		background-color: ${colors.primary.primary};
 	}
 `;
-
 const StyledContent = styled.div`
 	@media (min-width: 768px) {
 		width: 500px;
@@ -85,22 +84,10 @@ const StyledHeader = styled.div`
 `;
 
 const MyLikePostPage = () => {
-	const [selectedPost, setSelectedPost] = useState('');
+	const [selectedPost, setSelectedPost] = useState('유레카');
 	const handleMenuClick = (menu: '유레카' | '자유') => {
 		setSelectedPost(menu);
-		sessionStorage.setItem('selectedPost', menu);
 	};
-	useEffect(() => {
-		const categoryItem = sessionStorage.getItem('selectedPost') as
-			| '유레카'
-			| '자유';
-
-		if (categoryItem) {
-			setSelectedPost(categoryItem);
-		} else {
-			setSelectedPost('유레카');
-		}
-	}, []);
 
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -147,7 +134,6 @@ const MyLikePostPage = () => {
 					)}
 					{selectedPost === '자유' && (
 						<div>
-							{' '}
 							<LikeFreeboard />
 						</div>
 					)}

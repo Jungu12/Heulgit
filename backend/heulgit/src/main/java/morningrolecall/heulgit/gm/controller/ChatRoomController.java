@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
-import morningrolecall.heulgit.gm.repository.ChatRoomRepository;
 import morningrolecall.heulgit.gm.service.ChatRoomService;
 
 @RequiredArgsConstructor
@@ -22,7 +21,6 @@ import morningrolecall.heulgit.gm.service.ChatRoomService;
 public class ChatRoomController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private final ChatRoomService chatRoomService;
-	private final ChatRoomRepository chatRoomRepository;
 
 	// 모든 채팅방 목록 반환
 	// Todo : 자신의 githubID 어노테이션으로 자신의 채팅방 조회하는 로직 추가

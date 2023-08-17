@@ -7,6 +7,8 @@ import { authHttp } from '@utils/http';
 import { useLocation, useParams } from 'react-router-dom';
 import { findParams } from '@utils/relation';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import Loading from '@components/common/Loading';
 
 // 좋아요 한 사람 페이지 전체 컨테이너
 const StyledLikeViewPageContainer = styled.div`
@@ -141,16 +143,24 @@ const LikeViewPage: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
 	const location = useLocation();
 	const curLoction = findParams(location.pathname);
+	let curApiLocation = curLoction;
+	if (curApiLocation === 'freeboard') {
+		curApiLocation = 'freeBoard';
+	}
+	curApiLocation += 'Id';
 
-	const getLikeList = useCallback((page: number) => {
-		return authHttp
-			.get<LikedUserListResponse>(
-				`${curLoction}/posts/likes?freeBoardId=${id}&pages=${page}`,
-			)
-			.then((res) => res);
+	const getLikeList = useCallback(async (page: number) => {
+		const res = await authHttp.get<LikedUserListResponse>(
+			`${curLoction}/posts/likes?${curApiLocation}=${id}&pages=${page}`,
+		);
+		return res;
 	}, []);
 
-	const { data: likeList } = useInfiniteQuery(
+	const {
+		data: likeList,
+		fetchNextPage,
+		hasNextPage,
+	} = useInfiniteQuery(
 		['/likes', curLoction],
 		({ pageParam = 1 }) => getLikeList(pageParam),
 		{
@@ -172,24 +182,40 @@ const LikeViewPage: React.FC = () => {
 			<StyledLikeUserContainer>
 				<StyledLikeUserP>좋아하는 사람</StyledLikeUserP>
 				<StyledLikeUsersCount>{'좋아하는 사람 총 숫자'}</StyledLikeUsersCount>
-				<StyledUserContainer>
-					{likeList?.pages.map((users) =>
-						users.content.map((user) => (
-							<StyledLikeUser key={user.user.githubId}>
-								<StyledUserProfileContainer>
-									<StyledProfileImg src={user.user.avatarUrl} alt="Profile" />
-									<StyledUserName>{user.user.githubId}</StyledUserName>
-								</StyledUserProfileContainer>
-								<StyledFollowButtonContainer>
-									<StyledFollowButton $following={user.follow}>
-										{user.follow ? '팔로잉' : '팔로우'}
-									</StyledFollowButton>
-								</StyledFollowButtonContainer>
-							</StyledLikeUser>
-						)),
-					)}
-				</StyledUserContainer>
 			</StyledLikeUserContainer>
+			<StyledUserContainer>
+				{likeList ? (
+					<InfiniteScroll
+						dataLength={likeList.pages.length}
+						next={fetchNextPage}
+						hasMore={hasNextPage ? true : false}
+						loader={<Loading />}
+						height={`calc(100vh - 104.5px)`}
+						style={{
+							overflowY: 'scroll',
+							overflowX: 'hidden',
+						}}
+					>
+						{likeList?.pages.map((users) =>
+							users.content.map((user) => (
+								<StyledLikeUser key={user.user.githubId}>
+									<StyledUserProfileContainer>
+										<StyledProfileImg src={user.user.avatarUrl} alt="Profile" />
+										<StyledUserName>{user.user.githubId}</StyledUserName>
+									</StyledUserProfileContainer>
+									<StyledFollowButtonContainer>
+										<StyledFollowButton $following={user.follow}>
+											{user.follow ? '팔로잉' : '팔로우'}
+										</StyledFollowButton>
+									</StyledFollowButtonContainer>
+								</StyledLikeUser>
+							)),
+						)}
+					</InfiniteScroll>
+				) : (
+					<div>아무도 좋아하지 않습니다.</div>
+				)}
+			</StyledUserContainer>
 		</StyledLikeViewPageContainer>
 	);
 };

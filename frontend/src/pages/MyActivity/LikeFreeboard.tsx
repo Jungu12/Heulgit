@@ -1,3 +1,4 @@
+import Loading from '@components/common/Loading';
 import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
@@ -6,16 +7,16 @@ import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const LikeFreeboard = () => {
-	// 좋아요 게시물 불러오기
+	// 좋아요 자유 불러오기
 	const {
-		data: freeLikeList,
-		fetchNextPage: freeFetchNextPage,
-		hasNextPage: freeHasNextPage,
+		data: likeFreeboardList,
+		fetchNextPage: LikeFreeboardFetchNextPage,
+		hasNextPage: LikeFreeboardHasNextPage,
 	} = useInfiniteQuery(
-		['/my-likes/heulgit'],
+		['/my-likes/freeboard'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
-				`users/activities/eureka/my-likes?pages=${pageParam}`,
+				`users/activities/freeboard/my-likes?pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
@@ -27,19 +28,19 @@ const LikeFreeboard = () => {
 
 	return (
 		<div>
-			{freeLikeList && (
+			{likeFreeboardList && (
 				<InfiniteScroll
-					dataLength={freeLikeList.pages.length}
-					next={freeFetchNextPage}
-					hasMore={freeHasNextPage ? true : false}
-					loader={<div>loading...</div>}
+					dataLength={likeFreeboardList.pages.length}
+					next={LikeFreeboardFetchNextPage}
+					hasMore={LikeFreeboardHasNextPage ? true : false}
+					loader={<Loading />}
 					height={`calc(100vh - 102px)`}
 					style={{
 						overflowY: 'scroll',
 						overflowX: 'hidden',
 					}}
 				>
-					{freeLikeList.pages.map((free) =>
+					{likeFreeboardList.pages.map((free) =>
 						free.content.map((item) => (
 							<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
 						)),

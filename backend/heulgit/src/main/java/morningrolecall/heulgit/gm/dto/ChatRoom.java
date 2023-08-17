@@ -13,8 +13,8 @@ public class ChatRoom implements Serializable {
 
 	private static final long serialVersionUID = 211211211211L;
 	private String roomId;
-	private String user1;
-	private String user2;
+	private GmUserDetail user1;
+	private GmUserDetail user2;
 	private List<ChatMessage> chatMessages;
 
 	// 채팅 메시지를 추가하는 메서드

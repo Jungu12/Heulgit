@@ -150,10 +150,17 @@ const StyledTableContainer = styled.div`
 
 type Props = {
 	text: string;
+	type?: 'text';
 };
 
-const MarkdownRenderer = React.memo(({ text }: Props) => {
-	const memoizedText = useMemo(() => decodeUnicode(text), [text]);
+const MarkdownRenderer = React.memo(({ text, type }: Props) => {
+	let memoizedText = useMemo(() => decodeUnicode(text), [text]);
+	console.log('디코딩 버전', memoizedText);
+
+	if (type === 'text') {
+		memoizedText = text;
+		console.log('원본', memoizedText);
+	}
 
 	return (
 		<StyledMarkDownContainer>

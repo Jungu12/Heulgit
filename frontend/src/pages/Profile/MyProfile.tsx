@@ -9,6 +9,7 @@ import { colors } from '@constants/colors';
 import { UserType } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
 import { UserCommitType, UserRankingType } from '@typedef/profile/user.types';
+import Loading from '@components/common/Loading';
 
 //전체 컨테이너
 const StyledBox = styled.div`
@@ -88,7 +89,7 @@ type MyProfileProps = {
 
 const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 	const navigation = useNavigate();
-	const tags = ['feat', 'fix', 'algo', 'style', 'docs', 'study', 'chore'];
+	const tags = ['algo', 'chore', 'feat', 'fix', 'style', 'study', 'refactor'];
 
 	const [commitGraphData, setCommitGraphData] = useState<UserCommitType[]>();
 	const [commitRankingData, setCommitRankingData] = useState<UserRankingType[]>(
@@ -171,7 +172,7 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 						)}
 					</>
 				)}
-				{commitGraphData === undefined && <p>Loading...</p>}
+				{commitGraphData === undefined && <Loading />}
 			</StyledCommitBox>
 
 			{/* 랭킹 */}
@@ -191,7 +192,7 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 					{commitGraphData !== undefined ? (
 						<RankingGraph rankingList={commitRankingData} />
 					) : (
-						<p>Loading...</p>
+						<Loading />
 					)}
 				</StyledRankBox>
 			) : (

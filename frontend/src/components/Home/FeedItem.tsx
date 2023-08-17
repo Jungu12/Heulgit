@@ -128,6 +128,18 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 		setLikeNum((prev) => prev - 1);
 	}, [feed.heulgitId, user]);
 
+	const onClickProfile = useCallback(() => {
+		if (feed.registered) {
+			navigation(`/profiles/${feed.githubId}`);
+			return;
+		}
+		window.open(
+			`https://github.com/${feed.githubId}`,
+			'_blank',
+			'noopener, noreferrer',
+		);
+	}, []);
+
 	useEffect(() => {
 		if (user && feed.likedUsers) {
 			setLike(findLikeUser(feed.likedUsers, user.githubId));
@@ -138,7 +150,7 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 	return (
 		<StyledFeedItemContainer>
 			<StyledTopLine>
-				<StyledProfileContainer>
+				<StyledProfileContainer onClick={onClickProfile}>
 					<StyledProfileImage src={feed.avatarUrl} alt="user_profile" />
 					<p>{feed.githubId}</p>
 					{feed.registered && (
@@ -182,6 +194,13 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 							onClick={onClickLikeIcon}
 						/>
 					)}
+					<img
+						src={images.chat}
+						alt="comment_button"
+						onClick={
+							onClickComment ? () => onClickComment(feed.heulgitId) : () => {}
+						}
+					/>
 					<StyledLink
 						to={`https://github.com/${feed.githubId}/${feed.heulgitName}`}
 						target="_blank"

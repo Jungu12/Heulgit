@@ -155,12 +155,12 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 
 	// 좋아요 누른 유저 목록 페이지로 이동
 	const onClickLike = useCallback(() => {
-		navigation(`${feed.freeBoardId}/like`);
+		navigation(`/community/free/${feed.freeBoardId}/like`);
 	}, [navigation]);
 
 	// 자유 피드 상세보기 페이지로 이동
 	const onClickFeedItem = useCallback(() => {
-		navigation(`${feed.freeBoardId}`);
+		navigation(`/community/free/${feed.freeBoardId}`);
 	}, []);
 
 	// 유저 프로필 클릭시 유저 마이페이지로 이동

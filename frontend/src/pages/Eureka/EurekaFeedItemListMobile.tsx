@@ -13,6 +13,11 @@ import CBottomSheet from '@components/common/CBottomSheet';
 import EurekaCommentList from '@components/community/EurekaCommentList';
 import { authHttp } from '@utils/http';
 import { OnChangeHandlerFunc } from 'react-mentions';
+import {
+	FetchNextPageOptions,
+	InfiniteData,
+	InfiniteQueryObserverResult,
+} from '@tanstack/react-query';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -33,15 +38,17 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	feedList: EurekaPostType[];
+	feedList: InfiniteData<EurekaPostType[]>;
 	eurekaHasMore: boolean;
-	eurekaNextPageLoad: () => Promise<void>;
+	eurekaFetchNextPage: (
+		options?: FetchNextPageOptions | undefined,
+	) => Promise<InfiniteQueryObserverResult<EurekaPostType[], unknown>>;
 };
 
 const EurekaFeedItemListMobile = ({
 	feedList,
 	eurekaHasMore,
-	eurekaNextPageLoad,
+	eurekaFetchNextPage,
 }: Props) => {
 	const scrollContinaerRef = useRef<HTMLDivElement>(null);
 	const [isCommentOpen, setIsCommentOpen] = useState(false);
@@ -119,15 +126,6 @@ const EurekaFeedItemListMobile = ({
 		[authHttp, loadCommentList],
 	);
 
-	// const onClickCommentMenuOpen = useCallback(() => {
-	// 	setIsCommentMenuOpen(true);
-	// }, []);
-
-	// const onClickCommentMenuClose = useCallback(() => {
-	// 	setIsCommentMenuOpen(false);
-	// 	console.log('메뉴 닫기');
-	// }, []);
-
 	useEffect(() => {
 		if (seletedComment >= 0) {
 			loadCommentList();
@@ -136,20 +134,24 @@ const EurekaFeedItemListMobile = ({
 
 	return (
 		<StyledFeedListSection ref={scrollContinaerRef}>
-			<InfiniteScroll
-				dataLength={feedList.length}
-				next={eurekaNextPageLoad}
-				hasMore={eurekaHasMore}
-				loader={<div>로딩중...</div>}
-				height={`calc(100vh - 234px)`}
-			>
-				{feedList.map((feed, index) => (
-					<div key={index}>
-						<EurekaFeedItem feed={feed} onClickComment={onClickComment} />
-						<Separation />
-					</div>
-				))}
-			</InfiniteScroll>
+			{feedList && (
+				<InfiniteScroll
+					dataLength={feedList.pages.length}
+					next={eurekaFetchNextPage}
+					hasMore={eurekaHasMore}
+					loader={<div>로딩중...</div>}
+					height={`calc(100vh - 234px)`}
+				>
+					{feedList.pages.map((feed) =>
+						feed.map((item, index) => (
+							<div key={index}>
+								<EurekaFeedItem feed={item} onClickComment={onClickComment} />
+								<Separation />
+							</div>
+						)),
+					)}
+				</InfiniteScroll>
+			)}
 			{
 				<CBottomSheet
 					open={isCommentOpen}
@@ -163,29 +165,9 @@ const EurekaFeedItemListMobile = ({
 					<EurekaCommentList
 						commentList={commentList}
 						onClickDelete={onClickDelete}
-						// onClickCommentMenuOpen={onClickCommentMenuOpen}
 					/>
 				</CBottomSheet>
 			}
-			{/* <ReactModal
-				isOpen={isCommentMenuOpen}
-				// onRequestClose={onClickCommentMenuClose}
-				onRequestClose={() => console.log('dsdsd')}
-				style={customStyles}
-			>
-				<StyledMenuContainer onClick={() => console.log('클릭됨')}>
-					<StyledMenuItem
-						style={{ color: 'red' }}
-						onClick={() => console.log('삭제')}
-					>
-						삭제
-					</StyledMenuItem>
-					<StyledUnderline />
-					<StyledMenuItem onClick={onClickCommentMenuClose}>
-						닫기
-					</StyledMenuItem>
-				</StyledMenuContainer>
-			</ReactModal> */}
 		</StyledFeedListSection>
 	);
 };

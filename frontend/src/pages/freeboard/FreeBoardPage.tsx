@@ -1,36 +1,40 @@
 // 커뮤니티 내 자유게시판 전체 페이지
 
 import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
-import React, { useEffect } from 'react';
+import React from 'react';
 import FreeBoardFeedItemListMobile from '@pages/freeboard/FreeBoardFeedItemListMobile';
 import { useOutletContext } from 'react-router-dom';
+import {
+	FetchNextPageOptions,
+	InfiniteData,
+	InfiniteQueryObserverResult,
+} from '@tanstack/react-query';
 import { FreeBoardPostType } from '@typedef/community/freeboard.types';
+import Loading from '@components/common/Loading';
 
 type OutletProps = {
-	freeBoardFeedList: FreeBoardPostType[];
-	freeBoardHasMore: boolean;
-	freeboardNextPageLoad: () => Promise<void>;
+	freeboardFeedList: InfiniteData<FreeBoardPostType[]> | undefined;
+	freeboardFetchNextPage: (
+		options?: FetchNextPageOptions | undefined,
+	) => Promise<InfiniteQueryObserverResult<FreeBoardPostType[], unknown>>;
+	freeboardHasNextPage: boolean | undefined;
 };
 
 const FreeBoardPage = () => {
-	const { freeBoardFeedList, freeBoardHasMore, freeboardNextPageLoad } =
+	const { freeboardFeedList, freeboardFetchNextPage, freeboardHasNextPage } =
 		useOutletContext<OutletProps>();
 
-	useEffect(() => {
-		console.log(freeBoardFeedList);
-	}, []);
-
-	if (!freeBoardFeedList.length) {
-		return <div>loading...</div>;
+	if (!freeboardFeedList) {
+		return <Loading />;
 	}
 
 	return (
 		<>
 			<Mobile>
 				<FreeBoardFeedItemListMobile
-					feedList={freeBoardFeedList}
-					freeBoardHasMore={freeBoardHasMore}
-					freeboardNextPageLoad={freeboardNextPageLoad}
+					freeboardFeedList={freeboardFeedList}
+					freeboardFetchNextPage={freeboardFetchNextPage}
+					freeboardHasNextPage={freeboardHasNextPage ? true : false}
 				/>
 			</Mobile>
 

@@ -37,6 +37,9 @@ const StyledNoImage = styled.div`
 const ChatPage = () => {
 	const user = useSelector((state: RootState) => state.user.user);
 	const [chatRoomList, setChatRoomList] = useState<ChatRoomType[]>([]);
+	const [sortedChatRoomList, setSortedChatRoomList] = useState<ChatRoomType[]>(
+		[],
+	);
 	const [newMessage, setnewMessage] = useState<MessageType | null>(null);
 	const client = useRef<CompatClient>();
 	const navigation = useNavigate();
@@ -94,8 +97,8 @@ const ChatPage = () => {
 		[accessToken, client],
 	);
 
-	const findPartnerId = useCallback((room: ChatRoomType) => {
-		return 'ksg2388' === room.user1 ? room.user2 : room.user1;
+	const findPartner = useCallback((userId: string, room: ChatRoomType) => {
+		return userId === room.user1.id ? room.user2 : room.user1;
 	}, []);
 
 	const getLastMessage = useCallback((room: ChatRoomType) => {
@@ -114,13 +117,37 @@ const ChatPage = () => {
 		navigation(room.roomId, { state: { room: room } });
 	}, []);
 
+	const chatRoomSort = useCallback(() => {
+		const sortedChatRoom = [...chatRoomList];
+		if (sortedChatRoom.length > 1) {
+			sortedChatRoom.sort(
+				(room1, room2) =>
+					new Date(
+						room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
+					).getTime() -
+					new Date(
+						room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
+					).getTime(),
+			);
+			setSortedChatRoomList(sortedChatRoom);
+		}
+	}, [chatRoomList]);
+
 	useEffect(() => {
-		loadChatRoomList('ksg2388');
+		if (user) {
+			loadChatRoomList(user.githubId);
+		}
 
 		return () => {
 			client.current!.disconnect();
 		};
 	}, []);
+
+	// 채팅방 시간 순으로 정렬
+	useEffect(() => {
+		console.log('채팅방 정렬 시작');
+		chatRoomSort();
+	}, [chatRoomList]);
 
 	// 새로운 메시지 오면 화면 다시
 	useEffect(() => {
@@ -147,11 +174,11 @@ const ChatPage = () => {
 						<Header title={'깃속말'} />
 					</StyledHeader>
 					<StyledChatList>
-						{chatRoomList.length ? (
-							chatRoomList.map((room) => (
+						{sortedChatRoomList.length ? (
+							sortedChatRoomList.map((room) => (
 								<div onClick={() => onClickChatRoom(room)}>
 									<UserLog
-										userLName={findPartnerId(room)}
+										user={findPartner(user.githubId, room)}
 										userLog={getLastMessage(room)}
 										logDate={getLastMessageTime(room)}
 										unReadNum={findUnReadMessage(

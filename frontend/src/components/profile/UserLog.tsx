@@ -1,6 +1,12 @@
+import { colors } from '@constants/colors';
+import { UserDetailType } from '@typedef/gm/gm.types';
 import { getTimeAgo } from '@utils/date';
 import React from 'react';
 import { styled } from 'styled-components';
+
+type LogProps = {
+	$isRead: boolean;
+};
 
 const StyledUserLog = styled.div`
 	display: flex;
@@ -8,7 +14,6 @@ const StyledUserLog = styled.div`
 const StyledUserImage = styled.img`
 	display: flex;
 	justify-content: flex-start;
-	background-color: black;
 	height: 45px;
 	width: 45px;
 	border-radius: 50px;
@@ -41,6 +46,12 @@ const StyledInfoContainer = styled.div`
 	flex-direction: column;
 	margin-left: 4px;
 	justify-content: space-between;
+
+	.current-date {
+		font-size: 14px;
+		font-weight: 500;
+		color: ${colors.greyScale.grey4};
+	}
 `;
 
 const StyeldChatDataContainer = styled.div`
@@ -49,26 +60,39 @@ const StyeldChatDataContainer = styled.div`
 	justify-content: space-between;
 `;
 
+const StyledUserName = styled.p`
+	font-size: 16px;
+	font-weight: 700;
+`;
+
+const StyledLastMessage = styled.p<LogProps>`
+	font-size: 14px;
+	font-weight: 500;
+	color: ${(props) => (props.$isRead ? 'black' : colors.greyScale.grey4)};
+`;
+
 type Props = {
-	userLName: string;
+	user: UserDetailType;
 	userLog: string;
 	logDate: string;
 	unReadNum: number;
 };
 
-const UserLog = ({ userLName, userLog, logDate, unReadNum }: Props) => {
+const UserLog = ({ user, userLog, logDate, unReadNum }: Props) => {
 	return (
 		<StyledUserLog>
-			<StyledUserImage src="" alt="User" />
+			<StyledUserImage src={user.avater_url} alt="User" />
 			<StyeldChatDataContainer>
 				<StyledLog>
-					<div>{userLName}</div>
-					<div> {userLog}</div>
+					<StyledUserName>{user.id}</StyledUserName>
+					<StyledLastMessage $isRead={unReadNum > 0}>
+						{userLog}
+					</StyledLastMessage>
 				</StyledLog>
 
 				<StyledInfoContainer>
-					<div>{getTimeAgo(logDate)}</div>
-					<StyledUnReadNum>{unReadNum}</StyledUnReadNum>
+					<div className="current-date">{getTimeAgo(logDate)}</div>
+					{unReadNum > 0 && <StyledUnReadNum>{unReadNum}</StyledUnReadNum>}
 				</StyledInfoContainer>
 			</StyeldChatDataContainer>
 		</StyledUserLog>

@@ -110,3 +110,9 @@ export type EurekaCommentWriteType = {
 	mentionedFollowers: string[];
 	parentId: number;
 };
+
+// 유레카 링크 라벨 타입
+export type LabelType = {
+	name: string;
+	description: string;
+};

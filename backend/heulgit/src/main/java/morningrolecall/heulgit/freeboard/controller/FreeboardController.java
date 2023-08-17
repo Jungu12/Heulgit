@@ -145,13 +145,13 @@ public class FreeboardController {
 		return ResponseEntity.ok().body(freeBoardService.findLikedUsers(freeBoardId,githubId,pages));
 	}
 
-	// @GetMapping("/search/title")
-	// public ResponseEntity<?> freeBoardSearchByTitle(@RequestParam String keyword,
-	// 	@RequestParam String sort, @RequestParam int pages) {
-	// 	logger.debug("freeBoardSearchByTitle(), keyword = {}, sort = {}, pages = {}", keyword, sort, pages);
-	//
-	// 	return ResponseEntity.ok().body(freeBoardService.searchTitleFreeBoards(keyword, sort, pages));
-	// }
+	@GetMapping("/search/title")
+	public ResponseEntity<?> freeBoardSearchByTitle(@RequestParam String keyword,
+		 @RequestParam int pages) {
+		logger.debug("freeBoardSearchByTitle(), keyword = {}, sort = {}, pages = {}", pages);
+
+		return ResponseEntity.ok().body(freeBoardService.searchTitleFreeBoards(keyword, pages));
+	}
 
 	// @GetMapping("/search/user")
 	// public ResponseEntity<?> freeBoardSearchByUser(@RequestParam String keyword,
