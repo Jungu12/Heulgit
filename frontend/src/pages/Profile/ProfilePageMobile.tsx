@@ -22,10 +22,7 @@ const StyledProfileHigh = styled.div`
 	position: relative;
 `;
 
-type StyledUserProfileProps = {
-	$view: boolean;
-};
-const StyledUserProfile = styled.div<StyledUserProfileProps>`
+const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
 	margin-top: 40px;
@@ -44,6 +41,7 @@ const StyledUserInformation = styled.div`
 	flex-direction: column;
 	margin-left: 20px;
 	font-size: 16px;
+
 	gap: 4px;
 
 	div {
@@ -63,7 +61,8 @@ const StyledUserName = styled.div`
 `;
 
 const StyledAddInfo = styled.div`
-	margin-left: 8px;
+	margin-left: 10px;
+	margin-top: 10px;
 	font-size: 16px;
 `;
 
@@ -140,7 +139,6 @@ const ProfilePageMobile = ({
 }: ProfileProps) => {
 	const { userId } = useParams();
 	const user = useSelector((state: RootState) => state.user.user);
-	const [view, setView] = useState(false);
 	const [userInfo, setUserInfo] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
 	const [isFollowing, setIsFollowing] = useState<boolean>();
@@ -160,7 +158,7 @@ const ProfilePageMobile = ({
 			.then((response) => {
 				setLoadedUser(response);
 
-				// 추가 정보가 있을 경우에만 view를 true로 설정
+				// 추가 정보가 있을 경우에만 유저정보 true로 설정
 				if (
 					response.name !== 'null' ||
 					response.bio !== 'null' ||
@@ -241,7 +239,7 @@ const ProfilePageMobile = ({
 		<StyledProfilePage>
 			<StyledProfileHigh>
 				{/* 유저 프로필 */}
-				<StyledUserProfile $view={view}>
+				<StyledUserProfile>
 					<StyledUserImage src={loadedUser?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
 						<StyledUserName>
@@ -277,33 +275,15 @@ const ProfilePageMobile = ({
 						</div>
 						{/* 유저 정보 */}
 						{userInfo && (
-							<>
-								<div
-									onClick={() => {
-										setView(!view);
-									}}
-								>
-									추가정보{' '}
-									{view ? (
-										<img src={images.arrowUpBlack} alt="up" />
-									) : (
-										<img src={images.arrowDownBlack} alt="down" />
-									)}
-								</div>
-								{view && (
-									<StyledAddInfo>
-										{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
-										{loadedUser?.company !== 'null' && (
-											<p>{loadedUser?.company}</p>
-										)}
-										{loadedUser?.location !== 'null' && (
-											<p>{loadedUser?.location}</p>
-										)}
-										{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
-										{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
-									</StyledAddInfo>
+							<StyledAddInfo>
+								{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
+								{loadedUser?.company !== 'null' && <p>{loadedUser?.company}</p>}
+								{loadedUser?.location !== 'null' && (
+									<p>{loadedUser?.location}</p>
 								)}
-							</>
+								{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
+								{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
+							</StyledAddInfo>
 						)}
 					</StyledUserInformation>
 				</StyledUserProfile>
