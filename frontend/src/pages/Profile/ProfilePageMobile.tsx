@@ -12,7 +12,6 @@ import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
 import { UserType } from '@typedef/common.types';
 import { UserFollowingType } from '@typedef/profile/user.types';
-import MySeparation from '@components/myActivity/MySeparation';
 
 const StyledProfilePage = styled.div``;
 
