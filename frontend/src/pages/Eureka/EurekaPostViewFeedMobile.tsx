@@ -313,7 +313,7 @@ const EurekaPostViewFeedMobile = ({
 						))}
 					</StyledLabelContainer>
 				)}
-				<MarkdownRenderer text={feed.eurekaGithubInfo.body} />
+				<MarkdownRenderer type="text" text={feed.eurekaGithubInfo.body} />
 			</StyledLikedSiteContainer>
 			<StyledButtonContainer>
 				<img

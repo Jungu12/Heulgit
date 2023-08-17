@@ -3,14 +3,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-spring-bottom-sheet/dist/style.css';
 import { authHttp } from '@utils/http';
-import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import MainPageMobile from './MainPageMobile';
-import MainPageTablet from './MainPageTablet';
-import MainPageWeb from './MainPageWeb';
 import { getSortType } from '@utils/heulgit';
 import {
 	HeulGitCommentType,
-	HeulGitPostType,
 	HeulgitCommentWriteType,
 	HeulgitPostResponseType,
 } from '@typedef/home/heulgit.types';
@@ -29,7 +25,6 @@ const MainPage = () => {
 		false,
 	);
 	// const [page, setPage] = useState(1);
-	const [feedList, setFeedList] = useState<HeulGitPostType[]>([]);
 	const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 	const [isCommentOpen, setIsCommentOpen] = useState(false);
@@ -70,14 +65,7 @@ const MainPage = () => {
 			);
 			return response;
 		},
-		[
-			setFeedList,
-			selectedLanguage,
-			selelctedOption,
-			startDate,
-			endDate,
-			authHttp,
-		],
+		[selectedLanguage, selelctedOption, startDate, endDate, authHttp],
 	);
 
 	const loadFeedList = useCallback(
@@ -276,53 +264,43 @@ const MainPage = () => {
 	}, [selectedLanguage, endDate, selelctedOption]);
 
 	return (
-		<>
-			<Mobile>
-				<MainPageMobile
-					onClickHeulGit={onClickHeulGit}
-					onClickStarSort={onClickStarSort}
-					onClickLikeSort={onClickLikeSort}
-					handleChangeCalendar={handleChangeCalendar}
-					onClickComment={onClickComment}
-					onClickOutsideCalendar={onClickOutsideCalendar}
-					onClickClearCalendar={onClickClearCalendar}
-					onClickClearLanguage={onClickClearLanguage}
-					onClickLanguageChoiceButton={onClickLanguageChoiceButton}
-					onClickLanguageCloseButton={onClickLanguageCloseButton}
-					onClickLanguage={onClickLanguage}
-					onClickNotification={onClickNotification}
-					onClickGitMessage={onClickGitMessage}
-					onClickSubbmit={onClickSubbmit}
-					onHandleComment={onHandleComment}
-					loadNextFeedList={fetchNextPage}
-					handleClickCalendar={handleClickCalendar}
-					setIsCommentOpen={setIsCommentOpen}
-					setIsViewOptionOpen={setIsViewOptionOpen}
-					isViewOptionOpen={isViewOptionOpen}
-					dropDownRef={dropDownRef}
-					calendarRef={calendarRef}
-					selelctedOption={selelctedOption}
-					selectedLanguage={selectedLanguage}
-					startDate={startDate}
-					endDate={endDate}
-					isCalendarOpen={isCalendarOpen}
-					isLanguageOpen={isLanguageOpen}
-					isCommentOpen={isCommentOpen}
-					selelctedComment={selelctedComment}
-					feedList={data}
-					hasMore={hasNextPage ? true : false}
-					commentInput={commentInput}
-					commentList={commentList}
-					notificationCount={notificationCount}
-				></MainPageMobile>
-			</Mobile>
-			<Tablet>
-				<MainPageTablet feedList={feedList}></MainPageTablet>
-			</Tablet>
-			<PC>
-				<MainPageWeb></MainPageWeb>
-			</PC>
-		</>
+		<MainPageMobile
+			onClickHeulGit={onClickHeulGit}
+			onClickStarSort={onClickStarSort}
+			onClickLikeSort={onClickLikeSort}
+			handleChangeCalendar={handleChangeCalendar}
+			onClickComment={onClickComment}
+			onClickOutsideCalendar={onClickOutsideCalendar}
+			onClickClearCalendar={onClickClearCalendar}
+			onClickClearLanguage={onClickClearLanguage}
+			onClickLanguageChoiceButton={onClickLanguageChoiceButton}
+			onClickLanguageCloseButton={onClickLanguageCloseButton}
+			onClickLanguage={onClickLanguage}
+			onClickNotification={onClickNotification}
+			onClickGitMessage={onClickGitMessage}
+			onClickSubbmit={onClickSubbmit}
+			onHandleComment={onHandleComment}
+			loadNextFeedList={fetchNextPage}
+			handleClickCalendar={handleClickCalendar}
+			setIsCommentOpen={setIsCommentOpen}
+			setIsViewOptionOpen={setIsViewOptionOpen}
+			isViewOptionOpen={isViewOptionOpen}
+			dropDownRef={dropDownRef}
+			calendarRef={calendarRef}
+			selelctedOption={selelctedOption}
+			selectedLanguage={selectedLanguage}
+			startDate={startDate}
+			endDate={endDate}
+			isCalendarOpen={isCalendarOpen}
+			isLanguageOpen={isLanguageOpen}
+			isCommentOpen={isCommentOpen}
+			selelctedComment={selelctedComment}
+			feedList={data}
+			hasMore={hasNextPage ? true : false}
+			commentInput={commentInput}
+			commentList={commentList}
+			notificationCount={notificationCount}
+		></MainPageMobile>
 	);
 };
 

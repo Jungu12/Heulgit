@@ -18,7 +18,7 @@ const App = () => {
 	}, []);
 
 	return (
-		<div className="App">
+		<div className="App" style={{ maxWidth: '766px' }}>
 			<RootRouter />
 		</div>
 	);

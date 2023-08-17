@@ -2,15 +2,14 @@
 
 import Header from '@components/common/Header';
 import CommentInput from '@pages/community/CommentInput';
-import { images } from '@constants/images';
+// import { images } from '@constants/images';
 import React, { useCallback, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import FreePostViewFeedMobile from '@pages/freeboard/FreePostViewFeedMobile';
-import CommunityFilterPC from '@pages/community/CommunityFilterPC';
-import CommunitySideBarContent from '@pages/community/CommunitySideBarContent';
-import Sidebar from '@components/common/Sidebar';
-import TabletNavigation from '@components/common/TabletNavigation';
+// import CommunityFilterPC from '@pages/community/CommunityFilterPC';
+// import CommunitySideBarContent from '@pages/community/CommunitySideBarContent';
+// import Sidebar from '@components/common/Sidebar';
+// import TabletNavigation from '@components/common/TabletNavigation';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
@@ -61,41 +60,41 @@ const CommunityContainerMobile = styled.div`
 `;
 
 // 자유게시판 상세페이지 테블릿 버전
-const StyledFreeBoardPostViewTablet = styled.div`
-	display: flex;
+// const StyledFreeBoardPostViewTablet = styled.div`
+// 	display: flex;
 
-	justify-content: center;
-`;
+// 	justify-content: center;
+// `;
 
-// 커뮤니티 테블릿 버전
-const CommunityContainerTablet = styled.div`
-	display: flex;
-	flex-direction: column;
-	/* align-items: center; */
+// // 커뮤니티 테블릿 버전
+// const CommunityContainerTablet = styled.div`
+// 	display: flex;
+// 	flex-direction: column;
+// 	/* align-items: center; */
 
-	max-width: 640px;
-	margin-left: 125px;
+// 	max-width: 640px;
+// 	margin-left: 125px;
 
-	overflow-y: scroll;
-	scrollbar-width: none; /* 파이어폭스 */
-	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
-	&::-webkit-scrollbar {
-		display: none;
-	}
-`;
+// 	overflow-y: scroll;
+// 	scrollbar-width: none; /* 파이어폭스 */
+// 	/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+// 	&::-webkit-scrollbar {
+// 		display: none;
+// 	}
+// `;
 
-const StyledFilterButton = styled.button`
-	position: fixed;
-	top: 32px;
-	right: 30px;
-	cursor: pointer;
-	background: none;
+// const StyledFilterButton = styled.button`
+// 	position: fixed;
+// 	top: 32px;
+// 	right: 30px;
+// 	cursor: pointer;
+// 	background: none;
 
-	img {
-		width: 44px;
-		height: 44px;
-	}
-`;
+// 	img {
+// 		width: 44px;
+// 		height: 44px;
+// 	}
+// `;
 
 // 테블릿 끝
 
@@ -160,7 +159,7 @@ const FreePostViewPage = () => {
 	const [liked, setLiked] = useState(false);
 	const [likeNum, setLikeNum] = useState(0);
 
-	const [isFilterOpen, setIsFilterOpen] = useState(false);
+	// const [isFilterOpen, setIsFilterOpen] = useState(false);
 
 	const [input, setInput] = useState('');
 	const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
@@ -212,15 +211,15 @@ const FreePostViewPage = () => {
 			});
 	}, []);
 
-	// 필터 여는 함수
-	const onClickFilter = useCallback(() => {
-		setIsFilterOpen(true);
-	}, []);
+	// // 필터 여는 함수
+	// const onClickFilter = useCallback(() => {
+	// 	setIsFilterOpen(true);
+	// }, []);
 
-	// 필터 닫는 함수
-	const onClickClose = useCallback(() => {
-		setIsFilterOpen(false);
-	}, []);
+	// // 필터 닫는 함수
+	// const onClickClose = useCallback(() => {
+	// 	setIsFilterOpen(false);
+	// }, []);
 
 	// 메뉴버튼 여는 함수
 	const onClickMenu = useCallback(() => {
@@ -309,84 +308,51 @@ const FreePostViewPage = () => {
 	}, [feed]);
 
 	return (
-		<>
-			<Mobile>
-				<CommunityContainerMobile>
-					<Header title="상세 페이지"></Header>
-					<FreePostViewFeedMobile
-						feed={feed ?? null}
-						userId={userId!}
-						liked={liked}
-						likeNum={likeNum}
-						handleLikeClick={handleLikeClick}
-						onClickLike={onClickLike}
-						onClickUserProfile={onClickUserProfile}
-						isMenuOpen={isMenuOpen}
-						onClickMenu={onClickMenu}
-						onClickDelete={onClickDelete}
-						onClickMenuClose={onClickMenuClose}
-						onClickEdit={onClickEdit}
-					/>
+		<CommunityContainerMobile>
+			<Header title="상세 페이지"></Header>
+			<FreePostViewFeedMobile
+				feed={feed ?? null}
+				userId={userId!}
+				liked={liked}
+				likeNum={likeNum}
+				handleLikeClick={handleLikeClick}
+				onClickLike={onClickLike}
+				onClickUserProfile={onClickUserProfile}
+				isMenuOpen={isMenuOpen}
+				onClickMenu={onClickMenu}
+				onClickDelete={onClickDelete}
+				onClickMenuClose={onClickMenuClose}
+				onClickEdit={onClickEdit}
+			/>
 
-					<FreePostCommentList
-						commentList={feed?.freeBoardComments ?? []}
-						onClickCommentMenuOpen={onClickCommentMenuOpen}
-					/>
-					<CommentInput
-						input={input}
-						onSubmitComment={onSubmitComment}
-						handleInputChange={handleInputChange}
-					/>
-					<ReactModal
-						isOpen={isCommentMenuOpen}
-						onRequestClose={onClickCommentMenuClose}
-						style={customStyles}
+			<FreePostCommentList
+				commentList={feed?.freeBoardComments ?? []}
+				onClickCommentMenuOpen={onClickCommentMenuOpen}
+			/>
+			<CommentInput
+				input={input}
+				onSubmitComment={onSubmitComment}
+				handleInputChange={handleInputChange}
+			/>
+			<ReactModal
+				isOpen={isCommentMenuOpen}
+				onRequestClose={onClickCommentMenuClose}
+				style={customStyles}
+			>
+				<StyledMenuContainer>
+					<StyledMenuItem
+						style={{ color: 'red' }}
+						onClick={onClickCommentDelete}
 					>
-						<StyledMenuContainer>
-							<StyledMenuItem
-								style={{ color: 'red' }}
-								onClick={onClickCommentDelete}
-							>
-								삭제
-							</StyledMenuItem>
-							<StyledUnderline />
-							<StyledMenuItem onClick={onClickCommentMenuClose}>
-								닫기
-							</StyledMenuItem>
-						</StyledMenuContainer>
-					</ReactModal>
-				</CommunityContainerMobile>
-			</Mobile>
-
-			<Tablet>
-				<StyledFreeBoardPostViewTablet>
-					<TabletNavigation />
-					<CommunityContainerTablet>
-						{/* <FreePostViewFeedTabletPC feed={dummyPost} />
-						<FreePostCommentList comments={dummyComment} /> */}
-						<CommentInput />
-					</CommunityContainerTablet>
-					{/* 우측 필터 버튼 */}
-					<StyledFilterButton onClick={onClickFilter}>
-						<img src={images.filter} alt="filter" />
-					</StyledFilterButton>
-					<Sidebar open={isFilterOpen}>
-						<CommunitySideBarContent onClickClose={onClickClose} />
-					</Sidebar>
-				</StyledFreeBoardPostViewTablet>
-			</Tablet>
-
-			<PC>
-				{/* <StyledFreeBoardPostViewPC> */}
-				{/* <CommunityContainerPC> */}
-				{/* <FreePostViewFeedTabletPC feed={dummyPost} />
-						<FreePostCommentList comments={dummyComment} /> */}
-				<CommentInput />
-				{/* </CommunityContainerPC> */}
-				<CommunityFilterPC />
-				{/* </StyledFreeBoardPostViewPC> */}
-			</PC>
-		</>
+						삭제
+					</StyledMenuItem>
+					<StyledUnderline />
+					<StyledMenuItem onClick={onClickCommentMenuClose}>
+						닫기
+					</StyledMenuItem>
+				</StyledMenuContainer>
+			</ReactModal>
+		</CommunityContainerMobile>
 	);
 };
 

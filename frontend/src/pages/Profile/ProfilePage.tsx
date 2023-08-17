@@ -1,9 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import ProfilePageMobile from './ProfilePageMobile';
-import ProfilePageTablet from './ProfilePageTablet';
-import ProfilePageWeb from './ProfilePageWeb';
 import { styled } from 'styled-components';
 import { authHttp } from '@utils/http';
 import { ChatRoomType } from '@typedef/gm/gm.types';
@@ -36,28 +33,12 @@ const ProfilePage = () => {
 
 	return (
 		<StyledProfile>
-			<Mobile>
-				<ProfilePageMobile
-					handleMenuClick={handleMenuClick}
-					onClickGM={onClickGM}
-					navigation={navigation}
-					selectedMenu={selectedMenu}
-				/>
-			</Mobile>
-			<Tablet>
-				<ProfilePageTablet
-					handleMenuClick={handleMenuClick}
-					navigation={navigation}
-					selectedMenu={selectedMenu}
-				/>
-			</Tablet>
-			<PC>
-				<ProfilePageWeb
-					handleMenuClick={handleMenuClick}
-					navigation={navigation}
-					selectedMenu={selectedMenu}
-				/>
-			</PC>
+			<ProfilePageMobile
+				handleMenuClick={handleMenuClick}
+				onClickGM={onClickGM}
+				navigation={navigation}
+				selectedMenu={selectedMenu}
+			/>
 		</StyledProfile>
 	);
 };

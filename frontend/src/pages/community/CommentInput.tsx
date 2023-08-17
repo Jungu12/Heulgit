@@ -1,4 +1,3 @@
-import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { RootState } from '@store/index';
@@ -25,21 +24,21 @@ const StyledCommentComtainerMobile = styled.div`
 `;
 
 // 댓글 컨테이너 테블릿 PC
-const StyledCommentComtainerTabletPC = styled.div`
-	display: flex;
-	position: fixed;
-	/* justify-content: space-evenly; */
-	align-items: center;
+// const StyledCommentComtainerTabletPC = styled.div`
+// 	display: flex;
+// 	position: fixed;
+// 	/* justify-content: space-evenly; */
+// 	align-items: center;
 
-	width: 640px;
-	/* width: 100vw; */
-	bottom: 0;
+// 	width: 640px;
+// 	/* width: 100vw; */
+// 	bottom: 0;
 
-	height: 60px;
+// 	height: 60px;
 
-	border-top: solid 1px ${colors.greyScale.grey3};
-	background-color: #fff;
-`;
+// 	border-top: solid 1px ${colors.greyScale.grey3};
+// 	background-color: #fff;
+// `;
 
 // 프로필 이미지
 const StyledProfileImg = styled.img`
@@ -105,55 +104,19 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 	// const isKeywordValid = input!.trim().length > 0;
 
 	return (
-		<>
-			<Mobile>
-				<StyledCommentComtainerMobile>
-					<StyledProfileImg src={userImage} alt="profile" />
-					<StyledCommentInputContainer>
-						<StyledCommentInput
-							value={input}
-							onChange={handleInputChange}
-							onKeyDown={handleEnter}
-						/>
-						<StyledRegisterButton>
-							<img src={images.send} alt="send" onClick={onSubmitComment} />
-						</StyledRegisterButton>
-					</StyledCommentInputContainer>
-				</StyledCommentComtainerMobile>
-			</Mobile>
-
-			<Tablet>
-				<StyledCommentComtainerTabletPC>
-					<StyledProfileImg />
-					<StyledCommentInputContainer>
-						<StyledCommentInput
-							value={input}
-							onChange={handleInputChange}
-							onKeyDown={handleEnter}
-						/>
-						<StyledRegisterButton onClick={onSubmitComment}>
-							등록
-						</StyledRegisterButton>
-					</StyledCommentInputContainer>
-				</StyledCommentComtainerTabletPC>
-			</Tablet>
-
-			<PC>
-				<StyledCommentComtainerTabletPC>
-					<StyledProfileImg />
-					<StyledCommentInputContainer>
-						<StyledCommentInput
-							value={input}
-							onChange={handleInputChange}
-							onKeyDown={handleEnter}
-						/>
-						<StyledRegisterButton onClick={onSubmitComment}>
-							등록
-						</StyledRegisterButton>
-					</StyledCommentInputContainer>
-				</StyledCommentComtainerTabletPC>
-			</PC>
-		</>
+		<StyledCommentComtainerMobile>
+			<StyledProfileImg src={userImage} alt="profile" />
+			<StyledCommentInputContainer>
+				<StyledCommentInput
+					value={input}
+					onChange={handleInputChange}
+					onKeyDown={handleEnter}
+				/>
+				<StyledRegisterButton>
+					<img src={images.send} alt="send" onClick={onSubmitComment} />
+				</StyledRegisterButton>
+			</StyledCommentInputContainer>
+		</StyledCommentComtainerMobile>
 	);
 };
 
