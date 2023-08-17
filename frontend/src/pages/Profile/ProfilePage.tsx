@@ -27,10 +27,10 @@ const ProfilePage = () => {
 	const navigation = useNavigate();
 	const { userId } = useParams();
 
-	const [selectedMenu, setSelectedMenu] = useState('');
+	const [selectedMenu, setSelectedMenu] = useState('프로필');
 	const handleMenuClick = (menu: '프로필' | '유레카' | '자유') => {
 		setSelectedMenu(menu);
-		// sessionStorage.setItem('selectedMenu', menu);
+		sessionStorage.setItem('selectedMenu', menu);
 	};
 
 	const onClickGM = useCallback(() => {
