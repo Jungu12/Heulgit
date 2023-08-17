@@ -11,8 +11,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
 import { UserType } from '@typedef/common.types';
-import { FollowType } from '@typedef/profile/user.types';
-// import { UserType } from '@typedef/common.types';
 
 const StyledProfilePage = styled.div``;
 
@@ -160,10 +158,10 @@ const ProfilePageMobile = ({
 	// 팔로우 상태 확인
 	useEffect(() => {
 		authHttp
-			.get<FollowType>(`relations/state?to=${userId}`)
+			.get<boolean>(`relations/state?to=${userId}`)
 			.then((response) => {
 				console.log('팔로우 정보 성공:', response);
-				setIsFollowing(response.follow);
+				setIsFollowing(response);
 			})
 			.catch((error) => {
 				console.error('팔로우 정보 실패:', error);
@@ -172,8 +170,9 @@ const ProfilePageMobile = ({
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
+		console.log('버튼 클릭 시 팔로우 상태1 :', isFollowing);
 		if (isFollowing !== undefined) {
-			console.log('버튼 클릭 시 팔로우 상태 :', isFollowing);
+			console.log('버튼 클릭 시 팔로우 상태2 :', isFollowing);
 			if (!isFollowing) {
 				// 팔로우
 				authHttp
@@ -314,10 +313,10 @@ const ProfilePageMobile = ({
 								<MyProfile loadedUser={loadedUser} user={user} />
 							)}
 							{selectedMenu === '유레카' && user !== null && (
-								<MyEureka user={loadedUser} />
+								<MyEureka loadeduser={loadedUser} />
 							)}
 							{selectedMenu === '자유' && user !== null && (
-								<MyFreeboard user={loadedUser} />
+								<MyFreeboard loadeduser={loadedUser} />
 							)}
 						</StyledProfileLow>
 					</Sdiv>

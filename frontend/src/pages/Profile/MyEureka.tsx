@@ -13,10 +13,10 @@ const StyledBox = styled.div`
 `;
 
 type MyProfileProps = {
-	user: UserType;
+	loadeduser: UserType;
 };
 
-const MyEureka = ({ user }: MyProfileProps) => {
+const MyEureka = ({ loadeduser: user }: MyProfileProps) => {
 	// 작성한 유레카 불러오기
 	const {
 		data: myEurekaList,
