@@ -24,7 +24,7 @@ const MyFreeboard = () => {
 		['/my/freeboard'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
-				`users/myposts/freeboard?userId=${userId}&pages=${pageParam}`,
+				`users/myposts/freeboard/${userId}?pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
