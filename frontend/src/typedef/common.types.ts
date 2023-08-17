@@ -26,3 +26,20 @@ export type UserType = {
 	location: string;
 	blog: string;
 };
+
+export type LikedUserListResponse = {
+	content: [
+		{
+			user: UserType;
+			follow: boolean;
+		},
+	];
+	pageable: PageableType;
+	size: number;
+	number: number;
+	sort: SortType;
+	first: boolean;
+	last: boolean;
+	numberOfElements: 1;
+	empty: boolean;
+};
