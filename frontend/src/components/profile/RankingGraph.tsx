@@ -11,6 +11,7 @@ const StyledRankingGraph = styled.div`
 
 type StyledRankingListItemProps = {
 	$rankingNumber: number;
+	$count: number;
 };
 const calculateWidth = (rankingNumber: number) => {
 	return `${100 - (rankingNumber - 1) * 9}%`;
@@ -22,7 +23,9 @@ const StyledRankingListItem = styled.div<StyledRankingListItemProps>`
 	padding: 10px;
 	border-radius: 10px;
 	height: 35px;
-	width: ${(props) => calculateWidth(props.$rankingNumber)};
+	width: ${(props) =>
+		props.$count === 0 ? '25%' : calculateWidth(props.$rankingNumber)};
+
 	background-color: ${(props) =>
 		props.$rankingNumber === 1
 			? colors.primary.primary
@@ -57,7 +60,11 @@ const RankingGraph = ({ rankingList }: RankingProps) => {
 	return (
 		<StyledRankingGraph>
 			{top5RankingList.map((rank, index) => (
-				<StyledRankingListItem key={index} $rankingNumber={index + 1}>
+				<StyledRankingListItem
+					key={index}
+					$rankingNumber={index + 1}
+					$count={rank.count}
+				>
 					{index + 1 === 1 ? (
 						<>
 							<RankingImage src={images.profile.crownIcon} alt="Ranking 1" />
