@@ -86,12 +86,12 @@ const NotiFollow = ({ notificationList, loadNotification }: Props) => {
 
 	const onClickFollowButton = useCallback(
 		(isFollow: boolean, sender: string) => {
-			if (isFollow) {
+			if (!isFollow) {
 				authHttp
 					.delete(`relations/unfollow?to=${sender}`)
 					.then(() => loadNotification());
 			}
-			if (!isFollow) {
+			if (isFollow) {
 				authHttp
 					.post(`relations/follow?to=${sender}`)
 					.then(() => loadNotification());
