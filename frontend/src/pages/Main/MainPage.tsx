@@ -214,30 +214,7 @@ const MainPage = () => {
 		return newCommentList;
 	}, [authHttp, commentPage, selelctedComment]);
 
-	const onClickSubbmit = useCallback(async () => {
-		if (commentInput.trim() === '') return;
-		try {
-			await authHttp.post<HeulgitCommentWriteType>('h-comments/comments', {
-				content: commentInput,
-				eurekaId: selelctedComment,
-				mentionedFollowers: mentionList,
-				parentId: null,
-			});
-			setCommentInput('');
-			setCommentList([]);
-			loadCommentList();
-		} catch (err) {
-			console.error(err);
-		}
-	}, [
-		authHttp,
-		commentInput,
-		selelctedComment,
-		setCommentInput,
-		loadCommentList,
-	]);
-
-	const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
+	const { data, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery(
 		['infiniteHeulgitFeed', endDate, selelctedOption, selectedLanguage],
 		({ pageParam = 1 }) => loadFeedList(pageParam),
 		{
@@ -251,16 +228,37 @@ const MainPage = () => {
 		},
 	);
 
+	const onClickSubbmit = useCallback(async () => {
+		if (commentInput.trim() === '') return;
+		try {
+			await authHttp.post<HeulgitCommentWriteType>('h-comments/comments', {
+				content: commentInput,
+				eurekaId: selelctedComment,
+				mentionedFollowers: mentionList,
+				parentId: null,
+			});
+			setCommentInput('');
+			setCommentList([]);
+			loadCommentList();
+			// 댓글 작성 시 다시 피드 호출
+			refetch();
+		} catch (err) {
+			console.error(err);
+		}
+	}, [
+		authHttp,
+		commentInput,
+		selelctedComment,
+		setCommentInput,
+		loadCommentList,
+	]);
+
 	useEffect(() => {
 		// endDate가 변경된 경우 달력 닫기
 		if (endDate !== null) {
 			setIsCalendarOpen(false);
 		}
 	}, [endDate]);
-
-	useEffect(() => {
-		console.log('댓글 바텀시트', isCommentOpen);
-	}, [isCommentOpen]);
 
 	useEffect(() => {
 		if (selelctedComment > 0) {

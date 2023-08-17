@@ -142,6 +142,7 @@ const StyledUserContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	overflow-y: scroll;
 `;
 
 const StyledUserItem = styled.div`
@@ -322,7 +323,7 @@ const SearchResultPage = () => {
 						next={heulgitFetchNextPage}
 						hasMore={heulgitHasNextPage ? true : false}
 						loader={<Loading />}
-						height={`calc(100vh - 114px)`}
+						height={`calc(100vh - 134px)`}
 						style={{
 							overflowY: 'scroll',
 							overflowX: 'hidden',
@@ -341,6 +342,7 @@ const SearchResultPage = () => {
 						next={eurekaFetchNextPage}
 						hasMore={eurekaHasNextPage ? true : false}
 						loader={<Loading />}
+						height={`calc(100vh - 134px)`}
 						style={{
 							overflowY: 'scroll',
 							overflowX: 'hidden',
@@ -359,6 +361,7 @@ const SearchResultPage = () => {
 						next={freeBoardFetchNextPage}
 						hasMore={freeBoardHasNextPage ? true : false}
 						loader={<Loading />}
+						height={`calc(100vh - 134px)`}
 						style={{
 							overflowY: 'scroll',
 							overflowX: 'hidden',
