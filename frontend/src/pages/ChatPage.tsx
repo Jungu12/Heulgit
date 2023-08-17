@@ -134,7 +134,9 @@ const ChatPage = () => {
 	}, [chatRoomList]);
 
 	useEffect(() => {
-		loadChatRoomList('ksg2388');
+		if (user) {
+			loadChatRoomList(user.githubId);
+		}
 
 		return () => {
 			client.current!.disconnect();
