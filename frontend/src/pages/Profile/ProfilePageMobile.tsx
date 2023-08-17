@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
 import { UserType } from '@typedef/common.types';
+import { UserFollowingType } from '@typedef/profile/user.types';
 
 const StyledProfilePage = styled.div``;
 
@@ -136,6 +137,8 @@ const ProfilePageMobile = ({
 	const [userInfo, setUserInfo] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
 	const [isFollowing, setIsFollowing] = useState<boolean>();
+	const [followerData, setFollowerData] = useState<number>();
+	const [followingData, setFollowingData] = useState<number>();
 
 	// 유저 정보 불러오기
 	useEffect(() => {
@@ -158,6 +161,30 @@ const ProfilePageMobile = ({
 			})
 			.catch((error) => {
 				console.error('유저 정보 실패:', error);
+			});
+	}, []);
+
+	// 팔로잉 팔로워 정보 불러오기
+	useEffect(() => {
+		authHttp
+			.get<UserFollowingType[]>(`relations/followings/${userId}`)
+			.then((response) => {
+				console.log('팔로잉 로드 성공.', userId, response);
+				setFollowingData(response.length); // 받아온 데이터의 followings 배열을 상태에 저장
+			})
+			.catch((error) => {
+				console.error('팔로잉 로드 실패.', error);
+			});
+	}, []);
+	useEffect(() => {
+		authHttp
+			.get<UserFollowingType[]>(`relations/followers/${userId}`)
+			.then((response) => {
+				console.log('팔로워 로드 성공.', userId, response);
+				setFollowerData(response.length); // 받아온 데이터의 followers 배열을 상태에 저장
+			})
+			.catch((error) => {
+				console.error('팔로워 로드 실패.', error);
 			});
 	}, []);
 
@@ -217,12 +244,12 @@ const ProfilePageMobile = ({
 							<StyledFollowing
 								onClick={() => navigation(`/profiles/${userId}/following`)}
 							>
-								<div>팔로잉</div>
+								<div>팔로잉 {followingData}</div>
 							</StyledFollowing>
 							<StyledFollower
 								onClick={() => navigation(`/profiles/${userId}/follower`)}
 							>
-								<div>팔로워</div>
+								<div>팔로워 {followerData}</div>
 							</StyledFollower>
 						</div>
 						{/* 유저 정보 */}
@@ -318,12 +345,8 @@ const ProfilePageMobile = ({
 							{selectedMenu === '프로필' && user !== null && (
 								<MyProfile loadedUser={loadedUser} user={user} />
 							)}
-							{selectedMenu === '유레카' && user !== null && (
-								<MyEureka loadeduser={loadedUser} />
-							)}
-							{selectedMenu === '자유' && user !== null && (
-								<MyFreeboard loadeduser={loadedUser} />
-							)}
+							{selectedMenu === '유레카' && user !== null && <MyEureka />}
+							{selectedMenu === '자유' && user !== null && <MyFreeboard />}
 						</StyledProfileLow>
 					</Sdiv>
 				</SboxTop>

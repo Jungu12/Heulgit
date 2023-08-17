@@ -1,6 +1,5 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { UserType } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -13,11 +12,7 @@ const StyledBox = styled.div`
 	width: 100%;
 `;
 
-type MyProfileProps = {
-	loadeduser: UserType;
-};
-
-const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
+const MyFreeboard = () => {
 	const { userId } = useParams();
 
 	// 작성한 유레카 불러오기
@@ -29,7 +24,7 @@ const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
 		['/my/freeboard'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
-				`freeboard/myposts?userId=${userId}&pages=${pageParam}`,
+				`users/myposts/freeboard?userId=${userId}&pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
@@ -41,7 +36,6 @@ const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
 
 	return (
 		<StyledBox>
-			{loadeduser?.githubId}
 			{myFreeBoardList && (
 				<InfiniteScroll
 					dataLength={myFreeBoardList.pages.length}
