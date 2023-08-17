@@ -70,6 +70,12 @@ const StyledIconContainer = styled.div`
 		width: 28px;
 		height: 28px;
 	}
+
+	.alarm-icon {
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
 `;
 
 const MainCatecorySection = styled.section`
@@ -221,6 +227,17 @@ const StyledCalendarContainer = styled.div`
 	position: fixed;
 `;
 
+const NotificationBadge = styled.span`
+	position: absolute;
+	bottom: -5px;
+	right: -5px;
+	background-color: red;
+	color: white;
+	font-size: 12px;
+	border-radius: 50%;
+	padding: 2px 6px;
+`;
+
 const StyledClose = styled.img`
 	position: fixed;
 	bottom: 0;
@@ -271,6 +288,7 @@ type Props = {
 	hasMore: boolean;
 	commentInput: string;
 	commentList: HeulGitCommentType[];
+	notificationCount: number;
 };
 
 const MainPageMobile = ({
@@ -308,13 +326,19 @@ const MainPageMobile = ({
 	hasMore,
 	commentInput,
 	commentList,
+	notificationCount,
 }: Props) => {
 	return (
 		<StyledMainContainer>
 			<StyledMainTitleSection>
 				<h2>흘깃</h2>
 				<StyledIconContainer>
-					<img src={images.alarm} alt="alarm" onClick={onClickNotification} />
+					<div className="alarm-icon">
+						<img src={images.alarm} alt="alarm" onClick={onClickNotification} />
+						{notificationCount > 0 && (
+							<NotificationBadge>{notificationCount}</NotificationBadge>
+						)}
+					</div>
 					<img src={images.gitMessage} alt="gm" onClick={onClickGitMessage} />
 				</StyledIconContainer>
 			</StyledMainTitleSection>

@@ -39,6 +39,7 @@ const MainPage = () => {
 	const [endDate, setEndDate] = useState<Date | null>(null);
 	const [commentPage, setCommentPage] = useState(1);
 	const [mentionList, setMentionList] = useState<string[]>([]);
+	const [notificationCount, setNotificationCount] = useState(0);
 
 	const loadFeedList = useCallback(
 		async (cur: number) => {
@@ -94,6 +95,12 @@ const MainPage = () => {
 	const handleClickCalendar = useCallback(() => {
 		setIsCalendarOpen(!isCalendarOpen);
 	}, [isCalendarOpen]);
+
+	const getNotificationCount = useCallback(() => {
+		authHttp
+			.get<number>(`notifications/count`)
+			.then((res) => setNotificationCount(res));
+	}, []);
 
 	const handleChangeCalendar = useCallback(
 		([newStartDate, newEndDate]: [Date | null, Date | null]) => {
@@ -235,6 +242,10 @@ const MainPage = () => {
 		}
 	}, [selelctedComment]);
 
+	useEffect(() => {
+		getNotificationCount();
+	}, []);
+
 	return (
 		<>
 			<Mobile>
@@ -273,6 +284,7 @@ const MainPage = () => {
 					hasMore={hasNextPage ? true : false}
 					commentInput={commentInput}
 					commentList={commentList}
+					notificationCount={notificationCount}
 				></MainPageMobile>
 			</Mobile>
 			<Tablet>
