@@ -88,6 +88,7 @@ public class UserService {
 			.orElseThrow(() -> new UserException(ExceptionCode.USER_NOT_FOUND));
 		return user;
 	}
+
 	public List<User> findContainUser(String githubId) {
 
 		return userRepository.findByGithubIdContaining(githubId);
@@ -172,15 +173,20 @@ public class UserService {
 
 			HttpEntity<String> requestEntity = new HttpEntity<>(headers);
 
-			ResponseEntity<String> response = restTemplate.exchange(
-				commitUrl + "/" + githubId + "/" + repo.getName() + "/commits",
-				HttpMethod.GET,
-				requestEntity,
-				String.class
-			);
+			try {
+				ResponseEntity<String> response = restTemplate.exchange(
+					commitUrl + "/" + githubId + "/" + repo.getName() + "/commits",
+					HttpMethod.GET,
+					requestEntity,
+					String.class
+				);
 
-			commitMessages.addAll(extractCommits(response.getBody()));
+				commitMessages.addAll(extractCommits(response.getBody()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+
 		return commitMessages;
 	}
 
