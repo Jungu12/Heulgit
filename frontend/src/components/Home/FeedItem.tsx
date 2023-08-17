@@ -165,7 +165,7 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 				) : (
 					<MarkdownSummaryRenderer text={decodeUnicode(feed.content)} />
 				)}
-				{type === 'summary' ? (
+				{type !== 'full' ? (
 					<StyledMoreDataText
 						onClick={() => {
 							navigation(`/repo/${feed.heulgitId}`);

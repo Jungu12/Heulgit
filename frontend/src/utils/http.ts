@@ -87,9 +87,9 @@ authAxios.interceptors.request.use(
 		return config;
 	},
 	(error) => {
+		localStorage.removeItem('login');
 		window.location.href = 'https://i9d211.p.ssafy.io/';
 		console.log('엑세스 토큰 만료..?');
-		console.error(error);
 		return Promise.reject(error);
 	},
 );
