@@ -140,6 +140,12 @@ const ProfilePageMobile = ({
 	const [followerData, setFollowerData] = useState<number>();
 	const [followingData, setFollowingData] = useState<number>();
 
+	// 깃허브 열기
+	const goGithub = () => {
+		const githubUrl = `https://github.com/${userId}`;
+		window.open(githubUrl, '_blank');
+	};
+
 	// 유저 정보 불러오기
 	useEffect(() => {
 		authHttp
@@ -239,7 +245,20 @@ const ProfilePageMobile = ({
 				<StyledUserProfile>
 					<StyledUserImage src={loadedUser?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
-						<div className="user-name">{loadedUser?.githubId}</div>
+						<div className="user-name">
+							{loadedUser?.githubId}
+							{userId !== user?.githubId ? (
+								<img
+									src={images.profile.githubIcon}
+									alt="깃허브"
+									onClick={goGithub}
+									style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+								/>
+							) : (
+								<></>
+							)}
+						</div>
+
 						<div className="user-follow">
 							<StyledFollowing
 								onClick={() => navigation(`/profiles/${userId}/following`)}
