@@ -119,16 +119,18 @@ const ChatPage = () => {
 
 	const chatRoomSort = useCallback(() => {
 		const sortedChatRoom = [...chatRoomList];
-		sortedChatRoom.sort(
-			(room1, room2) =>
-				new Date(
-					room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
-				).getTime() -
-				new Date(
-					room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
-				).getTime(),
-		);
-		setSortedChatRoomList(sortedChatRoom);
+		if (sortedChatRoom.length) {
+			sortedChatRoom.sort(
+				(room1, room2) =>
+					new Date(
+						room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
+					).getTime() -
+					new Date(
+						room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
+					).getTime(),
+			);
+			setSortedChatRoomList(sortedChatRoom);
+		}
 	}, [chatRoomList]);
 
 	useEffect(() => {
