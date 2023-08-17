@@ -150,7 +150,7 @@ const EurekaFeedItem = ({ feed, onClickComment }: Props) => {
 
 	// 좋아요 누른 유저 목록 페이지로 이동
 	const onClickLike = useCallback(() => {
-		navigation(`/community/eureka/${1}/like`);
+		navigation(`/community/eureka/${feed.eurekaId}/like`);
 	}, []);
 
 	// 유레카 피드 상세보기 페이지로 이동

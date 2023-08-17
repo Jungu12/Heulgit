@@ -70,6 +70,7 @@ const StyledIconContainer = styled.div`
 	img {
 		width: 28px;
 		height: 28px;
+		cursor: pointer;
 	}
 
 	.alarm-icon {
@@ -121,6 +122,7 @@ const StyledViewFillter = styled.button`
 	border-radius: 24px;
 	margin-left: 24px;
 	flex: 0 0 auto;
+	cursor: pointer;
 
 	img {
 		margin-left: 8px;
@@ -136,6 +138,7 @@ const StyledCalendarFillter = styled.button`
 	margin-left: 10px;
 	justify-content: center;
 	flex: 0 0 auto;
+	cursor: pointer;
 
 	img {
 		margin-left: 8px;
@@ -170,6 +173,7 @@ const StyledLanguageFillter = styled.button`
 	margin-left: 10px;
 	margin-right: 20px;
 	flex: 0 0 auto;
+	cursor: pointer;
 
 	${(props) =>
 		props.name &&
@@ -247,6 +251,7 @@ const StyledClose = styled.img`
 	height: 50px;
 	z-index: 100;
 	transform: translate(-50%, -50%);
+	cursor: pointer;
 `;
 
 type Props = {

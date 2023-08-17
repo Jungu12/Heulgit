@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
 import { UserType } from '@typedef/common.types';
+import { UserFollowingType } from '@typedef/profile/user.types';
 
 const StyledProfilePage = styled.div``;
 
@@ -23,7 +24,6 @@ const StyledProfileHigh = styled.div`
 const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
-	/* align-items: end; */
 	margin-top: 40px;
 	min-height: 150px;
 `;
@@ -51,6 +51,15 @@ const StyledUserInformation = styled.div`
 		justify-content: center;
 	}
 `;
+
+type StyledUserInfoBoxProps = {
+	$view: boolean;
+};
+const StyledUserInfoBox = styled.div<StyledUserInfoBoxProps>`
+	height: ${(props) => (props.$view ? 'auto' : '0')};
+	font-size: 16px;
+`;
+
 const StyledFollowing = styled.div`
 	cursor: pointer;
 	/* background-color: aquamarine; */
@@ -99,8 +108,6 @@ const CateDiv = styled.div`
 `;
 const Sdiv = styled.div``;
 const StyledProfileLow = styled.div`
-	/* display: flex; */
-	/* flex-direction: column; */
 	justify-content: center;
 	align-items: center;
 	padding: 20px;
@@ -130,6 +137,14 @@ const ProfilePageMobile = ({
 	const [userInfo, setUserInfo] = useState(false);
 	const [loadedUser, setLoadedUser] = useState<UserType>();
 	const [isFollowing, setIsFollowing] = useState<boolean>();
+	const [followerData, setFollowerData] = useState<number>();
+	const [followingData, setFollowingData] = useState<number>();
+
+	// 깃허브 열기
+	const goGithub = () => {
+		const githubUrl = `https://github.com/${userId}`;
+		window.open(githubUrl, '_blank');
+	};
 
 	// 유저 정보 불러오기
 	useEffect(() => {
@@ -152,6 +167,30 @@ const ProfilePageMobile = ({
 			})
 			.catch((error) => {
 				console.error('유저 정보 실패:', error);
+			});
+	}, []);
+
+	// 팔로잉 팔로워 정보 불러오기
+	useEffect(() => {
+		authHttp
+			.get<UserFollowingType[]>(`relations/followings/${userId}`)
+			.then((response) => {
+				console.log('팔로잉 로드 성공.', userId, response);
+				setFollowingData(response.length); // 받아온 데이터의 followings 배열을 상태에 저장
+			})
+			.catch((error) => {
+				console.error('팔로잉 로드 실패.', error);
+			});
+	}, []);
+	useEffect(() => {
+		authHttp
+			.get<UserFollowingType[]>(`relations/followers/${userId}`)
+			.then((response) => {
+				console.log('팔로워 로드 성공.', userId, response);
+				setFollowerData(response.length); // 받아온 데이터의 followers 배열을 상태에 저장
+			})
+			.catch((error) => {
+				console.error('팔로워 로드 실패.', error);
 			});
 	}, []);
 
@@ -202,26 +241,39 @@ const ProfilePageMobile = ({
 	return (
 		<StyledProfilePage>
 			<StyledProfileHigh>
+				{/* 유저 프로필 */}
 				<StyledUserProfile>
 					<StyledUserImage src={loadedUser?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
-						<div className="user-name">{loadedUser?.githubId}</div>
+						<div className="user-name">
+							{loadedUser?.githubId}
+							{userId !== user?.githubId ? (
+								<img
+									src={images.profile.githubIcon}
+									alt="깃허브"
+									onClick={goGithub}
+									style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+								/>
+							) : (
+								<></>
+							)}
+						</div>
+
 						<div className="user-follow">
 							<StyledFollowing
 								onClick={() => navigation(`/profiles/${userId}/following`)}
 							>
-								<div>팔로잉</div>
+								<div>팔로잉 {followingData}</div>
 							</StyledFollowing>
 							<StyledFollower
 								onClick={() => navigation(`/profiles/${userId}/follower`)}
 							>
-								<div>팔로워</div>
+								<div>팔로워 {followerData}</div>
 							</StyledFollower>
 						</div>
 						{/* 유저 정보 */}
-						{/* 이 부분은 누르면 드롭다운 느낌으로 보이도록 */}
 						{userInfo && (
-							<div className="user-info">
+							<StyledUserInfoBox $view={view}>
 								<div
 									onClick={() => {
 										setView(!view);
@@ -247,7 +299,7 @@ const ProfilePageMobile = ({
 										{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
 									</div>
 								)}
-							</div>
+							</StyledUserInfoBox>
 						)}
 					</StyledUserInformation>
 				</StyledUserProfile>
@@ -312,12 +364,8 @@ const ProfilePageMobile = ({
 							{selectedMenu === '프로필' && user !== null && (
 								<MyProfile loadedUser={loadedUser} user={user} />
 							)}
-							{selectedMenu === '유레카' && user !== null && (
-								<MyEureka loadeduser={loadedUser} />
-							)}
-							{selectedMenu === '자유' && user !== null && (
-								<MyFreeboard loadeduser={loadedUser} />
-							)}
+							{selectedMenu === '유레카' && user !== null && <MyEureka />}
+							{selectedMenu === '자유' && user !== null && <MyFreeboard />}
 						</StyledProfileLow>
 					</Sdiv>
 				</SboxTop>

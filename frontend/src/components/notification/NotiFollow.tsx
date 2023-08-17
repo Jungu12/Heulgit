@@ -65,7 +65,6 @@ const StyledNoficationContent = styled.span`
 const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 	width: 83px;
 	height: 28px;
-	margin-left: 10px;
 	font-weight: 500;
 	font-size: 14px;
 	border-radius: 8px;
@@ -74,6 +73,7 @@ const StyledFollowButton = styled.button<StyledFollowButtonProps>`
 		props.$following ? colors.primary.primary : colors.greyScale.grey3};
 	color: ${(props) => (props.$following ? 'white' : 'black')};
 	margin-left: auto;
+	margin-right: 12px;
 `;
 
 type Props = {

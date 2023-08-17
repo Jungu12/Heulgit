@@ -10,11 +10,6 @@ const StyledSearchContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	height: calc(var(--vh, 1vh) * 100);
-
-	div {
-		margin-right: calc(50% - 62px);
-		cursor: pointer;
-	}
 `;
 
 const SearchBarInputContainer = styled.div`

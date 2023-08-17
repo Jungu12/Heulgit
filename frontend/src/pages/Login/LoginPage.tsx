@@ -17,10 +17,6 @@ const LoginPage = () => {
 
 	useEffect(() => {
 		if (localStorage.getItem('login')) {
-			console.log('로그이인!');
-			console.log(localStorage.getItem('login'));
-
-			// window.location.replace('/');
 			navigation('/');
 		}
 	}, []);

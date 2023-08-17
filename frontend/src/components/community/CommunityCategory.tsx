@@ -1,6 +1,6 @@
 import { colors } from '@constants/colors';
 import React, { useCallback, useEffect } from 'react';
-import { useLocation  } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 커뮤니티 선택 컨테이너
@@ -29,7 +29,7 @@ const StyledCategoryButton = styled.button<{ $active: boolean }>`
 	border-bottom: solid 2px
 		${({ $active }) =>
 			$active ? colors.primary.primary : colors.greyScale.grey4};
-
+	color: ${({ $active }) => ($active ? 'black' : colors.greyScale.grey4)};
 	width: 100%;
 	height: 100%;
 	padding: 0;

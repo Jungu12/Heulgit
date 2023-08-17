@@ -1,6 +1,7 @@
 import CommentList from '@components/Home/CommentList';
 import FeedItem from '@components/Home/FeedItem';
 import Header from '@components/common/Header';
+import Loading from '@components/common/Loading';
 import { colors } from '@constants/colors';
 import {
 	HeulGitCommentType,
@@ -100,14 +101,11 @@ const RepoViewPage = () => {
 
 	const loadFeed = useCallback(() => {
 		authHttp.get<HeulGitPostType>(`heulgit/posts/${repoId}`).then((res) => {
-			console.log('[흘깃 게시판 피드 불러오기]', res);
 			setFeed(res);
 		});
 	}, [repoId]);
 
 	const loadCommentList = useCallback(async () => {
-		console.log('댓글 불러오기 ㅎㅎ');
-
 		const newCommentList = await authHttp
 			.get<HeulGitCommentType[]>(`h-comments/${repoId}?pages=${page}`)
 			.then((res) => {
@@ -179,7 +177,7 @@ const RepoViewPage = () => {
 	}, []);
 
 	if (!feed) {
-		return <div>load...</div>;
+		return <Loading />;
 	}
 
 	return (

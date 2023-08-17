@@ -1,8 +1,6 @@
 // 커뮤니티 내 유레카 전체 페이지
-import { Mobile, PC, Tablet } from '@components/common/MediaQuery';
 import React from 'react';
 import EurekaFeedItemListMobile from './EurekaFeedItemListMobile';
-import EurekaFeedItemListTabletPC from './EurekaFeedItemListTabletPC';
 import { useOutletContext } from 'react-router-dom';
 import { EurekaPostType } from '@typedef/community/eureka.types';
 import {
@@ -30,21 +28,11 @@ const EurekaPage = () => {
 	}
 
 	return (
-		<>
-			<Mobile>
-				<EurekaFeedItemListMobile
-					feedList={eurekaFeedList}
-					eurekaHasMore={eurekaHasNextPage ? true : false}
-					eurekaFetchNextPage={eurekaFetchNextPage}
-				/>
-			</Mobile>
-			<Tablet>
-				<EurekaFeedItemListTabletPC feedList={eurekaFeedList.pages[0]} />
-			</Tablet>
-			<PC>
-				<EurekaFeedItemListTabletPC feedList={eurekaFeedList.pages[0]} />
-			</PC>
-		</>
+		<EurekaFeedItemListMobile
+			feedList={eurekaFeedList}
+			eurekaHasMore={eurekaHasNextPage ? true : false}
+			eurekaFetchNextPage={eurekaFetchNextPage}
+		/>
 	);
 };
 

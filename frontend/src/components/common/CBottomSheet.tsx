@@ -24,13 +24,6 @@ const StyledInputContainer = styled.div`
 	margin: -12px 0;
 `;
 
-// const StyledContentContainer = styled.div`
-// 	background-color: white;
-// 	/* z-index: 100; */
-// 	position: absolute;
-// 	bottom: 0;
-// `;
-
 type Props = {
 	open: boolean;
 	children: React.ReactNode;

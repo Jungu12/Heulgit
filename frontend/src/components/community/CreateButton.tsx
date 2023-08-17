@@ -21,6 +21,7 @@ const StyledCreateButton = styled.button`
 	background-size: 60%;
 	background-repeat: no-repeat;
 	background-position: center;
+	cursor: pointer;
 `;
 
 const CreateButton = () => {

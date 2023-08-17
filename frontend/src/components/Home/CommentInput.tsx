@@ -79,6 +79,7 @@ const StyledMentionContainer = styled.div`
 	align-items: center;
 	padding: 5px 15px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+	cursor: pointer;
 
 	&:focus {
 		background-color: #cee4e5;
@@ -134,10 +135,17 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 			<StyledProfile src={user?.avatarUrl} alt="profile" />
 			<StyledInputContainer>
 				<StyledInput
-					placeholder="댓글을 입력해주세요."
+					placeholder="댓글은 50자까지 입력이 가능합니다."
 					maxLength={50}
 					value={input}
 					onChange={onHandleComment}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault(); // 엔터 키의 기본 동작 막기
+							if (e.shiftKey) return;
+							onClickSubbmit();
+						}
+					}}
 					style={MentionInputStyle}
 				>
 					<Mention

@@ -9,6 +9,7 @@ import FeedItem from '@components/Home/FeedItem';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { HeulgitPostResponseType } from '@typedef/home/heulgit.types';
 import Loading from '@components/common/Loading';
+import MySeparation from '@components/myActivity/MySeparation';
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -138,7 +139,10 @@ const MyLikeRepoPage = () => {
 						>
 							{heulgitLikeList.pages.map((heulgit) =>
 								heulgit.content.map((item) => (
-									<FeedItem key={item.heulgitId} feed={item} type="summary" />
+									<div>
+										<FeedItem key={item.heulgitId} feed={item} type="summary" />
+										<MySeparation />
+									</div>
 								)),
 							)}
 						</InfiniteScroll>

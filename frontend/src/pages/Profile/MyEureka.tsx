@@ -1,23 +1,20 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { UserType } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
 import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
 import Loading from '@components/common/Loading';
+import { useParams } from 'react-router-dom';
+import MySeparation from '@components/myActivity/MySeparation';
 
 const StyledBox = styled.div`
 	width: 100%;
 `;
 
-type MyProfileProps = {
-	loadeduser: UserType;
-};
-
-const MyEureka = ({ loadeduser }: MyProfileProps) => {
-	console.log('userprofile:', { loadeduser });
+const MyEureka = () => {
+	const { userId } = useParams();
 
 	// 작성한 유레카 불러오기
 	const {
@@ -28,7 +25,7 @@ const MyEureka = ({ loadeduser }: MyProfileProps) => {
 		['/my/eureka'],
 		({ pageParam = 1 }) =>
 			authHttp.get<EurekaFeedResponseType>(
-				`eureka/myposts?userId=${loadeduser.githubId}&pages=${pageParam}`,
+				`users/myposts/eureka/${userId}?pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
@@ -40,7 +37,6 @@ const MyEureka = ({ loadeduser }: MyProfileProps) => {
 
 	return (
 		<StyledBox>
-			{loadeduser?.githubId}
 			{myEurekaList && (
 				<InfiniteScroll
 					dataLength={myEurekaList.pages.length}
@@ -54,7 +50,10 @@ const MyEureka = ({ loadeduser }: MyProfileProps) => {
 				>
 					{myEurekaList.pages.map((eureka) =>
 						eureka.content.map((item) => (
-							<EurekaFeedItem key={item.eurekaId} feed={item} />
+							<div>
+								<EurekaFeedItem key={item.eurekaId} feed={item} />
+								<MySeparation />
+							</div>
 						)),
 					)}
 				</InfiniteScroll>

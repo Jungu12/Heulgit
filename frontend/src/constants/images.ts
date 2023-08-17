@@ -41,6 +41,7 @@ export const images = {
 		eurekaInactive: '/assets/images/ic-profileceureka-inactive.png',
 		freeActive: '/assets/images/ic-profilefree-Active.png',
 		freeInactive: '/assets/images/ic-profilefree-inactive.png',
+		githubIcon: '/assets/images/ic_github.png',
 	},
 	header: {
 		back: '/assets/images/ic-arrow-back.png',

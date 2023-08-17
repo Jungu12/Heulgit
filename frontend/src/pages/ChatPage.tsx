@@ -118,21 +118,33 @@ const ChatPage = () => {
 	}, []);
 
 	const chatRoomSort = useCallback(() => {
-		const sortedChatRoom = [...chatRoomList];
-		sortedChatRoom.sort(
-			(room1, room2) =>
-				new Date(
-					room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
-				).getTime() -
-				new Date(
-					room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
-				).getTime(),
-		);
-		setSortedChatRoomList(sortedChatRoom);
+		const sortedChatRoom = [];
+
+		// 채팅방 메시지 내역이 있는 경우만 추가
+		for (const chatRoom of chatRoomList) {
+			if (chatRoom.chatMessages.length > 0) {
+				sortedChatRoom.push(chatRoom);
+			}
+		}
+
+		if (sortedChatRoom.length > 1) {
+			sortedChatRoom.sort(
+				(room1, room2) =>
+					new Date(
+						room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
+					).getTime() -
+					new Date(
+						room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
+					).getTime(),
+			);
+			setSortedChatRoomList(sortedChatRoom);
+		}
 	}, [chatRoomList]);
 
 	useEffect(() => {
-		loadChatRoomList('ksg2388');
+		if (user) {
+			loadChatRoomList(user.githubId);
+		}
 
 		return () => {
 			client.current!.disconnect();
