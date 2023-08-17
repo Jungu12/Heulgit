@@ -10,19 +10,19 @@ import {
 	UserCommitCustomData,
 	UserCommitCustomType,
 } from '@typedef/profile/user.types';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '@store/index';
 
 // 기본 데이터
 const basicData = [
+	{ type: 'algo', description: '알고리즘 풀이' },
+	{ type: 'chore', description: '빌드 과정 또는 보조 기능 수정' },
 	{ type: 'feat', description: '새로운 기능 개발' },
 	{ type: 'fix', description: '버그 수정' },
-	{ type: 'docs', description: '문서 작업' },
 	{ type: 'style', description: '코드 스타일링' },
+	{ type: 'study', description: '공부 및 내용 정리' },
 	{ type: 'refactor', description: '코드 리팩토링' },
-	{ type: 'test', description: '테스트 코드 작성' },
-	{
-		type: 'chore',
-		description: '필드 스크립트, 패키지 매니저 등 설정 파일 수정 ',
-	},
 ];
 
 const StyledBox = styled.div`
@@ -221,13 +221,15 @@ const StyledModalButtonItem = styled.div`
 `;
 
 const CommitEditPage = () => {
-	// const navigation = useNavigate();
+	const navigation = useNavigate();
+	const id = useSelector((state: RootState) => state.user.user?.githubId);
 
 	const [commitTags, setCommitTags] = useState<UserCommitCustomType[]>();
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [newCommit, setNewCommit] = useState({ type: '', description: '' });
 	const [errorMessage, setErrorMessage] = useState('');
+	const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
 	// 커밋 메시지 불러오기
 	useEffect(() => {
@@ -273,6 +275,7 @@ const CommitEditPage = () => {
 			setNewCommit({ type: '', description: '' });
 			setIsModalOpen(false);
 			setErrorMessage('');
+			setHasUnsavedChanges(true);
 		}
 	};
 
@@ -281,6 +284,7 @@ const CommitEditPage = () => {
 		setCommitTags((prevTags) =>
 			(prevTags || []).filter((tag) => tag.type !== idToDelete),
 		);
+		setHasUnsavedChanges(true);
 	};
 
 	// 커밋 메시지 저장
@@ -288,7 +292,10 @@ const CommitEditPage = () => {
 		console.log(commitTags);
 		authHttp
 			.post('users/commit-custom', commitTags) // API 요청
-			.then(() => console.log(commitTags))
+			.then(() => {
+				console.log(commitTags);
+				navigation(`/profiles/${id}`);
+			})
 			.catch((error) => {
 				console.error('커밋 메시지 저장에 실패했습니다.', error);
 			});
@@ -304,6 +311,20 @@ const CommitEditPage = () => {
 			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
+
+	// 페이지 이동 전 경고
+	useEffect(() => {
+		const confirmExit = (event: BeforeUnloadEvent) => {
+			if (hasUnsavedChanges) {
+				event.returnValue =
+					'저장되지 않은 변경사항이 있습니다. 정말로 나가시겠습니까?';
+			}
+		};
+		window.addEventListener('beforeunload', confirmExit);
+		return () => {
+			window.removeEventListener('beforeunload', confirmExit);
+		};
+	}, [hasUnsavedChanges]);
 
 	return (
 		<StyledBox>
