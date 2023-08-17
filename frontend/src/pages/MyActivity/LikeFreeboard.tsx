@@ -15,7 +15,7 @@ const LikeFreeboard = () => {
 		['/my-likes/heulgit'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
-				`users/activities/eureka/my-likes?pages=${pageParam}`,
+				`users/activities/freeboard/my-likes?pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
