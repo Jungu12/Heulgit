@@ -88,7 +88,7 @@ type MyProfileProps = {
 
 const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 	const navigation = useNavigate();
-	const tags = ['feat', 'fix', 'algo', 'style', 'docs', 'study', 'chore'];
+	const tags = ['algo', 'chore', 'feat', 'fix', 'style', 'study', 'refactor'];
 
 	const [commitGraphData, setCommitGraphData] = useState<UserCommitType[]>();
 	const [commitRankingData, setCommitRankingData] = useState<UserRankingType[]>(
