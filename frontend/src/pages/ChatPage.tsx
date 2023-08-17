@@ -118,7 +118,15 @@ const ChatPage = () => {
 	}, []);
 
 	const chatRoomSort = useCallback(() => {
-		const sortedChatRoom = [...chatRoomList];
+		const sortedChatRoom = [];
+
+		// 채팅방 메시지 내역이 있는 경우만 추가
+		for (const chatRoom of chatRoomList) {
+			if (chatRoom.chatMessages.length > 0) {
+				sortedChatRoom.push(chatRoom);
+			}
+		}
+
 		if (sortedChatRoom.length > 1) {
 			sortedChatRoom.sort(
 				(room1, room2) =>
