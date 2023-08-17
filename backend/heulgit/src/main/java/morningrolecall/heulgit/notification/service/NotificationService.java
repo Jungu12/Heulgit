@@ -322,21 +322,17 @@ public class NotificationService {
 
 	/**
 	 * notificationId를 받아 읽지 않은 알림 읽음 처리
-	 * @param notificationId
+	 * @param githubId
 	 * */
 	@Transactional
-	public void changeNotificationState(Long notificationId,String githubId) {
-		logger.debug("changeNotificationState(), notificationId = {}, ", notificationId);
+	public void changeNotificationState(String githubId) {
+		logger.debug("changeNotificationState(), who={}",githubId);
 		User user = userRepository.findUserByGithubId(githubId)
 				.orElseThrow(()->new NotificationException(ExceptionCode.USER_NOT_FOUND));
-		Notification notification = notificationRepository.findById(notificationId)
-			.orElseThrow(()-> new NotificationException(ExceptionCode.NOTIFICATION_NOT_FOUND));
-		if(!user.getGithubId().equals(notification.getReceiver().getGithubId())){
-			throw new NotificationException(ExceptionCode.RECEIVER_USER_MISMATCH);
-		}
+
 
 		// if(user.getGithubId())
-		notificationRepository.updateHasReadById(notificationId);
+		notificationRepository.updateHasReadByGithubId(githubId);
 	}
 
 	/**
