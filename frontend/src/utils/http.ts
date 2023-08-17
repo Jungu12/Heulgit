@@ -81,14 +81,14 @@ authAxios.interceptors.request.use(
 				console.error('액세스 토큰 재발급 실패:', error);
 				// 재발급 실패 시 로그아웃 등의 처리를 진행할 수 있습니다.
 				localStorage.removeItem('login');
-				window.location.href = 'https://i9d211.p.ssafy.io/';
+				window.location.href = 'https://i9d211.p.ssafy.io/login';
 			}
 		}
 		return config;
 	},
 	(error) => {
 		localStorage.removeItem('login');
-		window.location.href = 'https://i9d211.p.ssafy.io/';
+		window.location.href = 'https://i9d211.p.ssafy.io/login';
 		console.log('엑세스 토큰 만료..?');
 		return Promise.reject(error);
 	},

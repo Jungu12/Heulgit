@@ -218,6 +218,7 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 						}
 					}}
 				>{`댓글 ${feed.heulgitComments.length}개`}</div>
+				<div onClick={onClickLike}>{`스타 ${feed.star}개 · `}</div>
 			</StyledSubDataContainer>
 		</StyledFeedItemContainer>
 	);
