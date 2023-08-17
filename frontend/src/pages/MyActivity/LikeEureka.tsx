@@ -12,7 +12,7 @@ const LikeEureka = () => {
 		fetchNextPage: LikeEurekaFetchNextPage,
 		hasNextPage: LikeEurekaHasNextPage,
 	} = useInfiniteQuery(
-		['/my-likes/heulgit'],
+		['/my-likes/eureka'],
 		({ pageParam = 1 }) =>
 			authHttp.get<EurekaFeedResponseType>(
 				`users/activities/eureka/my-likes?pages=${pageParam}`,

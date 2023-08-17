@@ -45,7 +45,6 @@ const MyEureka = ({ loadeduser: user }: MyProfileProps) => {
 					next={myEurekaFetchNextPage}
 					hasMore={myEurekaHasNextPage ? true : false}
 					loader={<div>loading...</div>}
-					// height={`calc(100vh - 102px)`}
 					style={{
 						overflowY: 'hidden',
 						overflowX: 'hidden',
