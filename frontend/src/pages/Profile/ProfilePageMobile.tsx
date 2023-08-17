@@ -174,7 +174,7 @@ const ProfilePageMobile = ({
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
-		if (!isFollowing) {
+		if (isFollowing) {
 			// 팔로우
 			authHttp
 				.post(`relations/follow?to=${userId}`)
