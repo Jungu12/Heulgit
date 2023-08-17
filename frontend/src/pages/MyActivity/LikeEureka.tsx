@@ -6,11 +6,11 @@ import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const LikeEureka = () => {
-	// 좋아요 게시물 불러오기
+	// 좋아요 유레카 불러오기
 	const {
-		data: eurekaLikeList,
-		fetchNextPage: eurekaFetchNextPage,
-		hasNextPage: eurekaHasNextPage,
+		data: LikeEurekaList,
+		fetchNextPage: LikeEurekaFetchNextPage,
+		hasNextPage: LikeEurekaHasNextPage,
 	} = useInfiniteQuery(
 		['/my-likes/heulgit'],
 		({ pageParam = 1 }) =>
@@ -27,11 +27,11 @@ const LikeEureka = () => {
 
 	return (
 		<div>
-			{eurekaLikeList && (
+			{LikeEurekaList && (
 				<InfiniteScroll
-					dataLength={eurekaLikeList.pages.length}
-					next={eurekaFetchNextPage}
-					hasMore={eurekaHasNextPage ? true : false}
+					dataLength={LikeEurekaList.pages.length}
+					next={LikeEurekaFetchNextPage}
+					hasMore={LikeEurekaHasNextPage ? true : false}
 					loader={<div>loading...</div>}
 					height={`calc(100vh - 102px)`}
 					style={{
@@ -39,7 +39,7 @@ const LikeEureka = () => {
 						overflowX: 'hidden',
 					}}
 				>
-					{eurekaLikeList.pages.map((eureka) =>
+					{LikeEurekaList.pages.map((eureka) =>
 						eureka.content.map((item) => (
 							<EurekaFeedItem key={item.eurekaId} feed={item} />
 						)),

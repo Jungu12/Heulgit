@@ -5,13 +5,8 @@ import BigHeader from '@components/profile/BigHeader';
 import Category from '@components/profile/Category';
 import CategoryT from '@components/profile/CategoryT';
 import { colors } from '@constants/colors';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
-import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
-import { authHttp } from '@utils/http';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
-import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
+import LikeEureka from './LikeEureka';
+import LikeFreeboard from './LikeFreeboard';
 
 //스타일
 const StyledBox = styled.div`
@@ -64,7 +59,6 @@ const StyledSideR = styled.div`
 		background-color: ${colors.primary.primary};
 	}
 `;
-
 const StyledContent = styled.div`
 	@media (min-width: 768px) {
 		width: 500px;
@@ -91,66 +85,25 @@ const StyledHeader = styled.div`
 
 const MyLikePostPage = () => {
 	const [selectedPost, setSelectedPost] = useState('유레카');
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
 	const handleMenuClick = (menu: '유레카' | '자유') => {
 		setSelectedPost(menu);
+		// sessionStorage.setItem('selectedPost', menu);
 	};
 
-	// 좋아요 유레카 불러오기
-	const {
-		data: eurekaLikeList,
-		fetchNextPage: LikeEurekaFetchNextPage,
-		hasNextPage: LikeEurekaHasNextPage,
-		refetch: LikeEurekaRefetch,
-	} = useInfiniteQuery(
-		['/my-likes/heulgit'],
-		({ pageParam = 1 }) =>
-			authHttp.get<EurekaFeedResponseType>(
-				`users/activities/eureka/my-likes?pages=${pageParam}`,
-			),
-		{
-			getNextPageParam: (lastPage, allPages) => {
-				if (lastPage.last) return;
-				return allPages.length + 1;
-			},
-		},
-	);
+	// useEffect(() => {
+	// 	const categoryItem = sessionStorage.getItem('selectedPost') as
+	// 		| '유레카'
+	// 		| '자유';
 
-	// 좋아요 자유 불러오기
-	const {
-		data: likeFreeboardList,
-		fetchNextPage: LikeFreeboardFetchNextPage,
-		hasNextPage: LikeFreeboardHasNextPage,
-		refetch: LikeFreeboardRefetct,
-	} = useInfiniteQuery(
-		['/my-likes/heulgit'],
-		({ pageParam = 1 }) =>
-			authHttp.get<FreeBoarFeedResponseType>(
-				`users/activities/freeboard/my-likes?pages=${pageParam}`,
-			),
-		{
-			getNextPageParam: (lastPage, allPages) => {
-				if (lastPage.last) return;
-				return allPages.length + 1;
-			},
-		},
-	);
+	// 	if (categoryItem) {
+	// 		setSelectedPost(categoryItem);
+	// 	} else {
+	// 		setSelectedPost('유레카');
+	// 	}
+	// }, []);
 
-	// 카테고리
-	useEffect(() => {
-		const categoryItem = sessionStorage.getItem('selectedPost') as
-			| '유레카'
-			| '자유';
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-		if (categoryItem) {
-			setSelectedPost(categoryItem);
-		} else {
-			setSelectedPost('유레카');
-		}
-	}, []);
-
-	// 화면별 타이틀 변환
 	useEffect(() => {
 		const handleResize = () => {
 			setWindowWidth(window.innerWidth);
@@ -161,11 +114,6 @@ const MyLikePostPage = () => {
 		return () => {
 			window.removeEventListener('resize', handleResize);
 		};
-	}, []);
-
-	useEffect(() => {
-		LikeEurekaRefetch();
-		LikeFreeboardRefetct();
 	}, []);
 
 	return (
@@ -192,43 +140,15 @@ const MyLikePostPage = () => {
 					/>
 				</StyledCate>
 				<div>
-					{selectedPost === '유레카' && eurekaLikeList && (
-						<InfiniteScroll
-							dataLength={eurekaLikeList.pages.length}
-							next={LikeEurekaFetchNextPage}
-							hasMore={LikeEurekaHasNextPage ? true : false}
-							loader={<div>loading...</div>}
-							height={`calc(100vh - 102px)`}
-							style={{
-								overflowY: 'scroll',
-								overflowX: 'hidden',
-							}}
-						>
-							{eurekaLikeList.pages.map((eureka) =>
-								eureka.content.map((item) => (
-									<EurekaFeedItem key={item.eurekaId} feed={item} />
-								)),
-							)}
-						</InfiniteScroll>
+					{selectedPost === '유레카' && (
+						<div>
+							<LikeEureka />
+						</div>
 					)}
-					{selectedPost === '자유' && likeFreeboardList && (
-						<InfiniteScroll
-							dataLength={likeFreeboardList.pages.length}
-							next={LikeFreeboardFetchNextPage}
-							hasMore={LikeFreeboardHasNextPage ? true : false}
-							loader={<div>loading...</div>}
-							height={`calc(100vh - 102px)`}
-							style={{
-								overflowY: 'scroll',
-								overflowX: 'hidden',
-							}}
-						>
-							{likeFreeboardList.pages.map((free) =>
-								free.content.map((item) => (
-									<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
-								)),
-							)}
-						</InfiniteScroll>
+					{selectedPost === '자유' && (
+						<div>
+							<LikeFreeboard />
+						</div>
 					)}
 				</div>
 			</StyledContent>
