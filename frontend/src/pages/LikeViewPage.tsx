@@ -141,11 +141,16 @@ const LikeViewPage: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
 	const location = useLocation();
 	const curLoction = findParams(location.pathname);
+	let curApiLocation = curLoction;
+	if (curApiLocation === 'freeboard') {
+		curApiLocation = 'freeBoard';
+		curApiLocation += 'Id';
+	}
 
 	const getLikeList = useCallback((page: number) => {
 		return authHttp
 			.get<LikedUserListResponse>(
-				`${curLoction}/posts/likes?${curLoction}BoardId=${id}&pages=${page}`,
+				`${curLoction}/posts/likes?${curApiLocation}=${id}&pages=${page}`,
 			)
 			.then((res) => res);
 	}, []);
