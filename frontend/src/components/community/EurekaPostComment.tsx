@@ -1,8 +1,10 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
+import { RootState } from '@store/index';
 import { EurekaCommentType } from '@typedef/community/eureka.types';
 import { getTimeAgo } from '@utils/date';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
 // 댓글 컨테이너
@@ -88,6 +90,8 @@ type Props = {
 };
 
 const EurekaPostComment = ({ comment, onClickCommentMenuOpen }: Props) => {
+	const user = useSelector((state: RootState) => state.user.user);
+
 	return (
 		<StyledComment>
 			<StyledProfileContainer>
@@ -100,11 +104,13 @@ const EurekaPostComment = ({ comment, onClickCommentMenuOpen }: Props) => {
 			</StyledProfileContainer>
 			<StyledOptionContainer>
 				<StyledTime> {getTimeAgo(comment.updatedDate)}</StyledTime>
-				<img
-					src={images.menu}
-					alt="option"
-					onClick={() => onClickCommentMenuOpen(comment.commentId)}
-				/>
+				{comment.user.githubId != user?.githubId && (
+					<img
+						src={images.menu}
+						alt="option"
+						onClick={() => onClickCommentMenuOpen(comment.commentId)}
+					/>
+				)}
 			</StyledOptionContainer>
 		</StyledComment>
 	);

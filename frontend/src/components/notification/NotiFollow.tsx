@@ -159,12 +159,12 @@ const NotiFollow = ({ notificationList, loadNotification }: Props) => {
 								</StyledNotificationDate>
 							</StyledNotificationTextBox>
 							<StyledFollowButton
-								$following={noti.follow}
+								$following={!noti.follow}
 								onClick={() =>
-									onClickFollowButton(noti.follow, noti.sender.githubId)
+									onClickFollowButton(!noti.follow, noti.sender.githubId)
 								}
 							>
-								{noti.follow ? '팔로우' : '팔로잉'}
+								{!noti.follow ? '팔로우' : '팔로잉'}
 							</StyledFollowButton>
 						</StyledNotificationItem>
 					);

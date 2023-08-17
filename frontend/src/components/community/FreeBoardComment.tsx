@@ -1,8 +1,10 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
+import { RootState } from '@store/index';
 import { FreeBoardCommentType } from '@typedef/community/freeboard.types';
 import { getTimeAgo } from '@utils/date';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
 const StyledComment = styled.div`
@@ -61,12 +63,7 @@ type Props = {
 };
 
 const FreeBoardComment = ({ comment, onClickDelete }: Props) => {
-	// const onClickCommentMenu = useCallback(
-	//   () => {
-
-	//   },
-	//   [],
-	// )
+	const user = useSelector((state: RootState) => state.user.user);
 
 	return (
 		<StyledComment>
@@ -78,11 +75,13 @@ const FreeBoardComment = ({ comment, onClickDelete }: Props) => {
 			</StyledContentBox>
 			<StyledOptionContainer>
 				{getTimeAgo(comment.updatedDate)}
-				<img
-					src={images.closeBlack}
-					alt="option"
-					onClick={() => onClickDelete(comment.commentId)}
-				/>
+				{comment.user.githubId != user?.githubId && (
+					<img
+						src={images.closeBlack}
+						alt="option"
+						onClick={() => onClickDelete(comment.commentId)}
+					/>
+				)}
 			</StyledOptionContainer>
 		</StyledComment>
 	);
