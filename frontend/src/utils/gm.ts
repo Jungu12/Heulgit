@@ -1,10 +1,7 @@
-import { MessageType } from '@typedef/gm/gm.types';
+import { ChatRoomType, MessageType } from '@typedef/gm/gm.types';
 
-export const findParter = (id: string, user1: string, user2: string) => {
-	if (id === user1) {
-		return user2;
-	}
-	return user1;
+export const findPartner = (userId: string, room: ChatRoomType) => {
+	return userId === room.user1.id ? room.user2 : room.user1;
 };
 
 export const findUnReadMessage = (id: string, messageList: MessageType[]) => {

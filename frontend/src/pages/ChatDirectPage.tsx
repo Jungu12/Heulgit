@@ -19,7 +19,7 @@ import SockJS from 'sockjs-client';
 import { authHttp } from '@utils/http';
 import { RootState } from '@store/index';
 import { useSelector } from 'react-redux';
-import { findParter } from '@utils/gm';
+import { findPartner } from '@utils/gm';
 
 const StyledChatDirectPageContainer = styled.div`
 	display: flex;
@@ -188,13 +188,7 @@ const ChatDirectPage = () => {
 	const exitChatRoom = useCallback(async () => {
 		if (user) {
 			authHttp
-				.delete(
-					`gm/room/out/${findParter(
-						user.githubId,
-						state.room.user1.id,
-						state.room.user2.id,
-					)}`,
-				)
+				.delete(`gm/room/out/${user.githubId}`)
 				.then(() => console.log('채팅방 나가짐'));
 		}
 	}, []);
@@ -239,23 +233,13 @@ const ChatDirectPage = () => {
 			{user && (
 				<>
 					<StyledHeader>
-						<Header
-							title={findParter(
-								user?.githubId,
-								state.room.user1.id,
-								state.room.user2.id,
-							)}
-						/>
+						<Header title={findPartner(user?.githubId, state.room).id} />
 					</StyledHeader>
 					<StyledMessage>
 						{messageList.map((msg, index) => (
 							<ChatBox
 								key={index}
-								profile={findParter(
-									user?.githubId,
-									state.room.user1.avater_url,
-									state.room.user2.avater_url,
-								)}
+								profile={findPartner(user?.githubId, state.room).avater_url}
 								message={msg.message}
 								$isUser={msg.sender === user.githubId}
 							/>
