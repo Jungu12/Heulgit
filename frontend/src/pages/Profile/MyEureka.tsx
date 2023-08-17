@@ -8,7 +8,7 @@ import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
 import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
 
 const StyledBox = styled.div`
-	margin-bottom: -70px;
+	/* margin-bottom: -70px; */
 	width: 100%;
 `;
 
@@ -45,9 +45,9 @@ const MyEureka = ({ loadeduser: user }: MyProfileProps) => {
 					next={myEurekaFetchNextPage}
 					hasMore={myEurekaHasNextPage ? true : false}
 					loader={<div>loading...</div>}
-					height={`calc(100vh - 102px)`}
+					// height={`calc(100vh - 102px)`}
 					style={{
-						overflowY: 'scroll',
+						overflowY: 'hidden',
 						overflowX: 'hidden',
 					}}
 				>

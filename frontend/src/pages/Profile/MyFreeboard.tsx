@@ -8,7 +8,7 @@ import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
 import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 
 const StyledBox = styled.div`
-	margin-bottom: -70px;
+	/* margin-bottom: -70px; */
 	width: 100%;
 `;
 
