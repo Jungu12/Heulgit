@@ -18,7 +18,8 @@ export default createGlobalStyle`
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Bold.woff') format('woff'),;
+    src: url('/assets/fonts/NotoSansKR-Bold.woff') format('woff'),
+    url('/assets/fonts/MaplestoryBold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
 }
