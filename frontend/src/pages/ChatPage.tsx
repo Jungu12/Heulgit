@@ -119,7 +119,7 @@ const ChatPage = () => {
 
 	const chatRoomSort = useCallback(() => {
 		const sortedChatRoom = [...chatRoomList];
-		if (sortedChatRoom.length) {
+		if (sortedChatRoom.length > 1) {
 			sortedChatRoom.sort(
 				(room1, room2) =>
 					new Date(
