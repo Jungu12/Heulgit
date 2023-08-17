@@ -1,7 +1,9 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import { HeulGitCommentType } from '@typedef/home/heulgit.types';
+import { RootState } from '@store/index';
+import { UserCommentType } from '@typedef/profile/user.types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
 const StyledComment = styled.div`
@@ -50,15 +52,17 @@ const StyledOptionContainer = styled.div`
 `;
 
 type Props = {
-	comment: HeulGitCommentType;
+	comment: UserCommentType;
 };
 
 const MyComment = ({ comment }: Props) => {
+	const user = useSelector((state: RootState) => state.user.user);
+
 	return (
 		<StyledComment>
-			<StyledProfile src={comment.user.avatarUrl} alt="profile" />
+			<StyledProfile src={user?.avatarUrl} alt="profile" />
 			<StyledContentBox>
-				<StyledUserName>{comment.user.githubId}</StyledUserName>
+				<StyledUserName>{comment.githubId}</StyledUserName>
 				<StyledContent>{comment.content}</StyledContent>
 			</StyledContentBox>
 			<StyledOptionContainer>
