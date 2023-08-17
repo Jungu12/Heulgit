@@ -110,8 +110,6 @@ const ChatDirectPage = () => {
 	// 채팅방 연결 함수
 	const connectHandler = useCallback(
 		(roomId: string) => {
-			console.log('연결 시작', headers);
-
 			client.current = Stomp.over(() => {
 				const sock = new SockJS('https://i9d211.p.ssafy.io/api/gm');
 				return sock;
@@ -143,7 +141,6 @@ const ChatDirectPage = () => {
 	// 메세지 보내기 함수
 	const sendHandler = useCallback(() => {
 		if (inputMessage.trim() === '') return;
-		console.log(inputMessage);
 
 		const newMessage = {
 			roomId: state.room.roomId,
@@ -179,23 +176,17 @@ const ChatDirectPage = () => {
 
 	const loadChatRoomLog = useCallback((id: string) => {
 		authHttp.get<MessageType[]>(`gm/chats/${id}`).then((res) => {
-			// console.log(res);
 			setMessageList([...res]);
-			// setChatRoomList(res);
 		});
 	}, []);
 
 	const exitChatRoom = useCallback(async () => {
 		if (user) {
-			authHttp
-				.delete(`gm/room/out/${user.githubId}`)
-				.then(() => console.log('채팅방 나가짐'));
+			authHttp.delete(`gm/room/out/${user.githubId}`);
 		}
 	}, []);
 
 	useEffect(() => {
-		console.log('[메세지 리스트]', messageList);
-
 		if (messageEndRef.current) {
 			messageEndRef.current.scrollIntoView({
 				behavior: 'auto',
@@ -206,8 +197,6 @@ const ChatDirectPage = () => {
 	}, [messageList]);
 
 	useEffect(() => {
-		console.log('채팅방 입장 : ', state);
-
 		connectHandler(state.room.roomId);
 
 		return () => {
@@ -219,7 +208,6 @@ const ChatDirectPage = () => {
 		if (message) {
 			setMessageList((prev) => [...prev, message]);
 		}
-		console.log('[새로운 메시지 추가]', message);
 	}, [message]);
 
 	useEffect(() => {

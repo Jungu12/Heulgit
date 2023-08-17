@@ -155,7 +155,6 @@ type Props = {
 
 const MarkdownRenderer = React.memo(({ text, type }: Props) => {
 	const memoizedText = useMemo(() => decodeUnicode(text), [text]);
-	console.log('원본', text);
 
 	return (
 		<StyledMarkDownContainer>

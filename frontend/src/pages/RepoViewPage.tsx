@@ -133,15 +133,11 @@ const RepoViewPage = () => {
 	);
 
 	const onClickCommentMenuOpen = useCallback((commentId: number) => {
-		console.log(commentId, '선택된 메뉴 오픈');
-
 		setIsCommentMenuOpen(true);
 		setseletedComment(commentId);
 	}, []);
 
 	const onClickCommentDelete = useCallback(() => {
-		console.log('삭제할 댓글 번호', seletedComment);
-
 		if (confirm('정말 삭제하시겠습니까?')) {
 			authHttp.delete(`h-comments/${seletedComment}`).then(() => {
 				alert('댓글이 삭제됬습니다.');
@@ -171,8 +167,6 @@ const RepoViewPage = () => {
 	}, [authHttp, commentInput, repoId, setCommentInput, loadCommentList]);
 
 	useEffect(() => {
-		console.log('[feed]', feed);
-
 		loadFeed();
 	}, []);
 

@@ -53,11 +53,6 @@ const CommunityCategory = ({ button, toggleActive, setButton }: Props) => {
 	}, []);
 
 	useEffect(() => {
-		console.log(button); // 선택된 버튼이 변경될 때마다 로그를 출력합니다.
-	}, [button]);
-
-	useEffect(() => {
-		console.log(button);
 		const cur = location.pathname.split('community/')[1];
 		setButton(changeCategory(cur ?? 'eureka')); // 경로 이름에 따라 현재 선택된 버튼을 설정합니다.
 	}, []);

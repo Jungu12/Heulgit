@@ -87,7 +87,6 @@ const EditFreeBoardPostPage: React.FC = () => {
 		authHttp
 			.get<FreeBoardPostResponseType>(`freeboard/posts/${id}`)
 			.then((res) => {
-				console.log(res);
 				res.freeBoardImages.forEach((imgUrl) => {
 					const cur = imgUrl.fileUri;
 					setImageUrl((prevImageUrl) => prevImageUrl.concat(cur));
@@ -102,8 +101,6 @@ const EditFreeBoardPostPage: React.FC = () => {
 	}, []);
 
 	const titleInputChangeHandler = (value: string) => {
-		// 타이틀 인풋의 입력값을 콘솔에 출력
-		console.log('title:', value);
 		// setTitle(value);
 		setPostInput((prev) => ({
 			...prev,
@@ -112,8 +109,6 @@ const EditFreeBoardPostPage: React.FC = () => {
 	};
 
 	const contentInputChangeHandler = (value: string) => {
-		// 타이틀 인풋의 입력값을 콘솔에 출력
-		console.log('content:', value);
 		setPostInput((prev) => ({
 			...prev,
 			content: value,
@@ -121,8 +116,6 @@ const EditFreeBoardPostPage: React.FC = () => {
 	};
 
 	const linkInputChangeHandler = (value: string) => {
-		// 타이틀 인풋의 입력값을 콘솔에 출력
-		console.log('content:', value);
 		setPostInput((prev) => ({
 			...prev,
 			link: value,
@@ -173,8 +166,6 @@ const EditFreeBoardPostPage: React.FC = () => {
 
 			setSelectedImages(truncatedFiles as unknown as FileList);
 			setImageUrl([...imageUrls]);
-
-			console.log(e.target.files);
 		},
 		[],
 	);
@@ -188,7 +179,6 @@ const EditFreeBoardPostPage: React.FC = () => {
 
 	// id로 게시글 내용 부르기
 	useEffect(() => {
-		console.log(id);
 		loadPost();
 	}, []);
 

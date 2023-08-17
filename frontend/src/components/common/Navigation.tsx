@@ -33,12 +33,7 @@ const Navigation = () => {
 
 	useEffect(() => {
 		setPathName(location.pathname.split('/')[1]);
-		console.log(location.pathname.split('/')[1]);
 	}, []);
-
-	useEffect(() => {
-		console.log(id);
-	}, [id]);
 
 	return (
 		<StyledNavigationConatiner>

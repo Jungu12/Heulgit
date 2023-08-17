@@ -64,9 +64,6 @@ const ChatPage = () => {
 	const loadChatRoomList = useCallback(
 		(id: string) => {
 			authHttp.get<ChatRoomType[]>(`gm/chatrooms/${id}`).then((res) => {
-				console.log(res);
-				console.log('받아온 데이터 그대로 : ', res);
-
 				connectHandler();
 				// 모든 채팅방 소켓 열기
 				res.forEach((room) => {
@@ -80,7 +77,6 @@ const ChatPage = () => {
 								(msg) => {
 									const sendMsg: MessageType = JSON.parse(msg.body);
 									setnewMessage(sendMsg);
-									console.log(sendMsg.message, chatRoomList);
 								},
 								{
 									Authorization: accessToken ? accessToken : '',
@@ -153,7 +149,6 @@ const ChatPage = () => {
 
 	// 채팅방 시간 순으로 정렬
 	useEffect(() => {
-		console.log('채팅방 정렬 시작');
 		chatRoomSort();
 	}, [chatRoomList]);
 

@@ -165,10 +165,6 @@ const FreePostViewPage = () => {
 	const [isCommentMenuOpen, setIsCommentMenuOpen] = useState(false);
 	const [seletedComment, setseletedComment] = useState(-1);
 
-	useEffect(() => {
-		console.log(id);
-	}, []);
-
 	// 좋아요 클릭시 변환 이벤트
 	const handleLikeClick = () => {
 		if (feed) {
@@ -267,8 +263,6 @@ const FreePostViewPage = () => {
 	}, [authHttp, input, feed]);
 
 	const onClickCommentMenuOpen = useCallback((commentId: number) => {
-		console.log(commentId, '선택된 메뉴 오픈');
-
 		setIsCommentMenuOpen(true);
 		setseletedComment(commentId);
 	}, []);
@@ -279,8 +273,6 @@ const FreePostViewPage = () => {
 	);
 
 	const onClickCommentDelete = useCallback(() => {
-		console.log('삭제할 댓글 번호', seletedComment);
-
 		if (confirm('정말 삭제하시겠습니까?')) {
 			authHttp.delete(`f-comments/${seletedComment}`).then(() => {
 				alert('댓글이 삭제됐습니다.');

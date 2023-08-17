@@ -82,10 +82,6 @@ const CommunityMenuBarPC = () => {
 		}
 	};
 
-	useEffect(() => {
-		console.log(communityButton); // 선택된 버튼이 변경될 때마다 로그를 출력합니다.
-	}, [communityButton]);
-
 	const filterToggleActive = (category: string) => {
 		setFilterButton(category);
 		if (category === '전체') {
@@ -94,10 +90,6 @@ const CommunityMenuBarPC = () => {
 			navigation('/community/free'); // '자유게시판' 버튼을 클릭했을 때 '/community/free'로 이동
 		}
 	};
-
-	useEffect(() => {
-		console.log(filterButton); // 선택된 버튼이 변경될 때마다 로그를 출력합니다.
-	}, [filterButton]);
 
 	return (
 		<StlyedCommunityFilterContainer>

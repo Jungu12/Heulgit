@@ -14,7 +14,6 @@ type RankingProps = {
 };
 
 const RankingItem = ({ rank }: RankingProps) => {
-	console.log(rank);
 	return (
 		<StyledRankingItem>
 			<div>{rank.githubId}</div>

@@ -39,8 +39,6 @@ const FeedItemList = ({
 	onClickComment,
 	loadNextFeedList,
 }: Props) => {
-	console.log(feedList);
-
 	return (
 		<StyledFeedListSection>
 			{feedList ? (

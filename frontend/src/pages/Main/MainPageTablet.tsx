@@ -108,7 +108,6 @@ const MainPageTablet = ({ feedList }: Props) => {
 				// 특정 요소를 클릭한 경우, 함수를 바로 종료시킴
 				return;
 			}
-			console.log(e.target);
 			setIsCalendarOpen(false);
 		},
 		[],

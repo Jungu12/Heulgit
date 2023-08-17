@@ -121,14 +121,11 @@ const CreateFreePostModal = ({ closeModal }: Props) => {
 	const [content, setContent] = useState('');
 
 	const titleInputChangeHandler = (value: string) => {
-		// 타이틀 인풋의 입력값을 콘솔에 출력
-		console.log('title:', value);
+		// 타
 		setTitle(value);
 	};
 
 	const contentInputChangeHandler = (value: string) => {
-		// 타이틀 인풋의 입력값을 콘솔에 출력
-		console.log('content:', value);
 		setContent(value);
 		setContentLength(value.length);
 	};

@@ -1,5 +1,5 @@
 import Header from '@components/common/Header';
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { styled } from 'styled-components';
 import { LikedUserListResponse } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
@@ -90,11 +90,6 @@ const LikeViewPage: React.FC = () => {
 			},
 		},
 	);
-
-	useEffect(() => {
-		console.log(id, curLoction);
-		console.log(likeList);
-	}, [likeList]);
 
 	return (
 		<StyledLikeViewPageContainer>

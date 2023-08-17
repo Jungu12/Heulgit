@@ -47,10 +47,7 @@ export const http = {
 // 인터셉터 설정
 authAxios.interceptors.request.use(
 	async (config: InternalAxiosRequestConfig) => {
-		console.log('엑세스 토큰 확인');
-
 		const accessToken = store.getState().auth.token;
-		console.log('엑세스 토큰 :', accessToken);
 
 		if (accessToken) {
 			config.headers = config.headers || {};
@@ -63,8 +60,6 @@ authAxios.interceptors.request.use(
 			try {
 				const refreshResponse = await http.get<AuthType>('oauth/refresh-token');
 				const newAccessToken = refreshResponse.accessToken;
-
-				console.log('새로운 accessToken 발급 :', newAccessToken);
 
 				if (newAccessToken) {
 					config.headers = config.headers || {};
@@ -89,7 +84,6 @@ authAxios.interceptors.request.use(
 	(error) => {
 		localStorage.removeItem('login');
 		window.location.href = 'https://i9d211.p.ssafy.io/login';
-		console.log('엑세스 토큰 만료..?');
 		return Promise.reject(error);
 	},
 );

@@ -109,7 +109,6 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 		authHttp
 			.get<UserCommitType[]>(`users/commit-analyze/${loadedUser.githubId}`)
 			.then((response) => {
-				console.log('커밋 분석 성공.', response);
 				setCommitGraphData(response);
 			})
 			.catch((error) => {
@@ -123,11 +122,6 @@ const MyProfile = ({ loadedUser, user }: MyProfileProps) => {
 			authHttp
 				.get<UserRankingType[]>(`users/ranking?type=${tags[currentTagIndex]}`)
 				.then((response) => {
-					console.log(
-						'커밋 랭킹을 불러왔습니다.',
-						tags[currentTagIndex],
-						response,
-					);
 					setCommitRankingData(response);
 				})
 				.catch((error) => {

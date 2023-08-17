@@ -28,10 +28,6 @@ const useHandleChat = ({
 	deleteMessage,
 }: Props) => {
 	const sendHandler = () => {
-		console.log('room Id:' + roomId);
-		console.log(sender);
-		console.log(message);
-		console.log(client);
 		client.send(
 			'/pub/chat/message',
 			{},

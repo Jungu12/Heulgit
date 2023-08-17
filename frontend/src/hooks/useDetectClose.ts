@@ -10,7 +10,6 @@ const useDetectClose = (
 		const onClick = (e: MouseEvent) => {
 			if (elem.current !== null && !elem.current.contains(e.target as Node)) {
 				setIsOpen(false);
-				console.log('안녕~~');
 			}
 		};
 
@@ -22,10 +21,6 @@ const useDetectClose = (
 			window.removeEventListener('click', onClick);
 		};
 	}, [isOpen, elem]);
-
-	useEffect(() => {
-		console.log('open 값 변경', isOpen);
-	}, [isOpen]);
 
 	return [isOpen, setIsOpen] as const;
 };

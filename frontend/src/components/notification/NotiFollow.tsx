@@ -104,7 +104,6 @@ const NotiFollow = ({ notificationList, loadNotification }: Props) => {
 		const notiType = link.split('/posts/');
 		const boardType = notiType[0].slice(1);
 		const postId = notiType[1].trim();
-		console.log(postId);
 		if (boardType === 'heulgit') {
 			navigation(`/repo/${Number(postId)}`);
 		}
@@ -114,10 +113,6 @@ const NotiFollow = ({ notificationList, loadNotification }: Props) => {
 			navigation(`/community/${boardType}/${Number(postId)}`);
 		}
 	}, []);
-
-	useEffect(() => {
-		console.log('[알림목록]', notificationList);
-	}, [notificationList]);
 
 	return (
 		<StyledFollowContainer>

@@ -151,7 +151,6 @@ const ProfilePageMobile = ({
 		authHttp
 			.get<UserType>(`users/${userId}`)
 			.then((response) => {
-				console.log('유저 정보 성공:', response);
 				setLoadedUser(response);
 
 				// 추가 정보가 있을 경우에만 view를 true로 설정
@@ -175,7 +174,6 @@ const ProfilePageMobile = ({
 		authHttp
 			.get<UserFollowingType[]>(`relations/followings/${userId}`)
 			.then((response) => {
-				console.log('팔로잉 로드 성공.', userId, response);
 				setFollowingData(response.length); // 받아온 데이터의 followings 배열을 상태에 저장
 			})
 			.catch((error) => {
@@ -186,7 +184,6 @@ const ProfilePageMobile = ({
 		authHttp
 			.get<UserFollowingType[]>(`relations/followers/${userId}`)
 			.then((response) => {
-				console.log('팔로워 로드 성공.', userId, response);
 				setFollowerData(response.length); // 받아온 데이터의 followers 배열을 상태에 저장
 			})
 			.catch((error) => {
@@ -199,7 +196,6 @@ const ProfilePageMobile = ({
 		authHttp
 			.get<boolean>(`relations/state?to=${userId}`)
 			.then((response) => {
-				console.log('팔로우 정보 성공:', response);
 				setIsFollowing(response);
 			})
 			.catch((error) => {
@@ -209,15 +205,12 @@ const ProfilePageMobile = ({
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
-		console.log('버튼 클릭 시 팔로우 상태1 :', isFollowing);
 		if (isFollowing !== undefined) {
-			console.log('버튼 클릭 시 팔로우 상태2 :', isFollowing);
 			if (!isFollowing) {
 				// 팔로우
 				authHttp
 					.post(`relations/follow?to=${userId}`)
 					.then(() => {
-						console.log('팔로우 성공: ', isFollowing);
 						setIsFollowing(true);
 					})
 					.catch((error) => {
@@ -228,7 +221,6 @@ const ProfilePageMobile = ({
 				authHttp
 					.delete(`relations/unfollow?to=${userId}`)
 					.then(() => {
-						console.log('언팔로우 성공: ', isFollowing);
 						setIsFollowing(false);
 					})
 					.catch((error) => {

@@ -64,7 +64,6 @@ const FreeBoardFeedItemListMobile = ({
 	// 댓글 모달 나오게 할 거
 	const onClickComment = useCallback(
 		(id: number) => {
-			console.log('댓글 클릭');
 			setSeletedComment(id);
 			setIsCommentOpen(true);
 		},
@@ -90,7 +89,7 @@ const FreeBoardFeedItemListMobile = ({
 			);
 			setCommentList(res);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	}, [setCommentList, authHttp, seletedComment]);
 
@@ -134,10 +133,6 @@ const FreeBoardFeedItemListMobile = ({
 		}
 	}, [seletedComment]);
 
-	useEffect(() => {
-		console.log(freeboardFeedList);
-	}, [freeboardFeedList]);
-
 	return (
 		<StyledFeedListSection ref={scrollContinaerRef}>
 			{freeboardFeedList && (
@@ -165,7 +160,6 @@ const FreeBoardFeedItemListMobile = ({
 				<CBottomSheet
 					open={isCommentOpen}
 					onDismiss={() => {
-						console.log('바텀 시트 클릭');
 						setIsCommentOpen(false);
 					}}
 					onHandleComment={onHandleComment}

@@ -33,11 +33,7 @@ const FollowingPage = () => {
 		authHttp
 			.get<UserFollowingType[]>(`relations/followings/${userId}`)
 			.then((response) => {
-				console.log('팔로잉 로드 성공.', userId, response);
 				setUserFollowingData(response); // 받아온 데이터의 followings 배열을 상태에 저장
-			})
-			.catch((error) => {
-				console.error('팔로잉 로드 실패.', error);
 			});
 	}, []);
 

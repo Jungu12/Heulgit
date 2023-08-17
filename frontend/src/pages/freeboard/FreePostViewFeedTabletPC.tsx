@@ -163,7 +163,6 @@ const FreePostViewFeedTabletPC = () => {
 	// const imageSrc = feed.images.length > 0 ? feed.images[0].file_uri : '';
 
 	// const onClickComment = useCallback(() => {
-	// 	console.log('댓글 클릭');
 	// }, []);
 
 	// const onClickLike = useCallback(() => {

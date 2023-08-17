@@ -33,8 +33,6 @@ type Props = {
 
 // 받은 postId로 댓글 생성해서 넘기기
 const CommentListBottomSheet = ({ postId, commentList }: Props) => {
-	console.log(postId, commentList);
-
 	return (
 		<StyledCommentListContainer>
 			{commentList.length ? (
@@ -45,7 +43,6 @@ const CommentListBottomSheet = ({ postId, commentList }: Props) => {
 							key={comment.commentId}
 							// onClickCommentMenuOpen 수정해야함
 							onClickCommentMenuOpen={function (commentId: number): void {
-								console.log(commentId);
 								throw new Error('Function not implemented.');
 							}}
 						/>

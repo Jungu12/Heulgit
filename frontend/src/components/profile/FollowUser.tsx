@@ -56,24 +56,10 @@ const FollowUser = ({ userData }: FollowUserProps) => {
 		// 팔로우 버튼 클릭 시 팔로우 상태를 업데이트
 		if (!isFollowing) {
 			// 팔로우
-			authHttp
-				.post(`relations/follow?to=${userData.id}`)
-				.then(() => {
-					console.log('팔로우 성공', isFollowing);
-				})
-				.catch((error) => {
-					console.error('팔로우 실패:', error);
-				});
+			authHttp.post(`relations/follow?to=${userData.id}`);
 		} else {
 			// 언팔로우
-			authHttp
-				.delete(`relations/unfollow?to=${userData.id}`)
-				.then(() => {
-					console.log('언팔로우 성공', isFollowing);
-				})
-				.catch((error) => {
-					console.error('언팔로우 실패', error);
-				});
+			authHttp.delete(`relations/unfollow?to=${userData.id}`);
 		}
 		setIsFollowing((prevState) => !prevState);
 	};

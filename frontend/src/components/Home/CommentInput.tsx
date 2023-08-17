@@ -117,7 +117,6 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 		authHttp
 			.get<UserSimpleType[]>(`relations/followings/${user?.githubId}`)
 			.then((res) => {
-				console.log(res);
 				setFollowingList(res);
 			});
 	}, [authHttp]);
@@ -125,10 +124,6 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 	useEffect(() => {
 		getFollersData();
 	}, []);
-
-	useEffect(() => {
-		console.log('[내 팔로우 목록]', followingList);
-	}, [followingList]);
 
 	return (
 		<CommentInputContainer>

@@ -80,8 +80,6 @@ const CreateFreePostPage: React.FC = () => {
 	});
 
 	const titleInputChangeHandler = (value: string) => {
-		// 타이틀 인풋의 입력값을 콘솔에 출력
-		console.log('title:', value);
 		// setTitle(value);
 		setPostInput((prev) => ({
 			...prev,
@@ -90,8 +88,6 @@ const CreateFreePostPage: React.FC = () => {
 	};
 
 	const contentInputChangeHandler = (value: string) => {
-		// 타이틀 인풋의 입력값을 콘솔에 출력
-		console.log('content:', value);
 		setPostInput((prev) => ({
 			...prev,
 			content: value,
@@ -99,8 +95,6 @@ const CreateFreePostPage: React.FC = () => {
 	};
 
 	const linkInputChangeHandler = (value: string) => {
-		// 타이틀 인풋의 입력값을 콘솔에 출력
-		console.log('content:', value);
 		setPostInput((prev) => ({
 			...prev,
 			link: value,
@@ -156,8 +150,6 @@ const CreateFreePostPage: React.FC = () => {
 
 			setSelectedImages(truncatedFiles as unknown as FileList);
 			setImageUrl([...imageUrls]);
-
-			console.log(e.target.files);
 		},
 		[],
 	);
@@ -177,10 +169,6 @@ const CreateFreePostPage: React.FC = () => {
 			setIsRegisterButtonEnabled(true);
 		}
 	}, [postInput]);
-
-	useEffect(() => {
-		console.log(imageUrl);
-	}, [imageUrl]);
 
 	return (
 		<StyledCreateEurekaPostContainer>

@@ -195,8 +195,6 @@ const EurekaPostViewPage = () => {
 		navigation('like');
 	}, [navigation]);
 
-	console.log('userId', feed?.user.githubId);
-
 	const onClickUserProfile = useCallback(() => {
 		if (feed) {
 			navigation(`/profiles/${feed.user.githubId}`);
@@ -259,8 +257,6 @@ const EurekaPostViewPage = () => {
 	}, [authHttp, input, feed]);
 
 	const onClickCommentMenuOpen = useCallback((commentId: number) => {
-		console.log(commentId, '선택된 메뉴 오픈');
-
 		setIsCommentMenuOpen(true);
 		setseletedComment(commentId);
 	}, []);
@@ -271,8 +267,6 @@ const EurekaPostViewPage = () => {
 	);
 
 	const onClickCommentDelete = useCallback(() => {
-		console.log('삭제할 댓글 번호', seletedComment);
-
 		if (confirm('정말 삭제하시겠습니까?')) {
 			authHttp.delete(`e-comments/${seletedComment}`).then(() => {
 				alert('댓글이 삭제됬습니다.');

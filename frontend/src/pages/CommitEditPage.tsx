@@ -240,7 +240,6 @@ const CommitEditPage = () => {
 				} else {
 					setCommitTags(response); // 받아온 데이터를 commitTags 상태에 설정
 				}
-				console.log('커밋 메시지를 불러왔습니다.', response);
 			})
 			.catch((error) => {
 				console.error('커밋 메시지를 불러오지 못했습니다.', error);
@@ -286,11 +285,9 @@ const CommitEditPage = () => {
 
 	// 커밋 메시지 저장
 	const handleSaveButtonClick = () => {
-		console.log(commitTags);
 		authHttp
 			.post('users/commit-custom', commitTags) // API 요청
 			.then(() => {
-				console.log(commitTags);
 				navigation(`/profiles/${id}`);
 			})
 			.catch((error) => {

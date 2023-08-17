@@ -39,7 +39,6 @@ const Sidebar = ({ children, open }: Props) => {
 		} else {
 			setXPosition(sidebarRef.current?.clientWidth ?? 0);
 		}
-		console.log(xPosition, open);
 	}, [open]);
 
 	return (

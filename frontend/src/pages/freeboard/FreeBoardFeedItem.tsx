@@ -169,10 +169,6 @@ const FreeBoardFeedItem = ({ feed, onClickComment }: Props) => {
 	}, []);
 
 	useEffect(() => {
-		console.log(feed);
-	}, [feed]);
-
-	useEffect(() => {
 		const found = feed.likedUsers.find((user) => user.githubId === githubId);
 		if (found) {
 			setLiked(true);

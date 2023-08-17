@@ -125,8 +125,6 @@ const MainPage = () => {
 	);
 
 	const onClickComment = useCallback((id: number) => {
-		console.log('흘깃 댓글 클릭!');
-
 		setSelelctedComment(id);
 		setIsCommentOpen(true);
 	}, []);
@@ -150,7 +148,6 @@ const MainPage = () => {
 				// 특정 요소를 클릭한 경우, 함수를 바로 종료시킴
 				return;
 			}
-			console.log(e.target);
 			setIsCalendarOpen(false);
 		},
 		[],
@@ -207,8 +204,6 @@ const MainPage = () => {
 		({ pageParam = 1 }) => loadFeedList(pageParam),
 		{
 			getNextPageParam: (lastPage, allPages) => {
-				console.log('[allPage]', allPages);
-
 				if (lastPage.last) return;
 				return allPages.length + 1;
 			},

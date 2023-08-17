@@ -2,7 +2,7 @@
 
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { styled } from 'styled-components';
 import { FreeBoardPostResponseType } from '@typedef/community/freeboard.types';
 import { formatDateFromString } from '@utils/date';
@@ -249,10 +249,6 @@ const FreePostViewFeedMobile = ({
 	if (!feed) {
 		return <Loading />;
 	}
-
-	useEffect(() => {
-		console.log(feed);
-	}, [feed]);
 
 	return (
 		<StyledFeedItemContainer>

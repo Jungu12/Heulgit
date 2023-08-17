@@ -61,7 +61,6 @@ const EurekaFeedItemListMobile = ({
 	// 댓글 모달 나오게 할 거
 	const onClickComment = useCallback(
 		(id: number) => {
-			console.log('댓글 클릭');
 			setSeletedComment(id);
 			setIsCommentOpen(true);
 		},
@@ -74,7 +73,6 @@ const EurekaFeedItemListMobile = ({
 			setMentionList(
 				mentions.map((mention) => mention.display.replace(/@|\s/g, '')),
 			);
-			console.log(`${newValue} ${newPlainTextValue} ${mentions}`);
 		},
 		[],
 	);
@@ -86,7 +84,7 @@ const EurekaFeedItemListMobile = ({
 			);
 			setCommentList(res);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	}, [setCommentList, authHttp, seletedComment]);
 
@@ -119,7 +117,6 @@ const EurekaFeedItemListMobile = ({
 			if (confirm('정말 삭제하시겠습니까?')) {
 				authHttp.delete(`e-comments/${commentId}`).then(() => {
 					loadCommentList();
-					console.log('삭제 성공');
 				});
 			}
 		},
