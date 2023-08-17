@@ -154,13 +154,8 @@ type Props = {
 };
 
 const MarkdownRenderer = React.memo(({ text, type }: Props) => {
-	let memoizedText = useMemo(() => decodeUnicode(text), [text]);
-	console.log('디코딩 버전', memoizedText);
-
-	if (type === 'text') {
-		memoizedText = text;
-		console.log('원본', memoizedText);
-	}
+	const memoizedText = useMemo(() => decodeUnicode(text), [text]);
+	console.log('원본', text);
 
 	return (
 		<StyledMarkDownContainer>
@@ -240,7 +235,7 @@ const MarkdownRenderer = React.memo(({ text, type }: Props) => {
 					},
 				}}
 			>
-				{memoizedText}
+				{type === 'text' ? text : memoizedText}
 			</ReactMarkdown>
 		</StyledMarkDownContainer>
 	);
