@@ -1,7 +1,7 @@
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
 import { RootState } from '@store/index';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
@@ -84,29 +84,11 @@ const StyledRegisterButton = styled.button`
 
 type Props = {
 	input?: string;
-	onSubmitComment?: () => void;
+	onSubmitComment: () => void;
 	handleInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
-	const onKeyDown = useCallback(
-		(
-			event:
-				| React.KeyboardEvent<HTMLInputElement>
-				| React.KeyboardEvent<HTMLTextAreaElement>,
-		) => {
-			if (event.key === 'Enter' && event.shiftKey) {
-				// 쉬프트 + 엔터키를 누르면 줄바꿈 로직 실행
-				return;
-			}
-			if (event.key === 'Enter') {
-				console.log('엔텅 ㅋㅋ');
-				if (onSubmitComment) onSubmitComment();
-			}
-		},
-		[],
-	);
-
 	const userImage = useSelector(
 		(state: RootState) => state.user.user?.avatarUrl,
 	);
@@ -120,7 +102,13 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 				<StyledCommentInput
 					value={input}
 					onChange={handleInputChange}
-					onKeyDown={onKeyDown}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault(); // 엔터 키의 기본 동작 막기
+							if (e.shiftKey) return;
+							onSubmitComment();
+						}
+					}}
 				/>
 				<StyledRegisterButton>
 					<img src={images.send} alt="send" onClick={onSubmitComment} />
