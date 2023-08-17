@@ -115,7 +115,8 @@ const ChatPage = () => {
 	}, []);
 
 	const chatRoomSort = useCallback(() => {
-		chatRoomList.sort(
+		const sortedChatRoom = [...chatRoomList];
+		sortedChatRoom.sort(
 			(room1, room2) =>
 				new Date(
 					room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
@@ -124,6 +125,7 @@ const ChatPage = () => {
 					room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
 				).getTime(),
 		);
+		setChatRoomList(sortedChatRoom);
 	}, [chatRoomList]);
 
 	useEffect(() => {
@@ -136,6 +138,7 @@ const ChatPage = () => {
 
 	// 채팅방 시간 순으로 정렬
 	useEffect(() => {
+		console.log('채팅방 정렬 시작');
 		chatRoomSort();
 	}, [chatRoomList]);
 
