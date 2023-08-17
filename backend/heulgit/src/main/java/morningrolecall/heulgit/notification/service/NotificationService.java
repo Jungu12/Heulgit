@@ -102,6 +102,7 @@ public class NotificationService {
 		logger.debug("sendLostData()");
 
 		Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByGithubId(githubId);
+		
 		eventCaches.entrySet().stream()
 			.filter(entry -> lastEventId.compareTo(entry.getKey())<0)
 			.forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
@@ -113,6 +114,7 @@ public class NotificationService {
 	public void send(NotificationResponse notificationResponse){
 		logger.debug("send()");
 		Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByGithubId(notificationResponse.getReceiver().getGithubId());
+		logger.debug("test",sseEmitters.size());
 		sseEmitters.forEach(
 			(key, emitter) ->{
 				// 데이터 캐시 저장(유실된 데이터 처리하기 위함)
