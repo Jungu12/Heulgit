@@ -3,8 +3,9 @@ import { images } from '@constants/images';
 import { RootState } from '@store/index';
 import { EurekaCommentType } from '@typedef/community/eureka.types';
 import { getTimeAgo } from '@utils/date';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 // 댓글 컨테이너
@@ -90,14 +91,25 @@ type Props = {
 };
 
 const EurekaPostComment = ({ comment, onClickCommentMenuOpen }: Props) => {
+	const navigation = useNavigate();
 	const user = useSelector((state: RootState) => state.user.user);
+
+	const goUserProfile = useCallback(() => {
+		navigation(`/profiles/${comment.user.githubId}`);
+	}, [comment.user.githubId]);
 
 	return (
 		<StyledComment>
 			<StyledProfileContainer>
-				<StyledProfile src={comment.user.avatarUrl} alt="profile" />
+				<StyledProfile
+					onClick={goUserProfile}
+					src={comment.user.avatarUrl}
+					alt="profile"
+				/>
 				<StyledContentBox>
-					<StyledUserName>{comment.user.githubId}</StyledUserName>
+					<StyledUserName onClick={goUserProfile}>
+						{comment.user.githubId}
+					</StyledUserName>
 					<StyledContent>{comment.content}</StyledContent>
 					{/* <StyledReply>답글 달기</StyledReply> */}
 				</StyledContentBox>
