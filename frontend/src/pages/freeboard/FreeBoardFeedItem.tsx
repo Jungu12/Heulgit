@@ -76,7 +76,7 @@ const StyledContentContainer = styled.div`
 	margin: 20px 12px 0px 12px;
 
 	font-size: 18px;
-
+	line-height: 1.25;
 	max-width: 95vw;
 	overflow: hidden;
 	display: -webkit-box;

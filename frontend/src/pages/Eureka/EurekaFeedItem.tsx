@@ -69,11 +69,10 @@ const StyledContentContainer = styled.div`
 	display: block;
 	/* flex-direction: column; */
 	margin: 20px 12px 0px 12px;
-
 	font-size: 18px;
-
 	max-width: 95vw;
 	overflow: hidden;
+	line-height: 1.25;
 	display: -webkit-box;
 	-webkit-line-clamp: 3; /* 세 줄까지 표시 */
 	-webkit-box-orient: vertical;
