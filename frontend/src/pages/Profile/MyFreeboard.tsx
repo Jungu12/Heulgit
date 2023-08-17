@@ -7,6 +7,7 @@ import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
 import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 import Loading from '@components/common/Loading';
 import { useParams } from 'react-router-dom';
+import MySeparation from '@components/myActivity/MySeparation';
 
 const StyledBox = styled.div`
 	width: 100%;
@@ -49,7 +50,10 @@ const MyFreeboard = () => {
 				>
 					{myFreeBoardList.pages.map((freeboard) =>
 						freeboard.content.map((item) => (
-							<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
+							<div>
+								<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
+								<MySeparation />
+							</div>
 						)),
 					)}
 				</InfiniteScroll>

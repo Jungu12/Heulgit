@@ -7,6 +7,7 @@ import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
 import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
 import Loading from '@components/common/Loading';
 import { useParams } from 'react-router-dom';
+import MySeparation from '@components/myActivity/MySeparation';
 
 const StyledBox = styled.div`
 	width: 100%;
@@ -49,7 +50,10 @@ const MyEureka = () => {
 				>
 					{myEurekaList.pages.map((eureka) =>
 						eureka.content.map((item) => (
-							<EurekaFeedItem key={item.eurekaId} feed={item} />
+							<div>
+								<EurekaFeedItem key={item.eurekaId} feed={item} />
+								<MySeparation />
+							</div>
 						)),
 					)}
 				</InfiniteScroll>
