@@ -15,5 +15,5 @@ export type ChatRoomType = {
 
 export type UserDetailType = {
 	id: string;
-	avatar_url: string;
+	avater_url: string;
 };

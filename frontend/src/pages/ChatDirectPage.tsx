@@ -251,6 +251,11 @@ const ChatDirectPage = () => {
 						{messageList.map((msg, index) => (
 							<ChatBox
 								key={index}
+								profile={findParter(
+									user?.githubId,
+									state.room.user1.avater_url,
+									state.room.user2.avater_url,
+								)}
 								message={msg.message}
 								$isUser={msg.sender === user.githubId}
 							/>

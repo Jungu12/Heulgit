@@ -30,13 +30,14 @@ const StyledUserImage = styled.img`
 
 type MessageItemProps = {
 	message: string;
+	profile: string;
 	$isUser: boolean;
 };
 
-const ChatBox = ({ message, $isUser }: MessageItemProps) => {
+const ChatBox = ({ message, $isUser, profile }: MessageItemProps) => {
 	return (
 		<StyledMessageBox $isUser={$isUser}>
-			{!$isUser && <StyledUserImage src={''} />}
+			{!$isUser && <StyledUserImage src={profile} />}
 			<StyledMessageItem $isUser={$isUser}>{message}</StyledMessageItem>
 		</StyledMessageBox>
 	);

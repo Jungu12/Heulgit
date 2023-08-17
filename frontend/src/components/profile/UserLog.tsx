@@ -82,7 +82,7 @@ type Props = {
 const UserLog = ({ user, userLog, logDate, unReadNum }: Props) => {
 	return (
 		<StyledUserLog>
-			<StyledUserImage src={user.avatar_url} alt="User" />
+			<StyledUserImage src={user.avater_url} alt="User" />
 			<StyeldChatDataContainer>
 				<StyledLog>
 					<StyledUserName>{user.id}</StyledUserName>

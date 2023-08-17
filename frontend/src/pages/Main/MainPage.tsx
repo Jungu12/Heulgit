@@ -224,17 +224,6 @@ const MainPage = () => {
 		}
 	}, [endDate]);
 
-	// 정렬 조건이 바뀌는 경우 다시 api 호출
-	// useEffect(() => {
-	// 	if (endDate || selelctedOption !== '흘깃' || selectedLanguage) {
-	// 		//  .setQueryData(['projects'], (data) => ({
-	// 		// 	pages: data.pages.slice(1)
-	// 		// 	pageParams: data.pageParams.slice(1),
-	// 		// }));
-	// 		refetch();
-	// 	}
-	// }, [selelctedOption, selectedLanguage, endDate]);
-
 	useEffect(() => {
 		console.log('댓글 바텀시트', isCommentOpen);
 	}, [isCommentOpen]);
