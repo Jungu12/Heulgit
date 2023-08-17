@@ -216,7 +216,7 @@ const MainPage = () => {
 		try {
 			await authHttp.post<HeulgitCommentWriteType>('h-comments/comments', {
 				content: commentInput,
-				eurekaId: selelctedComment,
+				heulgitId: selelctedComment,
 				mentionedFollowers: mentionList,
 				parentId: null,
 			});
