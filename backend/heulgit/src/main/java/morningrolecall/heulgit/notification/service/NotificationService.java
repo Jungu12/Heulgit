@@ -135,7 +135,7 @@ public class NotificationService {
 				// .reconnectTime(0));
 		} catch (Exception exception) {
 			logger.debug("예외");
-			logger.debug(exception);
+			logger.debug(exception.getMessage());
 			emitterRepository.deleteById(id);
 			emitter.completeWithError(exception);
 		}
