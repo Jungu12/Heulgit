@@ -127,13 +127,14 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 				| React.KeyboardEvent<HTMLInputElement>
 				| React.KeyboardEvent<HTMLTextAreaElement>,
 		) => {
-			if (event.key === 'Enter' && !event.shiftKey) {
+			if (event.key === 'Enter' && event.shiftKey) {
+				// 쉬프트 + 엔터키를 누르면 줄바꿈 로직 실행
+				return;
+			}
+			if (event.key === 'Enter') {
 				// 엔터키를 누르면 전송 로직 실행
 				event.preventDefault(); // 기본 엔터 동작 방지
 				onClickSubbmit();
-			} else if (event.key === 'Enter' && event.shiftKey) {
-				// 쉬프트 + 엔터키를 누르면 줄바꿈 로직 실행
-				return;
 			}
 		},
 		[],
@@ -152,7 +153,7 @@ const CommentInput = ({ input, onHandleComment, onClickSubbmit }: Props) => {
 			<StyledProfile src={user?.avatarUrl} alt="profile" />
 			<StyledInputContainer>
 				<StyledInput
-					placeholder="댓글을 입력해주세요."
+					placeholder="댓글은 50자까지 입력이 가능합니다."
 					maxLength={50}
 					value={input}
 					onChange={onHandleComment}

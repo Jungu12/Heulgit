@@ -95,13 +95,14 @@ const CommentInput = ({ input, onSubmitComment, handleInputChange }: Props) => {
 				| React.KeyboardEvent<HTMLInputElement>
 				| React.KeyboardEvent<HTMLTextAreaElement>,
 		) => {
-			if (event.key === 'Enter' && !event.shiftKey) {
-				// 엔터키를 누르면 전송 로직 실행
-				event.preventDefault(); // 기본 엔터 동작 방지
-				if (onSubmitComment) onSubmitComment();
-			} else if (event.key === 'Enter' && event.shiftKey) {
+			if (event.key === 'Enter' && event.shiftKey) {
 				// 쉬프트 + 엔터키를 누르면 줄바꿈 로직 실행
 				return;
+			}
+			if (event.key === 'Enter') {
+				console.log('엔텅 ㅋㅋ');
+				event.preventDefault();
+				if (onSubmitComment) onSubmitComment();
 			}
 		},
 		[],
