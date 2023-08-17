@@ -220,6 +220,7 @@ const StyledLikedSiteTitle = styled.div`
 
 const StyledLabelContainer = styled.div`
 	display: flex;
+	margin: 12px 0;
 `;
 
 const StyledLabel = styled.span<LabelProps>`
