@@ -76,12 +76,6 @@ const MainPage = () => {
 		],
 	);
 
-	// const loadNextFeedList = useCallback(() => {
-	// 	const next = page + 1;
-	// 	setPage(next);
-	// 	loadFeedList(next);
-	// }, [page]);
-
 	const onClickHeulGit = useCallback(() => {
 		setSelelctedOption('흘깃');
 		setIsViewOptionOpen(false);
@@ -136,7 +130,6 @@ const MainPage = () => {
 				return;
 			}
 			console.log(e.target);
-			// e.preventDefault();
 			setIsCalendarOpen(false);
 		},
 		[],
@@ -189,7 +182,6 @@ const MainPage = () => {
 
 	const onClickSubbmit = useCallback(async () => {
 		if (commentInput.trim() === '') return;
-
 		try {
 			await authHttp.post<HeulgitCommentWriteType>('h-comments/comments', {
 				content: commentInput,
@@ -211,8 +203,8 @@ const MainPage = () => {
 		loadCommentList,
 	]);
 
-	const { data, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery(
-		['infiniteHeulgitFeed'],
+	const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
+		['infiniteHeulgitFeed', endDate, selelctedOption, selectedLanguage],
 		({ pageParam = 1 }) => loadFeedList(pageParam),
 		{
 			getNextPageParam: (lastPage, allPages) => {
@@ -221,7 +213,7 @@ const MainPage = () => {
 				if (lastPage.length < 20) return;
 				return allPages.length + 1;
 			},
-			staleTime: 600000,
+			staleTime: 100000,
 		},
 	);
 
@@ -232,12 +224,16 @@ const MainPage = () => {
 		}
 	}, [endDate]);
 
-	useEffect(() => {
-		console.log(endDate, startDate);
-		if (endDate || selelctedOption !== '흘깃' || selectedLanguage) {
-			refetch();
-		}
-	}, [selelctedOption, selectedLanguage, endDate]);
+	// 정렬 조건이 바뀌는 경우 다시 api 호출
+	// useEffect(() => {
+	// 	if (endDate || selelctedOption !== '흘깃' || selectedLanguage) {
+	// 		//  .setQueryData(['projects'], (data) => ({
+	// 		// 	pages: data.pages.slice(1)
+	// 		// 	pageParams: data.pageParams.slice(1),
+	// 		// }));
+	// 		refetch();
+	// 	}
+	// }, [selelctedOption, selectedLanguage, endDate]);
 
 	useEffect(() => {
 		console.log('댓글 바텀시트', isCommentOpen);

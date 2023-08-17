@@ -94,8 +94,8 @@ const ChatPage = () => {
 		[accessToken, client],
 	);
 
-	const findPartnerId = useCallback((room: ChatRoomType) => {
-		return 'ksg2388' === room.user1 ? room.user2 : room.user1;
+	const findPartnerId = useCallback((userId: string, room: ChatRoomType) => {
+		return 'userId' === room.user1 ? room.user2 : room.user1;
 	}, []);
 
 	const getLastMessage = useCallback((room: ChatRoomType) => {
@@ -118,10 +118,10 @@ const ChatPage = () => {
 		chatRoomList.sort(
 			(room1, room2) =>
 				new Date(
-					room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
+					room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
 				).getTime() -
 				new Date(
-					room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
+					room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
 				).getTime(),
 		);
 	}, [chatRoomList]);
@@ -168,7 +168,7 @@ const ChatPage = () => {
 							chatRoomList.map((room) => (
 								<div onClick={() => onClickChatRoom(room)}>
 									<UserLog
-										userLName={findPartnerId(room)}
+										userLName={findPartnerId(user.githubId, room)}
 										userLog={getLastMessage(room)}
 										logDate={getLastMessageTime(room)}
 										unReadNum={findUnReadMessage(

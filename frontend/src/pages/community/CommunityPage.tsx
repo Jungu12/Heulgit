@@ -169,20 +169,24 @@ const CommunityPage = () => {
 	const eurekaNextPageLoad = useCallback(async () => {
 		const nextPage = page + 1;
 		setPage(nextPage);
+		setEurekaHasMore(false);
 		getEurekaFeedList(seletedSort, nextPage).then((res) => {
 			if (res.length < 20) {
 				setEurekaHasMore(false);
 			}
 			const newFeedList = [...feedList, ...res];
 			setFeedList(newFeedList);
+			setEurekaHasMore(true);
 		});
 	}, [seletedSort, page, feedList]);
 
 	// 컴포넌트 렌더링 시 FeedList 불러옴
 	useEffect(() => {
 		getEurekaFeedList(seletedSort, page).then((res) => {
+			if (res.length < 20) {
+				setEurekaHasMore(false);
+			}
 			setFeedList(res);
-			console.log('새로운 데이터', res);
 		});
 	}, []);
 

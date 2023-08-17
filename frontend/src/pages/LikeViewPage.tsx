@@ -189,7 +189,7 @@ const LikeViewPage: React.FC = () => {
 						next={fetchNextPage}
 						hasMore={hasNextPage ? true : false}
 						loader={<div>loading...</div>}
-						height={`calc(100vh)`}
+						height={`calc(100vh - 104.5px)`}
 						style={{
 							overflowY: 'scroll',
 							overflowX: 'hidden',
