@@ -60,10 +60,10 @@ public class NotificationController {
 
 	}
 
-	@GetMapping("/isread/{notificationId}")
-	public ResponseEntity<?> changeReadState(@AuthenticationPrincipal String githubId ,@PathVariable Long notificationId){
-		notificationService.changeNotificationState(notificationId,githubId);
-		logger.debug("changeReadState(), notificaiton={}", notificationId  );
+	@GetMapping("/isread")
+	public ResponseEntity<?> changeReadState(@AuthenticationPrincipal String githubId ){
+		notificationService.changeNotificationState(githubId);
+		logger.debug("changeReadState(), who={}", githubId );
 		return ResponseEntity.ok().build();
 	}
 
