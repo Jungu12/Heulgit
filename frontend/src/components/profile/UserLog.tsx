@@ -51,7 +51,7 @@ const StyledInfoContainer = styled.div`
 	.current-date {
 		font-size: 14px;
 		font-weight: 500;
-		color: ${colors.greyScale.grey3};
+		color: ${colors.greyScale.grey4};
 	}
 `;
 
@@ -69,7 +69,7 @@ const StyledUserName = styled.p`
 const StyledLastMessage = styled.p<LogProps>`
 	font-size: 14px;
 	font-weight: 500;
-	color: ${(props) => (props.$isRead ? 'black' : colors.greyScale.grey3)};
+	color: ${(props) => (props.$isRead ? 'black' : colors.greyScale.grey4)};
 `;
 
 type Props = {

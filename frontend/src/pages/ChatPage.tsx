@@ -95,7 +95,7 @@ const ChatPage = () => {
 	);
 
 	const findPartner = useCallback((userId: string, room: ChatRoomType) => {
-		return 'userId' === room.user1.id ? room.user2 : room.user1;
+		return userId === room.user1.id ? room.user2 : room.user1;
 	}, []);
 
 	const getLastMessage = useCallback((room: ChatRoomType) => {
