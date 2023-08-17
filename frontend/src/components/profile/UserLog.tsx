@@ -1,4 +1,5 @@
 import { colors } from '@constants/colors';
+import { UserDetailType } from '@typedef/gm/gm.types';
 import { getTimeAgo } from '@utils/date';
 import React from 'react';
 import { styled } from 'styled-components';
@@ -72,19 +73,19 @@ const StyledLastMessage = styled.p<LogProps>`
 `;
 
 type Props = {
-	userLName: string;
+	user: UserDetailType;
 	userLog: string;
 	logDate: string;
 	unReadNum: number;
 };
 
-const UserLog = ({ userLName, userLog, logDate, unReadNum }: Props) => {
+const UserLog = ({ user, userLog, logDate, unReadNum }: Props) => {
 	return (
 		<StyledUserLog>
-			<StyledUserImage src="" alt="User" />
+			<StyledUserImage src={user.avatar_url} alt="User" />
 			<StyeldChatDataContainer>
 				<StyledLog>
-					<StyledUserName>{userLName}</StyledUserName>
+					<StyledUserName>{user.id}</StyledUserName>
 					<StyledLastMessage $isRead={unReadNum > 0}>
 						{userLog}
 					</StyledLastMessage>

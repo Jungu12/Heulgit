@@ -94,8 +94,8 @@ const ChatPage = () => {
 		[accessToken, client],
 	);
 
-	const findPartnerId = useCallback((userId: string, room: ChatRoomType) => {
-		return 'userId' === room.user1 ? room.user2 : room.user1;
+	const findPartner = useCallback((userId: string, room: ChatRoomType) => {
+		return 'userId' === room.user1.id ? room.user2 : room.user1;
 	}, []);
 
 	const getLastMessage = useCallback((room: ChatRoomType) => {
@@ -168,7 +168,7 @@ const ChatPage = () => {
 							chatRoomList.map((room) => (
 								<div onClick={() => onClickChatRoom(room)}>
 									<UserLog
-										userLName={findPartnerId(user.githubId, room)}
+										user={findPartner(user.githubId, room)}
 										userLog={getLastMessage(room)}
 										logDate={getLastMessageTime(room)}
 										unReadNum={findUnReadMessage(

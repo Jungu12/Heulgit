@@ -191,8 +191,8 @@ const ChatDirectPage = () => {
 				.delete(
 					`gm/room/out/${findParter(
 						user.githubId,
-						state.room.user1,
-						state.room.user2,
+						state.room.user1.id,
+						state.room.user2.id,
 					)}`,
 				)
 				.then(() => console.log('채팅방 나가짐'));
@@ -242,8 +242,8 @@ const ChatDirectPage = () => {
 						<Header
 							title={findParter(
 								user?.githubId,
-								state.room.user1,
-								state.room.user2,
+								state.room.user1.id,
+								state.room.user2.id,
 							)}
 						/>
 					</StyledHeader>

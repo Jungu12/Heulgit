@@ -8,7 +8,12 @@ export type MessageType = {
 
 export type ChatRoomType = {
 	roomId: string;
-	user1: string;
-	user2: string;
+	user1: UserDetailType;
+	user2: UserDetailType;
 	chatMessages: MessageType[];
+};
+
+export type UserDetailType = {
+	id: string;
+	avatar_url: string;
 };
