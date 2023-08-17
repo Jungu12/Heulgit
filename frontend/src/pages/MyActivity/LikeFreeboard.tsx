@@ -1,4 +1,5 @@
 import Loading from '@components/common/Loading';
+import MySeparation from '@components/myActivity/MySeparation';
 import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
@@ -42,7 +43,10 @@ const LikeFreeboard = () => {
 				>
 					{likeFreeboardList.pages.map((free) =>
 						free.content.map((item) => (
-							<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
+							<div>
+								<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
+								<MySeparation />
+							</div>
 						)),
 					)}
 				</InfiniteScroll>

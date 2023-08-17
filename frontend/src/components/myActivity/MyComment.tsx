@@ -1,7 +1,7 @@
 import { colors } from '@constants/colors';
-import { images } from '@constants/images';
 import { RootState } from '@store/index';
 import { UserCommentType } from '@typedef/profile/user.types';
+import { getTimeAgo } from '@utils/date';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
@@ -26,14 +26,13 @@ const StyledContentBox = styled.div`
 
 const StyledUserName = styled.p`
 	font-size: 14px;
-	font-weight: 500;
-	margin-bottom: 6px;
+	font-weight: 700;
+	margin-bottom: 10px;
 `;
 
 const StyledContent = styled.p`
 	font-size: 14px;
 	font-weight: 500;
-	margin-bottom: 10px;
 `;
 
 const StyledOptionContainer = styled.div`
@@ -66,8 +65,7 @@ const MyComment = ({ comment }: Props) => {
 				<StyledContent>{comment.content}</StyledContent>
 			</StyledContentBox>
 			<StyledOptionContainer>
-				{comment.updatedDate}
-				<img src={images.menu} alt="option" />
+				{getTimeAgo(comment.updatedDate)}
 			</StyledOptionContainer>
 		</StyledComment>
 	);
