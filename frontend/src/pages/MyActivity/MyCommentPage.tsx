@@ -94,7 +94,7 @@ const MyCommentPage = () => {
 	// 댓글 불러오기
 	useEffect(() => {
 		authHttp
-			.get<UserCommentType>('users/activities/my-comments')
+			.get<UserCommentType>('users/activities/my-comments?pages=1')
 			.then((response) => {
 				console.log('내 댓글 성공.', response);
 			})
