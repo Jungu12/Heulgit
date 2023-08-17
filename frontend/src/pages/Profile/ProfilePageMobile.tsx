@@ -12,6 +12,7 @@ import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
 import { UserType } from '@typedef/common.types';
 import { UserFollowingType } from '@typedef/profile/user.types';
+import MySeparation from '@components/myActivity/MySeparation';
 
 const StyledProfilePage = styled.div``;
 
@@ -39,6 +40,7 @@ const StyledUserImage = styled.img`
 const StyledUserInformation = styled.div`
 	display: flex;
 	flex-direction: column;
+	align-content: center;
 	margin-left: 20px;
 	font-size: 16px;
 
@@ -59,10 +61,12 @@ const StyledUserName = styled.div`
 		font-size: 20px;
 	}
 `;
-
 const StyledAddInfo = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+
 	margin-left: 10px;
-	margin-top: 10px;
 	font-size: 16px;
 `;
 
@@ -242,6 +246,7 @@ const ProfilePageMobile = ({
 				<StyledUserProfile>
 					<StyledUserImage src={loadedUser?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
+						{/* 유저이름 + 깃허브 이동 */}
 						<StyledUserName>
 							<div>{loadedUser?.githubId}</div>
 							{userId !== user?.githubId ? (
@@ -260,7 +265,7 @@ const ProfilePageMobile = ({
 								<></>
 							)}
 						</StyledUserName>
-
+						{/* 팔로잉/팔로워 수 */}
 						<div className="user-follow">
 							<StyledFollowing
 								onClick={() => navigation(`/profiles/${userId}/following`)}
@@ -273,7 +278,8 @@ const ProfilePageMobile = ({
 								<div>팔로워 {followerData}</div>
 							</StyledFollower>
 						</div>
-						{/* 유저 정보 */}
+						<MySeparation />
+						{/* 추가 정보 */}
 						{userInfo && (
 							<StyledAddInfo>
 								{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
