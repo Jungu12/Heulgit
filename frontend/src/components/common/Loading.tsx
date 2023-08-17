@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled } from 'styled-components';
 import Lottie from 'lottie-react';
+import loadCatPaw from '../../cat-loading-paw.json';
 
 const StyledLoadingContainer = styled.div`
 	width: 100%;
@@ -14,7 +15,7 @@ const Loading = () => {
 	return (
 		<StyledLoadingContainer>
 			<Lottie
-				animationData={'/assets/lottie/cat-loading-paw.json'}
+				animationData={loadCatPaw}
 				loop={true}
 				style={{ width: '180px', height: '180px' }}
 			/>
