@@ -182,6 +182,13 @@ const FeedItem = ({ feed, type, onClickComment }: Props) => {
 							onClick={onClickLikeIcon}
 						/>
 					)}
+					<img
+						src={images.chat}
+						alt="comment_button"
+						onClick={
+							onClickComment ? () => onClickComment(feed.heulgitId) : () => {}
+						}
+					/>
 					<StyledLink
 						to={`https://github.com/${feed.githubId}/${feed.heulgitName}`}
 						target="_blank"
