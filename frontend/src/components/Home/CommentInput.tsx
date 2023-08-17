@@ -79,6 +79,7 @@ const StyledMentionContainer = styled.div`
 	align-items: center;
 	padding: 5px 15px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+	cursor: pointer;
 
 	&:focus {
 		background-color: #cee4e5;

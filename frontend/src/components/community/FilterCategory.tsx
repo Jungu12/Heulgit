@@ -28,6 +28,7 @@ const StyledFilterButton = styled.button<{ $active: boolean }>`
 	padding: 0;
 	width: 88px;
 	height: 28px;
+	cursor: pointer;
 
 	border: solid 2px
 		${({ $active }) =>

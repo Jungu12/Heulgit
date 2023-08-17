@@ -48,6 +48,7 @@ const StyledBackButton = styled.img`
 	height: 24px;
 	width: 24px;
 	margin-left: 8px;
+	cursor: pointer;
 `;
 
 const StyledCategory = styled.div`
@@ -65,6 +66,7 @@ const StyledCategoryItem = styled.div<StyledCategoryItemProps>`
 	font-size: 16px;
 	font-weight: 600;
 	color: ${colors.greyScale.grey4};
+	cursor: pointer;
 
 	${(props) =>
 		props.$isSeleted &&
@@ -118,6 +120,7 @@ const StyledDropDown = styled.ul`
 	letter-spacing: -0.24px;
 	gap: 4px;
 	z-index: 10;
+	cursor: pointer;
 
 	&.active {
 		opacity: 1;
@@ -152,6 +155,7 @@ const StyledUserItem = styled.div`
 	height: 80px;
 	width: 100%;
 	padding: 12px 16px;
+	cursor: pointer;
 
 	img {
 		width: 48px;
@@ -330,7 +334,7 @@ const SearchResultPage = () => {
 						next={heulgitFetchNextPage}
 						hasMore={heulgitHasNextPage ? true : false}
 						loader={<Loading />}
-						height={`calc(100vh - 134px)`}
+						height={`calc(100vh - 118px)`}
 						style={{
 							overflowY: 'scroll',
 							overflowX: 'hidden',
