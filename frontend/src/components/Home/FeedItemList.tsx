@@ -38,31 +38,37 @@ const FeedItemList = ({
 	onClickComment,
 	loadNextFeedList,
 }: Props) => {
+	console.log(feedList);
+
 	return (
 		<StyledFeedListSection>
-			<InfiniteScroll
-				dataLength={feedList.length}
-				next={loadNextFeedList}
-				hasMore={hasMore}
-				style={{
-					overflowX: 'hidden',
-				}}
-				loader={<Loading />}
-				height={`calc(100vh - 193px)`}
-			>
-				{feedList.map((page) =>
-					page.map((feed, index) => (
-						<div key={index}>
-							<FeedItem
-								feed={feed}
-								type="summary"
-								onClickComment={onClickComment}
-							/>
-							<Separation />
-						</div>
-					)),
-				)}
-			</InfiniteScroll>
+			{feedList ? (
+				<InfiniteScroll
+					dataLength={feedList.length}
+					next={loadNextFeedList}
+					hasMore={hasMore}
+					style={{
+						overflowX: 'hidden',
+					}}
+					loader={<Loading />}
+					height={`calc(100vh - 193px)`}
+				>
+					{feedList.map((page) =>
+						page.map((feed, index) => (
+							<div key={index}>
+								<FeedItem
+									feed={feed}
+									type="summary"
+									onClickComment={onClickComment}
+								/>
+								<Separation />
+							</div>
+						)),
+					)}
+				</InfiniteScroll>
+			) : (
+				<Loading />
+			)}
 		</StyledFeedListSection>
 	);
 };
