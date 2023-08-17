@@ -144,15 +144,14 @@ const LikeViewPage: React.FC = () => {
 	let curApiLocation = curLoction;
 	if (curApiLocation === 'freeboard') {
 		curApiLocation = 'freeBoard';
-		curApiLocation += 'Id';
 	}
+	curApiLocation += 'Id';
 
-	const getLikeList = useCallback((page: number) => {
-		return authHttp
-			.get<LikedUserListResponse>(
-				`${curLoction}/posts/likes?${curApiLocation}=${id}&pages=${page}`,
-			)
-			.then((res) => res);
+	const getLikeList = useCallback(async (page: number) => {
+		const res = await authHttp.get<LikedUserListResponse>(
+			`${curLoction}/posts/likes?${curApiLocation}=${id}&pages=${page}`,
+		);
+		return res;
 	}, []);
 
 	const { data: likeList } = useInfiniteQuery(
