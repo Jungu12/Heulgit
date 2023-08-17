@@ -57,14 +57,39 @@ export type UserLikePostType = {
 
 // 작성한 댓글
 export type UserCommentType = {
-	posts: [
-		{
-			id: number;
-			type: string;
-			updated_date: string;
-			content: string;
-		},
-	];
+	commentId: number;
+	commentType: string;
+	content: string;
+	githubId: string;
+	updatedDate: string;
+};
+
+// 자유게시판 전체 게시물(피드 페이지네이션 반환)
+export type UserCommentResponseType = {
+	content: UserCommentType[];
+	pageable: {
+		sort: {
+			empty: boolean;
+			sorted: boolean;
+			unsorted: boolean;
+		};
+		offset: number;
+		pageNumber: number;
+		pageSize: number;
+		paged: boolean;
+		unpaged: boolean;
+	};
+	size: number;
+	number: number;
+	sort: {
+		empty: true;
+		sorted: false;
+		unsorted: true;
+	};
+	numberOfElements: number;
+	first: true;
+	last: true;
+	empty: true;
 };
 
 // 작성한 유레카/자유
