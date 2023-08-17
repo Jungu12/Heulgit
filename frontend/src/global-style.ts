@@ -18,35 +18,35 @@ export default createGlobalStyle`
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Black') format('woff');
+    src: url('/assets/fonts/NotoSansKR-Black.woff') format('woff');
     font-weight: 900;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Bold') format('woff');
+    src: url('/assets/fonts/NotoSansKR-Bold.woff') format('woff');
     font-weight: 700;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Medium') format('woff');
+    src: url('/assets/fonts/NotoSansKR-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Regular') format('woff');
+    src: url('/assets/fonts/NotoSansKR-Regular.woff') format('woff');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Light') format('woff');
+    src: url('/assets/fonts/NotoSansKR-Light.woff') format('woff');
     font-weight: 300;
     font-style: normal;
 }
