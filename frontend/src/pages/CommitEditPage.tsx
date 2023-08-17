@@ -101,8 +101,10 @@ const CommitPageMiddle = styled.div`
 	padding: 10px 20px 60px;
 `;
 
+// 커밋 분석 설명
 const StyledCommitNoti = styled.div`
-	color: ${colors.greyScale.grey3};
+	color: ${colors.greyScale.grey4};
+	margin-bottom: 10px;
 `;
 const StyledFooter = styled.div`
 	z-index: 1;

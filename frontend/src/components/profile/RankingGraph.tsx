@@ -25,7 +25,7 @@ const StyledRankingListItem = styled.div<StyledRankingListItemProps>`
 	height: 35px;
 	width: ${(props) =>
 		props.$count === 0 ? '35%' : calculateWidth(props.$rankingNumber)};
-
+	min-width: 150px;
 	background-color: ${(props) =>
 		props.$rankingNumber === 1
 			? colors.primary.primary
