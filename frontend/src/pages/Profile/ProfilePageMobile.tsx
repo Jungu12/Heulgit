@@ -21,7 +21,11 @@ const StyledProfileHigh = styled.div`
 	padding: 20px;
 	position: relative;
 `;
-const StyledUserProfile = styled.div`
+
+type StyledUserProfileProps = {
+	$view: boolean;
+};
+const StyledUserProfile = styled.div<StyledUserProfileProps>`
 	display: flex;
 	justify-content: center;
 	margin-top: 40px;
@@ -39,7 +43,7 @@ const StyledUserInformation = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-left: 20px;
-	font-size: 20px;
+	font-size: 16px;
 	gap: 4px;
 
 	div {
@@ -51,12 +55,15 @@ const StyledUserInformation = styled.div`
 		justify-content: center;
 	}
 `;
+const StyledUserName = styled.div`
+	div {
+		font-weight: 600;
+		font-size: 20px;
+	}
+`;
 
-type StyledUserInfoBoxProps = {
-	$view: boolean;
-};
-const StyledUserInfoBox = styled.div<StyledUserInfoBoxProps>`
-	height: ${(props) => (props.$view ? 'auto' : '0')};
+const StyledAddInfo = styled.div`
+	margin-left: 8px;
 	font-size: 16px;
 `;
 
@@ -234,23 +241,27 @@ const ProfilePageMobile = ({
 		<StyledProfilePage>
 			<StyledProfileHigh>
 				{/* 유저 프로필 */}
-				<StyledUserProfile>
+				<StyledUserProfile $view={view}>
 					<StyledUserImage src={loadedUser?.avatarUrl} alt="user_profile" />
 					<StyledUserInformation>
-						<div className="user-name">
-							{loadedUser?.githubId}
-							{'  '}
+						<StyledUserName>
+							<div>{loadedUser?.githubId}</div>
 							{userId !== user?.githubId ? (
 								<img
 									src={images.profile.githubIcon}
 									alt="깃허브"
 									onClick={goGithub}
-									style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+									style={{
+										cursor: 'pointer',
+										width: '18px',
+										height: '18px',
+										marginLeft: '',
+									}}
 								/>
 							) : (
 								<></>
 							)}
-						</div>
+						</StyledUserName>
 
 						<div className="user-follow">
 							<StyledFollowing
@@ -266,7 +277,7 @@ const ProfilePageMobile = ({
 						</div>
 						{/* 유저 정보 */}
 						{userInfo && (
-							<StyledUserInfoBox $view={view}>
+							<>
 								<div
 									onClick={() => {
 										setView(!view);
@@ -280,7 +291,7 @@ const ProfilePageMobile = ({
 									)}
 								</div>
 								{view && (
-									<div>
+									<StyledAddInfo>
 										{loadedUser?.name !== 'null' && <p>{loadedUser?.name}</p>}
 										{loadedUser?.company !== 'null' && (
 											<p>{loadedUser?.company}</p>
@@ -290,9 +301,9 @@ const ProfilePageMobile = ({
 										)}
 										{loadedUser?.blog !== 'null' && <p>{loadedUser?.blog}</p>}
 										{loadedUser?.bio !== 'null' && <p>{loadedUser?.bio}</p>}
-									</div>
+									</StyledAddInfo>
 								)}
-							</StyledUserInfoBox>
+							</>
 						)}
 					</StyledUserInformation>
 				</StyledUserProfile>
