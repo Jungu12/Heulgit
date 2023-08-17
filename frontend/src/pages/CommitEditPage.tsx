@@ -101,6 +101,9 @@ const CommitPageMiddle = styled.div`
 	padding: 10px 20px 60px;
 `;
 
+const StyledCommitNoti = styled.div`
+	color: ${colors.greyScale.grey3};
+`;
 const StyledFooter = styled.div`
 	z-index: 1;
 	position: fixed;
@@ -330,6 +333,9 @@ const CommitEditPage = () => {
 				</StyledEditType>
 
 				<CommitPageMiddle>
+					<StyledCommitNoti>
+						커밋 타입 뒤에 ':'을 작성해야 분석이 가능합니다. (feat:설명)
+					</StyledCommitNoti>
 					{/* CommitTag 목록을 매핑하여 렌더링 */}
 					{commitTags &&
 						commitTags.map((tag) => (
