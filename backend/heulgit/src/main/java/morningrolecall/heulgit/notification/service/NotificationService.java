@@ -133,7 +133,7 @@ public class NotificationService {
 			emitter.send(SseEmitter.event()
 				.id(id)
 				.name("sse")
-				.data(data, MediaType.APPLICATION_JSON));
+				.data(data, MediaType.APPLICATION_JSON))
 				.reconnectTime(0));
 		} catch (Exception exception) {
 			logger.debug("예외");
