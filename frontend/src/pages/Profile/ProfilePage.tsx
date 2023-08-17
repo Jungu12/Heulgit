@@ -19,10 +19,6 @@ const StyledProfile = styled.div`
 	}
 `;
 
-// const deleteKeysFromSession = (keys: string[]) => {
-// 	keys.forEach((key) => sessionStorage.removeItem(key));
-// };
-
 const ProfilePage = () => {
 	const navigation = useNavigate();
 	const { userId } = useParams();
@@ -37,20 +33,6 @@ const ProfilePage = () => {
 			navigation(`/gm/${res.roomId}`, { state: { room: res } });
 		});
 	}, []);
-
-	// useEffect(() => {
-	// 	// selectedMenu가 변경될 때마다 sessionStorage에 저장.
-	// 	const categoryItem = sessionStorage.getItem('selectedMenu') as
-	// 		| '프로필'
-	// 		| '유레카'
-	// 		| '자유';
-
-	// 	if (categoryItem) {
-	// 		setSelectedMenu(categoryItem);
-	// 	} else {
-	// 		setSelectedMenu('프로필');
-	// 	}
-	// }, []);
 
 	return (
 		<StyledProfile>

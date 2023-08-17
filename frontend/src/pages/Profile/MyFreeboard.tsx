@@ -1,23 +1,19 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import { UserType } from '@typedef/common.types';
 import { authHttp } from '@utils/http';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
 import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 import Loading from '@components/common/Loading';
+import { useParams } from 'react-router-dom';
 
 const StyledBox = styled.div`
 	width: 100%;
 `;
 
-type MyProfileProps = {
-	loadeduser: UserType;
-};
-
-const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
-	console.log('userprofile:', { loadeduser });
+const MyFreeboard = () => {
+	const { userId } = useParams();
 
 	// 작성한 유레카 불러오기
 	const {
@@ -28,7 +24,7 @@ const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
 		['/my/freeboard'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
-				`freeboard/myposts?userId=${loadeduser.githubId}&pages=${pageParam}`,
+				`users/myposts/freeboard?userId=${userId}&pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
@@ -40,7 +36,6 @@ const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
 
 	return (
 		<StyledBox>
-			{loadeduser?.githubId}
 			{myFreeBoardList && (
 				<InfiniteScroll
 					dataLength={myFreeBoardList.pages.length}
