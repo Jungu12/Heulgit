@@ -59,6 +59,7 @@ const StyledSideR = styled.div`
 		background-color: ${colors.primary.primary};
 	}
 `;
+
 const StyledContent = styled.div`
 	@media (min-width: 768px) {
 		width: 500px;

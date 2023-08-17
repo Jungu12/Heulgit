@@ -59,6 +59,7 @@ const StyledSideR = styled.div`
 	}
 `;
 const StyledContent = styled.div`
+	margin-top: 56px;
 	@media (min-width: 768px) {
 		width: 500px;
 	}
@@ -128,6 +129,7 @@ const MyLikeRepoPage = () => {
 							next={heulgitFetchNextPage}
 							hasMore={heulgitHasNextPage ? true : false}
 							loader={<div>loading...</div>}
+							height={`calc(100vh - 56px)`}
 							style={{
 								overflowY: 'scroll',
 								overflowX: 'hidden',
