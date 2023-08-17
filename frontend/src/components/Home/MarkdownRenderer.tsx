@@ -150,10 +150,14 @@ const StyledTableContainer = styled.div`
 
 type Props = {
 	text: string;
+	type?: 'text';
 };
 
-const MarkdownRenderer = React.memo(({ text }: Props) => {
-	const memoizedText = useMemo(() => decodeUnicode(text), [text]);
+const MarkdownRenderer = React.memo(({ text, type }: Props) => {
+	let memoizedText = useMemo(() => decodeUnicode(text), [text]);
+	if (type === 'text') {
+		memoizedText = text;
+	}
 
 	return (
 		<StyledMarkDownContainer>

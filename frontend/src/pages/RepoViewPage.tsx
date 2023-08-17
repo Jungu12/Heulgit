@@ -1,6 +1,7 @@
 import CommentList from '@components/Home/CommentList';
 import FeedItem from '@components/Home/FeedItem';
 import Header from '@components/common/Header';
+import Loading from '@components/common/Loading';
 import { colors } from '@constants/colors';
 import {
 	HeulGitCommentType,
@@ -179,7 +180,7 @@ const RepoViewPage = () => {
 	}, []);
 
 	if (!feed) {
-		return <div>load...</div>;
+		return <Loading />;
 	}
 
 	return (

@@ -208,6 +208,8 @@ const StyledImageSliderContainer = styled.div`
 const StyledLikedSiteContainer = styled.div`
 	display: flex;
 	flex-direction: column;
+	padding: 0 12px;
+	margin-bottom: 24px;
 `;
 
 const StyledLikedSiteTitle = styled.div`
@@ -218,15 +220,15 @@ const StyledLikedSiteTitle = styled.div`
 
 const StyledLabelContainer = styled.div`
 	display: flex;
-	flex-direction: column;
 `;
 
 const StyledLabel = styled.span<LabelProps>`
-	width: 64px;
-	height: 32px;
+	display: flex;
+	border-radius: 2em;
 	background-color: ${(props) => props.$color};
 	color: white;
 	margin-right: 8px;
+	padding: 6px 12px;
 `;
 
 // 구분 선
@@ -299,6 +301,9 @@ const EurekaPostViewFeedMobile = ({
 			)}
 			{/* 유레카 링크된 사이트 보여주기 */}
 			<StyledLikedSiteContainer>
+				<StyledLikedSiteTitle>
+					{feed.eurekaGithubInfo.title}
+				</StyledLikedSiteTitle>
 				{feed.eurekaLabels.length && (
 					<StyledLabelContainer>
 						{feed.eurekaLabels.map((label) => (
@@ -308,9 +313,6 @@ const EurekaPostViewFeedMobile = ({
 						))}
 					</StyledLabelContainer>
 				)}
-				<StyledLikedSiteTitle>
-					{feed.eurekaGithubInfo.title}
-				</StyledLikedSiteTitle>
 				<MarkdownRenderer text={feed.eurekaGithubInfo.body} />
 			</StyledLikedSiteContainer>
 			<StyledButtonContainer>

@@ -8,6 +8,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { UserCommentResponseType } from '@typedef/profile/user.types';
 import MyComment from '@components/myActivity/MyComment';
+import Loading from '@components/common/Loading';
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -126,7 +127,7 @@ const MyCommentPage = () => {
 							dataLength={commentList.pages.length}
 							next={commentFetchNextPage}
 							hasMore={commentHasNextPage ? true : false}
-							loader={<div>loading...</div>}
+							loader={<Loading />}
 							height={`calc(100vh - 102px)`}
 							style={{
 								overflowY: 'scroll',
