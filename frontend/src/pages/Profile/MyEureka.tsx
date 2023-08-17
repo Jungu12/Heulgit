@@ -9,7 +9,7 @@ import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
 import Loading from '@components/common/Loading';
 
 const StyledBox = styled.div`
-	margin-bottom: -70px;
+	/* margin-bottom: -70px; */
 	width: 100%;
 `;
 
@@ -48,7 +48,7 @@ const MyEureka = ({ loadeduser: user }: MyProfileProps) => {
 					loader={<Loading />}
 					height={`calc(100vh - 102px)`}
 					style={{
-						overflowY: 'scroll',
+						overflowY: 'hidden',
 						overflowX: 'hidden',
 					}}
 				>

@@ -13,7 +13,7 @@ const LikeFreeboard = () => {
 		fetchNextPage: LikeFreeboardFetchNextPage,
 		hasNextPage: LikeFreeboardHasNextPage,
 	} = useInfiniteQuery(
-		['/my-likes/heulgit'],
+		['/my-likes/freeboard'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
 				`users/activities/freeboard/my-likes?pages=${pageParam}`,
