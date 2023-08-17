@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import morningrolecall.heulgit.gm.dto.ChatMessage;
 import morningrolecall.heulgit.gm.dto.ChatRoom;
-import morningrolecall.heulgit.user.domain.dto.UserDetail;
+import morningrolecall.heulgit.gm.dto.GmUserDetail;
 import morningrolecall.heulgit.user.repository.UserRepository;
 
 @RequiredArgsConstructor
@@ -42,13 +42,12 @@ public class ChatRoomRepository {
 				logger.debug("added chatRoom = {}", chatRoom);
 			}
 		}
-		
+
 		return myChatRooms;
 	}
 
 	/**
 	 * 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
-	 * Todo : 돌아가는지 확인 필요!!!!!!!!!!!
 	 */
 	public ChatRoom createChatRoom(String user1, String user2) {
 		ChatRoom chatRoom = getChatRoom(user1 + ":" + user2);
@@ -57,8 +56,8 @@ public class ChatRoomRepository {
 			String user2AvatarUrl = userRepository.findUserByGithubId(user2).get().getAvatarUrl();
 			chatRoom = ChatRoom.builder()
 				.roomId(user1 + ":" + user2)
-				.user1(UserDetail.builder().id(user1).avater_url(user1AvatarUrl).build())
-				.user2(UserDetail.builder().id(user2).avater_url(user2AvatarUrl).build())
+				.user1(GmUserDetail.builder().id(user1).avater_url(user1AvatarUrl).build())
+				.user2(GmUserDetail.builder().id(user2).avater_url(user2AvatarUrl).build())
 				.build();
 
 			opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
