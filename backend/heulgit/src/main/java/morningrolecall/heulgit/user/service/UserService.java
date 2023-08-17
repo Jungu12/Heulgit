@@ -114,7 +114,7 @@ public class UserService {
 
 		//commit message List에서 commit type 파싱
 		for (String commitMessage : commitMessages) {
-			String[] commit = commitMessage.split("\\(");
+			String[] commit = commitMessage.split(":");
 			String commitType = commit[0];
 
 			if (commitInfo.containsKey(commitType)) {

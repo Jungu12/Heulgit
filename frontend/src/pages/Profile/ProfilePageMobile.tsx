@@ -239,12 +239,13 @@ const ProfilePageMobile = ({
 					<StyledUserInformation>
 						<div className="user-name">
 							{loadedUser?.githubId}
+							{'  '}
 							{userId !== user?.githubId ? (
 								<img
 									src={images.profile.githubIcon}
 									alt="깃허브"
 									onClick={goGithub}
-									style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+									style={{ cursor: 'pointer', width: '18px', height: '18px' }}
 								/>
 							) : (
 								<></>
