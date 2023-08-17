@@ -41,10 +41,15 @@ const MainPage = () => {
 	const [mentionList, setMentionList] = useState<string[]>([]);
 	const [notificationCount, setNotificationCount] = useState(0);
 
-	const loadFeedList = useCallback(
-		async (cur: number) => {
-			console.log(cur + '페이지 호출!');
+	// 흘깃 선택되어있을때와 조건이 있을때 다른 api 호출
+	const loadOriginFeedList = useCallback(async (cur: number) => {
+		return authHttp.get<HeulGitPostType[]>(
+			`heulgit/posts/feedlist?pages=${cur}`,
+		);
+	}, []);
 
+	const loadOptionalFeddList = useCallback(
+		async (cur: number) => {
 			try {
 				const response = await authHttp.get<HeulgitPostResponseType>(
 					`heulgit/posts?${
@@ -74,6 +79,29 @@ const MainPage = () => {
 			startDate,
 			endDate,
 			authHttp,
+		],
+	);
+
+	const loadFeedList = useCallback(
+		async (cur: number) => {
+			if (
+				selectedLanguage ||
+				selelctedOption !== '흘깃' ||
+				endDate ||
+				startDate
+			) {
+				return loadOptionalFeddList(cur);
+			} else {
+				return loadOriginFeedList(cur);
+			}
+		},
+		[
+			loadOriginFeedList,
+			loadOptionalFeddList,
+			selectedLanguage,
+			selelctedOption,
+			startDate,
+			endDate,
 		],
 	);
 
