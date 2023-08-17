@@ -134,7 +134,7 @@ public class NotificationService {
 				.id(id)
 				.name("sse")
 				.data(data, MediaType.APPLICATION_JSON));
-				// .reconnectTime(0));
+				.reconnectTime(0));
 		} catch (Exception exception) {
 			logger.debug("예외");
 			logger.debug(exception.getMessage());
