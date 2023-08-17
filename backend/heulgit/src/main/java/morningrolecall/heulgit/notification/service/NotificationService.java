@@ -109,7 +109,7 @@ public class NotificationService {
 
 	//특정 유저에게 알림 전송
 	public void send(NotificationResponse notificationResponse){
-		logger.debug("send()")
+		logger.debug("send()");
 		Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByGithubId(notificationResponse.getReceiver().getGithubId());
 		sseEmitters.forEach(
 			(key, emitter) ->{
