@@ -229,7 +229,6 @@ const CommitEditPage = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [newCommit, setNewCommit] = useState({ type: '', description: '' });
 	const [errorMessage, setErrorMessage] = useState('');
-	const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
 	// 커밋 메시지 불러오기
 	useEffect(() => {
@@ -275,7 +274,6 @@ const CommitEditPage = () => {
 			setNewCommit({ type: '', description: '' });
 			setIsModalOpen(false);
 			setErrorMessage('');
-			setHasUnsavedChanges(true);
 		}
 	};
 
@@ -284,7 +282,6 @@ const CommitEditPage = () => {
 		setCommitTags((prevTags) =>
 			(prevTags || []).filter((tag) => tag.type !== idToDelete),
 		);
-		setHasUnsavedChanges(true);
 	};
 
 	// 커밋 메시지 저장
@@ -311,20 +308,6 @@ const CommitEditPage = () => {
 			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
-
-	// 페이지 이동 전 경고
-	useEffect(() => {
-		const confirmExit = (event: BeforeUnloadEvent) => {
-			if (hasUnsavedChanges) {
-				event.returnValue =
-					'저장되지 않은 변경사항이 있습니다. 정말로 나가시겠습니까?';
-			}
-		};
-		window.addEventListener('beforeunload', confirmExit);
-		return () => {
-			window.removeEventListener('beforeunload', confirmExit);
-		};
-	}, [hasUnsavedChanges]);
 
 	return (
 		<StyledBox>
