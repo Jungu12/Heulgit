@@ -1,3 +1,4 @@
+import Loading from '@components/common/Loading';
 import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
@@ -32,7 +33,7 @@ const LikeEureka = () => {
 					dataLength={LikeEurekaList.pages.length}
 					next={LikeEurekaFetchNextPage}
 					hasMore={LikeEurekaHasNextPage ? true : false}
-					loader={<div>loading...</div>}
+					loader={<Loading />}
 					height={`calc(100vh - 102px)`}
 					style={{
 						overflowY: 'scroll',

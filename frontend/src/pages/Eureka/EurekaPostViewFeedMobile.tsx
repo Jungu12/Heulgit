@@ -9,6 +9,7 @@ import { EurekaPostResponseType } from '@typedef/community/eureka.types';
 import ReactModal from 'react-modal';
 import { formatDateFromString } from '@utils/date';
 import ImageSlider from '@components/Home/ImageSlider';
+import Loading from '@components/common/Loading';
 
 const customStyles = {
 	overlay: {
@@ -254,7 +255,7 @@ const EurekaPostViewFeedMobile = ({
 	onClickMenuClose,
 }: Props) => {
 	if (!feed) {
-		return <div>loading...</div>;
+		return <Loading />;
 	}
 
 	return (

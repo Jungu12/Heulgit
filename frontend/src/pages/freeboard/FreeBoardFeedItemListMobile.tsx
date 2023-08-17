@@ -14,6 +14,11 @@ import { authHttp } from '@utils/http';
 import CBottomSheet from '@components/common/CBottomSheet';
 import FreeBoardCommentList from '@components/community/FreeBoardCommentList';
 import { OnChangeHandlerFunc } from 'react-mentions';
+import {
+	FetchNextPageOptions,
+	InfiniteData,
+	InfiniteQueryObserverResult,
+} from '@tanstack/react-query';
 
 const StyledFeedListSection = styled.section`
 	overflow-y: scroll;
@@ -36,15 +41,17 @@ const Separation = styled.div`
 `;
 
 type Props = {
-	feedList: FreeBoardPostType[];
-	freeBoardHasMore: boolean;
-	freeboardNextPageLoad: () => Promise<void>;
+	freeboardFeedList: InfiniteData<FreeBoardPostType[]>;
+	freeboardFetchNextPage: (
+		options?: FetchNextPageOptions | undefined,
+	) => Promise<InfiniteQueryObserverResult<FreeBoardPostType[], unknown>>;
+	freeboardHasNextPage: boolean;
 };
 
 const FreeBoardFeedItemListMobile = ({
-	feedList,
-	freeBoardHasMore,
-	freeboardNextPageLoad,
+	freeboardFeedList,
+	freeboardFetchNextPage,
+	freeboardHasNextPage,
 }: Props) => {
 	const scrollContinaerRef = useRef<HTMLDivElement>(null);
 
@@ -129,20 +136,27 @@ const FreeBoardFeedItemListMobile = ({
 
 	return (
 		<StyledFeedListSection ref={scrollContinaerRef}>
-			<InfiniteScroll
-				dataLength={feedList.length}
-				next={freeboardNextPageLoad}
-				hasMore={freeBoardHasMore}
-				loader={<div>로딩 중...</div>}
-				height={`calc(100vh - 234px)`}
-			>
-				{feedList.map((feed, index) => (
-					<div key={index}>
-						<FreeBoardFeedItem feed={feed} onClickComment={onClickComment} />
-						<Separation />
-					</div>
-				))}
-			</InfiniteScroll>
+			{freeboardFeedList && (
+				<InfiniteScroll
+					dataLength={freeboardFeedList.pages.length}
+					next={freeboardFetchNextPage}
+					hasMore={freeboardHasNextPage}
+					loader={<div>로딩중...</div>}
+					height={`calc(100vh - 234px)`}
+				>
+					{freeboardFeedList.pages.map((feed) =>
+						feed.map((item, index) => (
+							<div key={index}>
+								<FreeBoardFeedItem
+									feed={item}
+									onClickComment={onClickComment}
+								/>
+								<Separation />
+							</div>
+						)),
+					)}
+				</InfiniteScroll>
+			)}
 			{
 				<CBottomSheet
 					open={isCommentOpen}
@@ -157,7 +171,6 @@ const FreeBoardFeedItemListMobile = ({
 					<FreeBoardCommentList
 						commentList={commentList}
 						onClickDelete={onClickDelete}
-						// onClickCommentMenuOpen={onClickCommentMenuOpen}
 					/>
 				</CBottomSheet>
 			}

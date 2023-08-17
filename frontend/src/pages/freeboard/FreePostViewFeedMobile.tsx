@@ -8,6 +8,7 @@ import { FreeBoardPostResponseType } from '@typedef/community/freeboard.types';
 import { formatDateFromString } from '@utils/date';
 import ImageSlider from '@components/Home/ImageSlider';
 import ReactModal from 'react-modal';
+import Loading from '@components/common/Loading';
 
 const customStyles = {
 	overlay: {
@@ -246,7 +247,7 @@ const FreePostViewFeedMobile = ({
 	onClickMenuClose,
 }: Props) => {
 	if (!feed) {
-		return <div>loading...</div>;
+		return <Loading />;
 	}
 
 	useEffect(() => {

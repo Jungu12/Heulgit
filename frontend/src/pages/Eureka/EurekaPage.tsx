@@ -10,6 +10,7 @@ import {
 	InfiniteData,
 	InfiniteQueryObserverResult,
 } from '@tanstack/react-query';
+import Loading from '@components/common/Loading';
 
 type OutletProps = {
 	eurekaFeedList: InfiniteData<EurekaPostType[]> | undefined;
@@ -25,7 +26,7 @@ const EurekaPage = () => {
 		useOutletContext<OutletProps>();
 
 	if (!eurekaFeedList) {
-		return <div>loading...</div>;
+		return <Loading />;
 	}
 
 	return (

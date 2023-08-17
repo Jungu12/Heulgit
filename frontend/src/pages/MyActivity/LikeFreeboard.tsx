@@ -1,3 +1,4 @@
+import Loading from '@components/common/Loading';
 import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
@@ -32,7 +33,7 @@ const LikeFreeboard = () => {
 					dataLength={likeFreeboardList.pages.length}
 					next={LikeFreeboardFetchNextPage}
 					hasMore={LikeFreeboardHasNextPage ? true : false}
-					loader={<div>loading...</div>}
+					loader={<Loading />}
 					height={`calc(100vh - 102px)`}
 					style={{
 						overflowY: 'scroll',
