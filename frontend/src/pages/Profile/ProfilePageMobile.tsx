@@ -26,7 +26,6 @@ const StyledUserProfile = styled.div`
 	display: flex;
 	justify-content: center;
 	margin-top: 40px;
-	min-height: 150px;
 `;
 const StyledUserImage = styled.img`
 	display: flex;
@@ -61,6 +60,10 @@ const StyledUserName = styled.div`
 		font-weight: 600;
 		font-size: 20px;
 	}
+
+	img {
+		margin-left: 10px;
+	}
 `;
 const StyledAddInfo = styled.div`
 	display: flex;
@@ -74,7 +77,6 @@ const StyledAddInfo = styled.div`
 
 const StyledFollowing = styled.div`
 	cursor: pointer;
-	/* background-color: aquamarine; */
 	width: 100px;
 `;
 const StyledFollower = styled.div`
