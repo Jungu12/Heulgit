@@ -158,44 +158,45 @@ const ProfilePageMobile = ({
 	}, []);
 
 	// 팔로우 상태 확인
-	if (userId !== user?.githubId) {
-		useEffect(() => {
-			authHttp
-				.get<FollowType>(`relations/state?to=${userId}`)
-				.then((response) => {
-					console.log('팔로우 정보 성공:', response);
-					setIsFollowing(response.follow);
-				})
-				.catch((error) => {
-					console.error('팔로우 정보 실패:', error);
-				});
-		}, []);
-	}
+	useEffect(() => {
+		authHttp
+			.get<FollowType>(`relations/state?to=${userId}`)
+			.then((response) => {
+				console.log('팔로우 정보 성공:', response);
+				setIsFollowing(response.follow);
+			})
+			.catch((error) => {
+				console.error('팔로우 정보 실패:', error);
+			});
+	}, []);
 
 	// 유저 팔로우/언팔로우
 	const handleFollowClick = () => {
-		if (isFollowing) {
-			// 팔로우
-			authHttp
-				.post(`relations/follow?to=${userId}`)
-				.then(() => {
-					console.log('팔로우 성공: ', isFollowing);
-					setIsFollowing(true);
-				})
-				.catch((error) => {
-					console.error('팔로우 실패:', error);
-				});
-		} else {
-			// 언팔로우
-			authHttp
-				.delete(`relations/unfollow?to=${userId}`)
-				.then(() => {
-					console.log('언팔로우 성공: ', isFollowing);
-					setIsFollowing(false);
-				})
-				.catch((error) => {
-					console.error('언팔로우 실패', error);
-				});
+		if (isFollowing !== undefined) {
+			console.log('버튼 클릭 시 팔로우 상태 :', isFollowing);
+			if (!isFollowing) {
+				// 팔로우
+				authHttp
+					.post(`relations/follow?to=${userId}`)
+					.then(() => {
+						console.log('팔로우 성공: ', isFollowing);
+						setIsFollowing(true);
+					})
+					.catch((error) => {
+						console.error('팔로우 실패:', error);
+					});
+			} else {
+				// 언팔로우
+				authHttp
+					.delete(`relations/unfollow?to=${userId}`)
+					.then(() => {
+						console.log('언팔로우 성공: ', isFollowing);
+						setIsFollowing(false);
+					})
+					.catch((error) => {
+						console.error('언팔로우 실패', error);
+					});
+			}
 		}
 	};
 
