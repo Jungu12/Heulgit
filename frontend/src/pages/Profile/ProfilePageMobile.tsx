@@ -12,7 +12,6 @@ import { RootState } from '@store/index';
 import { authHttp } from '@utils/http';
 import { UserType } from '@typedef/common.types';
 import { UserFollowingType } from '@typedef/profile/user.types';
-import MySeparation from '@components/myActivity/MySeparation';
 
 const StyledProfilePage = styled.div``;
 
@@ -56,6 +55,8 @@ const StyledUserInformation = styled.div`
 	}
 `;
 const StyledUserName = styled.div`
+	display: flex;
+
 	div {
 		font-weight: 600;
 		font-size: 20px;
@@ -65,9 +66,10 @@ const StyledAddInfo = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-content: center;
-
-	margin-left: 10px;
 	font-size: 16px;
+	p {
+		margin-bottom: 3px;
+	}
 `;
 
 const StyledFollowing = styled.div`
@@ -278,7 +280,6 @@ const ProfilePageMobile = ({
 								<div>팔로워 {followerData}</div>
 							</StyledFollower>
 						</div>
-						<MySeparation />
 						{/* 추가 정보 */}
 						{userInfo && (
 							<StyledAddInfo>
