@@ -25,7 +25,6 @@ import ChatDirectPage from '@pages/ChatDirectPage';
 import ChatPage from '@pages/ChatPage';
 import MainPage from '@pages/Main/MainPage';
 import PrivateRoutes from './PrivateRoutes';
-import Test from '@pages/Eureka/Test';
 import EditEurekaPostPage from '@pages/Eureka/EditEurekaPostPage';
 import FollowingPage from '@pages/FollowingPage';
 import FollowerPage from '@pages/FollowerPage';
@@ -37,7 +36,6 @@ const RootRouter = () => {
 			<Routes>
 				<Route path="/login" element={<LoginPage />}></Route>
 				<Route path="/oauth/github" element={<LoginCallBackPage />}></Route>
-				<Route path="/test" element={<Test />}></Route>
 				<Route element={<PrivateRoutes redirectTo="/login" />}>
 					<Route path="/" element={<MainPage />}></Route>
 					<Route path="/profiles">

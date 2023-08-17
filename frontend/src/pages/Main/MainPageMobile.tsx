@@ -3,6 +3,7 @@ import CommentListBottomSheet from '@components/Home/CommentListBottomSheet';
 import FeedItemList from '@components/Home/FeedItemList';
 import LanguageSearchModal from '@components/Home/LanguageSearchModal';
 import CBottomSheet from '@components/common/CBottomSheet';
+import Loading from '@components/common/Loading';
 import Navigation from '@components/common/Navigation';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
@@ -230,13 +231,6 @@ const StyledClose = styled.img`
 	transform: translate(-50%, -50%);
 `;
 
-const LoadingConatiner = styled.div`
-	display: flex;
-	flex: 1;
-	align-items: center;
-	justify-content: center;
-`;
-
 type Props = {
 	onClickHeulGit: () => void;
 	onClickStarSort: () => void;
@@ -414,7 +408,7 @@ const MainPageMobile = ({
 					hasMore={hasMore}
 				/>
 			) : (
-				<LoadingConatiner>loading...</LoadingConatiner>
+				<Loading />
 			)}
 			<CBottomSheet
 				open={isCommentOpen}

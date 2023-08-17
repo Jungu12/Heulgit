@@ -8,6 +8,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import FeedItem from '@components/Home/FeedItem';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { HeulgitPostResponseType } from '@typedef/home/heulgit.types';
+import Loading from '@components/common/Loading';
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -128,7 +129,7 @@ const MyLikeRepoPage = () => {
 							dataLength={heulgitLikeList.pages.length}
 							next={heulgitFetchNextPage}
 							hasMore={heulgitHasNextPage ? true : false}
-							loader={<div>loading...</div>}
+							loader={<Loading />}
 							height={`calc(100vh - 56px)`}
 							style={{
 								overflowY: 'scroll',

@@ -6,6 +6,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { EurekaFeedResponseType } from '@typedef/community/eureka.types';
 import EurekaFeedItem from '@pages/Eureka/EurekaFeedItem';
+import Loading from '@components/common/Loading';
 
 const StyledBox = styled.div`
 	margin-bottom: -70px;
@@ -44,7 +45,7 @@ const MyEureka = ({ loadeduser: user }: MyProfileProps) => {
 					dataLength={myEurekaList.pages.length}
 					next={myEurekaFetchNextPage}
 					hasMore={myEurekaHasNextPage ? true : false}
-					loader={<div>loading...</div>}
+					loader={<Loading />}
 					height={`calc(100vh - 102px)`}
 					style={{
 						overflowY: 'scroll',

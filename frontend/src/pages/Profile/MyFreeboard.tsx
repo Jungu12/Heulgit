@@ -6,6 +6,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { FreeBoarFeedResponseType } from '@typedef/community/freeboard.types';
 import FreeBoardFeedItem from '@pages/freeboard/FreeBoardFeedItem';
+import Loading from '@components/common/Loading';
 
 const StyledBox = styled.div`
 	margin-bottom: -70px;
@@ -44,7 +45,7 @@ const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
 					dataLength={myFreeBoardList.pages.length}
 					next={myFreeBoardFetchNextPage}
 					hasMore={myFreeBoardHasNextPage ? true : false}
-					loader={<div>loading...</div>}
+					loader={<Loading />}
 					// height={`calc(100vh - 102px)`}
 					// style={{
 					// 	overflowY: 'scroll',

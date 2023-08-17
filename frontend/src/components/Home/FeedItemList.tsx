@@ -4,9 +4,7 @@ import { styled } from 'styled-components';
 import { colors } from '@constants/colors';
 import FeedItem from './FeedItem';
 import InfiniteScroll from 'react-infinite-scroll-component';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import Lottie from 'lottie-react';
-import loading from '../../list_loading.json';
+import Loading from '@components/common/Loading';
 
 const StyledFeedListSection = styled.section`
 	/* height: calc(100vh - 194px); */
@@ -25,13 +23,6 @@ const Separation = styled.div`
 	width: 100%;
 	background-color: ${colors.greyScale.grey2};
 	margin-top: 12px;
-`;
-
-const LoadingContainer = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100%;
 `;
 
 type Props = {
@@ -56,15 +47,7 @@ const FeedItemList = ({
 				style={{
 					overflowX: 'hidden',
 				}}
-				loader={
-					<LoadingContainer>
-						<Lottie
-							animationData={loading}
-							loop={true}
-							style={{ width: '160px', height: '160px' }}
-						/>
-					</LoadingContainer>
-				}
+				loader={<Loading />}
 				height={`calc(100vh - 193px)`}
 			>
 				{feedList.map((page) =>

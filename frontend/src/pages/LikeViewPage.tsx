@@ -8,6 +8,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { findParams } from '@utils/relation';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Loading from '@components/common/Loading';
 
 // 좋아요 한 사람 페이지 전체 컨테이너
 const StyledLikeViewPageContainer = styled.div`
@@ -188,7 +189,7 @@ const LikeViewPage: React.FC = () => {
 						dataLength={likeList.pages.length}
 						next={fetchNextPage}
 						hasMore={hasNextPage ? true : false}
-						loader={<div>loading...</div>}
+						loader={<Loading />}
 						height={`calc(100vh - 104.5px)`}
 						style={{
 							overflowY: 'scroll',
