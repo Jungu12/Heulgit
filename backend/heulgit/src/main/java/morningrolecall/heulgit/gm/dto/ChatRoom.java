@@ -6,7 +6,6 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
-import morningrolecall.heulgit.user.domain.dto.UserDetail;
 
 @Getter
 @Builder
@@ -14,8 +13,8 @@ public class ChatRoom implements Serializable {
 
 	private static final long serialVersionUID = 211211211211L;
 	private String roomId;
-	private UserDetail user1;
-	private UserDetail user2;
+	private GmUserDetail user1;
+	private GmUserDetail user2;
 	private List<ChatMessage> chatMessages;
 
 	// 채팅 메시지를 추가하는 메서드
