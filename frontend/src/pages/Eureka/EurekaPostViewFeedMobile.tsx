@@ -10,6 +10,12 @@ import ReactModal from 'react-modal';
 import { formatDateFromString } from '@utils/date';
 import ImageSlider from '@components/Home/ImageSlider';
 import Loading from '@components/common/Loading';
+import MarkdownRenderer from '@components/Home/MarkdownRenderer';
+import { getColorFromName } from '@utils/eureka';
+
+type LabelProps = {
+	$color: string;
+};
 
 const customStyles = {
 	overlay: {
@@ -129,24 +135,6 @@ const StyledContent = styled.div`
 	margin: 24px 12px;
 `;
 
-// 이미지 담는 컨테이너
-// const StyledImgContainer = styled.div`
-// 	display: flex;
-// 	position: relative;
-// 	justify-content: start;
-// 	align-items: center;
-
-// 	max-width: 100%;
-// 	/* height: 190px; */
-
-// 	margin: 0px 12px 12px 12px;
-// `;
-
-// 이미지
-// const StyledImg = styled.img`
-// 	max-width: 100%;
-// `;
-
 // 링크 컨테이너
 const StyledLink = styled(Link)`
 	margin-left: auto;
@@ -217,6 +205,30 @@ const StyledImageSliderContainer = styled.div`
 	}
 `;
 
+const StyledLikedSiteContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
+
+const StyledLikedSiteTitle = styled.div`
+	font-size: 20px;
+	font-weight: 700;
+	margin-top: 24px;
+`;
+
+const StyledLabelContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
+
+const StyledLabel = styled.span<LabelProps>`
+	width: 64px;
+	height: 32px;
+	background-color: ${(props) => props.$color};
+	color: white;
+	margin-right: 8px;
+`;
+
 // 구분 선
 const StyledUnderline = styled.div`
 	width: 100%;
@@ -285,7 +297,22 @@ const EurekaPostViewFeedMobile = ({
 					<ImageSlider images={feed.eurekaImages.map((img) => img.fileUri)} />
 				</StyledImageSliderContainer>
 			)}
-
+			{/* 유레카 링크된 사이트 보여주기 */}
+			<StyledLikedSiteContainer>
+				{feed.eurekaLabels.length && (
+					<StyledLabelContainer>
+						{feed.eurekaLabels.map((label) => (
+							<StyledLabel $color={getColorFromName(label.name)}>
+								{label.name}
+							</StyledLabel>
+						))}
+					</StyledLabelContainer>
+				)}
+				<StyledLikedSiteTitle>
+					{feed.eurekaGithubInfo.title}
+				</StyledLikedSiteTitle>
+				<MarkdownRenderer text={feed.eurekaGithubInfo.body} />
+			</StyledLikedSiteContainer>
 			<StyledButtonContainer>
 				<img
 					src={
@@ -309,7 +336,6 @@ const EurekaPostViewFeedMobile = ({
 			<ReactModal
 				isOpen={isMenuOpen}
 				style={customStyles}
-				// overlayClassName="custom-overlay"
 				onRequestClose={onClickMenuClose}
 			>
 				<StyledMenuContainer>
