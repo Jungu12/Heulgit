@@ -75,7 +75,15 @@ public class ChatRoomService {
 
 	// 사용자와 타 유저의 채팅방이 있는지 없는지 확인하고 없다면 생성한다.
 	public ChatRoom addChatRoom(String user1, String user2) {
-		return chatRoomRepository.createChatRoom(user1, user2);
+		String normalizedUser1 = user1.toLowerCase();
+		String normalizedUser2 = user2.toLowerCase();
+
+		int compareResult = normalizedUser1.compareToIgnoreCase(normalizedUser2);
+
+		String sortedUser1 = (compareResult <= 0) ? user1 : user2;
+		String sortedUser2 = (compareResult <= 0) ? user2 : user1;
+
+		return chatRoomRepository.createChatRoom(sortedUser1, sortedUser2);
 	}
 
 	// 메세지를 읽음 처리와 동시에 저장한다.
