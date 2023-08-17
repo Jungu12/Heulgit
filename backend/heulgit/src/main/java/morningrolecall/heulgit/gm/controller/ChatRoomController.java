@@ -45,6 +45,7 @@ public class ChatRoomController {
 	}
 
 	//채팅 로그 가져오기
+	@SuppressWarnings("checkstyle:RegexpMultiline")
 	@GetMapping("/chats/{roomId}")
 	@ResponseBody
 	public ResponseEntity<?> messageList(@AuthenticationPrincipal String githubId, @PathVariable String roomId) {
