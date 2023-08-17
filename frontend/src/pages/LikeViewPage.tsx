@@ -1,5 +1,4 @@
 import Header from '@components/common/Header';
-import { colors } from '@constants/colors';
 import React, { useEffect, useCallback } from 'react';
 import { styled } from 'styled-components';
 import { LikedUserListResponse } from '@typedef/common.types';
@@ -41,18 +40,6 @@ const StyledLikeUserP = styled.div`
 	font-size: 18px;
 	font-weight: 600;
 	margin-left: 20px;
-`;
-
-// n 명
-const StyledLikeUsersCount = styled.div`
-	display: flex;
-	align-items: center;
-
-	font-size: 14px;
-	font-weight: 500;
-	color: ${colors.greyScale.grey4};
-
-	margin-right: 20px;
 `;
 
 // 좋아요 한 사람 프로필 전체 컨테이너
@@ -111,7 +98,6 @@ const LikeViewPage: React.FC = () => {
 			<Header title="좋아요" />
 			<StyledLikeUserContainer>
 				<StyledLikeUserP>좋아하는 사람</StyledLikeUserP>
-				<StyledLikeUsersCount>{'좋아하는 사람 총 숫자'}</StyledLikeUsersCount>
 			</StyledLikeUserContainer>
 			<StyledUserContainer>
 				{likeList ? (
