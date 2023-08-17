@@ -3,8 +3,11 @@ import styled from 'styled-components';
 import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
-import { authHttp } from '@utils/http';
-import { UserCommentType } from '@typedef/profile/user.types';
+// import { authHttp } from '@utils/http';
+// import { UserCommentType } from '@typedef/profile/user.types';
+// import { useInfiniteQuery } from "@tanstack/react-query";
+// import InfiniteScroll from "react-infinite-scroll-component";
+// import Comment from "@components/Home/Comment";
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -84,17 +87,36 @@ const MyCommentPage = () => {
 		};
 	}, []);
 
-	// 댓글 불러오기
-	useEffect(() => {
-		authHttp
-			.get<UserCommentType>('users/activities/my-comments')
-			.then((response) => {
-				console.log('내 댓글 성공.', response);
-			})
-			.catch((error) => {
-				console.error('내 댓글 실패.', error);
-			});
-	}, []);
+	// // 댓글 불러오기
+	// useEffect(() => {
+	// 	authHttp
+	// 		.get<UserCommentType>('users/activities/my-comments')
+	// 		.then((response) => {
+	// 			console.log('내 댓글 성공.', response);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error('내 댓글 실패.', error);
+	// 		});
+	// }, []);
+
+	// // 좋아요 게시물 불러오기
+	// const {
+	// 	data: eurekaLikeList,
+	// 	fetchNextPage: eurekaFetchNextPage,
+	// 	hasNextPage: eurekaHasNextPage,
+	// } = useInfiniteQuery(
+	// 	['/my-likes/heulgit'],
+	// 	({ pageParam = 1 }) =>
+	// 		authHttp.get<UserCommentType>(
+	// 			`users/activities/eureka/my-likes?pages=${pageParam}`,
+	// 		),
+	// 	{
+	// 		getNextPageParam: (lastPage, allPages) => {
+	// 			if (lastPage.last) return;
+	// 			return allPages.length + 1;
+	// 		},
+	// 	},
+	// );
 
 	return (
 		<StyledBox>
@@ -111,7 +133,25 @@ const MyCommentPage = () => {
 					)}
 				</StyledHeader>
 				<StyledMyComment>
-					{/* <MyCommentList comments={dummyComment} /> */}
+					{/* {eurekaLikeList && (
+						<InfiniteScroll
+							dataLength={eurekaLikeList.pages.length}
+							next={eurekaFetchNextPage}
+							hasMore={eurekaHasNextPage ? true : false}
+							loader={<div>loading...</div>}
+							height={`calc(100vh - 102px)`}
+							style={{
+								overflowY: 'scroll',
+								overflowX: 'hidden',
+							}}
+						>
+							{eurekaLikeList.pages.map((eureka) =>
+								eureka.content.map((item) => (
+									<Comment key={item.eurekaId} feed={item} />
+								)),
+							)}
+						</InfiniteScroll>
+					)} */}
 				</StyledMyComment>
 			</StyledContent>
 
