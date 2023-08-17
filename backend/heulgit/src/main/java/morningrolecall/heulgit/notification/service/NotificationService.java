@@ -97,7 +97,7 @@ public class NotificationService {
 
 	// 유실된 데이터 다시 전송
 	private void sendLostData(String lastEventId, String githubId, String emitterId, SseEmitter emitter) {
-		looger.debug("sendLostData()");
+		logger.debug("sendLostData()");
 
 		Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByGithubId(githubId);
 		eventCaches.entrySet().stream()
