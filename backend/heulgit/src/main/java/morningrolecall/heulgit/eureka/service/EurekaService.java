@@ -213,7 +213,7 @@ public class EurekaService {
 			eurekaGithubInfo.updateUpdatedDate(newEurekaGithubInfo.getUpdatedDate());
 
 			eurekaGithubInfoRepository.save(eurekaGithubInfo);
-			
+
 			eurekaLabelRepository.deleteAll(eurekaLabels);
 			eurekaLabelRepository.saveAll(parseLabel(githubInfo, eurekaGithubInfo));
 		}
@@ -230,8 +230,8 @@ public class EurekaService {
 			imageService.deleteFile(imageUrls);
 		}
 
-		eurekaImageRepository.deleteAllByEureka(eureka);
-		eureka.removeAllImage();
+		// eurekaImageRepository.deleteAllByEureka(eureka);
+		// eureka.removeAllImage();
 
 		// 현재 받은 이미지 S3에 업로드
 		List<String> imageUrls = imageService.uploadFile(githubId,"eureka",multipartFiles);
@@ -242,6 +242,7 @@ public class EurekaService {
 		eureka.addAllImage(eurekaImages);
 		eurekaRepository.save(eureka);
 	}
+
 
 	/**
 	 * 유레카 게시물 삭제
