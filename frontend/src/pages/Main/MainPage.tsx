@@ -18,6 +18,9 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { OnChangeHandlerFunc } from 'react-mentions';
 
 const MainPage = () => {
+	const InfinityContainerRef = document.querySelector(
+		'.infinite-scroll-component',
+	);
 	const dropDownRef = useRef(null);
 	const calendarRef = useRef<HTMLButtonElement>(null);
 	const navigation = useNavigate();
@@ -274,6 +277,10 @@ const MainPage = () => {
 	useEffect(() => {
 		getNotificationCount();
 	}, []);
+
+	useEffect(() => {
+		if (InfinityContainerRef) InfinityContainerRef.scrollTop = 0;
+	}, [selectedLanguage, endDate, selelctedOption]);
 
 	return (
 		<>
