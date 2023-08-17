@@ -7,9 +7,10 @@ import Loading from '@components/common/Loading';
 import Navigation from '@components/common/Navigation';
 import { colors } from '@constants/colors';
 import { images } from '@constants/images';
+import { InfiniteData } from '@tanstack/react-query';
 import {
 	HeulGitCommentType,
-	HeulGitPostType,
+	HeulgitPostResponseType,
 } from '@typedef/home/heulgit.types';
 import { getYearAndMonth } from '@utils/date';
 import React from 'react';
@@ -284,7 +285,7 @@ type Props = {
 	isLanguageOpen: boolean;
 	isCommentOpen: boolean;
 	selelctedComment: number;
-	feedList: HeulGitPostType[][] | undefined;
+	feedList: InfiniteData<HeulgitPostResponseType> | undefined;
 	hasMore: boolean;
 	commentInput: string;
 	commentList: HeulGitCommentType[];

@@ -46,34 +46,29 @@ const MainPage = () => {
 
 	// 흘깃 선택되어있을때와 조건이 있을때 다른 api 호출
 	const loadOriginFeedList = useCallback(async (cur: number) => {
-		return authHttp
-			.get<HeulgitPostResponseType>(`heulgit/posts/feedlist?pages=${cur}`)
-			.then((res) => res.content);
+		return authHttp.get<HeulgitPostResponseType>(
+			`heulgit/posts/feedlist?pages=${cur}`,
+		);
 	}, []);
 
 	const loadOptionalFeddList = useCallback(
 		async (cur: number) => {
-			try {
-				const response = await authHttp.get<HeulgitPostResponseType>(
-					`heulgit/posts?${
-						(selectedLanguage ? `language=${selectedLanguage}&` : '') +
-						(selelctedOption !== '흘깃'
-							? `sort=${getSortType(selelctedOption)}&`
-							: '') +
-						(endDate && startDate
-							? `start-year=${startDate.getFullYear()}&start-month=
+			const response = await authHttp.get<HeulgitPostResponseType>(
+				`heulgit/posts?${
+					(selectedLanguage ? `language=${selectedLanguage}&` : '') +
+					(selelctedOption !== '흘깃'
+						? `sort=${getSortType(selelctedOption)}&`
+						: '') +
+					(endDate && startDate
+						? `start-year=${startDate.getFullYear()}&start-month=
 							${startDate.getMonth() + 1}
 									&end-year=${endDate.getFullYear()}&end-month=
 								${endDate.getMonth() + 1}&`
-							: '')
-					}
+						: '')
+				}
 					pages=${cur}`,
-				);
-				return response.content;
-			} catch (error) {
-				console.error('Error loading feed list:', error);
-				return [];
-			}
+			);
+			return response;
 		},
 		[
 			setFeedList,
@@ -249,7 +244,7 @@ const MainPage = () => {
 			getNextPageParam: (lastPage, allPages) => {
 				console.log('[allPage]', allPages);
 
-				if (lastPage.length < 20) return;
+				if (lastPage.last) return;
 				return allPages.length + 1;
 			},
 			staleTime: 100000,
@@ -316,7 +311,7 @@ const MainPage = () => {
 					isLanguageOpen={isLanguageOpen}
 					isCommentOpen={isCommentOpen}
 					selelctedComment={selelctedComment}
-					feedList={data?.pages}
+					feedList={data}
 					hasMore={hasNextPage ? true : false}
 					commentInput={commentInput}
 					commentList={commentList}
