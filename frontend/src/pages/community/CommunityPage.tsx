@@ -130,6 +130,9 @@ const StyledFilterButton = styled.button`
 `;
 
 const CommunityPage = () => {
+	const InfinityContainerRef = document.querySelector(
+		'.infinite-scroll-component',
+	);
 	const navigation = useNavigate();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [page, setPage] = useState(1);
@@ -243,6 +246,10 @@ const CommunityPage = () => {
 			});
 		}
 	}, [seletedSort]);
+
+	useEffect(() => {
+		if (InfinityContainerRef) InfinityContainerRef.scrollTop = 0;
+	}, [seletedSort, seletedCommunityTitle]);
 
 	return (
 		<>

@@ -14,7 +14,6 @@ const StyledUserLog = styled.div`
 const StyledUserImage = styled.img`
 	display: flex;
 	justify-content: flex-start;
-	background-color: black;
 	height: 45px;
 	width: 45px;
 	border-radius: 50px;
