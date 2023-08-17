@@ -13,10 +13,10 @@ const StyledBox = styled.div`
 `;
 
 type MyProfileProps = {
-	user: UserType;
+	loadeduser: UserType;
 };
 
-const MyFreeboard = ({ user }: MyProfileProps) => {
+const MyFreeboard = ({ loadeduser }: MyProfileProps) => {
 	// 작성한 유레카 불러오기
 	const {
 		data: myFreeBoardList,
@@ -26,7 +26,7 @@ const MyFreeboard = ({ user }: MyProfileProps) => {
 		['/my/freeboard'],
 		({ pageParam = 1 }) =>
 			authHttp.get<FreeBoarFeedResponseType>(
-				`freeboard/myposts?userId=${user.githubId}&pages=${pageParam}`,
+				`freeboard/myposts?userId=${loadeduser.githubId}&pages=${pageParam}`,
 			),
 		{
 			getNextPageParam: (lastPage, allPages) => {
@@ -38,7 +38,7 @@ const MyFreeboard = ({ user }: MyProfileProps) => {
 
 	return (
 		<StyledBox>
-			{user?.githubId}
+			{loadeduser?.githubId}
 			{myFreeBoardList && (
 				<InfiniteScroll
 					dataLength={myFreeBoardList.pages.length}

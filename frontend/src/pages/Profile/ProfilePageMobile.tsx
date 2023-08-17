@@ -313,10 +313,10 @@ const ProfilePageMobile = ({
 								<MyProfile loadedUser={loadedUser} user={user} />
 							)}
 							{selectedMenu === '유레카' && user !== null && (
-								<MyEureka user={loadedUser} />
+								<MyEureka loadeduser={loadedUser} />
 							)}
 							{selectedMenu === '자유' && user !== null && (
-								<MyFreeboard user={loadedUser} />
+								<MyFreeboard loadeduser={loadedUser} />
 							)}
 						</StyledProfileLow>
 					</Sdiv>
