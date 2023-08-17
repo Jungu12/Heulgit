@@ -66,9 +66,9 @@ public class NotificationService {
 		//503에러를 방지하기 위한 더미 이벤트 전송
 		String eventId = githubId + "_" + System.currentTimeMillis();
 		sendNotification(emitter, eventId, emitterId, "EventStream Created. [gitHubId=" +githubId + "]");
-		logger.debug("");
 		// 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
 		if(hasLostData(lastEventId)) {
+			logger.debug("미수신한 Event 목록 존재");
 			sendLostData(lastEventId,githubId,emitterId,emitter);
 		}
 		return emitter;
@@ -97,6 +97,7 @@ public class NotificationService {
 
 	// 유실된 데이터 다시 전송
 	private void sendLostData(String lastEventId, String githubId, String emitterId, SseEmitter emitter) {
+		looger.debug("sendLostData()");
 
 		Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByGithubId(githubId);
 		eventCaches.entrySet().stream()
@@ -108,6 +109,7 @@ public class NotificationService {
 
 	//특정 유저에게 알림 전송
 	public void send(NotificationResponse notificationResponse){
+		logger.debug("send()")
 		Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByGithubId(notificationResponse.getReceiver().getGithubId());
 		sseEmitters.forEach(
 			(key, emitter) ->{
@@ -125,13 +127,15 @@ public class NotificationService {
 	//알림 전송
 	private void sendToClient(SseEmitter emitter, String id, Object data) {
 		try{
-			logger.debug("sentToClient 전송 되니?");
+			logger.debug("sendToClient() 전송 되니?");
 			emitter.send(SseEmitter.event()
 				.id(id)
 				.name("sse")
 				.data(data, MediaType.APPLICATION_JSON));
 				// .reconnectTime(0));
 		} catch (Exception exception) {
+			logger.debug("예외");
+			logger.debug(exception);
 			emitterRepository.deleteById(id);
 			emitter.completeWithError(exception);
 		}
