@@ -194,6 +194,7 @@ const MainPage = () => {
 	}, []);
 
 	const onClickNotification = useCallback(() => {
+		authHttp.get('notifications/isread');
 		navigation('/notification');
 	}, []);
 
