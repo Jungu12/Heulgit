@@ -116,7 +116,7 @@ const EurekaPostComment = ({ comment, onClickCommentMenuOpen }: Props) => {
 			</StyledProfileContainer>
 			<StyledOptionContainer>
 				<StyledTime> {getTimeAgo(comment.updatedDate)}</StyledTime>
-				{comment.user.githubId != user?.githubId && (
+				{comment.user.githubId === user?.githubId && (
 					<img
 						src={images.menu}
 						alt="option"

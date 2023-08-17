@@ -113,7 +113,7 @@ const FreePostComment = ({ comment, onClickCommentMenuOpen }: Props) => {
 			</StyledProfileContainer>
 			<StyledOptionContainer>
 				{getTimeAgo(comment.updatedDate)}
-				{comment.user.githubId != user?.githubId && (
+				{comment.user.githubId === user?.githubId && (
 					<img
 						src={images.menu}
 						alt="option"
