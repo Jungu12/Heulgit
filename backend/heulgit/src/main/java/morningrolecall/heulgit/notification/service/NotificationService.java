@@ -80,12 +80,14 @@ public class NotificationService {
 	private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
 
 		try{
+			logger.debug("sendNotification() 내부");
 			emitter.send(SseEmitter.event()
 				.id(eventId)
 				.name("sse")
 				.data(data, MediaType.APPLICATION_JSON));
 			logger.debug("전송..?");
 		} catch (IOException e){
+			logger.debug(e.getMessage());
 			emitterRepository.deleteById(emitterId);
 			emitter.completeWithError(e);
 		}
