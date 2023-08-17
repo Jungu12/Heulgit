@@ -145,7 +145,7 @@ const LikeViewPage: React.FC = () => {
 	const getLikeList = useCallback((page: number) => {
 		return authHttp
 			.get<LikedUserListResponse>(
-				`${curLoction}/posts/likes?freeBoardId=${id}&pages=${page}`,
+				`${curLoction}/posts/likes?${curLoction}BoardId=${id}&pages=${page}`,
 			)
 			.then((res) => res);
 	}, []);

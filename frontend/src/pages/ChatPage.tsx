@@ -114,6 +114,18 @@ const ChatPage = () => {
 		navigation(room.roomId, { state: { room: room } });
 	}, []);
 
+	const chatRoomSort = useCallback(() => {
+		chatRoomList.sort(
+			(room1, room2) =>
+				new Date(
+					room1.chatMessages[room1.chatMessages.length - 1].updatedTime,
+				).getTime() -
+				new Date(
+					room2.chatMessages[room2.chatMessages.length - 1].updatedTime,
+				).getTime(),
+		);
+	}, [chatRoomList]);
+
 	useEffect(() => {
 		loadChatRoomList('ksg2388');
 
@@ -121,6 +133,11 @@ const ChatPage = () => {
 			client.current!.disconnect();
 		};
 	}, []);
+
+	// 채팅방 시간 순으로 정렬
+	useEffect(() => {
+		chatRoomSort();
+	}, [chatRoomList]);
 
 	// 새로운 메시지 오면 화면 다시
 	useEffect(() => {
