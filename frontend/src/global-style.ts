@@ -1,39 +1,41 @@
 import { createGlobalStyle } from 'styled-components';
 
-const isWindows = window.navigator.platform.includes('Win');
+// const isWindows = window.navigator.platform.includes('Win');
 
-// 맥과 윈도우에 따라 다른 폰트 경로 설정
-const fontPath = isWindows
-	? '/assets/fonts/RixYeoljeongdo_Regular_Windows.woff' // 윈도우 폰트 경로
-	: '/assets/fonts/RixYeoljeongdo_Regular_Mac.woff'; // 맥 폰트 경로
+// // 맥과 윈도우에 따라 다른 폰트 경로 설정
+// const fontPath = isWindows
+// 	? '/assets/fonts/RixYeoljeongdo_Regular_Windows.woff' // 윈도우 폰트 경로
+// 	: '/assets/fonts/RixYeoljeongdo_Regular_Mac.woff'; // 맥 폰트 경로
 
 // 외부에서 import 할거니까 모듈 내보내자~!
 export default createGlobalStyle`
 @font-face {
     font-family: 'RixYeoljeongdo_Regular';
-    src: url('${fontPath}') format('woff');
+    src: url('/assets/fonts/RixYeoljeongdo_Regular_Windows.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Bold.woff') format('woff'),
-    url('/assets/fonts/MaplestoryBold.woff2') format('woff2');
+    src: url('/assets/fonts/NotoSansKR-Bold.otf') format('opentype'),
+    url('/assets/fonts/NotoSansKR-Bold.woff') format('woff');
     font-weight: 700;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Medium.woff') format('woff');
+    src: url('/assets/fonts/NotoSansKR-Medium.otf') format('opentype'),
+    url('/assets/fonts/NotoSansKR-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Noto Sans KR';
-    src: url('/assets/fonts/NotoSansKR-Regular.woff') format('woff');
+    src: url('/assets/fonts/NotoSansKR-Regular.otf') format('opentype'),
+    url('/assets/fonts/NotoSansKR-Regular.woff') format('woff');
     font-weight: 400;
     font-style: normal;
 }

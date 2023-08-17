@@ -70,10 +70,6 @@ const NotificationPage = () => {
 			.then((res) => setNotifications(res));
 	}, []);
 
-	// const { data } = useQuery(['/notifications'], () =>
-	// 	authHttp.get('notifications').then((res) => res as UnionNotificationType[]),
-	// );
-
 	useEffect(() => {
 		loadNotification();
 	}, []);
@@ -93,10 +89,10 @@ const NotificationPage = () => {
 	return (
 		<StyledNotificationContainer>
 			<Header title="알림" />
-			{pastNotifications.length === 0 && recentNotifications.length === 0 ? (
+			{recentNotifications.length === 0 ? (
 				<StyledEmptyNotification>알림이 없습니다.</StyledEmptyNotification>
 			) : (
-				<>
+				<div className="notification-container">
 					<StyledWeekNotiContainer>
 						<StyledNotiDiv>
 							<StyleNoti>이번 주</StyleNoti>
@@ -117,7 +113,7 @@ const NotificationPage = () => {
 							/>
 						</StyledWeekNotiContainer>
 					)}
-				</>
+				</div>
 			)}
 		</StyledNotificationContainer>
 	);
