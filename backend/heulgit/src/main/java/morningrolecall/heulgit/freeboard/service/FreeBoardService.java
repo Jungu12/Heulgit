@@ -163,8 +163,8 @@ public class FreeBoardService {
 			imageService.deleteFile(imageUrls);
 		}
 
-		freeBoardImageRepository.deleteAllByFreeBoard(freeBoard);
-		freeBoard.removeAllImage();
+		// freeBoardImageRepository.deleteAllByFreeBoard(freeBoard);
+		// freeBoard.removeAllImage();
 
 		// 현재 받은 이미지 S3에 업로드
 		List<String> imageUrls = imageService.uploadFile(githubId, "freeboard", multipartFiles);
