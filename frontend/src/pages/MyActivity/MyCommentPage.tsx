@@ -4,14 +4,10 @@ import Header from '@components/common/Header';
 import BigHeader from '@components/profile/BigHeader';
 import { colors } from '@constants/colors';
 import { authHttp } from '@utils/http';
-import { UserCommentType } from '@typedef/profile/user.types';
-// import { useInfiniteQuery } from '@tanstack/react-query';
-// import InfiniteScroll from 'react-infinite-scroll-component';
-// import { authHttp } from '@utils/http';
-// import { UserCommentType } from '@typedef/profile/user.types';
-// import { useInfiniteQuery } from "@tanstack/react-query";
-// import InfiniteScroll from "react-infinite-scroll-component";
-// import Comment from "@components/Home/Comment";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { UserCommentResponseType } from '@typedef/profile/user.types';
+import MyComment from '@components/myActivity/MyComment';
 
 const StyledBox = styled.div`
 	height: 100vh;
@@ -92,35 +88,23 @@ const MyCommentPage = () => {
 	}, []);
 
 	// 댓글 불러오기
-	useEffect(() => {
-		authHttp
-			.get<UserCommentType>('users/activities/my-comments?pages=1')
-			.then((response) => {
-				console.log('내 댓글 성공.', response);
-			})
-			.catch((error) => {
-				console.error('내 댓글 실패.', error);
-			});
-	}, []);
-
-	// // 좋아요 게시물 불러오기
-	// const {
-	// 	data: commentList,
-	// 	fetchNextPage: commentFetchNextPage,
-	// 	hasNextPage: commentHasNextPage,
-	// } = useInfiniteQuery(
-	// 	['/my-likes/heulgit'],
-	// 	({ pageParam = 1 }) =>
-	// 		authHttp.get<UserCommentType>(
-	// 			`users/activities/eureka/my-likes?pages=${pageParam}`,
-	// 		),
-	// 	{
-	// 		getNextPageParam: (lastPage, allPages) => {
-	// 			if (lastPage.last) return;
-	// 			return allPages.length + 1;
-	// 		},
-	// 	},
-	// );
+	const {
+		data: commentList,
+		fetchNextPage: commentFetchNextPage,
+		hasNextPage: commentHasNextPage,
+	} = useInfiniteQuery(
+		['/my-likes/heulgit'],
+		({ pageParam = 1 }) =>
+			authHttp.get<UserCommentResponseType>(
+				`users/activities/my-comments?pages=${pageParam}`,
+			),
+		{
+			getNextPageParam: (lastPage, allPages) => {
+				if (lastPage.last) return;
+				return allPages.length + 1;
+			},
+		},
+	);
 
 	return (
 		<StyledBox>
@@ -137,7 +121,7 @@ const MyCommentPage = () => {
 					)}
 				</StyledHeader>
 				<StyledMyComment>
-					{/* {commentList && (
+					{commentList && (
 						<InfiniteScroll
 							dataLength={commentList.pages.length}
 							next={commentFetchNextPage}
@@ -151,11 +135,11 @@ const MyCommentPage = () => {
 						>
 							{commentList.pages.map((comment) =>
 								comment.content.map((item) => (
-									<Comment key={item} feed={item} />
+									<MyComment key={item.commentId} comment={item} />
 								)),
 							)}
 						</InfiniteScroll>
-					)} */}
+					)}
 				</StyledMyComment>
 			</StyledContent>
 
