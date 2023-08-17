@@ -179,8 +179,8 @@ const ProfilePageMobile = ({
 			authHttp
 				.post(`relations/follow?to=${userId}`)
 				.then(() => {
-					console.log('팔로우 성공');
-					setIsFollowing(!isFollowing);
+					console.log('팔로우 성공: ', isFollowing);
+					setIsFollowing(true);
 				})
 				.catch((error) => {
 					console.error('팔로우 실패:', error);
@@ -190,8 +190,8 @@ const ProfilePageMobile = ({
 			authHttp
 				.delete(`relations/unfollow?to=${userId}`)
 				.then(() => {
-					console.log('언팔로우 성공');
-					setIsFollowing(!isFollowing);
+					console.log('언팔로우 성공: ', isFollowing);
+					setIsFollowing(false);
 				})
 				.catch((error) => {
 					console.error('언팔로우 실패', error);
@@ -262,15 +262,14 @@ const ProfilePageMobile = ({
 								</StyledActivityButtonItem>
 							</div>
 							<div>
-								{isFollowing && (
-									<StyledActivityButtonItem onClick={handleFollowClick}>
-										{isFollowing ? (
-											<img src={images.profile.followingIcon} alt="팔로잉" />
-										) : (
-											<img src={images.profile.followIcon} alt="팔로우" />
-										)}
-									</StyledActivityButtonItem>
-								)}
+								<StyledActivityButtonItem onClick={handleFollowClick}>
+									{isFollowing ? (
+										<img src={images.profile.followingIcon} alt="팔로잉" />
+									) : (
+										<img src={images.profile.followIcon} alt="팔로우" />
+									)}
+								</StyledActivityButtonItem>
+
 								<StyledActivityButtonItem onClick={onClickGM}>
 									<img src={images.gitMessage} alt="채팅" />
 								</StyledActivityButtonItem>
