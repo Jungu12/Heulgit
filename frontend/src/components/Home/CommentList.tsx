@@ -30,13 +30,19 @@ const CommentList = ({
 	comments,
 	onClickSubbmit,
 	handleInputChange,
+	onClickCommentMenuOpen,
 	input,
 }: Props) => {
 	return (
 		<StyledCommentListContainer>
 			{comments.map((comment) => (
 				<>
-					<Comment comment={comment} key={comment.commentId} />
+					<Comment
+						comment={comment}
+						key={comment.commentId}
+						onClickCommentMenuOpen={onClickCommentMenuOpen}
+						type={'detail'}
+					/>
 					<Separation />
 				</>
 			))}

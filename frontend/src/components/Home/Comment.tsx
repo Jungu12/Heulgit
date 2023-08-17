@@ -1,6 +1,9 @@
 import { colors } from '@constants/colors';
+import { images } from '@constants/images';
+import { RootState } from '@store/index';
 import { HeulGitCommentType } from '@typedef/home/heulgit.types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { styled } from 'styled-components';
 
 const StyledComment = styled.div`
@@ -56,9 +59,18 @@ const StyledOptionContainer = styled.div`
 
 type Props = {
 	comment: HeulGitCommentType;
+	onClickDelete?: (commentId: number) => void;
+	onClickCommentMenuOpen?: (commentId: number) => void;
+	type: 'bottomSheet' | 'detail';
 };
 
-const Comment = ({ comment }: Props) => {
+const Comment = ({
+	comment,
+	onClickDelete,
+	onClickCommentMenuOpen,
+	type,
+}: Props) => {
+	const user = useSelector((state: RootState) => state.user.user);
 	return (
 		<StyledComment>
 			<StyledProfile src={comment.user.avatarUrl} alt="profile" />
@@ -67,7 +79,19 @@ const Comment = ({ comment }: Props) => {
 				<StyledContent>{comment.content}</StyledContent>
 				<StyledReply>답글 달기</StyledReply>
 			</StyledContentBox>
-			<StyledOptionContainer>{comment.updatedDate}</StyledOptionContainer>
+			<StyledOptionContainer>
+				{comment.updatedDate}
+				{comment.user.githubId === user?.githubId && (
+					<img
+						src={images.closeBlack}
+						alt="delete"
+						onClick={() => {
+							if (type === 'bottomSheet') onClickDelete!(comment.commentId);
+							if (type === 'detail') onClickCommentMenuOpen!(comment.commentId);
+						}}
+					/>
+				)}
+			</StyledOptionContainer>
 		</StyledComment>
 	);
 };

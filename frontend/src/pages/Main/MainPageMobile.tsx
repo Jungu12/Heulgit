@@ -295,6 +295,7 @@ type Props = {
 	commentInput: string;
 	commentList: HeulGitCommentType[];
 	notificationCount: number;
+	onClickDeleteComment: (commentId: number) => void;
 };
 
 const MainPageMobile = ({
@@ -317,6 +318,7 @@ const MainPageMobile = ({
 	setIsViewOptionOpen,
 	setIsCommentOpen,
 	handleClickCalendar,
+	onClickDeleteComment,
 	dropDownRef,
 	calendarRef,
 	isViewOptionOpen,
@@ -450,6 +452,7 @@ const MainPageMobile = ({
 				<CommentListBottomSheet
 					postId={selelctedComment}
 					commentList={commentList}
+					onClickDelete={onClickDeleteComment}
 				/>
 			</CBottomSheet>
 			<Navigation />

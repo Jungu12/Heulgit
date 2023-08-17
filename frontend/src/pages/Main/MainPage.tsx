@@ -211,6 +211,16 @@ const MainPage = () => {
 		},
 	);
 
+	const onClickDeleteComment = useCallback((postId: number) => {
+		if (confirm('정말 삭제하시겠습니까?')) {
+			authHttp.delete(`h-comments/${postId}`).then(() => {
+				alert('댓글이 삭제됬습니다.');
+				setCommentList([]);
+				loadCommentList();
+			});
+		}
+	}, []);
+
 	const onClickSubbmit = useCallback(async () => {
 		if (commentInput.trim() === '') return;
 		try {
@@ -273,6 +283,7 @@ const MainPage = () => {
 			onClickGitMessage={onClickGitMessage}
 			onClickSubbmit={onClickSubbmit}
 			onHandleComment={onHandleComment}
+			onClickDeleteComment={onClickDeleteComment}
 			loadNextFeedList={fetchNextPage}
 			handleClickCalendar={handleClickCalendar}
 			setIsCommentOpen={setIsCommentOpen}

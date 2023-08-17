@@ -29,16 +29,22 @@ const StyledCommentEmpty = styled.div`
 type Props = {
 	postId: number;
 	commentList: HeulGitCommentType[];
+	onClickDelete: (commentId: number) => void;
 };
 
 // 받은 postId로 댓글 생성해서 넘기기
-const CommentListBottomSheet = ({ commentList }: Props) => {
+const CommentListBottomSheet = ({ commentList, onClickDelete }: Props) => {
 	return (
 		<StyledCommentListContainer>
 			{commentList.length ? (
 				commentList.map((comment) => (
 					<>
-						<Comment comment={comment} key={comment.commentId} />
+						<Comment
+							comment={comment}
+							key={comment.commentId}
+							onClickDelete={onClickDelete}
+							type={'bottomSheet'}
+						/>
 						<Separation />
 					</>
 				))
