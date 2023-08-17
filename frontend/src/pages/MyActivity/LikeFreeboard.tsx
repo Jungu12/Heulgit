@@ -6,11 +6,11 @@ import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const LikeFreeboard = () => {
-	// 좋아요 게시물 불러오기
+	// 좋아요 자유 불러오기
 	const {
-		data: freeLikeList,
-		fetchNextPage: freeFetchNextPage,
-		hasNextPage: freeHasNextPage,
+		data: likeFreeboardList,
+		fetchNextPage: LikeFreeboardFetchNextPage,
+		hasNextPage: LikeFreeboardHasNextPage,
 	} = useInfiniteQuery(
 		['/my-likes/heulgit'],
 		({ pageParam = 1 }) =>
@@ -27,11 +27,11 @@ const LikeFreeboard = () => {
 
 	return (
 		<div>
-			{freeLikeList && (
+			{likeFreeboardList && (
 				<InfiniteScroll
-					dataLength={freeLikeList.pages.length}
-					next={freeFetchNextPage}
-					hasMore={freeHasNextPage ? true : false}
+					dataLength={likeFreeboardList.pages.length}
+					next={LikeFreeboardFetchNextPage}
+					hasMore={LikeFreeboardHasNextPage ? true : false}
 					loader={<div>loading...</div>}
 					height={`calc(100vh - 102px)`}
 					style={{
@@ -39,7 +39,7 @@ const LikeFreeboard = () => {
 						overflowX: 'hidden',
 					}}
 				>
-					{freeLikeList.pages.map((free) =>
+					{likeFreeboardList.pages.map((free) =>
 						free.content.map((item) => (
 							<FreeBoardFeedItem key={item.freeBoardId} feed={item} />
 						)),
