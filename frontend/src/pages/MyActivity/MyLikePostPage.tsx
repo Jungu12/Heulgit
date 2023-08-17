@@ -90,12 +90,11 @@ const StyledHeader = styled.div`
 `;
 
 const MyLikePostPage = () => {
-	const [selectedPost, setSelectedPost] = useState('');
+	const [selectedPost, setSelectedPost] = useState('유레카');
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
 	const handleMenuClick = (menu: '유레카' | '자유') => {
 		setSelectedPost(menu);
-		sessionStorage.setItem('selectedPost', menu);
 	};
 
 	// 좋아요 유레카 불러오기
