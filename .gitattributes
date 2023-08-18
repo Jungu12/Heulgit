@@ -1,0 +1,2 @@
+exec/heulgitDump.zip filter=lfs diff=lfs merge=lfs -text
+exec/dumpdata/heulgit_heulgit.sql filter=lfs diff=lfs merge=lfs -text
