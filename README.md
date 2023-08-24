@@ -10,7 +10,7 @@
 - `Front` - React, TypeScript, Redux, React-Query, styled-components, yarn,
 - `Back` - Java, Springboot, Spring Security, Swagger, JUnit, Gradle
 - `DB` - MySQL
-- `채팅` - Socket.io, Redis
+- `채팅` - Spring WebSocket, SockJS, Redis,
 - `Deploy` - AWS EC2, RDS, S3, Nginx, Jenkins, Docker
 - `Cooperation` - Figma, Jira, GitLab, Mattermost, Notion
 
